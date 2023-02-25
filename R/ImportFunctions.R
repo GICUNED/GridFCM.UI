@@ -11,6 +11,7 @@
 #' @export
 #'
 #' @import readxl
+#' @import OpenRepGrid
 #'
 #' @examples
 

@@ -1,4 +1,5 @@
 ## Simulation Functions ##
+
 # Scenario Matrix -----------------------------------------------------------
 
 #' Scenario Matrix
@@ -46,7 +47,7 @@ scenariomatrix <- function(wimp, act.vector, infer = "linear transform",
       act.vector <- t(wimp[[6]][[3]]) %*% delta.iter
     }
 
-    e.iter <- mean(next.iter - scene.matrix[n,])
+    e.iter <- mean(abs(next.iter - scene.matrix[n,]))
 
     if(e.iter < e){
       i <- i + 1

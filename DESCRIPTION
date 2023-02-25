@@ -1,11 +1,14 @@
 Package: GridFCM.UI
 Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Title: Fuzzy Cognitive Maps (FCM) for RepGrids and ImpGrids
+Version: 0.1.1
+Author: person("Alejandro", "Sanfeliciano", email = "Sanfeliciano.Alejandro@gmail.com",
+                  role = c("aut", "cre"))
+Maintainer: Alejandro Sanfeliciano <Sanfeliciano.Alejandro@gmail.com>
+Description: GridFCM.UI is an R package that allows us to create Fuzzy Cognitive 
+  Maps using a RepGrid and an ImpGrid. With this software you will be able to 
+  analyse the structure and dynamics of the personal meaning system of individuals.
+License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
+RoxygenNote: 7.2.1
