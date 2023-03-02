@@ -1,6 +1,5 @@
 ## WEIGTHED IMPGRID INDECES FUNCTIONS ##
 
-
 # FCM density -------------------------------------------------------------
 
 
@@ -25,7 +24,7 @@ density_index <- function(wimp){
 
   n <- ncol(wmat)
 
-  result <- sum(degree_index(wimp)$Outputs)/(n*(n-1))                           # divide the number of edges by the number of possible edges
+  result <- sum(degree_index(wimp)[,1])/(n*(n-1))                               # divide the number of edges by the number of possible edges
 
   return(result)
 }
@@ -52,7 +51,6 @@ density_index <- function(wimp){
 #' @return Returns a list with the centrality data by construct and separated by
 #'  input degree, output degree and total degree (in and out).
 #'
-#' @import OpenRepGrid
 #'
 #' @export
 
@@ -63,7 +61,7 @@ degree_index <- function(wimp, method="simple"){
   rpoles <- wimp$constructs[[2]]
   poles <- wimp$constructs[[3]]
 
-  result <- list()                                                              # Create empty list
+
   wmat <- wimp$scores[[3]]
   N <- dim(wmat)[1]
 
@@ -97,11 +95,9 @@ degree_index <- function(wimp, method="simple"){
   names(Cout) <- poles
   names(Cin) <- poles
 
-
-  result$Outputs <- Cout
-  result$Inputs <- Cin
-  result$All <- Cout + Cin                                                      # Write the values in the list and return that list
-
+  result <- cbind(Cout, Cin , Cout + Cin)
+  rownames(result) <- poles
+  colnames(result) <- c("Out","In", "All")
   return(result)
 }
 
@@ -178,11 +174,12 @@ close_index <- function(wimp, norm = TRUE){
     result <- (N-1)/(rowSums(dist))                                             # Sum the distance of each construct with the rest and normalize.
   }
 
-  names(result) <- poles                                                        # Name vector's elements.
+  result <- matrix(result)
+  rownames(result) <- poles                                                     # Name vector's elements.
+  colnames(result) <- "Closeness"
 
   return(result)
 }
-
 
 # Betweeness Centrality Index ---------------------------------------------
 
@@ -216,7 +213,9 @@ betw_index <- function(wimp,norm=TRUE){
 
   result <- igraph::betweenness(G,normalized = norm,weights = NA )              # Igraph function to betweeness index.
 
-  names(result) <- poles
+  result <- matrix(result)
+  rownames(result) <- poles                                                     # Name vector's elements.
+  colnames(result) <- "Betweenness"
 
   return(result)
 }
@@ -236,7 +235,6 @@ betw_index <- function(wimp,norm=TRUE){
 #'
 #' @return WIP.
 #'
-#' @import plotly
 #'
 #' @export
 #'

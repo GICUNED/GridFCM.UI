@@ -156,7 +156,7 @@ pcsd_derivative <- function(scn){
 
 # Simulation Digraph ------------------------------------------------------
 
-#' Title
+#' Digraph of simulation scenario -- simdigraph()
 #'
 #' @param scn
 #' @param niter
@@ -257,13 +257,13 @@ simdigraph <- function(scn,niter = 0, layout = "graphopt", vertex.size = 1, edge
     }
     n <- n + 1
   }
-  # Vertex size
+                                                                                # Vertex size
   V(graph.map)$size <- sapply(results, function(x) 5 + abs(x * vertex.size * 15))
 
 
   # Final config ------------------------------------------------------------
 
-  E(graph.map)$arrow.size <- edge.width
+  E(graph.map)$arrow.size <- edge.width * 0.5
   V(graph.map)$shape <- "circle"
   V(graph.map)$label.cex <- 0.75
   V(graph.map)$label.family <- "sans"
@@ -353,7 +353,7 @@ selfdigraph <- function(wimp, layout = "circle", vertex.size = 1, edge.width = 1
 
 
   if(color == "grey scale"){
-    E(graph.map)$lty <- sapply(E(graph.map)$weight, function(x)                   # Edge colour
+    E(graph.map)$lty <- sapply(E(graph.map)$weight, function(x)                 # Edge colour
       ifelse(x < 0, 2, 1 ))
   }else{
     E(graph.map)$color <- sapply(E(graph.map)$weight, function(x)
@@ -510,7 +510,7 @@ idealdigraph <- function(wimp, inc = FALSE, layout = "circle", vertex.size = 1, 
 
 
   if(color == "grey scale"){
-    E(graph.map)$lty <- sapply(E(graph.map)$weight, function(x)                   # Edge colour
+    E(graph.map)$lty <- sapply(E(graph.map)$weight, function(x)                 # Edge colour
       ifelse(x < 0, 2, 1 ))
   }else{
     E(graph.map)$color <- sapply(E(graph.map)$weight, function(x)

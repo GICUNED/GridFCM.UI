@@ -2,7 +2,7 @@
 
 # Scenario Matrix -----------------------------------------------------------
 
-#' Scenario Matrix
+#' Scenario Matrix -- scenariomatrix()
 #'
 #' @param wimp
 #' @param act.vector

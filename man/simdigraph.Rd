@@ -2,7 +2,7 @@
 % Please edit documentation in R/GraphFunctions.R
 \name{simdigraph}
 \alias{simdigraph}
-\title{Title}
+\title{Digraph of simulation scenario -- simdigraph()}
 \usage{
 simdigraph(
   scn,
@@ -17,5 +17,5 @@ simdigraph(
 \item{color}{}
 }
 \description{
-Title
+Digraph of simulation scenario -- simdigraph()
 }

@@ -21,7 +21,7 @@ importwimp <- function(path, sheet = 1){
   wimp <- list()
   class(wimp) <- c("wimp","list")
 
-  xlsx <- read_excel(path, sheet = sheet)
+  xlsx <- readxl::read_excel(path, sheet = sheet)
 
   n.constructs <- dim(xlsx)[1]
 
@@ -116,7 +116,7 @@ importwimp <- function(path, sheet = 1){
 
   # OpenRepGrid adaptation --------------------------------------------------
 
-  openrepgrid.object <- importExcel(path, sheetIndex = sheet)
+  openrepgrid.object <- OpenRepGrid::importExcel(path, sheetIndex = sheet)
   wimp$openrepgrid <- openrepgrid.object
 
   # Function return ---------------------------------------------------------

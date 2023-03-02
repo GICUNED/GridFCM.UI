@@ -1,6 +1,5 @@
 ## PCSD INDECES FUNTIONS ##
 
-
 # AUC Index ---------------------------------------------------------------
 
 #' PCSD AUC Index -- auc_index()
@@ -23,11 +22,11 @@ auc_index <- function(scn){
   poles <- scn$constructs[[3]]
 
 
-  iter <- scn$convergence                                                       # Save convergence value.
+  iter <- nrow(scn$values)                                                             # Save convergence value.
 
   ideal.vector <- scn$self[[2]]
   ideal.matrix <- matrix(ideal.vector, ncol = length(ideal.vector),             # Create a matrix with Ideal-Self values repeated by rows.
-                         nrow = iter + 4, byrow = TRUE)
+                         nrow = iter, byrow = TRUE)
 
   res <- scn$values
   res <- abs(res - ideal.matrix) / 2
@@ -35,12 +34,13 @@ auc_index <- function(scn){
   matrix <- matrix(ncol= length(poles), nrow = 1)
 
   for (n in 1:length(poles)) {                                                  # Calculate AUC for each construct curve.
-    matrix[,n] <- MESS::auc(c(0:(iter + 3)), res[,n], type = "spline")/(iter + 4)
+    matrix[,n] <- MESS::auc(c(0:(iter - 1)), res[,n], type = "spline")/(iter + 4)
   }
 
-  result <- as.vector(matrix)
+  result <- t(matrix)
 
-  names(result) <- poles                                                        # Name de vector's elements.
+  rownames(result) <- poles                                                     # Name vector's elements.
+  colnames(result) <- "AUC"
 
 
   return(result)
@@ -71,11 +71,11 @@ stability_index <- function(scn){
   poles <- scn$constructs[[3]]
 
 
-  iter <- scn$convergence                                                       # Save convergence value.
+  iter <- nrow(scn$values)                                                        # Save convergence value.
 
   ideal.vector <- scn$self[[2]]
   ideal.matrix <- matrix(ideal.vector, ncol = length(ideal.vector),             # Create a matrix with Ideal-Self values repeated by rows.
-                         nrow = iter + 4, byrow = TRUE)
+                         nrow = iter, byrow = TRUE)
 
   res <- scn$values
   res <- abs(res - ideal.matrix) / 2
@@ -83,7 +83,9 @@ stability_index <- function(scn){
 
   result <- apply(res, 2, sd)                                                   # Calculate SD for each construct.
 
-  names(result) <- poles                                                        # Name de vector's elements.
+  result <- matrix(result)
+  rownames(result) <- poles                                                     # Name vector's elements.
+  colnames(result) <- "Standard Deviation"
 
   return(result)
 }
@@ -111,11 +113,11 @@ pcsd_summary <- function(scn){
   poles <- scn$constructs[[3]]
 
 
-  iter <- scn$convergence                                                       # Save convergence value.
+  iter <- nrow(scn$values)                                                      # Save convergence value.
 
   ideal.vector <- scn$self[[2]]
   ideal.matrix <- matrix(ideal.vector, ncol = length(ideal.vector),             # Create a matrix with Ideal-Self values repeated by rows.
-                         nrow = iter + 4, byrow = TRUE)
+                         nrow = iter, byrow = TRUE)
 
   res <- scn$values
   res <- abs(res - ideal.matrix) / 2

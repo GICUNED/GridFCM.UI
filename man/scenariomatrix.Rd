@@ -2,7 +2,7 @@
 % Please edit documentation in R/SimulationFunctions.R
 \name{scenariomatrix}
 \alias{scenariomatrix}
-\title{Scenario Matrix}
+\title{Scenario Matrix -- scenariomatrix()}
 \usage{
 scenariomatrix(
   wimp,
@@ -18,5 +18,5 @@ scenariomatrix(
 \item{quiet}{}
 }
 \description{
-Scenario Matrix
+Scenario Matrix -- scenariomatrix()
 }
