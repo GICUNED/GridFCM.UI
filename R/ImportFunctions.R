@@ -53,10 +53,9 @@ importwimp <- function(path, sheet = 1){
 
 
   # Self vector -------------------------------------------------------------
-
-  direct.scores <- as.matrix(xlsx[,1:n.constructs+1])
-
-  direct.self <- diag(direct.scores)
+  xlsx.scores <- as.numeric(as.matrix(xlsx[,1:n.constructs+1]))
+  direct.scores <- matrix(xlsx.scores,ncol=10,nrow=10)
+  direct.self <- as.numeric(diag(direct.scores))
 
   standarized.self <- (direct.self - (scale.center * rep(1,n.constructs))) / (0.5 * (scale.max - scale.min))
 
@@ -67,7 +66,7 @@ importwimp <- function(path, sheet = 1){
 
   # Ideal vector ------------------------------------------------------------
 
-  direct.ideal <- as.vector(xlsx[,n.constructs + 2])[[1]]
+  direct.ideal <- as.numeric(as.vector(xlsx[,n.constructs + 2])[[1]])
   standarized.ideal <- (direct.ideal - (scale.center * rep(1,n.constructs))) / (0.5 * (scale.max - scale.min))
 
   wimp$ideal[[1]] <- direct.ideal
