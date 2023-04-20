@@ -5,17 +5,47 @@
 
 .content{
   margin-inline: 22px;
+}
 
+.btn-primary:focus{
+  background-color: #005440;
+  border-color: #00795d;
+}
+
+.btn-primary{
+  background-color: #005440;
+  border-color: #00795d;
+}
+
+.link{
+  color: #28a745;
+}
+
+.link:hover{
+  color: #47d367 !important;
 }
 
 .pagetitlecustom{
   font-family: 'Titillium Web Semibold', sans-serif;
   text-align: center;
-  margin-bottom: 2rem;
+}
+
+#rejillas_anteriores{
+  display: flex;
+  justify-content: center;
+
+}
+
+.input-group-btn{
+margin: 0 !important;
+}
+
+#archivo_repgrid_progress{
+  display: none;
 }
 
 .desccustom{
-  text-align: justify;
+  text-align: center;
 }
 
 .content-wrapper{
@@ -45,6 +75,17 @@
   text-align: center;
 }
 
+.logocontainer{
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.logoimg{
+  width: 100%;
+  object-fit: cover;
+}
+
 .brand-link {
   font-family: 'Titillium Web Semibold', sans-serif;
 }
@@ -53,6 +94,10 @@
   font-weight: 600 !important;
 }
 .card-title i{
+  margin-right: 4px !important;
+}
+
+.btn i{
   margin-right: 4px !important;
 }
 

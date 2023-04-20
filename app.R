@@ -2,6 +2,7 @@ library(shiny)
 library(shinyjs)
 library(shiny.router)
 library(bs4Dash)
+library(fresh)
 
 source("global.R")
 # UI
@@ -19,20 +20,30 @@ source("Servers/inicio_page_servers.R")
 source("Servers/import_servers.R")
 source("Servers/import_excel_servers.R")
 
+theme <- create_theme(
+  bs4dash_status(
+    primary = "#095540", danger = "#BF616A", light = "#272c30"
+  )
+)
+
 ui <- dashboardPage(
-  skin = "black",
+  freshTheme = theme,
   # menu,
   dashboardHeader(
+
     tags$head(
     tags$link(rel = "stylesheet", type = "text/css", href = "customization.css"),
-  ),
-  title = "GridFCM"),
+    tags$script(type = "text/javascript", src = "script.js"),
+
+    ),
+  title = tags$a(href='https://www.uned.es/', target ="_blank", class = "logocontainer", tags$img(src='LogoUNED.svg',height='56',width='', class = "logoimg"))),
   dashboardSidebar(
     sidebarMenu(
+      id = "sidebar-principal",
       menuItem("Inicio", href = route_link("/"), icon = icon("home"), newTab = FALSE),
-      menuItem("User",  href = route_link("user_home"), icon = icon("house-user"), newTab = FALSE),
-      menuItem("Import",  href = route_link("import"), icon = icon("file-arrow-up"), newTab = FALSE),
-      menuItem("Import Excel",  href = route_link("excel"), icon = icon("file-excel"), newTab = FALSE)
+      menuItem("User", href = route_link("user_home"), icon = icon("house-user"), newTab = FALSE),
+      menuItem("Import", href = route_link("import"), icon = icon("file-arrow-up"), newTab = FALSE),
+      menuItem("Import Excel", href = route_link("excel"), icon = icon("file-excel"), newTab = FALSE)
     )
   ),
   dashboardBody(
@@ -42,12 +53,11 @@ ui <- dashboardPage(
       route("/home", home_page),
       route("/", inicio_ui),
       route("another", another_page),
-      route("user_home", user_home_ui), #Página user.home
+      route("user_home", user_home_ui), # Página user.home
       route("import", import_ui),
       route("excel", import_excel_ui)
     )
-  ),
-
+  )
 )
 
 server <- function(input, output, session) {
@@ -60,8 +70,6 @@ server <- function(input, output, session) {
   import_server(input, output, session)
   import_excel_server(input,output,session)
 }
-
-
 
 
 shinyApp(ui, server)

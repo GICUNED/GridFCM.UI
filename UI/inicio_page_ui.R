@@ -1,6 +1,6 @@
 inicio_ui <-  div(
 
-  h2("Bienvenido a la página de inicio del usuario", class = "pagetitlecustom"),
+  h2("Inicia sesión para continuar", class = "pagetitlecustom mb-4"),
         fluidRow(
           column(7,
           box(
@@ -13,8 +13,8 @@ inicio_ui <-  div(
             textInput("usuario", "Nombre de usuario", placeholder = 'Introduce tu usuario'),
             passwordInput("contrasena", "Contraseña", placeholder = '■ ■ ■ ■ ■ ■ ■ ■'),
 
-            column(12, actionButton("ingresar", "Acceder", status = 'primary')),
-            column(12, actionButton("invitado", "Acceder como invitado"))
+            column(12, class="d-flex justify-content-center mb-2", actionButton("ingresar", "Acceder", status = 'primary', icon = icon("arrow-up"),)),
+            column(12, class="d-flex justify-content-center", actionButton("invitado", "Sesión de invitado", icon = icon("user")))
 
           )),
           column(5,
