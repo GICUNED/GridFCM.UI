@@ -37,6 +37,7 @@ ui <- dashboardPage(
   ),
   dashboardBody(
     # router_ui(router),
+    useShinyjs(),
     router_ui(
       route("/home", home_page),
       route("/", inicio_ui),

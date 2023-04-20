@@ -17,7 +17,7 @@ home_server <- function(input, output, session) {
   
   
   observeEvent(input$go_to_home, {
-    runjs("window.location.href = '/#!/';")
+    runjs("window.location.href = '/';")
     
   })
 
