@@ -1,17 +1,20 @@
 import_ui <-  div(
-    h1("Importar datos para un nuevo análisis de rejilla"),
-    p("En esta página, puedes aprender sobre los tres tipos de análisis de rejilla y elegir cómo importar tus datos."),
+    h2("Importar datos para un nuevo análisis de rejilla", class = "pagetitlecustom"),
+    p("En esta página, puedes aprender sobre los tres tipos de análisis de rejilla y elegir cómo importar tus datos.", class = "desccustom"),
 
     # información para cada tipo de análisis
     fluidRow(
       column(4,
-             box(title = "RepGrid", 
+             box(title = "RepGrid",
+             width = 12,
                  p("Descripción del análisis RepGrid."))),
       column(4,
-             box(title = "WimpGrid", 
+             box(title = "WimpGrid",
+             width = 12,
                  p("Descripción del análisis WimpGrid."))),
       column(4,
-             box(title = "Fullgrid", 
+             box(title = "Fullgrid",
+             width = 12,
                  p("Descripción del análisis Fullgrid.")))
     ),
 

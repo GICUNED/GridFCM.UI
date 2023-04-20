@@ -14,6 +14,7 @@ inicio_server <- function(input, output, session) {
     # route_link("user_home")
     # tags$ul(tags$li(a(class = "item", href = route_link("user_home"), "u page")))
     runjs("window.location.href = '/#!/import';")
+    
   })
 
 }

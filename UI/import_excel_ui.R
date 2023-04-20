@@ -1,6 +1,6 @@
 import_excel_ui <-  div(
-    h1("Importar datos desde archivo xlsx"),
-    p("En esta página, puedes descargar plantillas de xlsx y documentos de ayuda, y subir archivos xlsx para importar datos."),
+    h2("Importar datos desde archivo xlsx", class = "pagetitlecustom"),
+    p("En esta página, puedes descargar plantillas de xlsx y documentos de ayuda, y subir archivos xlsx para importar datos.", class = "desccustom"),
 
     # Enlaces a plantillas de xlsx y documentos de ayuda
     fluidRow(

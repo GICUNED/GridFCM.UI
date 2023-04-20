@@ -1,0 +1,77 @@
+@import url('https://fonts.googleapis.com/css2?family=Titillium+Web:wght@400;600&display=swap');
+
+
+* {font-family: 'Titillium Web', sans-serif;}
+
+.content{
+  margin-inline: 22px;
+
+}
+
+.pagetitlecustom{
+  font-family: 'Titillium Web Semibold', sans-serif;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.desccustom{
+  text-align: justify;
+}
+
+.content-wrapper{
+    padding-block: 22px;
+}
+
+
+#contrasena::placeholder{
+  font-size: 6px;
+}
+
+.custom-control{
+
+  margin-block: 0 !important ;
+
+}
+
+.navbar::before {
+  content:"GridCFM";
+  display: block;
+  position: absolute;
+  top: 10px;
+  font-size: 24px;
+  left: 0;
+  width: 100%;
+  font-weight: bolder;
+  text-align: center;
+}
+
+.brand-link {
+  font-family: 'Titillium Web Semibold', sans-serif;
+}
+
+.card-title{
+  font-weight: 600 !important;
+}
+.card-title i{
+  margin-right: 4px !important;
+}
+
+.skin-blue .main-header .navbar {
+  background-color: #005440;
+}
+
+.skin-blue .main-header .logo {
+  background-color: #45CE98;
+  color: #0A0A0A;
+}
+
+/* Personalizar el color del cuadro de inicio de sesión */
+#login_box.box.box-primary {
+  border-top-color: #45CE98;
+  background-color: #BFE9D8;
+}
+
+#login_box.box.box-primary > h3,
+#login_box.box.box-primary > p {
+  color: #0A0A0A;
+}
