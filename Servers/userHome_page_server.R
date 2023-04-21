@@ -12,10 +12,10 @@ userHome_server <- function(input, output, session) {
   output$rejillas_anteriores <- renderTable({
     req(rejillas())
     rejillas()
-  }, 
-    striped = TRUE, 
-    bordered = TRUE,  
-    hover = TRUE, 
+  },
+    striped = TRUE,
+    bordered = TRUE,
+    hover = TRUE,
     spacing = 'm',
     width = "80%",
   )

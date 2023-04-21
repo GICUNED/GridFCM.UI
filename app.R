@@ -22,31 +22,37 @@ source("Servers/import_excel_servers.R")
 
 theme <- create_theme(
   bs4dash_status(
-    primary = "#095540", danger = "#BF616A", light = "#272c30"
+    primary = "#095540", danger = "#BF616A", light = "#272c30", success = "#13906d"
   )
 )
 
 ui <- dashboardPage(
+
   freshTheme = theme,
   # menu,
   dashboardHeader(
 
     tags$head(
     tags$link(rel = "stylesheet", type = "text/css", href = "customization.css"),
-    tags$script(type = "text/javascript", src = "script.js"),
 
     ),
   title = tags$a(href='https://www.uned.es/', target ="_blank", class = "logocontainer", tags$img(src='LogoUNED.svg',height='56',width='', class = "logoimg"))),
   dashboardSidebar(
+    
     sidebarMenu(
       id = "sidebar-principal",
-      menuItem("Inicio", href = route_link("/"), icon = icon("home"), newTab = FALSE),
-      menuItem("User", href = route_link("user_home"), icon = icon("house-user"), newTab = FALSE),
-      menuItem("Import", href = route_link("import"), icon = icon("file-arrow-up"), newTab = FALSE),
-      menuItem("Import Excel", href = route_link("excel"), icon = icon("file-excel"), newTab = FALSE)
+      div(id="incio-page", class = "nav-item incio-page", menuItem("Inicio", href = route_link("/"), icon = icon("home"), newTab = FALSE)),
+      div(id="user-page", class = "nav-item user-page" , menuItem("User", href = route_link("user_home"), icon = icon("house-user"), newTab = FALSE)),
+      div(id="import-page", class = "nav-item import-page", menuItem("Import", href = route_link("import"), icon = icon("file-arrow-up"), newTab = FALSE)),
+      div(id="excel-page", class = "nav-item excel-page", menuItem("Import Excel", href = route_link("excel"), icon = icon("file-excel"), newTab = FALSE))
+      
     )
   ),
   dashboardBody(
+
+    # Clase active de selección para la navegación de páginas
+    tags$script(src = "activescript.js"),
+
     # router_ui(router),
     useShinyjs(),
     router_ui(
@@ -55,12 +61,17 @@ ui <- dashboardPage(
       route("another", another_page),
       route("user_home", user_home_ui), # Página user.home
       route("import", import_ui),
-      route("excel", import_excel_ui)
+      route("excel", import_excel_ui),
+      page_404 = page404(shiny::tags$div(h1("Error 404",class = "pagetitlecustom"),img(src='LogoUNED_error404.svg',height='300',width='', class = "logoimg404"), h3("Página no encontrada.", class = "pagesubtitlecustom",status = 'danger'), column(12, class="d-flex mb-4 justify-content-center", actionButton("volver_a_inicio", "Volver a Inicio", status = 'danger', icon = icon("arrow-left"), class = "mt-3"))))
     )
   )
 )
-
 server <- function(input, output, session) {
+
+   observeEvent(input$volver_a_inicio, {
+    runjs("window.location.href = '/#!/';")
+  })
+  
   router_server()
 
   home_server(input, output, session)

@@ -4,3 +4,12 @@ user_home_ui <-  div(
     column(12, class="d-flex mb-4 justify-content-center", actionButton("crear_nuevo", "Nuevo análisis de rejilla", status = 'success', icon = icon("plus"))),
     tableOutput("rejillas_anteriores")
   )
+
+observeEvent(input$ROUTE_PATH, {
+    route_path <- input$ROUTE_PATH
+    if (route_path == "/") {
+      updateTabItems(session, "sidebar", "page1", selected = TRUE)
+    } else if (route_path == "/user_home") {
+      updateTabItems(session, "sidebar", "page2", selected = TRUE)
+    }
+  })
