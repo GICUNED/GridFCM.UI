@@ -12,7 +12,13 @@ userHome_server <- function(input, output, session) {
   output$rejillas_anteriores <- renderTable({
     req(rejillas())
     rejillas()
-  })
+  },
+    striped = TRUE,
+    bordered = TRUE,
+    hover = TRUE,
+    spacing = 'm',
+    width = "80%",
+  )
 
   observeEvent(input$crear_nuevo, {
     # Navega a la página de creación de un nuevo análisis de rejilla

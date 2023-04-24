@@ -1,0 +1,151 @@
+@import url('https://fonts.googleapis.com/css2?family=Titillium+Web:wght@400;600&display=swap');
+
+
+* {font-family: 'Titillium Web', sans-serif;}
+
+.content{
+  margin-inline: 22px;
+}
+
+.btn-primary:focus{
+  background-color: #005440;
+  border-color: #00795d;
+}
+
+.btn-primary{
+  background-color: #005440;
+  border-color: #00795d;
+}
+
+.link{
+  color: #28a745;
+}
+
+.link:hover{
+  color: #47d367 !important;
+}
+
+.nav-link.active{
+  color: #fff;
+  background-color: #13906d !important;
+  box-shadow: 0 0 3px #13906d;
+}
+
+.pagetitlecustom{
+  font-family: 'Titillium Web Semibold', sans-serif;
+  text-align: center;
+}
+
+.pagesubtitlecustom{
+  font-family: 'Titillium Web', sans-serif;
+  text-align: center;
+}
+
+#rejillas_anteriores{
+  display: flex;
+  justify-content: center;
+
+}
+
+.input-group-btn{
+margin: 0 !important;
+}
+
+#archivo_repgrid_progress{
+  display: none;
+}
+
+.desccustom{
+  text-align: center;
+}
+
+.content-wrapper{
+    padding-block: 22px;
+}
+
+
+#contrasena::placeholder{
+  font-size: 6px;
+}
+
+.custom-control{
+
+  margin-block: 0 !important ;
+
+}
+
+.navbar::before {
+  content:"GridCFM";
+  display: block;
+  position: absolute;
+  top: 10px;
+  font-size: 24px;
+  left: 0;
+  width: 100%;
+  font-weight: bolder;
+  text-align: center;
+}
+
+.logocontainer{
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.logoimg{
+  width: 100%;
+  object-fit: cover;
+}
+
+.logoimg404{
+  width: 100%;
+  margin-block: 2rem;
+  object-fit: contain;
+}
+
+.brand-link {
+  font-family: 'Titillium Web Semibold', sans-serif;
+}
+
+.card-title{
+  font-weight: 600 !important;
+}
+.card-title i{
+  margin-right: 4px !important;
+}
+
+.btn i{
+  margin-right: 4px !important;
+}
+
+.skin-blue .main-header .navbar {
+  background-color: #005440;
+}
+
+.skin-blue .main-header .logo {
+  background-color: #45CE98;
+  color: #0A0A0A;
+}
+
+/* Personalizar el color del cuadro de inicio de sesión */
+#login_box.box.box-primary {
+  border-top-color: #45CE98;
+  background-color: #BFE9D8;
+}
+
+#login_box.box.box-primary > h3,
+#login_box.box.box-primary > p {
+  color: #0A0A0A;
+}
+
+
+[class*="sidebar-dark-"] .nav-pills .nav-link:not(.active):hover {
+
+background-color: rgba(255,255,255,0.1);
+color: #fff;
+}
+
+[class*="sidebar-light-"] .nav-pills .nav-link:not(.active):hover {
+  background-color: rgba(0,0,0,0.1);
+  color: #212529;
+}
