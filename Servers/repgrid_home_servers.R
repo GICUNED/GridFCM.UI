@@ -5,7 +5,7 @@ repgrid_home_server <- function(input, output, session) {
   # output$tabla_datos_repgrid <- renderTable({#session$userData$datos_repgrid() # a <- OpenRepGrid::importExcel("Servers/Repgrid_data.xlsx")a})
   datos <- OpenRepGrid::importExcel("Servers/Repgrid_data.xlsx")
   #datos <- datos$data
-  datos <- as.data.frame(datos@data)
+  datos <- NULL
 
 
   output$tabla_datos_repgrid <- DT::renderDataTable({

@@ -1,16 +1,13 @@
 library(shiny)
 library(shinyjs)
 library(shiny.router)
-<<<<<<< HEAD
 library(shinydashboard)
 library(OpenRepGrid)
 library(toastui)
 library(DT)
 
-=======
 library(bs4Dash)
 library(fresh)
->>>>>>> design
 
 source("global.R")
 
@@ -40,19 +37,17 @@ source("Servers/import_servers.R")
 source("Servers/import_excel_servers.R")
 source("Servers/repgrid_home_servers.R")
 
-<<<<<<< HEAD
 menu <- tags$ul(
   tags$li(a(class = "item", href = route_link(""), "Inicio")),
   tags$li(a(class = "item", href = route_link("user_home"), "User")),
   tags$li(a(class = "item", href = route_link("import"), "Import")),
   tags$li(a(class = "item", href = route_link("excel"), "Import excel")),
-  tags$li(a(class = "item", href = route_link("repgrid"), "Repgrid home"))
-=======
+  tags$li(a(class = "item", href = route_link("repgrid"), "Repgrid home")))
+
 theme <- create_theme(
   bs4dash_status(
     primary = "#095540", danger = "#BF616A", light = "#272c30", success = "#13906d"
   )
->>>>>>> design
 )
 
 ui <- dashboardPage(
@@ -91,11 +86,8 @@ ui <- dashboardPage(
       route("user_home", user_home_ui), # Página user.home
       route("import", import_ui),
       route("excel", import_excel_ui),
-<<<<<<< HEAD
-      route("repgrid", repgrid_home_ui)
-=======
+      route("repgrid", repgrid_home_ui),
       page_404 = page404(shiny::tags$div(h1("Error 404",class = "pagetitlecustom"),img(src='LogoUNED_error404.svg',height='300',width='', class = "logoimg404"), h3("Página no encontrada.", class = "pagesubtitlecustom",status = 'danger'), column(12, class="d-flex mb-4 justify-content-center", actionButton("volver_a_inicio", "Volver a Inicio", status = 'danger', icon = icon("arrow-left"), class = "mt-3"))))
->>>>>>> design
     )
   )
 )
