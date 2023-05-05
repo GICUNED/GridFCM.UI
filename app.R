@@ -5,9 +5,16 @@ library(shinydashboard)
 library(OpenRepGrid)
 library(toastui)
 library(DT)
-
+library(openxlsx)
 library(bs4Dash)
 library(fresh)
+library(rgl)
+library(knitr)
+library(kableExtra)
+
+knitr::knit_hooks$set(webgl = hook_webgl)
+
+
 
 source("global.R")
 
@@ -28,6 +35,9 @@ source("UI/inicio_page_ui.R")
 source("UI/import_ui.R")
 source("UI/import_excel_ui.R")
 source("UI/repgrid_home_ui.R")
+source("UI/repgrid_analysis_ui.R")
+source("UI/repgrid_ui.R")
+
 # SERVERS
 source("Servers/home_page_server_observers.R")
 source("Servers/another_page_server_observers.R")
@@ -36,6 +46,10 @@ source("Servers/inicio_page_servers.R")
 source("Servers/import_servers.R")
 source("Servers/import_excel_servers.R")
 source("Servers/repgrid_home_servers.R")
+source("Servers/repgrid_analysis_server.R")
+source("Servers/repgrid_server.R")
+
+
 
 menu <- tags$ul(
   tags$li(a(class = "item", href = route_link(""), "Inicio")),
@@ -50,6 +64,8 @@ theme <- create_theme(
   )
 )
 
+
+
 ui <- dashboardPage(
 
   freshTheme = theme,
@@ -59,18 +75,21 @@ ui <- dashboardPage(
     tags$head(
     tags$link(rel = "stylesheet", type = "text/css", href = "customization.css"),
 
+
     ),
   title = tags$a(href='https://www.uned.es/', target ="_blank", class = "logocontainer", tags$img(src='LogoUNED.svg',height='56',width='', class = "logoimg"))),
   dashboardSidebar(
-    
+
     sidebarMenu(
       id = "sidebar-principal",
-      div(id="incio-page", class = "nav-item incio-page", menuItem("Inicio", href = route_link("/"), icon = icon("home"), newTab = FALSE)),
-      div(id="user-page", class = "nav-item user-page" , menuItem("User", href = route_link("user_home"), icon = icon("house-user"), newTab = FALSE)),
-      div(id="import-page", class = "nav-item import-page", menuItem("Import", href = route_link("import"), icon = icon("file-arrow-up"), newTab = FALSE)),
-      div(id="excel-page", class = "nav-item excel-page", menuItem("Import Excel", href = route_link("excel"), icon = icon("file-excel"), newTab = FALSE))
-      
-    )
+    div(id="incio-page", class = "nav-item incio-page", menuItem("Inicio", href = route_link("/"), icon = icon("home"), newTab = FALSE)),
+    div(id="user-page", class = "nav-item user-page" , menuItem("User", href = route_link("user_home"), icon = icon("house-user"), newTab = FALSE)),
+    div(id="import-page", class = "nav-item import-page", menuItem("Import", href = route_link("import"), icon = icon("file-arrow-up"), newTab = FALSE)),
+    div(id="excel-page", class = "nav-item excel-page submenu-item", menuItem("Files", href = route_link("excel"), icon = icon("file-excel"), newTab = FALSE)),
+    div(id="from-page", class = "nav-item excel-page submenu-item", menuItem("Form", href = route_link("excel"), icon = icon("file-excel"), newTab = FALSE)),
+    div(id="repgrid-page", class = "nav-item excel-page", menuItem("Repgrid", href = route_link("repgrid"), icon = icon("file-excel"), newTab = FALSE))
+
+  )
   ),
   dashboardBody(
 
@@ -80,13 +99,15 @@ ui <- dashboardPage(
     # router_ui(router),
     useShinyjs(),
     router_ui(
-      route("/home", home_page),
-      route("/", inicio_ui),
-      route("another", another_page),
-      route("user_home", user_home_ui), # Página user.home
-      route("import", import_ui),
-      route("excel", import_excel_ui),
-      route("repgrid", repgrid_home_ui),
+      route("/home", home_page,server=home_server),
+      route("/", inicio_ui,server=inicio_server),
+      route("another", another_page,server=another_server),
+      route("user_home", user_home_ui,server=userHome_server), # Página user.home
+      route("import", import_ui,server=import_server),
+      route("excel", import_excel_ui,server=import_excel_server),
+      #route("repgrid", repgrid_home_ui),
+      route("repgrid", repgrid_ui,server=repgrid_server),
+      #route("repgrid-analisis", repgrid_analysis_ui),
       page_404 = page404(shiny::tags$div(h1("Error 404",class = "pagetitlecustom"),img(src='LogoUNED_error404.svg',height='300',width='', class = "logoimg404"), h3("Página no encontrada.", class = "pagesubtitlecustom",status = 'danger'), column(12, class="d-flex mb-4 justify-content-center", actionButton("volver_a_inicio", "Volver a Inicio", status = 'danger', icon = icon("arrow-left"), class = "mt-3"))))
     )
   )
@@ -96,7 +117,7 @@ server <- function(input, output, session) {
    observeEvent(input$volver_a_inicio, {
     runjs("window.location.href = '/#!/';")
   })
-  
+
   router_server()
 
   home_server(input, output, session)
@@ -106,7 +127,12 @@ server <- function(input, output, session) {
   import_server(input, output, session)
   import_excel_server(input,output,session)
   repgrid_home_server(input,output,session)
+  repgrid_analisis_server(input,output,session)
+  repgrid_server(input,output,session)
 }
+
+
+
 
 
 shinyApp(ui, server)

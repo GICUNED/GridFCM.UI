@@ -6,6 +6,8 @@ import_excel_server <- function(input, output, session) {
     datos_repgrid <- if (!is.null(input$archivo_repgrid)) {
       OpenRepGrid::importExcel(input$archivo_repgrid$datapath)
     }
+    session$userData$datos_to_table<- read.xlsx(input$archivo_repgrid$datapath)
+
     print(datos_repgrid)
     datos_wimpgrid <- if (!is.null(input$archivo_wimpgrid)) {
       importwimp(input$archivo_wimpgrid$datapath)

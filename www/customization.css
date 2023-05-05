@@ -149,3 +149,20 @@ color: #fff;
   background-color: rgba(0,0,0,0.1);
   color: #212529;
 }
+
+
+/*revisar*/
+.submenu-item {
+  padding-left: 30px;
+}
+
+
+.my-custom-table.dataTable thead th {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  white-space: nowrap;
+  text-align: left;
+  height: 80px;
+  vertical-align: bottom;
+  padding: 5px;
+}
