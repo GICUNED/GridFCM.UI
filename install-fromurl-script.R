@@ -14,8 +14,10 @@ package_urls <- c(
   "https://github.com/rstudio/shiny/archive/v1.7.4.tar.gz",
   "https://github.com/rstudio/shinydashboard/archive/v0.7.2.tar.gz",
   "https://github.com/ycphs/openxlsx/archive/83271527bc83cfe7b72c04a23c5de47cd18e1773.tar.gz",
-  "https://github.com/yihui/knitr/archive/v1.42.tar.gz"
+  "https://github.com/yihui/knitr/archive/v1.42.tar.gz",
+  "https://github.com/jrowen/rhandsontable/archive/refs/tags/v0.3.8.tar.gz"
 )
+#devtools::install_github("jrowen/rhandsontable")
 
 # Instalar paquetes desde URL
 lapply(package_urls, remotes::install_url)

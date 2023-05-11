@@ -8,7 +8,8 @@ repgrid_analysis_ui <- fluidPage(
                           "Análisis Tridimensional" = "biplot3d",
                           "Análisis por Conglomerados" = "cluster",
                           "Índices Cognitivos" = "gridindices",
-                          "Dilemas" = "dilem")),
+                          "Dilemas" = "dilem"
+                          )),
 
   # Mostrar el gráfico seleccionado usando conditionalPanel
   conditionalPanel(condition = "input.graph_selector == 'biplot2d'",

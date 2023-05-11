@@ -1,11 +1,11 @@
 repgrid_analisis_server <- function(input, output, session) {
 
   repgrid_data <- OpenRepGrid::importExcel("Servers/Repgrid_data.xlsx")
-  indices_list <- gridindices(boeker)
+  indices_list <- gridindices(repgrid_data)
   # Generar gráfico bidimensional
   output$biplot2d_plot <- renderPlot({
-   
-    OpenRepGrid::biplot2d(repgrid_data, c.label.col = "#005440")
+    
+    OpenRepGrid::biplot2d(repgrid_data, c.label.col = "#005440",c.grid = "gray", c.grid.lty = "dotted", c.grid.lwd = 0.5, cex.axis = 0.8, cex.labels = 0.8,)
   })
 
   # Generar gráfico tridimensional
@@ -77,7 +77,7 @@ repgrid_analisis_server <- function(input, output, session) {
 
   output$constructs <- renderText({
     
-    INTc <- indices_list[["dilemmas"]][["congruency"]] 
+    INTc <- indices_list[["dilemmas"]][["Constructs"]] #Constructs congruency
 
     knitr::kable(INTc, col.names = "Intensity",format = "html") %>%
     kable_styling("striped", full_width = F) %>%
@@ -88,7 +88,7 @@ repgrid_analisis_server <- function(input, output, session) {
 
   output$dilemmasss <- renderText({
     
-    INTc <- indices_list[["dilemmas"]][["dilemmas"]] 
+    INTc <- indices_list[["dilemmas"]][["Elements"]] #dilemmas
 
     knitr::kable(INTc, col.names = "Intensity",format = "html") %>%
     kable_styling("striped", full_width = F) %>%

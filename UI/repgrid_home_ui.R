@@ -8,11 +8,12 @@ repgrid_home_ui <- fluidPage(
   #tableOutput("tabla_datos_repgrid"),
   actionButton("editar", "Editar"),
   actionButton("guardar", "Guardar", style = "display: none;"),
+  actionButton("reiniciar", "Reiniciar", style = "display: none;"),
   
   shinyjs::hidden(
     div(id = "tabla_datos_repgrid_container",
       # Mostrar los datos de tabla_datos_repgrid
-      DT::dataTableOutput("tabla_datos_repgrid")
+      rHandsontableOutput("tabla_datos_repgrid")
     )
   ),
 

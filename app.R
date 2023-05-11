@@ -11,6 +11,7 @@ library(fresh)
 library(rgl)
 library(knitr)
 library(kableExtra)
+library(rhandsontable)
 
 knitr::knit_hooks$set(webgl = hook_webgl)
 
@@ -99,14 +100,14 @@ ui <- dashboardPage(
     # router_ui(router),
     useShinyjs(),
     router_ui(
-      route("/home", home_page,server=home_server),
-      route("/", inicio_ui,server=inicio_server),
-      route("another", another_page,server=another_server),
-      route("user_home", user_home_ui,server=userHome_server), # Página user.home
-      route("import", import_ui,server=import_server),
-      route("excel", import_excel_ui,server=import_excel_server),
+      route("/home", home_page),
+      route("/", inicio_ui),
+      route("another", another_page),
+      route("user_home", user_home_ui,), # Página user.home
+      route("import", import_ui),
+      route("excel", import_excel_ui),
       #route("repgrid", repgrid_home_ui),
-      route("repgrid", repgrid_ui,server=repgrid_server),
+      route("repgrid", repgrid_ui),
       #route("repgrid-analisis", repgrid_analysis_ui),
       page_404 = page404(shiny::tags$div(h1("Error 404",class = "pagetitlecustom"),img(src='LogoUNED_error404.svg',height='300',width='', class = "logoimg404"), h3("Página no encontrada.", class = "pagesubtitlecustom",status = 'danger'), column(12, class="d-flex mb-4 justify-content-center", actionButton("volver_a_inicio", "Volver a Inicio", status = 'danger', icon = icon("arrow-left"), class = "mt-3"))))
     )
