@@ -3,7 +3,7 @@ version: "3.9"
 services:
 
   shiny-server:
-    image: "repo.stratebi.com/stratebi/shiny-server:v1.5.20.1002-3"
+    image: "repo.stratebi.com/stratebi/shiny-server:v1.5.20.1002-4"
     restart: "on-failure:3"
     networks:
       - "shiny-server"
