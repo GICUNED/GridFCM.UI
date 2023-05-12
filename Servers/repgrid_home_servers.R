@@ -73,7 +73,8 @@ observeEvent(input$tabla_datos_repgrid, {
 
     # Extract the scores from the data frame
     scores <- as.vector(as.matrix(my_dataframe[1:22,2:14]))
-
+    print("scores: ")
+    print(scores)
     # Create the args list
     args <- list(
       name = element_names,
