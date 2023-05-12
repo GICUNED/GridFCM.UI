@@ -19,5 +19,6 @@ package_urls <- c(
 )
 #devtools::install_github("jrowen/rhandsontable")
 
-# Instalar paquetes desde URL
-lapply(package_urls, remotes::install_url)
+for (url in package_urls) {
+  remotes::install_url(url)
+}
