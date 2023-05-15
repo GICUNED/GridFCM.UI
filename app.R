@@ -127,9 +127,10 @@ server <- function(input, output, session) {
   userHome_server(input, output, session)
   import_server(input, output, session)
   import_excel_server(input,output,session)
+  repgrid_server(input,output,session)
   repgrid_home_server(input,output,session)
   repgrid_analisis_server(input,output,session)
-  repgrid_server(input,output,session)
+  
 }
 
 
