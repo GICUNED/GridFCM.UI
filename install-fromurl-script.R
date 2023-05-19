@@ -18,7 +18,7 @@ package_urls <- c(
   "https://github.com/jrowen/rhandsontable/archive/refs/tags/v0.3.8.tar.gz"
 )
 #devtools::install_github("jrowen/rhandsontable")
-
+#remotes::install_url(https://github.com/markheckmann/OpenRepGrid/archive/refs/tags/v0.0.14.tar.gz)
 for (url in package_urls) {
   remotes::install_url(url)
 }

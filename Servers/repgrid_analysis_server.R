@@ -120,14 +120,18 @@ repgrid_analisis_server <- function(input, output, session) {
     INTc <- indices_list[["dilemmas"]][["Dilemmas"]] #dilemmas
     INTc <- indexDilemma(repgrid_data,self=1,ideal=13, diff.congruent = 1, diff.discrepant = 4)
     print("dilemmmmmmmm")
-    #print(INTc$dilemmas_df)
+    print(INTc$dilemmas_df)
     dilemmas_df <- INTc$dilemmas_df
+    
     if (nrow(dilemmas_df) > 0) {
+
       dilemmas_df <- dilemmas_df %>% select(-id_c, -id_d)
       dilemmas_df$R <- round(dilemmas_df$R, 2) # digits
       ii <- str_detect(dilemmas_df$RexSI, "\\.")
       dilemmas_df$RexSI[ii] <- as.character(round(as.numeric(dilemmas_df$RexSI[ii]), digits))
+      
       print(dilemmas_df)
+      
       knitr::kable(dilemmas_df,format = "html") %>%
       #knitr::kable(INTc, col.names = "Intensity",format = "html") %>%
       kable_styling("striped", full_width = F) %>%

@@ -5,32 +5,33 @@ repgrid_home_server <- function(input, output, session) {
     #}
   #session$userData$datos_to_table<- read.xlsx("Servers/Repgrid_data.xlsx")
   print("Repgrid")
-  print(session$userData$datos_to_repgrid)
+  print(session$userData$datos_repgrid)
   if (is.null(session$userData$datos_repgrid) || is.null(session$userData$datos_to_table)) {
-    datos_control <- 0
-    datos_control_table <- 0
+    repgrid_aux <- 0
+    tabla_aux <- 0
   }else{
-    datos_control <- session$userData$datos_repgrid
-    datos_control_table <- session$userData$datos_to_table
+    repgrid_aux <- session$userData$datos_repgrid
+    tabla_aux <- session$userData$datos_to_table
   }
 
-  datos_initial <- reactiveVal(datos_control)
-  datos_show <- reactiveVal(datos_control)
-  datos_change <- reactiveVal(datos_control_table)
-  #datos_change <- session$userData$datos_to_table
-  datos_table_final <- datos_control_table
+  repgrid_inicial <- reactiveVal(repgrid_aux)
+  repgrid_a_mostrar <- reactiveVal(repgrid_aux)
+
+  tabla_manipulable <- reactiveVal(tabla_aux)
+  #tabla_manipulable <- session$userData$datos_to_table
+  tabla_final <- tabla_aux
   
   #output$tabla_datos_repgrid <- DT::renderDataTable({
-  #  DT::datatable(datos_change, 
+  #  DT::datatable(tabla_manipulable, 
   #                class = 'my-custom-table', 
   #                options = list(autoWidth = TRUE, columnDefs = list(list(width = '30px', targets = "_all"))), editable = TRUE)
   #})
 
   output$tabla_datos_repgrid <- renderRHandsontable({
   if (!is.null(session$userData$datos_repgrid)) {
-  print("datos_change:")
-  print(datos_change)
-  rhandsontable(datos_change()) %>%
+  print("tabla_manipulable:")
+  print(tabla_manipulable)
+  rhandsontable(tabla_manipulable()) %>%
     hot_table(highlightCol = TRUE, highlightRow = TRUE) %>%
   hot_col(c(1,7), readOnly = TRUE)
   }
@@ -38,13 +39,13 @@ repgrid_home_server <- function(input, output, session) {
 
 observeEvent(input$tabla_datos_repgrid, {
   if (!is.null(session$userData$datos_repgrid)) {
-    datos_change(hot_to_r(input$tabla_datos_repgrid))
-    #datos_change <- datos_change
+    tabla_manipulable(hot_to_r(input$tabla_datos_repgrid))
+    #tabla_manipulable <- tabla_manipulable
 }})
 
-  output$prueba <- renderPlot({
+output$bert <- renderPlot({
     if (!is.null(session$userData$datos_repgrid)) {
-    bertin(datos_show() , color=c("white", "#005440"))
+    bertin(repgrid_a_mostrar() , color=c("white", "#005440"))
     }
   })
 
@@ -57,7 +58,7 @@ observeEvent(input$tabla_datos_repgrid, {
   
   #print(paste("Fila:", row, "Columna:", col, "Valor:", value))
   
-  #datos_change$data[row, col] <- value  
+  #tabla_manipulable$data[row, col] <- value  
   #})
 
   observeEvent(input$editar, {
@@ -74,13 +75,13 @@ observeEvent(input$tabla_datos_repgrid, {
 
   observeEvent(input$reiniciar, {
     if (!is.null(session$userData$datos_repgrid)) {
-    datos_change(datos_table_final)
-    #session$userData$datos_repgrid <- datos_change()
-    #session$userData$datos_to_table<- datos_table_final
+    tabla_manipulable(tabla_final)
+    #session$userData$datos_repgrid <- tabla_manipulable()
+    #session$userData$datos_to_table<- tabla_final
 
-    datos_table_final <- datos_change()
-    print("datos_table_final: ")
-    my_dataframe <-datos_table_final
+    tabla_final <- tabla_manipulable()
+    print("tabla_final: ")
+    my_dataframe <-tabla_final
     print(my_dataframe[1:22,2:14])
     element_names <- colnames(my_dataframe)[2:14]
 
@@ -100,23 +101,46 @@ observeEvent(input$tabla_datos_repgrid, {
       scores = scores
     )
 
+
+    # Create a temporary file
+    temp_file <- tempfile(fileext = ".xlsx")
+
+
+    # Write the dataframe to the temporary file
+    write.xlsx(my_dataframe, temp_file)
+
+    print(paste("Temporary file saved at: ", temp_file))
+
+    # Read the data from the temporary file
+    df_read <- OpenRepGrid::importExcel(temp_file)
+
+    # Print the data
+    print(df_read)
+
+
+   
     # Create a repgrid object
-    my_repgrid <- makeRepgrid(args)
-     my_repgrid <- setScale(my_repgrid, 1,7)
+    #my_repgrid <- makeRepgrid(args)
+    #my_repgrid <- setScale(my_repgrid, minValue,maxValue)
+    my_repgrid <- df_read
+
+    # Create a repgrid object
+    #my_repgrid <- makeRepgrid(args)
+    #my_repgrid <- setScale(my_repgrid, 1,7)
     print(my_repgrid)
 
 
-    datos_show(my_repgrid)
-    session$userData$datos_repgrid <- datos_show()
-    session$userData$datos_to_table<- datos_table_final 
+    repgrid_a_mostrar(my_repgrid)
+    session$userData$datos_repgrid <- repgrid_a_mostrar()
+    session$userData$datos_to_table<- tabla_final 
 
   }})
 
   observeEvent(input$guardar, {
     if (!is.null(session$userData$datos_repgrid)) {
-    datos_table_final <- datos_change()
-    print("datos_table_final: ")
-    my_dataframe <-datos_table_final
+    tabla_final <- tabla_manipulable()
+    print("tabla_final: ")
+    my_dataframe <-tabla_final
     print(my_dataframe[1:22,2:14])
     element_names <- colnames(my_dataframe)[2:14]
 
@@ -136,15 +160,38 @@ observeEvent(input$tabla_datos_repgrid, {
       scores = scores
     )
 
+ 
+	  minValue <-min(unlist(scores), na.rm=TRUE) 
+	
+	  maxValue <-max(unlist(scores), na.rm=TRUE)  
+    
+    # Create a temporary file
+    temp_file <- tempfile(fileext = ".xlsx")
+
+
+    # Write the dataframe to the temporary file
+    write.xlsx(my_dataframe, temp_file)
+
+    print(paste("Temporary file saved at: ", temp_file))
+
+    # Read the data from the temporary file
+    df_read <- OpenRepGrid::importExcel(temp_file)
+
+    # Print the data
+    print(df_read)
+
+
+   
     # Create a repgrid object
-    my_repgrid <- makeRepgrid(args)
-     my_repgrid <- setScale(my_repgrid, 1,7)
+    #my_repgrid <- makeRepgrid(args)
+    #my_repgrid <- setScale(my_repgrid, minValue,maxValue)
+    my_repgrid <- df_read
     print(my_repgrid)
+   
 
-
-    datos_show(my_repgrid)
-    session$userData$datos_repgrid <- datos_show()
-    session$userData$datos_to_table<- datos_table_final             
+    repgrid_a_mostrar(my_repgrid)
+    session$userData$datos_repgrid <- repgrid_a_mostrar()
+    session$userData$datos_to_table<- tabla_final           
     # Ocultar el botón "Guardar" y mostrar el botón "Editar"
     shinyjs::hide("guardar")
     shinyjs::hide("reiniciar")

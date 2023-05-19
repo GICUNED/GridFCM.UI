@@ -19,7 +19,7 @@ repgrid_home_ui <- fluidPage(
 
   div(id = "prueba_container",
     # Mostrar los datos de prueba
-    plotOutput("prueba")
+    plotOutput("bert")
   ),
 
   # Agregar enlaces o botones para acceder a diferentes análisis

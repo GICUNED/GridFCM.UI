@@ -38,6 +38,7 @@ source("UI/import_excel_ui.R")
 source("UI/repgrid_home_ui.R")
 source("UI/repgrid_analysis_ui.R")
 source("UI/repgrid_ui.R")
+source("UI/wimpgrid_analysis_ui.R")
 
 # SERVERS
 source("Servers/home_page_server_observers.R")
@@ -49,6 +50,7 @@ source("Servers/import_excel_servers.R")
 source("Servers/repgrid_home_servers.R")
 source("Servers/repgrid_analysis_server.R")
 source("Servers/repgrid_server.R")
+source("Servers/wimpgrid_analysis_server.R")
 
 
 
@@ -57,7 +59,10 @@ menu <- tags$ul(
   tags$li(a(class = "item", href = route_link("user_home"), "User")),
   tags$li(a(class = "item", href = route_link("import"), "Import")),
   tags$li(a(class = "item", href = route_link("excel"), "Import excel")),
-  tags$li(a(class = "item", href = route_link("repgrid"), "Repgrid home")))
+  tags$li(a(class = "item", href = route_link("repgrid"), "Repgrid home")),
+  tags$li(a(class = "item", href = route_link("wimpgrid"), "Wimpgrid analysis"))
+)
+
 
 theme <- create_theme(
   bs4dash_status(
@@ -88,7 +93,8 @@ ui <- dashboardPage(
     div(id="import-page", class = "nav-item import-page", menuItem("Import", href = route_link("import"), icon = icon("file-arrow-up"), newTab = FALSE)),
     div(id="excel-page", class = "nav-item excel-page submenu-item", menuItem("Files", href = route_link("excel"), icon = icon("file-excel"), newTab = FALSE)),
     div(id="from-page", class = "nav-item excel-page submenu-item", menuItem("Form", href = route_link("excel"), icon = icon("file-excel"), newTab = FALSE)),
-    div(id="repgrid-page", class = "nav-item excel-page", menuItem("Repgrid", href = route_link("repgrid"), icon = icon("file-excel"), newTab = FALSE))
+    div(id="repgrid-page", class = "nav-item excel-page", menuItem("Repgrid", href = route_link("repgrid"), icon = icon("file-excel"), newTab = FALSE)),
+    div(id = "wimpgrid-page", class = "nav-item excel-page", menuItem("Wimpgrid", href = route_link("wimpgrid"), icon = icon("file-excel"), newTab = FALSE))
 
   )
   ),
@@ -108,6 +114,7 @@ ui <- dashboardPage(
       route("excel", import_excel_ui),
       #route("repgrid", repgrid_home_ui),
       route("repgrid", repgrid_ui),
+      route("wimpgrid", wimpgrid_analysis_ui),
       #route("repgrid-analisis", repgrid_analysis_ui),
       page_404 = page404(shiny::tags$div(h1("Error 404",class = "pagetitlecustom"),img(src='LogoUNED_error404.svg',height='300',width='', class = "logoimg404"), h3("Página no encontrada.", class = "pagesubtitlecustom",status = 'danger'), column(12, class="d-flex mb-4 justify-content-center", actionButton("volver_a_inicio", "Volver a Inicio", status = 'danger', icon = icon("arrow-left"), class = "mt-3"))))
     )
@@ -130,7 +137,7 @@ server <- function(input, output, session) {
   repgrid_server(input,output,session)
   repgrid_home_server(input,output,session)
   repgrid_analisis_server(input,output,session)
-  
+  wimpgrid_analysis_server(input, output, session)
 }
 
 
