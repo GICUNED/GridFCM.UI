@@ -16,7 +16,7 @@
 #' @examples
 
 
-importwimp <- function(path, sheet = 1){
+importwimp <- function(path, sheet = 1, opr = TRUE){
 
   wimp <- list()
   class(wimp) <- c("wimp","list")
@@ -54,7 +54,7 @@ importwimp <- function(path, sheet = 1){
 
   # Self vector -------------------------------------------------------------
   xlsx.scores <- as.numeric(as.matrix(xlsx[,1:n.constructs+1]))
-  direct.scores <- matrix(xlsx.scores,ncol=10,nrow=10)
+  direct.scores <- matrix(xlsx.scores,ncol=n.constructs,nrow=n.constructs)
   direct.self <- as.numeric(diag(direct.scores))
 
   standarized.self <- (direct.self - (scale.center * rep(1,n.constructs))) / (0.5 * (scale.max - scale.min))
@@ -114,10 +114,10 @@ importwimp <- function(path, sheet = 1){
   names(wimp$scores) <- c("direct","implications","weights")
 
   # OpenRepGrid adaptation --------------------------------------------------
-
+  if(opr == TRUE){
   openrepgrid.object <- OpenRepGrid::importExcel(path, sheetIndex = sheet)
   wimp$openrepgrid <- openrepgrid.object
-
+  }
   # Function return ---------------------------------------------------------
 
 
