@@ -1,14 +1,17 @@
 wimpgrid_analysis_server <- function(input, output, session) {
-  # Lógica para la pestaña "Visualización"
-  dataaa <- importwimp("WimpGrid_data.xlsx")
-  print(dataaa)
-  observeEvent(input$tab_visualizacion, {
+# Lógica para la pestaña "Visualización"
+dataaa <- importwimp("WimpGrid_data.xlsx")
+print(dataaa)
+ 
+observeEvent(input$tab_visualizacion, {
     # Variables para almacenar los cambios de los inputs
     selfdigraph_layout <- reactiveVal("circle")
     selfdigraph_vertex_size <- reactiveVal(1)
     selfdigraph_edge_width <- reactiveVal(1)
     selfdigraph_color <- reactiveVal("red/green")
-    
+    a <- selfdigraph(dataaa)
+    print(a)
+    print("2")
     idealdigraph_inc <- reactiveVal(FALSE)
     idealdigraph_layout <- reactiveVal("circle")
     idealdigraph_vertex_size <- reactiveVal(1)
@@ -66,20 +69,33 @@ wimpgrid_analysis_server <- function(input, output, session) {
     # Lógica para mostrar los resultados de selfdigraph()
     observeEvent(input$graph_selector_visualizacion, {
       graph <- input$graph_selector_visualizacion
-      output$graph_output_visualizacion <- renderPlot({
-        if (graph == "selfdigraph") {
-           a <- selfdigraph(dataaa, layout = selfdigraph_layout(), vertex.size = selfdigraph_vertex_size(),edge.width = selfdigraph_edge_width(), color = selfdigraph_color())
-           print(a)
-        } else if (graph == "idealdigraph") {
-          #idealdigraph(dataaa, inc = idealdigraph_inc(), layout = idealdigraph_layout(), vertex.size = idealdigraph_vertex_size(), edge.width = idealdigraph_edge_width(),color = idealdigraph_color())
-        } else if (graph == "wimpindices") {
-          #wimpindices(dataaa)
-        }
-      })
     })
+    
+    
+
+
   })
 
-  # Lógica para la pestaña "Laboratorio"
+# Definir la lógica del servidor para la aplicación
+output$graph_output_visualizacion <- renderPlot({
+  # Verificar que input$graph_selector_visualizacion no es NULL
+  req(input$graph_selector_visualizacion)
+
+  # Asignar el input a una variable
+  graph <- input$graph_selector_visualizacion
+
+  # Dependiendo de la selección del usuario, dibuja el gráfico correspondiente
+  if (graph == "selfdigraph") {
+    selfdigraph(dataaa, layout = selfdigraph_layout(), vertex.size = selfdigraph_vertex_size(),edge.width = selfdigraph_edge_width(), color = selfdigraph_color())
+  } else if (graph == "idealdigraph") {
+    idealdigraph(dataaa, inc = idealdigraph_inc(), layout = idealdigraph_layout(), vertex.size = idealdigraph_vertex_size(), edge.width = idealdigraph_edge_width(),color = idealdigraph_color())
+  } else if (graph == "wimpindices") {
+    wimpindices(dataaa)
+  }
+})
+
+
+# Lógica para la pestaña "Laboratorio"
 observeEvent(input$tab_laboratorio, {
       
   # Variables reactivas para almacenar los cambios de los inputs de simdigraph
@@ -249,15 +265,27 @@ observeEvent(input$tab_laboratorio, {
       # Lógica para mostrar los resultados de simdigraph()
       observeEvent(input$graph_selector_laboratorio, {
         graph <- input$graph_selector_laboratorio
-        output$graph_output_laboratorio <- renderPlot({
-          if (graph == "simdigraph") {
-            #simdigraph(dataaa, layout = simdigraph_layout(), vertex.size = simdigraph_vertex_size(),edge.width = simdigraph_edge_width(), color = simdigraph_color())
-          } else if (graph == "pcsd") {
-            #pcsd(dataaa, inc = pcsd_inc(), layout = pcsd_layout(), vertex.size = pcsd_vertex_size(),edge.width = pcsd_edge_width(), color = pcsd_color())
-          } else if (graph == "pcsdindices") {
-            #pcsdindices(dataaa)
-          }
-        })
       })
     })
+
+    # Definir la lógica del servidor para la aplicación
+
+output$graph_output_laboratorio <- renderPlot({
+  # Verificar que input$graph_selector_visualizacion no es NULL
+  req(input$graph_selector_laboratorio)
+
+  # Asignar el input a una variable
+  graph <- input$graph_selector_laboratorio
+
+  # Dependiendo de la selección del usuario, dibuja el gráfico correspondiente
+  if (graph == "simdigraph") {
+    simdigraph(dataaa, layout = simdigraph_layout(), vertex.size = simdigraph_vertex_size(),edge.width = simdigraph_edge_width(), color = simdigraph_color())
+  } else if (graph == "pcsd") {
+    pcsd(dataaa, inc = pcsd_inc(), layout = pcsd_layout(), vertex.size = pcsd_vertex_size(),edge.width = pcsd_edge_width(), color = pcsd_color())
+  } else if (graph == "pcsdindices") {
+    pcsdindices(dataaa)
   }
+})
+
+
+}

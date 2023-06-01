@@ -12,10 +12,10 @@ library(rgl)
 library(knitr)
 library(kableExtra)
 library(rhandsontable)
-
+library(shiny.i18n)
 knitr::knit_hooks$set(webgl = hook_webgl)
 
-#
+
 
 source("global.R")
 
@@ -54,6 +54,7 @@ source("Servers/wimpgrid_analysis_server.R")
 
 
 
+
 menu <- tags$ul(
   tags$li(a(class = "item", href = route_link(""), "Inicio")),
   tags$li(a(class = "item", href = route_link("user_home"), "User")),
@@ -73,57 +74,69 @@ theme <- create_theme(
 
 
 ui <- dashboardPage(
-
+  #shiny.i18n::usei18n(i18n),
   freshTheme = theme,
   # menu,
   dashboardHeader(
 
-    tags$head(
-    tags$link(rel = "stylesheet", type = "text/css", href = "customization.css"),
-
-
-    ),
-  title = tags$a(href='https://www.uned.es/', target ="_blank", class = "logocontainer", tags$img(src='LogoUNED.svg',height='56',width='', class = "logoimg"))),
-  dashboardSidebar(
-
-    sidebarMenu(
-      id = "sidebar-principal",
-    div(id="incio-page", class = "nav-item incio-page", menuItem("Inicio", href = route_link("/"), icon = icon("home"), newTab = FALSE)),
-    div(id="user-page", class = "nav-item user-page" , menuItem("User", href = route_link("user_home"), icon = icon("house-user"), newTab = FALSE)),
-    div(id="import-page", class = "nav-item import-page", menuItem("Import", href = route_link("import"), icon = icon("file-arrow-up"), newTab = FALSE)),
-    div(id="excel-page", class = "nav-item excel-page submenu-item", menuItem("Files", href = route_link("excel"), icon = icon("file-excel"), newTab = FALSE)),
-    div(id="from-page", class = "nav-item excel-page submenu-item", menuItem("Form", href = route_link("excel"), icon = icon("file-excel"), newTab = FALSE)),
-    div(id="repgrid-page", class = "nav-item excel-page", menuItem("Repgrid", href = route_link("repgrid"), icon = icon("file-excel"), newTab = FALSE)),
-    div(id = "wimpgrid-page", class = "nav-item excel-page", menuItem("Wimpgrid", href = route_link("wimpgrid"), icon = icon("file-excel"), newTab = FALSE))
-
-  )
+    tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "customization.css")),
+    tags$li(style = "padding: 10px;",div(class = 'language-selector',selectInput('selected_language',"Change language",choices = i18n$get_languages(),selected = i18n$get_key_translation()))),
+    title = tags$a(href='https://www.uned.es/', target ="_blank", class = "logocontainer", tags$img(src='LogoUNED.svg',height='56',width='', class = "logoimg"))
   ),
+  
+  
+  dashboardSidebar(
+    
+    sidebarMenu(
+        id = "sidebar-principal",
+        div(id="incio-page", class = "nav-item incio-page", menuItem("Inicio", href = route_link("/"), icon = icon("home"), newTab = FALSE)),
+        div(id="user-page", class = "nav-item user-page" , menuItem("User", href = route_link("user_home"), icon = icon("house-user"), newTab = FALSE)),
+        div(id="import-page", class = "nav-item import-page", menuItem("Import", href = route_link("import"), icon = icon("file-arrow-up"), newTab = FALSE)),
+        div(id="excel-page", class = "nav-item excel-page submenu-item", menuItem("Files", href = route_link("excel"), icon = icon("file-excel"), newTab = FALSE)),
+        div(id="from-page", class = "nav-item excel-page submenu-item", menuItem("Form", href = route_link("excel"), icon = icon("file-excel"), newTab = FALSE)),
+        div(id="repgrid-page", class = "nav-item excel-page", menuItem("Repgrid", href = route_link("repgrid"), icon = icon("file-excel"), newTab = FALSE)),
+        div(id = "wimpgrid-page", class = "nav-item excel-page", menuItem("Wimpgrid", href = route_link("wimpgrid"), icon = icon("file-excel"), newTab = FALSE))
+      )
+  ),
+      
+    
   dashboardBody(
+      usei18n(i18n),
+      # Clase active de selección para la navegación de páginas
+      tags$script(src = "activescript.js"),
+      #tags$script("function reloadPage() { location.reload(); }"),
 
-    # Clase active de selección para la navegación de páginas
-    tags$script(src = "activescript.js"),
-
-    # router_ui(router),
-    useShinyjs(),
-    router_ui(
-      route("/home", home_page),
-      route("/", inicio_ui),
-      route("another", another_page),
-      route("user_home", user_home_ui,), # Página user.home
-      route("import", import_ui),
-      route("excel", import_excel_ui),
-      #route("repgrid", repgrid_home_ui),
-      route("repgrid", repgrid_ui),
-      route("wimpgrid", wimpgrid_analysis_ui),
-      #route("repgrid-analisis", repgrid_analysis_ui),
-      page_404 = page404(shiny::tags$div(h1("Error 404",class = "pagetitlecustom"),img(src='LogoUNED_error404.svg',height='300',width='', class = "logoimg404"), h3("Página no encontrada.", class = "pagesubtitlecustom",status = 'danger'), column(12, class="d-flex mb-4 justify-content-center", actionButton("volver_a_inicio", "Volver a Inicio", status = 'danger', icon = icon("arrow-left"), class = "mt-3"))))
-    )
+      # router_ui(router),
+      useShinyjs(),
+      router_ui(
+        route("/home", home_page),
+        route("/", inicio_ui),
+        route("another", another_page),
+        route("user_home", user_home_ui), # Página user.home
+        route("import", import_ui),
+        route("excel", import_excel_ui),
+        #route("repgrid", repgrid_home_ui),
+        route("repgrid", repgrid_ui),
+        route("wimpgrid", wimpgrid_analysis_ui),
+        #route("repgrid-analisis", repgrid_analysis_ui),
+        page_404 = page404(shiny::tags$div(h1("Error 404",class = "pagetitlecustom"),img(src='LogoUNED_error404.svg',height='300',width='', class = "logoimg404"), h3("Página no encontrada.", class = "pagesubtitlecustom",status = 'danger'), column(12, class="d-flex mb-4 justify-content-center", actionButton("volver_a_inicio", "Volver a Inicio", status = 'danger', icon = icon("arrow-left"), class = "mt-3"))))
+      ) 
   )
 )
+
 server <- function(input, output, session) {
 
-   observeEvent(input$volver_a_inicio, {
+  observeEvent(input$volver_a_inicio, {
     runjs("window.location.href = '/#!/';")
+  })
+
+  observeEvent(input$selected_language, {
+    # This print is just for demonstration
+    print(paste("Language change!", input$selected_language))
+    # Here is where we update language in session
+    shiny.i18n::update_lang(input$selected_language)
+    i18n$set_translation_language(input$selected_language)
+
   })
 
   router_server()
@@ -137,7 +150,7 @@ server <- function(input, output, session) {
   repgrid_server(input,output,session)
   repgrid_home_server(input,output,session)
   repgrid_analisis_server(input,output,session)
-  wimpgrid_analysis_server(input, output, session)
+  #wimpgrid_analysis_server(input, output, session)
 }
 
 

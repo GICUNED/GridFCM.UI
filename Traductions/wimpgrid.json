@@ -1,0 +1,169 @@
+{
+  "languages": ["en", "es"],
+  "translation": [
+    {
+      "en": "Wimpgrid Analysis",
+      "es": "Análisis de Wimpgrid"
+    },
+    {
+      "en": "Visualization",
+      "es": "Visualización"
+    },
+    {
+      "en": "Select a graph:",
+      "es": "Seleccione un gráfico:"
+    },
+    {
+      "en": "selfdigraph",
+      "es": "autodigrafo"
+    },
+    {
+      "en": "idealdigraph",
+      "es": "digrafo ideal"
+    },
+    {
+      "en": "wimpindices",
+      "es": "índices de Wimp"
+    },
+    {
+      "en": "Layout:",
+      "es": "Diseño:"
+    },
+    {
+      "en": "circle",
+      "es": "círculo"
+    },
+    {
+      "en": "rtcircle",
+      "es": "rtcírculo"
+    },
+    {
+      "en": "tree",
+      "es": "árbol"
+    },
+    {
+      "en": "graphopt",
+      "es": "graphopt"
+    },
+    {
+      "en": "mds",
+      "es": "mds"
+    },
+    {
+      "en": "grid",
+      "es": "cuadrícula"
+    },
+    {
+      "en": "Tamaño de los vértices:",
+      "es": "Tamaño de los vértices:"
+    },
+    {
+      "en": "Ancho de las aristas:",
+      "es": "Ancho de las aristas:"
+    },
+    {
+      "en": "Paleta de colores:",
+      "es": "Paleta de colores:"
+    },
+    {
+      "en": "red/green",
+      "es": "rojo/verde"
+    },
+    {
+      "en": "grey scale",
+      "es": "escala de grises"
+    },
+    {
+      "en": "Ocultar relaciones directas",
+      "es": "Ocultar relaciones directas"
+    },
+    {
+      "en": "Laboratory",
+      "es": "Laboratorio"
+    },
+    {
+      "en": "simdigraph",
+      "es": "simdigrafo"
+    },
+    {
+      "en": "pcsd",
+      "es": "pcsd"
+    },
+    {
+      "en": "pcsdindices",
+      "es": "pcsdindices"
+    },
+    {
+      "en": "Número de la iteración:",
+      "es": "Número de la iteración:"
+    },
+    {
+      "en": "Archivo de entrada:",
+      "es": "Archivo de entrada:"
+    },
+    {
+      "en": "Vector de cambios:",
+      "es": "Vector de cambios:"
+    },
+    {
+      "en": "Función de propagación:",
+      "es": "Función de propagación:"
+    },
+    {
+      "en": "linear transform",
+      "es": "transformación lineal"
+    },
+    {
+      "en": "otra opción",
+      "es": "otra opción"
+    },
+    {
+      "en": "Función umbral:",
+      "es": "Función umbral:"
+    },
+    {
+      "en": "Número de iteraciones máximas:",
+      "es": "Número de iteraciones máximas:"
+    },
+    {
+      "en": "Valor diferencial:",
+      "es": "Valor diferencial:"
+    },
+    {
+      "en": "Número de iteraciones sin cambios:",
+      "es": "Número de iteraciones sin cambios:"
+    },
+    {
+      "en": "WimpGrid_data.xlsx",
+      "es": "WimpGrid_data.xlsx"
+    },
+    {
+      "en": "data.csv",
+      "es": "data.csv"
+    },
+    {
+      "en": "datos.txt",
+      "es": "datos.txt"
+    },
+    {
+      "en": "Cambios a simular:",
+      "es": "Cambios a simular:"
+    },
+    {
+      "en": "sigmoid transform",
+      "es": "transformación sigmoide"
+    },
+    {
+      "en": "exponential transform",
+      "es": "transformación exponencial"
+    },
+    {
+      "en": "sigmoid",
+      "es": "sigmoide"
+    },
+    {
+      "en": "exponential",
+      "es": "exponencial"
+    }
+  ]
+}
