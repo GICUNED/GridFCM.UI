@@ -1,72 +1,100 @@
+//botón de Inicio
+
 $('#incio-page').find('.nav-link').addClass('active');
+
 $('#incio-page').on('click', function () {
+  
+      $('.nav-pills')
+        .find('.nav-link')
+        .removeClass('active');
+
       $(this)
-          .find('.nav-link')
-         .addClass('active');
-  
-      $('#user-page')
         .find('.nav-link')
-        .removeClass('active');
-  
-      $('#import-page')
-        .find('.nav-link')
-        .removeClass('active');
-  
-      $('#excel-page')
-        .find('.nav-link')
-        .removeClass('active');
+        .addClass('active');
+
   });
-  
+
+//botón de User
+
   $('#user-page').on('click', function () {
+
+      $('.nav-pills')
+        .find('.nav-link')
+        .removeClass('active');
+
       $(this)
-          .find('.nav-link')
-         .addClass('active');
-  
-      $('#incio-page')
         .find('.nav-link')
-        .removeClass('active');
-  
-      $('#import-page')
-        .find('.nav-link')
-        .removeClass('active');
-  
-      $('#excel-page')
-        .find('.nav-link')
-        .removeClass('active');
+        .addClass('active');
   });
+  
+  //botón de Import
   
   $('#import-page').on('click', function () {
+
+      $('.nav-pills')
+        .find('.nav-link')
+        .removeClass('active');
+
       $(this)
           .find('.nav-link')
          .addClass('active');
-  
-      $('#user-page')
-        .find('.nav-link')
-        .removeClass('active');
-  
-      $('#incio-page')
-        .find('.nav-link')
-        .removeClass('active');
-  
-      $('#excel-page')
-        .find('.nav-link')
-        .removeClass('active');
+
   });
-  
+
+    //botón de Files
+
   $('#excel-page').on('click', function () {
-      $(this)
-          .find('.nav-link')
-         .addClass('active');
-  
-      $('#user-page')
+
+    $('.nav-pills')
         .find('.nav-link')
         .removeClass('active');
+
+    $(this)
+        .find('.nav-link')
+       .addClass('active')
+       .addClass('sub');
+})
+
+//botón de Form
+
+$('#form-page').on('click', function () {
+
+  $('.nav-pills')
+      .find('.nav-link')
+      .removeClass('active');
+
+  $(this)
+      .find('.nav-link')
+     .addClass('active')
+     .addClass('sub');
+})
+
+
   
-      $('#import-page')
+//botón de Repgrid
+
+  $('#repgrid-page').on('click', function () {
+
+    $('.nav-pills')
         .find('.nav-link')
         .removeClass('active');
-  
-      $('#incio-page')
+
+    $(this)
         .find('.nav-link')
-        .removeClass('active');
-  })
+       .addClass('active');
+})
+
+//botón de Repgrid
+
+$('#wimpgrid-page').on('click', function () {
+
+  $('.nav-pills')
+      .find('.nav-link')
+      .removeClass('active');
+
+  $(this)
+      .find('.nav-link')
+     .addClass('active');
+})
+  
+  

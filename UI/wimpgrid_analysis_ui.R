@@ -4,7 +4,7 @@ wimpgrid_analysis_ui <- fluidPage(
     h1(i18n$t("Wimpgrid Analysis")),
 
     tabsetPanel(
-      tabPanel(i18n$t("Visualization"), id = "tab_visualizacion",
+      tabPanel(i18n$t("Visualization"), id = "tab_visualizacion", icon = icon("square-poll-vertical"),
         selectInput("graph_selector_visualizacion",
                     i18n$t("Select a graph:"),
                     choices = c(i18n$t("selfdigraph"), i18n$t("idealdigraph"), i18n$t("wimpindices"))),
@@ -31,7 +31,7 @@ wimpgrid_analysis_ui <- fluidPage(
         ),
         plotOutput("graph_output_visualizacion")
       ),
-      tabPanel(i18n$t("Laboratory"), id = "tab_laboratorio",
+      tabPanel(i18n$t("Laboratory"), id = "tab_laboratorio", icon = icon("square-poll-vertical"),
         selectInput("graph_selector_laboratorio",
                     i18n$t("Select a graph:"),
                     choices = c(i18n$t("simdigraph"), i18n$t("pcsd"), i18n$t("pcsdindices"))),

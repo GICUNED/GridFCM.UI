@@ -1,6 +1,10 @@
 repgrid_analysis_ui <- fluidPage(
-  h1("Análisis de RepGrid"),
+  
+  fluidRow( class = ("flex-container-xl border-divider"),
 
+    h2("Análisis de RepGrid", class = "pagetitlecustom mt-4 mb-4"),
+
+    column(12, class = ("input-container"),
   # Agregar un selectInput para elegir el gráfico a mostrar
   selectInput("graph_selector",
               "Seleccione un gráfico:",
@@ -9,22 +13,45 @@ repgrid_analysis_ui <- fluidPage(
                           "Análisis por Conglomerados" = "cluster",
                           "Índices Cognitivos" = "gridindices",
                           "Dilemas" = "dilem"
-                          )),
+                          )), 
+    ),
+  ),
 
   # Mostrar el gráfico seleccionado usando conditionalPanel
-  conditionalPanel(condition = "input.graph_selector == 'biplot2d'",
-                   h3("Análisis Bidimensional"),
-                   plotOutput("biplot2d_plot")),
-  conditionalPanel(condition = "input.graph_selector == 'biplot3d'",
-                   h3("Análisis Tridimensional"),
-                   rglwidgetOutput("biplot3d_plot")),
-  conditionalPanel(condition = "input.graph_selector == 'cluster'",
-                   h3("Análisis por Conglomerados"),
+    conditionalPanel(condition = "input.graph_selector == 'biplot2d'",
+      fluidRow(class = "flex-container-sm",
+        icon("arrow-up-right-dots", class = "mt-4"),
+        h4("Análisis Bidimensional", class = "pagetitle2custom mt-2 mb-2")
+      ),
+
+      fluidRow(class = "flex-container-sm",
+        plotOutput("biplot2d_plot")
+        )
+      ),
+
+    conditionalPanel(condition = "input.graph_selector == 'biplot3d'",
+      fluidRow(class = "flex-container-sm",
+        icon("cube", class = "mt-4"),
+        h4("Análisis Tridimensional", class = "pagetitle2custom mt-2 mb-2"),
+        p("Haz click y arrastra para Interactuar.",  class = "desccustom-hint mb-2")
+    ),
+
+      fluidRow(class = "flex-container-sm",
+        rglwidgetOutput("biplot3d_plot")
+      )
+    ),
+
+    conditionalPanel(condition = "input.graph_selector == 'cluster'",
+      fluidRow(class = "flex-container-sm",
+        icon("network-wired", class = "mt-4"),
+        h4("Análisis por Conglomerados", class = "pagetitle2custom mt-2 mb-2")
+    ),
+
                  fluidRow(
                    # Primer gráfico de cluster
                    column(
                      12,
-                     h3("Constructs"),
+                     h4("Constructs", class = "pagesubtitlecustom mb-4"),
                      plotOutput("cluster_plot_1")
                    )
                  ),
@@ -32,25 +59,35 @@ repgrid_analysis_ui <- fluidPage(
                    # Segundo gráfico de cluster
                    column(
                      12,
-                     h3("Elements"),
+                     h4("Elements", class = "pagesubtitlecustom mt-4 mb-4"),
                      plotOutput("cluster_plot_2")
                    )
                  )
                    ),
-  conditionalPanel(condition = "input.graph_selector == 'gridindices'",
-                   h3("Índices y Valores Matemáticos"),
+    conditionalPanel(condition = "input.graph_selector == 'gridindices'",
+                    fluidRow(class = "flex-container-sm",
+                      icon("brain", class = "mt-4"),
+                      h4("Índices Cognitivos", class = "pagetitle2custom mt-2 mb-2")
+                    ),
+                   fluidRow(class = "table-container",
+                      h4("Índices y Valores Matemáticos", class = "pagesubtitlecustom mt-4 mb-4"),
+                      htmlOutput("gridindices_table")),
                    fluidRow(
-                     htmlOutput("gridindices_table")),
-                   fluidRow(
-                     column(6, h4("Intensidad de Constructos"), htmlOutput("construct")),
-                     column(6, h4("Intensidad de Elementos"), htmlOutput("elementss"))
+                     column(6, h4("Intensidad de Constructos", class = "pagesubtitlecustom mt-4 mb-4"), 
+                     fluidRow(class = "table-container", htmlOutput("construct"))),
+                     column(6, h4("Intensidad de Elementos", class = "pagesubtitlecustom mt-4 mb-4"), 
+                     fluidRow(class = "table-container", htmlOutput("elementss")))
                    )),
-  conditionalPanel(condition = "input.graph_selector == 'dilem'",
-                   h3("Índices y Valores Matemáticos"),
+    conditionalPanel(condition = "input.graph_selector == 'dilem'",
+                  fluidRow(class = "flex-container-sm",
+                      icon("calculator", class = "mt-4"),
+                      h4("Índices y Valores Matemáticos", class = "pagetitle2custom mt-2 mb-2")
+                  ),
                    
                    fluidRow(
-                     column(6, h4("Congruent/Discrepant Constructs"), htmlOutput("constructs")),
-                     column(6, h4("Dilemmas"), htmlOutput("dilemmasss"))
+                     column(6, h4("Congruent/Discrepant Constructs", class = "pagesubtitlecustom mt-4 mb-4"), htmlOutput("constructs")),
+                     column(6, h4("Dilemmas", class = "pagesubtitlecustom mt-4 mb-4"), htmlOutput("dilemmasss"))
                    ))
+  
 
 )

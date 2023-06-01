@@ -6,6 +6,16 @@ import_server <- function(input, output, session) {
     # Navegar a la página de importación de datos desde archivo xlsx
     # route_link("nombre_de_la_pagina_de_importacion_xlsx")
     runjs("window.location.href = '/#!/excel';")
+    runjs("
+    $('.nav-pills')
+      .find('.nav-link')
+      .removeClass('active');
+
+    $('#excel-page')
+      .find('.nav-link')
+      .addClass('active')
+      .addClass('sub');
+  ")
   })
 
   observeEvent(input$importar_formulario, {

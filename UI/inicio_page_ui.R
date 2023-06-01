@@ -1,8 +1,8 @@
 inicio_ui <-  div(
 
-  h2("Inicia sesión para continuar", class = "pagetitlecustom mb-4 animated bounce"),
+  h2("Inicia sesión para continuar", class = "pagetitlecustom mb-4"),
         fluidRow(
-          column(7, class = "animated bounce",
+          column(7,
           box(
             id = "login_box",
             title = "Inicio de sesión",

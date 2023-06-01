@@ -69,7 +69,7 @@ repgrid_analisis_server <- function(input, output, session) {
     knitr::kable(data.frame(PVEFF,INT,CON,BIA),col.names = c("PVAFF","Intensity","Conflicts","BIAS"),format = "html") %>%
     kable_styling("striped", full_width = T) %>%
     row_spec(0, bold = T, color = "white", background = "#005440") %>%
-    column_spec(1, bold = T, color = "#005440", width = "25%") %>%
+    column_spec(1, bold = T, width = "25%") %>%
     column_spec(2, width = "25%") %>%
     column_spec(3, width = "25%") %>%
     column_spec(4, width = "25%")
@@ -83,7 +83,7 @@ repgrid_analisis_server <- function(input, output, session) {
     knitr::kable(INTc, col.names = "Intensity",format = "html") %>%
     kable_styling("striped", full_width = F) %>%
     row_spec(0, bold = T, color = "white", background = "#005440") %>%
-    column_spec(1, bold = T, color = "#005440")
+    column_spec(1, bold = T)
     
   })
 
@@ -94,7 +94,7 @@ repgrid_analisis_server <- function(input, output, session) {
     knitr::kable(INTe, col.names = "Intensity",format = "html") %>%
     kable_styling("striped", full_width = F) %>%
     row_spec(0, bold = T, color = "white", background = "#005440") %>%
-    column_spec(1, bold = T, color = "#005440")
+    column_spec(1, bold = T)
     
   })
 
@@ -110,7 +110,7 @@ repgrid_analisis_server <- function(input, output, session) {
     #knitr::kable(INTc, col.names = "Intensity",format = "html") %>%
     kable_styling("striped", full_width = F) %>%
     row_spec(0, bold = T, color = "white", background = "#005440") %>%
-    column_spec(1, bold = T, color = "#005440")
+    column_spec(1, bold = T)
     
   })
 
@@ -136,7 +136,7 @@ repgrid_analisis_server <- function(input, output, session) {
       #knitr::kable(INTc, col.names = "Intensity",format = "html") %>%
       kable_styling("striped", full_width = F) %>%
       row_spec(0, bold = T, color = "white", background = "#005440") %>%
-      column_spec(1, bold = T, color = "#005440")
+      column_spec(1, bold = T)
       #cat("\n\tR = Correlation including Self & Ideal")
       #cat("\n\tRexSI = Correlation excluding Self & Ideal")
       #cor.used <- ifelse(exclude, "RexSI", "R")

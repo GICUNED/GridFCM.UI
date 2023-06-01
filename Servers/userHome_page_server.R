@@ -24,6 +24,15 @@ userHome_server <- function(input, output, session) {
     # Navega a la página de creación de un nuevo análisis de rejilla
     # route_link("nombre_de_la_pagina_de_creacion")
     runjs("window.location.href = '/#!/import';")
+    runjs("
+      $('.nav-pills')
+        .find('.nav-link')
+        .removeClass('active');
+
+      $('#import-page')
+        .find('.nav-link')
+        .addClass('active');
+    ")
   })
 
 }
