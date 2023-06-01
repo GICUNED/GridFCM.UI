@@ -1,13 +1,21 @@
 #source("global.R")
 wimpgrid_analysis_ui <- fluidPage(
     #shiny.i18n::usei18n(i18n),
-    h1(i18n$t("Wimpgrid Analysis")),
-
+  
     tabsetPanel(
       tabPanel(i18n$t("Visualization"), id = "tab_visualizacion", icon = icon("square-poll-vertical"),
+
+      fluidRow( class = ("flex-container-xl border-divider"),
+        h2(i18n$t("WimpGrid Analysis"), class = "pagetitlecustom  mt-4"),
+        p("Esta página te permite...",  class = "desccustom mb-4"),
+
+        column(12, class = ("input-container"),
+        # Agregar un selectInput para elegir el gráfico a mostrar
         selectInput("graph_selector_visualizacion",
                     i18n$t("Select a graph:"),
                     choices = c(i18n$t("selfdigraph"), i18n$t("idealdigraph"), i18n$t("wimpindices"))),
+        ),
+      ),
         conditionalPanel(condition = "input.graph_selector_visualizacion == 'selfdigraph'",
                          selectInput("selfdigraph_layout", i18n$t("Layout:"),
                                      choices = c(i18n$t("circle"), i18n$t("rtcircle"), i18n$t("tree"), i18n$t("graphopt"), i18n$t("mds"), i18n$t("grid")),
@@ -31,10 +39,20 @@ wimpgrid_analysis_ui <- fluidPage(
         ),
         plotOutput("graph_output_visualizacion")
       ),
-      tabPanel(i18n$t("Laboratory"), id = "tab_laboratorio", icon = icon("square-poll-vertical"),
-        selectInput("graph_selector_laboratorio",
+      tabPanel(i18n$t("Laboratory"), id = "tab_laboratorio", icon = icon("flask-vial"),
+
+      fluidRow( class = ("flex-container-xl border-divider"),
+        h2(i18n$t("WimpGrid Analysis"), class = "pagetitlecustom  mt-4"),
+        p("Esta página te permite...",  class = "desccustom mb-4"),
+
+        column(12, class = ("input-container"),
+          # Agregar un selectInput para elegir el gráfico a mostrar
+          selectInput("graph_selector_laboratorio",
                     i18n$t("Select a graph:"),
                     choices = c(i18n$t("simdigraph"), i18n$t("pcsd"), i18n$t("pcsdindices"))),
+                ),
+        
+      ),
         conditionalPanel(
           condition = "input.graph_selector_laboratorio == 'simdigraph'",
               numericInput("simdigraph_niter", i18n$t("Iteration number:"), value = 0),

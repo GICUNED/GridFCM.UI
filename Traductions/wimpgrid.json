@@ -1,169 +1,169 @@
 {
-  "languages": ["en", "es"],
+  "languages": ["ENG", "ESP"],
   "translation": [
     {
-      "en": "Wimpgrid Analysis",
-      "es": "Análisis de Wimpgrid"
+      "ENG": "WimpGrid Analysis",
+      "ESP": "Análisis de WimpGrid"
     },
     {
-      "en": "Visualization",
-      "es": "Visualización"
+      "ENG": "Visualization",
+      "ESP": "Visualización"
     },
     {
-      "en": "Select a graph:",
-      "es": "Seleccione un gráfico:"
+      "ENG": "Select a graph:",
+      "ESP": "Seleccione un gráfico:"
     },
     {
-      "en": "selfdigraph",
-      "es": "autodigrafo"
+      "ENG": "selfdigraph",
+      "ESP": "autodigrafo"
     },
     {
-      "en": "idealdigraph",
-      "es": "digrafo ideal"
+      "ENG": "idealdigraph",
+      "ESP": "digrafo ideal"
     },
     {
-      "en": "wimpindices",
-      "es": "índices de Wimp"
+      "ENG": "wimpindices",
+      "ESP": "índices de Wimp"
     },
     {
-      "en": "Layout:",
-      "es": "Diseño:"
+      "ENG": "Layout:",
+      "ESP": "Diseño:"
     },
     {
-      "en": "circle",
-      "es": "círculo"
+      "ENG": "circle",
+      "ESP": "círculo"
     },
     {
-      "en": "rtcircle",
-      "es": "rtcírculo"
+      "ENG": "rtcircle",
+      "ESP": "rtcírculo"
     },
     {
-      "en": "tree",
-      "es": "árbol"
+      "ENG": "tree",
+      "ESP": "árbol"
     },
     {
-      "en": "graphopt",
-      "es": "graphopt"
+      "ENG": "graphopt",
+      "ESP": "graphopt"
     },
     {
-      "en": "mds",
-      "es": "mds"
+      "ENG": "mds",
+      "ESP": "mds"
     },
     {
-      "en": "grid",
-      "es": "cuadrícula"
+      "ENG": "grid",
+      "ESP": "cuadrícula"
     },
     {
-      "en": "Tamaño de los vértices:",
-      "es": "Tamaño de los vértices:"
+      "ENG": "Tamaño de los vértices:",
+      "ESP": "Tamaño de los vértices:"
     },
     {
-      "en": "Ancho de las aristas:",
-      "es": "Ancho de las aristas:"
+      "ENG": "Ancho de las aristas:",
+      "ESP": "Ancho de las aristas:"
     },
     {
-      "en": "Paleta de colores:",
-      "es": "Paleta de colores:"
+      "ENG": "Paleta de colores:",
+      "ESP": "Paleta de colores:"
     },
     {
-      "en": "red/green",
-      "es": "rojo/verde"
+      "ENG": "red/green",
+      "ESP": "rojo/verde"
     },
     {
-      "en": "grey scale",
-      "es": "escala de grises"
+      "ENG": "grey scale",
+      "ESP": "escala de grises"
     },
     {
-      "en": "Ocultar relaciones directas",
-      "es": "Ocultar relaciones directas"
+      "ENG": "Ocultar relaciones directas",
+      "ESP": "Ocultar relaciones directas"
     },
     {
-      "en": "Laboratory",
-      "es": "Laboratorio"
+      "ENG": "Laboratory",
+      "ESP": "Laboratorio"
     },
     {
-      "en": "simdigraph",
-      "es": "simdigrafo"
+      "ENG": "simdigraph",
+      "ESP": "simdigrafo"
     },
     {
-      "en": "pcsd",
-      "es": "pcsd"
+      "ENG": "pcsd",
+      "ESP": "pcsd"
     },
     {
-      "en": "pcsdindices",
-      "es": "pcsdindices"
+      "ENG": "pcsdindices",
+      "ESP": "pcsdindices"
     },
     {
-      "en": "Número de la iteración:",
-      "es": "Número de la iteración:"
+      "ENG": "Número de la iteración:",
+      "ESP": "Número de la iteración:"
     },
     {
-      "en": "Archivo de entrada:",
-      "es": "Archivo de entrada:"
+      "ENG": "Archivo de entrada:",
+      "ESP": "Archivo de entrada:"
     },
     {
-      "en": "Vector de cambios:",
-      "es": "Vector de cambios:"
+      "ENG": "Vector de cambios:",
+      "ESP": "Vector de cambios:"
     },
     {
-      "en": "Función de propagación:",
-      "es": "Función de propagación:"
+      "ENG": "Función de propagación:",
+      "ESP": "Función de propagación:"
     },
     {
-      "en": "linear transform",
-      "es": "transformación lineal"
+      "ENG": "linear transform",
+      "ESP": "transformación lineal"
     },
     {
-      "en": "otra opción",
-      "es": "otra opción"
+      "ENG": "otra opción",
+      "ESP": "otra opción"
     },
     {
-      "en": "Función umbral:",
-      "es": "Función umbral:"
+      "ENG": "Función umbral:",
+      "ESP": "Función umbral:"
     },
     {
-      "en": "Número de iteraciones máximas:",
-      "es": "Número de iteraciones máximas:"
+      "ENG": "Número de iteraciones máximas:",
+      "ESP": "Número de iteraciones máximas:"
     },
     {
-      "en": "Valor diferencial:",
-      "es": "Valor diferencial:"
+      "ENG": "Valor diferencial:",
+      "ESP": "Valor diferencial:"
     },
     {
-      "en": "Número de iteraciones sin cambios:",
-      "es": "Número de iteraciones sin cambios:"
+      "ENG": "Número de iteraciones sin cambios:",
+      "ESP": "Número de iteraciones sin cambios:"
     },
     {
-      "en": "WimpGrid_data.xlsx",
-      "es": "WimpGrid_data.xlsx"
+      "ENG": "WimpGrid_data.xlsx",
+      "ESP": "WimpGrid_data.xlsx"
     },
     {
-      "en": "data.csv",
-      "es": "data.csv"
+      "ENG": "data.csv",
+      "ESP": "data.csv"
     },
     {
-      "en": "datos.txt",
-      "es": "datos.txt"
+      "ENG": "datos.txt",
+      "ESP": "datos.txt"
     },
     {
-      "en": "Cambios a simular:",
-      "es": "Cambios a simular:"
+      "ENG": "Cambios a simular:",
+      "ESP": "Cambios a simular:"
     },
     {
-      "en": "sigmoid transform",
-      "es": "transformación sigmoide"
+      "ENG": "sigmoid transform",
+      "ESP": "transformación sigmoide"
     },
     {
-      "en": "exponential transform",
-      "es": "transformación exponencial"
+      "ENG": "exponential transform",
+      "ESP": "transformación exponencial"
     },
     {
-      "en": "sigmoid",
-      "es": "sigmoide"
+      "ENG": "sigmoid",
+      "ESP": "sigmoide"
     },
     {
-      "en": "exponential",
-      "es": "exponencial"
+      "ENG": "exponential",
+      "ESP": "exponencial"
     }
   ]
 }

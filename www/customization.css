@@ -152,7 +152,7 @@ margin: 0 !important;
   content:"GridCFM";
   display: block;
   position: absolute;
-  top: 10px;
+  top: 16px;
   font-size: 24px;
   left: 0;
   width: 100%;
@@ -272,12 +272,37 @@ margin: 0 !important;
 }
 
 .language-selector .form-group{
-  width: 80px;
+  display: flex;
+  width: 120px;
+  align-items: center;
   margin-bottom: 0 !important;
 }
 
-.language-selector{
-  display: flex;
+.language-selector .form-group label{
+  margin: 0 .2rem 0 0 !important;
+}
+
+.language-selector .form-group div{
+  width: 100%;
+}
+
+.language-selector .form-group div .selectize-control .selectize-input{
+  height: 34px;
+  margin: 0 0 0 .2rem;
+  padding: 6px;
+}
+
+.language-selector .form-group div .selectize-control{
+  height: 34px;
+}
+
+#selected_language-selectized{
+  display: none !important; 
+}
+
+
+.language-selector .form-group div .selectize-control .selectize-dropdown{
+  height: fit-content;
 }
 
 .selectize-input{
@@ -286,6 +311,14 @@ margin: 0 !important;
   height: 40px;
   margin-bottom: 0;
 }
+
+.selectize-input:hover{
+  background-color: #f5fdfa;
+}
+
+.dark-mode .selectize-input:hover{
+  background-color: #1e2322;
+} 
 
 .selectize-control{
   margin-bottom: 0;
