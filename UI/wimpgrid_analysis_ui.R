@@ -89,7 +89,15 @@ wimpgrid_analysis_ui <- fluidPage(
               numericInput("pcsdindices_e", i18n$t("Differential value:"), value = 0.0001),
               numericInput("pcsdindices_stop_iter", i18n$t("Number of iterations without changes:"), value = 3)
             ),
-        plotOutput("graph_output_laboratorio")
+
+      
+          div(id = "pscd_showw",
+            # Mostrar los datos de tabla_datos_repgrid
+            plotlyOutput("pscd_show")
+          ),
+        
+
+          div(id = "lab_showw",plotOutput("graph_output_laboratorio"))
       )
     )
   )

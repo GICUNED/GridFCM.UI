@@ -13,6 +13,9 @@ library(knitr)
 library(kableExtra)
 library(rhandsontable)
 library(shiny.i18n)
+library(igraph)
+library(plotly)
+library(stats)
 knitr::knit_hooks$set(webgl = hook_webgl)
 
 
@@ -83,10 +86,10 @@ ui <- dashboardPage(
     tags$li(style = "padding: 10px;",div(class = 'language-selector',selectInput('selected_language',"Change language",choices = i18n$get_languages(),selected = i18n$get_key_translation()))),
     title = tags$a(href='https://www.uned.es/', target ="_blank", class = "logocontainer", tags$img(src='LogoUNED.svg',height='56',width='', class = "logoimg"))
   ),
-  
-  
+
+
   dashboardSidebar(
-    
+
     sidebarMenu(
         id = "sidebar-principal",
         div(id="incio-page", class = "nav-item incio-page", menuItem("Inicio", href = route_link("/"), icon = icon("home"), newTab = FALSE)),
@@ -98,8 +101,8 @@ ui <- dashboardPage(
         div(id = "wimpgrid-page", class = "nav-item excel-page", menuItem("Wimpgrid", href = route_link("wimpgrid"), icon = icon("file-excel"), newTab = FALSE))
       )
   ),
-      
-    
+
+
   dashboardBody(
       usei18n(i18n),
       # Clase active de selección para la navegación de páginas
@@ -120,7 +123,7 @@ ui <- dashboardPage(
         route("wimpgrid", wimpgrid_analysis_ui),
         #route("repgrid-analisis", repgrid_analysis_ui),
         page_404 = page404(shiny::tags$div(h1("Error 404",class = "pagetitlecustom"),img(src='LogoUNED_error404.svg',height='300',width='', class = "logoimg404"), h3("Página no encontrada.", class = "pagesubtitlecustom",status = 'danger'), column(12, class="d-flex mb-4 justify-content-center", actionButton("volver_a_inicio", "Volver a Inicio", status = 'danger', icon = icon("arrow-left"), class = "mt-3"))))
-      ) 
+      )
   )
 )
 
@@ -150,7 +153,7 @@ server <- function(input, output, session) {
   repgrid_server(input,output,session)
   repgrid_home_server(input,output,session)
   repgrid_analisis_server(input,output,session)
-  #wimpgrid_analysis_server(input, output, session)
+  wimpgrid_analysis_server(input, output, session)
 }
 
 
