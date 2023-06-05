@@ -21,7 +21,7 @@ repgrid_home_ui <- fluidPage(
     )
   ),
 
-  div(id = "prueba_container",
+  div(class=("row"), id = "prueba_container",
     # Mostrar los datos de prueba
     plotOutput("bert")
   ),
