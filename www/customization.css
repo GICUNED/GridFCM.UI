@@ -199,6 +199,51 @@ margin: 0 !important;
   margin-bottom: 1rem;
 }
 
+.row{
+  max-width: 900px;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.reducirfix{margin-bottom: -0.1px;}
+
+.flex-container-resp{
+  display: flex;
+  max-width: 800px;
+  width: 80%;
+  gap: 1rem;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem auto;
+}
+
+.detail .form-group:first-child{
+  width: 100%;
+}
+
+.detail .form-group:first-child > div{
+  display: flex;
+  margin: auto;
+  max-width: 300px;
+}
+
+.detail .form-group:first-child > div > div > div{
+  width: 300px;
+}
+
+.detail .form-group:first-child > label{
+  text-align: center;
+  display: block;
+  margin-inline: auto;
+}
+
+.detail .form-group:first-child > div > label{
+margin: auto;
+}
+
+
 #biplot2d_plot{
   height: 1000px !important;
 }
@@ -322,6 +367,7 @@ margin: 0 !important;
 
 .selectize-control{
   margin-bottom: 0;
+  height: 40px;
   }
 
 .selectize-input .item{
