@@ -162,7 +162,7 @@ wimpgrid_analysis_ui <- fluidPage(
               numericInput("pcsdindices_stop_iter", i18n$t("Number of iterations without changes:"), value = 3)
             ),
 
-        plotOutput("graph_output_laboratorio")
+        #plotOutput("graph_output_laboratorio")
       
           div(id = "pscd_showw",
             # Mostrar los datos de tabla_datos_repgrid

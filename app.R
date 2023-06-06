@@ -113,95 +113,9 @@ ui <- dashboardPage(
         div(id="repgrid-page", class = "nav-item excel-page", menuItem("Repgrid", href = route_link("repgrid"), icon = icon("magnifying-glass-chart"), newTab = FALSE)),
         div(id = "wimpgrid-page", class = "nav-item excel-page", menuItem("Wimpgrid", href = route_link("wimpgrid"), icon = icon("chart-column"), newTab = FALSE))
       )
-    )),
-    title = tags$a(
-      href = 'https://www.uned.es/',
-      target = "_blank",
-      class = "logocontainer",
-      tags$img(
-        src = 'LogoUNED.svg',
-        height = '56',
-        width = '',
-        class = "logoimg"
-      )
-    )
-  ),
-  dashboardSidebar(
-    sidebarMenu(
-      div(
-        id = "incio-page",
-        class = "nav-item incio-page",
-        menuItem(
-          text = "Inicio",
-          icon = icon(name = "home"),
-          href = route_link(path = "/"),
-          newTab = FALSE
-        )
-      ),
-      div(
-        id = "user-page",
-        class = "nav-item user-page",
-        menuItem(
-          text = "User",
-          icon = icon(name = "house-user"),
-          href = route_link(path = "user_home"),
-          newTab = FALSE
-        )
-      ),
-      div(
-        id = "import-page",
-        class = "nav-item import-page",
-        menuItem(
-          text = "Import",
-          icon = icon(name = "file-arrow-up"),
-          href = route_link(path = "import"),
-          newTab = FALSE
-        )
-      ),
-      div(
-        id = "excel-page",
-        class = "nav-item excel-page submenu-item",
-        menuItem(
-          text = "Files",
-          icon = icon(name = "file-excel"),
-          href = route_link(path = "excel"),
-          newTab = FALSE
-        )
-      ),
-      div(
-        id = "from-page",
-        class = "nav-item excel-page submenu-item",
-        menuItem(
-          text = "Form",
-          icon = icon(name = "file-excel"),
-          href = route_link(path = "excel"),
-          newTab = FALSE
-        )
-      ),
-      div(
-        id = "repgrid-page",
-        class = "nav-item excel-page",
-        menuItem(
-          text = "Repgrid",
-          icon = icon(name = "file-excel"),
-          href = route_link(path = "repgrid"),
-          newTab = FALSE
-        )
-      ),
-      div(
-        id = "wimpgrid-page",
-        class = "nav-item excel-page",
-        menuItem(
-          text = "Wimpgrid",
-          icon = icon(name = "file-excel"),
-          href = route_link(path = "wimpgrid"),
-          newTab = FALSE
-        )
-      ),
-      id = "sidebar-principal"
-    )
-  ),
-  body = dashboardBody(
+    ),
+      
+  dashboardBody(
     usei18n(translator = i18n),
     tags$script(src = "activescript.js"),
     useShinyjs(),
