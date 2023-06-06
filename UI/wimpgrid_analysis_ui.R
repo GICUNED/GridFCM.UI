@@ -51,6 +51,17 @@ wimpgrid_analysis_ui <- fluidPage(
                          
         ),
 
+        conditionalPanel(condition = "input.graph_selector_visualizacion == 'wimpindices'",
+                        htmlOutput("dens"),
+                        DT::renderDataTable("distance"),
+                        
+                        titlePanel("Centralidad"),
+                        tabsetPanel(
+                            tabPanel("Degree", DT::dataTableOutput("table_degree")),
+                            tabPanel("Closeness", DT::dataTableOutput("table_closeness")),
+                            tabPanel("Betweenness", DT::dataTableOutput("table_betweenness"))
+                        ),
+                        DT::dataTableOutput(("inconsistences"))),
         plotOutput("graph_output_visualizacion")
         
       ),
@@ -152,6 +163,14 @@ wimpgrid_analysis_ui <- fluidPage(
             ),
 
         plotOutput("graph_output_laboratorio")
+      
+          div(id = "pscd_showw",
+            # Mostrar los datos de tabla_datos_repgrid
+            plotlyOutput("pscd_show")
+          ),
+        
+
+          div(id = "lab_showw",plotOutput("graph_output_laboratorio"))
       )
     )
   )

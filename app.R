@@ -1,6 +1,5 @@
 library(shiny)
 library(shinyjs)
-library(shiny.router)
 library(shinydashboard)
 library(OpenRepGrid)
 library(toastui)
@@ -12,6 +11,10 @@ library(rgl)
 library(knitr)
 library(kableExtra)
 library(rhandsontable)
+library(igraph)
+library(plotly)
+library(stats)
+library(shiny.router)
 library(shiny.i18n)
 knitr::knit_hooks$set(webgl = hook_webgl)
 
@@ -55,28 +58,41 @@ source("Servers/wimpgrid_analysis_server.R")
 
 
 
-menu <- tags$ul(
-  tags$li(a(class = "item", href = route_link(""), "Inicio")),
-  tags$li(a(class = "item", href = route_link("user_home"), "User")),
-  tags$li(a(class = "item", href = route_link("import"), "Import")),
-  tags$li(a(class = "item", href = route_link("excel"), "Import excel")),
-  tags$li(a(class = "item", href = route_link("repgrid"), "Repgrid home")),
-  tags$li(a(class = "item", href = route_link("wimpgrid"), "Wimpgrid analysis"))
-)
+menu <- tags$ul(tags$li(a(
+  class = "item", href = route_link(""), "Inicio"
+)),
+tags$li(a(
+  class = "item", href = route_link("user_home"), "User"
+)),
+tags$li(a(
+  class = "item", href = route_link("import"), "Import"
+)),
+tags$li(a(
+  class = "item", href = route_link("excel"), "Import excel"
+)),
+tags$li(a(
+  class = "item", href = route_link("repgrid"), "Repgrid home"
+)),
+tags$li(a(
+  class = "item",
+  href = route_link("wimpgrid"),
+  "Wimpgrid analysis"
+)))
 
 
 theme <- create_theme(
   bs4dash_status(
-    primary = "#095540", danger = "#BF616A", light = "#272c30", success = "#13906d"
+    primary = "#095540",
+    danger = "#BF616A",
+    light = "#272c30",
+    success = "#13906d"
   )
 )
 
 
 
 ui <- dashboardPage(
-  #shiny.i18n::usei18n(i18n),
   freshTheme = theme,
-  # menu,
   dashboardHeader(
 
     tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "customization.css")),
@@ -97,35 +113,141 @@ ui <- dashboardPage(
         div(id="repgrid-page", class = "nav-item excel-page", menuItem("Repgrid", href = route_link("repgrid"), icon = icon("magnifying-glass-chart"), newTab = FALSE)),
         div(id = "wimpgrid-page", class = "nav-item excel-page", menuItem("Wimpgrid", href = route_link("wimpgrid"), icon = icon("chart-column"), newTab = FALSE))
       )
+    )),
+    title = tags$a(
+      href = 'https://www.uned.es/',
+      target = "_blank",
+      class = "logocontainer",
+      tags$img(
+        src = 'LogoUNED.svg',
+        height = '56',
+        width = '',
+        class = "logoimg"
+      )
+    )
   ),
-      
-    
-  dashboardBody(
-      usei18n(i18n),
-      # Clase active de selección para la navegación de páginas
-      tags$script(src = "activescript.js"),
-      #tags$script("function reloadPage() { location.reload(); }"),
-
-      # router_ui(router),
-      useShinyjs(),
-      router_ui(
-        route("/home", home_page),
-        route("/", inicio_ui),
-        route("another", another_page),
-        route("user_home", user_home_ui), # Página user.home
-        route("import", import_ui),
-        route("excel", import_excel_ui),
-        #route("repgrid", repgrid_home_ui),
-        route("repgrid", repgrid_ui),
-        route("wimpgrid", wimpgrid_analysis_ui),
-        #route("repgrid-analisis", repgrid_analysis_ui),
-        page_404 = page404(shiny::tags$div(h1("Error 404",class = "pagetitlecustom"),img(src='LogoUNED_error404.svg',height='300',width='', class = "logoimg404"), h3("Página no encontrada.", class = "pagesubtitlecustom",status = 'danger'), column(12, class="d-flex mb-4 justify-content-center", actionButton("volver_a_inicio", "Volver a Inicio", status = 'danger', icon = icon("arrow-left"), class = "mt-3"))))
-      ) 
-  )
+  dashboardSidebar(
+    sidebarMenu(
+      div(
+        id = "incio-page",
+        class = "nav-item incio-page",
+        menuItem(
+          text = "Inicio",
+          icon = icon(name = "home"),
+          href = route_link(path = "/"),
+          newTab = FALSE
+        )
+      ),
+      div(
+        id = "user-page",
+        class = "nav-item user-page",
+        menuItem(
+          text = "User",
+          icon = icon(name = "house-user"),
+          href = route_link(path = "user_home"),
+          newTab = FALSE
+        )
+      ),
+      div(
+        id = "import-page",
+        class = "nav-item import-page",
+        menuItem(
+          text = "Import",
+          icon = icon(name = "file-arrow-up"),
+          href = route_link(path = "import"),
+          newTab = FALSE
+        )
+      ),
+      div(
+        id = "excel-page",
+        class = "nav-item excel-page submenu-item",
+        menuItem(
+          text = "Files",
+          icon = icon(name = "file-excel"),
+          href = route_link(path = "excel"),
+          newTab = FALSE
+        )
+      ),
+      div(
+        id = "from-page",
+        class = "nav-item excel-page submenu-item",
+        menuItem(
+          text = "Form",
+          icon = icon(name = "file-excel"),
+          href = route_link(path = "excel"),
+          newTab = FALSE
+        )
+      ),
+      div(
+        id = "repgrid-page",
+        class = "nav-item excel-page",
+        menuItem(
+          text = "Repgrid",
+          icon = icon(name = "file-excel"),
+          href = route_link(path = "repgrid"),
+          newTab = FALSE
+        )
+      ),
+      div(
+        id = "wimpgrid-page",
+        class = "nav-item excel-page",
+        menuItem(
+          text = "Wimpgrid",
+          icon = icon(name = "file-excel"),
+          href = route_link(path = "wimpgrid"),
+          newTab = FALSE
+        )
+      ),
+      id = "sidebar-principal"
+    )
+  ),
+  body = dashboardBody(
+    usei18n(translator = i18n),
+    tags$script(src = "activescript.js"),
+    useShinyjs(),
+    router_ui(
+      default = route(path = "/home",
+                      ui = home_page),
+      route(path = "/",
+            ui = inicio_ui),
+      route(path = "another",
+            ui = another_page),
+      route(path = "user_home",
+            ui = user_home_ui),
+      route(path = "import",
+            ui = import_ui),
+      route(path = "excel",
+            ui = import_excel_ui),
+      route(path = "repgrid",
+            ui = repgrid_ui),
+      route(path = "wimpgrid",
+            ui = wimpgrid_analysis_ui),
+      page_404 = page404(shiny::tags$div(
+        h1("Error 404", class = "pagetitlecustom"),
+        img(
+          src = 'LogoUNED_error404.svg',
+          height = '300',
+          width = '',
+          class = "logoimg404"
+        ),
+        h3("Página no encontrada.", class = "pagesubtitlecustom", status = 'danger'),
+        column(
+          12,
+          class = "d-flex mb-4 justify-content-center",
+          actionButton(
+            "volver_a_inicio",
+            "Volver a Inicio",
+            status = 'danger',
+            icon = icon("arrow-left"),
+            class = "mt-3"
+          )
+        )
+      ))
+    )
+  ),
 )
 
 server <- function(input, output, session) {
-
   observeEvent(input$volver_a_inicio, {
     runjs("window.location.href = '/#!/';")
   })
@@ -146,11 +268,11 @@ server <- function(input, output, session) {
   another_server(input, output, session)
   userHome_server(input, output, session)
   import_server(input, output, session)
-  import_excel_server(input,output,session)
-  repgrid_server(input,output,session)
-  repgrid_home_server(input,output,session)
-  repgrid_analisis_server(input,output,session)
-  #wimpgrid_analysis_server(input, output, session)
+  import_excel_server(input, output, session)
+  repgrid_server(input, output, session)
+  repgrid_home_server(input, output, session)
+  repgrid_analisis_server(input, output, session)
+  wimpgrid_analysis_server(input, output, session)
 }
 
 
