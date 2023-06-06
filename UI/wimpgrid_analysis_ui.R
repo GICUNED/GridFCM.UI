@@ -29,6 +29,17 @@ wimpgrid_analysis_ui <- fluidPage(
                                      choices = c(i18n$t("red/green"), i18n$t("grey scale")),
                                      selected = i18n$t("red/green"))
         ),
+        conditionalPanel(condition = "input.graph_selector_visualizacion == 'wimpindices'",
+                        htmlOutput("dens"),
+                        DT::renderDataTable("distance"),
+                        
+                        titlePanel("Centralidad"),
+                        tabsetPanel(
+                            tabPanel("Degree", DT::dataTableOutput("table_degree")),
+                            tabPanel("Closeness", DT::dataTableOutput("table_closeness")),
+                            tabPanel("Betweenness", DT::dataTableOutput("table_betweenness"))
+                        ),
+                        DT::dataTableOutput(("inconsistences"))),
         plotOutput("graph_output_visualizacion")
       ),
       tabPanel(i18n$t("Laboratory"), id = "tab_laboratorio",

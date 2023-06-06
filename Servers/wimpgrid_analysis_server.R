@@ -85,8 +85,47 @@ output$graph_output_visualizacion <- renderPlot({
   } else if (graph == "idealdigraph") {
     idealdigraph(dataaa, inc = idealdigraph_inc(), layout = idealdigraph_layout(), vertex.size = idealdigraph_vertex_size(), edge.width = idealdigraph_edge_width(),color = idealdigraph_color())
   } else if (graph == "wimpindices") {
-    wimpindices(dataaa)
+    print("wimpindices")
+    # Get column names
+    column_names <- names(wimpindices(dataaa))
+
+    # Print column names
+    cat("Columns:", paste(column_names, collapse = ", "))
+    print(wimpindices(dataaa)[["distance"]])
+        #wimpindices(dataaa)
   }
+})
+output$dens <- renderText({
+
+    INTe <- wimpindices(dataaa)[["density"]]
+    knitr::kable(INTe, col.names = "density",format = "html") %>%
+    kable_styling("striped", full_width = F) %>%
+    row_spec(0, bold = T, color = "white", background = "#005440") %>%
+    column_spec(1, bold = T, color = "#005440")
+})
+output$distance <- DT::renderDataTable({
+
+    INTe <- wimpindices(dataaa)[["distance"]]
+    DT::datatable(INTe)
+})
+centrality <- wimpindices(dataaa)[["centrality"]]
+
+  # Creamos las tablas dinámicas para cada subconjunto
+  output$table_degree <- DT::renderDataTable({
+    DT::datatable(centrality$degree)
+  })
+  
+  output$table_closeness <- DT::renderDataTable({
+    DT::datatable(centrality$closeness)
+  })
+  
+  output$table_betweenness <- DT::renderDataTable({
+    DT::datatable(centrality$betweenness)
+  })
+output$inconsistences <- DT::renderDataTable({
+
+    INTe <- wimpindices(dataaa)[["inconsistences"]]
+     DT::datatable(INTe)
 })
 
 # Variables reactivas para almacenar los cambios de los inputs de simdigraph
@@ -276,7 +315,7 @@ graph <- input$graph_selector_laboratorio
 print("grapfh selected in laboratory")
 print(graph)
 if (graph == "simdigraph") {
-   shinyjs::show("lab_showw")
+  shinyjs::show("lab_showw")
   shinyjs::hide("pscd_showw")
   sim_stop_it <- simdigraph_stop_iter()
   scn <- scenariomatrix(dataaa,act.vector= c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),infer = simdigraph_infer(),
@@ -314,8 +353,8 @@ output$pscd_show <- renderPlotly({
 graph <- input$graph_selector_laboratorio
   if (graph == "pcsd") {
 
-     shinyjs::hide("lab_showw")
-  shinyjs::show("pscd_showw")
+    shinyjs::hide("lab_showw")
+    shinyjs::show("pscd_showw")
   pscd_stop_it <- pscd_stop_iter()
   scn <- scenariomatrix(dataaa,act.vector= c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),infer = pscd_infer(),
                            thr = pscd_thr(), max.iter = pscd_max_iter(), e = pscd_e(),
@@ -325,7 +364,7 @@ graph <- input$graph_selector_laboratorio
    
   } else {
     shinyjs::show("lab_showw")
-  shinyjs::hide("pscd_showw")
+    shinyjs::hide("pscd_showw")
   }
 })
 
