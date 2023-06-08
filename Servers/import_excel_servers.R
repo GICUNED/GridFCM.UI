@@ -6,12 +6,13 @@ import_excel_server <- function(input, output, session) {
     datos_repgrid <- if (!is.null(input$archivo_repgrid)) {
       OpenRepGrid::importExcel(input$archivo_repgrid$datapath)
     }
-    session$userData$datos_to_table<- read.xlsx(input$archivo_repgrid$datapath)
+    session$userData$datos_to_table<- if (!is.null(input$archivo_repgrid)) {read.xlsx(input$archivo_repgrid$datapath)}
 
     print(datos_repgrid)
     datos_wimpgrid <- if (!is.null(input$archivo_wimpgrid)) {
       importwimp(input$archivo_wimpgrid$datapath)
     }
+    session$userData$datos_to_table_w<-if (!is.null(input$archivo_wimpgrid)) { read.xlsx(input$archivo_wimpgrid$datapath)}
 
     # Almacenar los objetos importados en el entorno de la sesión para su uso posterior
     session$userData$datos_repgrid <- datos_repgrid
@@ -32,6 +33,10 @@ import_excel_server <- function(input, output, session) {
     } else if (!is.null(datos_wimpgrid)) {
       # Solo archivo WimpGrid cargado, navegar a WimpGrid Home
       #
+      print("ok")
+      #print(session$userData$datos_repgrid)
+      wimpgrid_analysis_server(input,output,session)
+      runjs("window.location.href = '/#!/wimpgrid';")
     }
 
     

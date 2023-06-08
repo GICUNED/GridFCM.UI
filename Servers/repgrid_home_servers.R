@@ -31,9 +31,12 @@ repgrid_home_server <- function(input, output, session) {
   if (!is.null(session$userData$datos_repgrid)) {
   print("tabla_manipulable:")
   print(tabla_manipulable)
+  indicess <- c(1,2,3,4,5,6,7,8,9,10,11,12,13,14)
+
   rhandsontable(tabla_manipulable()) %>%
     hot_table(highlightCol = TRUE, highlightRow = TRUE) %>%
-  hot_col(c(1,7), readOnly = TRUE)
+      hot_col(col = indicess, format = "1")
+
   }
 })
 
