@@ -57,7 +57,6 @@ source("Servers/wimpgrid_analysis_server.R")
 
 
 
-
 menu <- tags$ul(tags$li(a(
   class = "item", href = route_link(""), "Inicio"
 )),
@@ -171,7 +170,7 @@ server <- function(input, output, session) {
     print(paste("Language change!", input$selected_language))
     # Here is where we update language in session
     shiny.i18n::update_lang(input$selected_language)
-    i18n$set_translation_language(input$selected_language)
+    #i18n$set_translation_language(shiny::getDefaultReactiveDomain()input$selected_language)
 
   })
 

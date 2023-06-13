@@ -24,7 +24,7 @@ output$tabla_datos_wimpgrid <- renderRHandsontable({
   if (!is.null(session$userData$datos_wimpgrid)) {
   print("tabla_manipulable_w:")
   print(tabla_manipulable_w())
-  
+
 indicess <- c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24)
 hot_table <- rhandsontable(tabla_manipulable_w()) %>%
     hot_table(highlightCol = TRUE, highlightRow = TRUE) %>%
@@ -74,6 +74,7 @@ observeEvent(input$reiniciar_w, {
     # Write the dataframe to the temporary file
     write.xlsx(my_dataframe, temp_file)
     print(paste("Temporary file saved at: ", temp_file))
+
     # Read the data from the temporary file
     df_read <- importwimp(temp_file)
     # Print the data
@@ -273,7 +274,7 @@ simdigraph_edge_width <- reactiveVal(1)
 simdigraph_color <- reactiveVal("red/green")
 
 simdigraph_wimp <- reactiveVal()
-simdigraph_act_vector <- reactiveVal(0)
+#simdigraph_act_vector <- reactiveVal(0)
 simdigraph_infer <- reactiveVal("linear transform")
 simdigraph_thr <- reactiveVal("linear")
 simdigraph_max_iter <- reactiveVal(30)
@@ -334,9 +335,9 @@ observeEvent(input$simdigraph_wimp, {
 })
 
 # Observer event para el input act.vector de simdigraph
-observeEvent(input$simdigraph_act_vector, {
-  simdigraph_act_vector(input$simdigraph_act_vector)
-})
+#observeEvent(input$simdigraph_act_vector, {
+  #simdigraph_act_vector(input$simdigraph_act_vector)
+#})
 
 # Observer event para el input infer de simdigraph
 observeEvent(input$simdigraph_infer, {
@@ -363,11 +364,34 @@ observeEvent(input$simdigraph_stop_iter, {
   simdigraph_stop_iter(input$simdigraph_stop_iter)
 })
 
-# Observer event para el input act.vector de pcsdindices
-observeEvent(input$pcsdindices_act_vector, {
-  act_vector(input$pcsdindices_act_vector)
+v <- rep(0, 22)
+df_V <- reactiveVal(as.data.frame(t(v)))
+
+output$simdigraph_act_vector <- renderRHandsontable({
+  vv <- df_V()
+ rhandsontable(vv )
 })
 
+observeEvent(input$simdigraph_act_vector, {
+  
+    vv <- (hot_to_r(input$simdigraph_act_vector))
+    df_V(vv)
+})
+
+# Observer event para el input act.vector de pcsdindices
+#v <- rep(0, 22)
+df_Vind <- reactiveVal(as.data.frame(t(v)))
+
+output$pcsdindices_act_vector <- renderRHandsontable({
+  vv <- df_Vind()
+ rhandsontable(vv )
+})
+
+observeEvent(input$pcsdindices_act_vector, {
+  
+    vv <- (hot_to_r(input$pcsdindices_act_vector))
+    df_Vind(vv)
+})
 # Observer event para el input infer de pcsdindices
 observeEvent(input$pcsdindices_infer, {
   infer(input$pcsdindices_infer)
@@ -405,10 +429,19 @@ observeEvent(input$pscd_wimp, {
 })
 
 # Observer event para el input act.vector de pscd
-observeEvent(input$pscd_act_vector, {
-  pscd_act_vector(input$pscd_act_vector)
+#v <- rep(0, 22)
+df_Vpcsd <- reactiveVal(as.data.frame(t(v)))
+
+output$pcsd_act_vector <- renderRHandsontable({
+  vv <- df_Vpcsd()
+ rhandsontable(vv )
 })
 
+observeEvent(input$pcsd_act_vector, {
+  
+    vv <- (hot_to_r(input$pcsd_act_vector))
+    df_Vpcsd(vv)
+})
 # Observer event para el input infer de pscd
 observeEvent(input$pscd_infer, {
   pscd_infer(input$pscd_infer)
@@ -454,7 +487,7 @@ if (graph == "simdigraph") {
   shinyjs::show("lab_showw")
   shinyjs::hide("pscd_showw")
   sim_stop_it <- simdigraph_stop_iter()
-  scn <- scenariomatrix(dataaa_w(),act.vector= c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),infer = simdigraph_infer(),
+  scn <- scenariomatrix(dataaa_w(),act.vector= df_V(),infer = simdigraph_infer(),
                            thr = simdigraph_thr(), max.iter = simdigraph_max_iter(), e = simdigraph_e(),
                            stop.iter = sim_stop_it)
   simdigraph(scn,niter=simdigraph_niter(), layout = simdigraph_layout(), vertex.size = simdigraph_vertex_size(),edge.width = simdigraph_edge_width(), color = simdigraph_color())

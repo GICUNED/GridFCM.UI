@@ -1,0 +1,13 @@
+{
+  "languages": ["ENG", "ESP"],
+  "translation": [
+    {
+      "ENG": "sigmoid",
+      "ESP": "sigmoide"
+    },
+    {
+      "ENG": "exponential",
+      "ESP": "exponencial"
+    }
+  ]
+}

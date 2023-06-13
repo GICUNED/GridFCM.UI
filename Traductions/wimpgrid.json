@@ -2,6 +2,10 @@
   "languages": ["ENG", "ESP"],
   "translation": [
     {
+      "ENG": "HOL Analysis",
+      "ESP": "HOL de WimpGrid"
+    },
+    {
       "ENG": "WimpGrid Analysis",
       "ESP": "Análisis de WimpGrid"
     },

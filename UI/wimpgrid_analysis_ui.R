@@ -1,3 +1,4 @@
+
 #source("global.R")
 wimpgrid_analysis_ui <- fluidPage(
   #shiny.i18n::usei18n(i18n),
@@ -113,7 +114,8 @@ wimpgrid_analysis_ui <- fluidPage(
           condition = "input.graph_selector_laboratorio == 'simdigraph'",
 
 
-            fileInput("simdigraph_wimp", i18n$t("Input file:"), accept = c(".xlsx")),
+            shinyjs::hidden(
+    div(id = "simdig_inp",fileInput("simdigraph_wimp", i18n$t("Input file:"), accept = c(".xlsx")))),
 
             selectInput("simdigraph_layout", i18n$t("Layout:"),
                           choices = c(i18n$t("circle"), i18n$t("rtcircle"), i18n$t("tree"), i18n$t("graphopt"), i18n$t("mds"), i18n$t("grid")),
@@ -133,7 +135,7 @@ wimpgrid_analysis_ui <- fluidPage(
 
               numericInput("simdigraph_stop_iter", i18n$t("Number of iterations without changes:"), value = 3),
 
-              numericInput("simdigraph_act_vector", i18n$t("Change vector:"), value = 0, step = 0.01),
+              #numericInput("simdigraph_act_vector", i18n$t("Change vector:"), value = 0, step = 0.01),
 
               selectInput("simdigraph_infer", i18n$t("Propagation function:"),
                           choices = c(i18n$t("linear transform"), i18n$t("another option")),
@@ -143,13 +145,14 @@ wimpgrid_analysis_ui <- fluidPage(
                           choices = c(i18n$t("linear"), i18n$t("another option")),
                           selected = i18n$t("linear")),
 
-              numericInput("simdigraph_e", i18n$t("Differential value:"), value = 0.0001)
+              numericInput("simdigraph_e", i18n$t("Differential value:"), value = 0.0001),
+              rHandsontableOutput("simdigraph_act_vector")
           ),
 
         conditionalPanel(class = ("flex-container-resp detail"),
           condition = "input.graph_selector_laboratorio == 'pcsd'",
 
-              fileInput("pcsd_wimp", i18n$t("Input file:"), accept = c(".xlsx")),
+              #fileInput("pcsd_wimp", i18n$t("Input file:"), accept = c(".xlsx")),
 
               numericInput("pcsd_iter", i18n$t("Iteration number:"), value = 0),
 
@@ -157,7 +160,7 @@ wimpgrid_analysis_ui <- fluidPage(
 
               numericInput("pcsd_stop_iter", i18n$t("Number of iterations without changes:"), value = 3),
 
-              numericInput("pcsd_act_vector", i18n$t("Change vector:"), value = 0, step = 0.01),
+              #numericInput("pcsd_act_vector", i18n$t("Change vector:"), value = 0, step = 0.01),
 
               selectInput("pcsd_infer", i18n$t("Propagation function:"),
                           choices = c(i18n$t("linear transform"), i18n$t("another option")),
@@ -169,13 +172,13 @@ wimpgrid_analysis_ui <- fluidPage(
 
 
               numericInput("pcsd_e", i18n$t("Differential value:"), value = 0.0001),
-
+              rHandsontableOutput("pcsd_act_vector")
              ),
 
         conditionalPanel(class = ("flex-container-resp detail"),
           condition = "input.graph_selector_laboratorio == 'pcsdindices'",
-              selectInput("pcsdindices_wimp", i18n$t("Input file:"),
-                          choices = c(i18n$t("WimpGrid_data.xlsx"), i18n$t("data.csv"), i18n$t("datos.txt"))),
+              #selectInput("pcsdindices_wimp", i18n$t("Input file:"),
+                          #choices = c(i18n$t("WimpGrid_data.xlsx"), i18n$t("data.csv"), i18n$t("datos.txt"))),
 
               selectInput("pcsdindices_infer", i18n$t("Propagation function:"),
                           choices = c(i18n$t("linear transform"), i18n$t("sigmoid transform"), i18n$t("binary transform")),
@@ -185,11 +188,13 @@ wimpgrid_analysis_ui <- fluidPage(
                           choices = c(i18n$t("linear"), i18n$t("sigmoid"), i18n$t("binary")),
                           selected = i18n$t("linear")),
 
-              numericInput("pcsdindices_act_vector", i18n$t("Changes to simulate:"),
-                          value = 0, step = 0.01),
+              #numericInput("pcsdindices_act_vector", i18n$t("Changes to simulate:"),
+              #            value = 0, step = 0.01),
               numericInput("pcsdindices_max_iter", i18n$t("Maximum number of iterations:"), value = 30),
               numericInput("pcsdindices_e", i18n$t("Differential value:"), value = 0.0001),
               numericInput("pcsdindices_stop_iter", i18n$t("Number of iterations without changes:"), value = 3),
+              rHandsontableOutput("pcsdindices_act_vector"),
+
               htmlOutput("convergence"),
               tabsetPanel(
                   tabPanel("Summary", DT::dataTableOutput("summary")),
