@@ -5,6 +5,16 @@ repgrid_home_ui <- fluidPage(
     h2("RepGrid Home", class = "pagetitlecustom  mt-4"),
     p("Esta página te permite visualizar y manipular los datos importados de RepGrid y acceder a diferentes tipos de análisis.",  class = "desccustom mb-2"),
   ),
+
+fluidRow(class="mb-4 mt-4 gap-2 justify-content-center error-help hidden",
+  column(12, class = "row flex-column justify-content-center",
+      icon("triangle-exclamation", "fa-2x"),
+      p("Para hacer el análisis es necesario importar un archivo o formulario. ",  class = "mt-2 mb-2"),
+    ),
+
+  column(12, class="d-flex justify-content-center", actionButton("crear_nuevo", "Importar Archivos", status = 'warning', icon = icon("file-lines"))),
+  ),
+
   # Mostrar los datos importados en una tabla
   #tableOutput("tabla_datos_repgrid"),
   fluidRow( class="mb-4 button-container",

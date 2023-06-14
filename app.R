@@ -95,17 +95,19 @@ ui <- dashboardPage(
   dashboardHeader(
 
     tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "customization.css")),
-    tags$li(style = "padding: 10px; list-style:none;",div(class = 'language-selector',selectInput('selected_language',"Idioma", choices = i18n$get_languages(),selected = i18n$get_key_translation()))),
-    title = tags$a(href='https://www.uned.es/', target ="_blank", class = "logocontainer", tags$img(src='LogoUNED.svg',height='56',width='', class = "logoimg"))
+    tags$li(style = "padding: 10px; list-style:none;",
+    div(class = 'language-selector',selectInput('selected_language',"Idioma", choices = i18n$get_languages(),selected = i18n$get_key_translation()))),
+    title = tags$a(href='https://www.uned.es/', target ="_blank", class = "logocontainer", 
+    tags$img(src='LogoUNED.svg',height='56',width='', class = "logoimg")),
+    div(id="user-page", class = "nav-item user-page user-page-btn" , menuItem("User", href = route_link("user_home"), icon = icon("house-user"), newTab = FALSE))    
   ),
-  
-  
+
+
   dashboardSidebar(
-    
+
     sidebarMenu(
         id = "sidebar-principal",
         div(id="incio-page", class = "nav-item incio-page", menuItem("Inicio", href = route_link("/"), icon = icon("home"), newTab = FALSE)),
-        div(id="user-page", class = "nav-item user-page" , menuItem("User", href = route_link("user_home"), icon = icon("house-user"), newTab = FALSE)),
         div(id="import-page", class = "nav-item import-page", menuItem("Import", href = route_link("import"), icon = icon("file-arrow-up"), newTab = FALSE)),
         div(id="excel-page", class = "nav-item excel-page submenu-item", menuItem("Files", href = route_link("excel"), icon = icon("file-excel"), newTab = FALSE)),
         div(id="form-page", class = "nav-item excel-page submenu-item", menuItem("Form", href = route_link("excel"), icon = icon("rectangle-list"), newTab = FALSE)),
@@ -113,7 +115,7 @@ ui <- dashboardPage(
         div(id = "wimpgrid-page", class = "nav-item excel-page", menuItem("Wimpgrid", href = route_link("wimpgrid"), icon = icon("chart-column"), newTab = FALSE))
       )
     ),
-      
+
   dashboardBody(
     usei18n(translator = i18n),
     tags$script(src = "activescript.js"),

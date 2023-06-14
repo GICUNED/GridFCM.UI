@@ -26,6 +26,11 @@ a{
   color: #095540;
 }
 
+ul
+{
+  list-style: none !important;
+}
+
 .dark-mode a{
   color: #fff;
 }
@@ -229,6 +234,7 @@ margin: 0 !important;
   max-width: 300px;
 }
 
+
 .detail .form-group:first-child > div > div > div{
   width: 300px;
 }
@@ -243,10 +249,72 @@ margin: 0 !important;
 margin: auto;
 }
 
+.error-help {
+  background-color: #eebfbf;
+  padding: 1rem;
+  border-radius: 1rem;
+  max-width: 500px;
+}
+
+.dark-mode .error-help {
+  background-color: #3b1a1a;
+}
+
+.error-help p {
+  text-align: center;
+  font-size: .9rem;
+  color: #8b0000;
+}
+
+.error-help  > div:first-child > i {
+  margin: auto;
+  color: #8b0000;
+}
+
+.dark-mode .error-help > div:first-child > i {
+  color: #d87272;
+}
+
+.dark-mode .error-help p{
+  color: #d87272;
+}
+
+
+.error-help div:nth-child(2) button{
+  background-color: #ffffff !important;
+  border-color: #acacac !important;
+}
+
+.error-help div:nth-child(2) button:hover{
+  background-color: #e2e2e2 !important;
+  border-color: #acacac !important;
+}
+
+.error-help div:nth-child(2) button:active{
+  background-color: #ffffff !important;
+  border-color: #acacac !important;
+}
 
 #biplot2d_plot{
   height: 1000px !important;
 }
+
+.hidden{
+  /*display: none;*/
+  display: none;
+}
+
+
+.shiny-output-error{
+text-align: center;
+color: #8b0000; 
+}
+
+.dark-mode  .shiny-output-error{
+  text-align: center;
+  color: #d87272;
+}
+
 
 .flex-container-xl{
   display: flex;
@@ -549,4 +617,29 @@ ul.nav.nav-tabs{
   height: 80px;
   vertical-align: bottom;
   padding: 5px;
+}
+
+.user-page-btn{
+position: absolute;
+right: 80px;
+border-radius: 1rem;
+padding: .2rem;
+overflow: hidden;
+}
+
+.user-page-btn li a{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+}
+
+.user-page-btn li a i{
+width: fit-content;
+margin: auto;
+}
+
+.user-page-btn li a p{
+  margin: 0 !important;
+  font-size: 12px;
 }

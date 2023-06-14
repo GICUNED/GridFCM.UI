@@ -18,11 +18,23 @@ repgrid_analysis_ui <- fluidPage(
   ),
 
   # Mostrar el gráfico seleccionado usando conditionalPanel
+
+  fluidRow(class="mb-4 mt-4 gap-2 justify-content-center error-help hidden",
+        column(12, class = "row flex-column justify-content-center",
+          icon("triangle-exclamation", "fa-2x"),
+          p("Para hacer el análisis es necesario importar un archivo o formulario. ",  class = "mt-2 mb-2"),
+        ),
+
+        column(12, class="d-flex justify-content-center", actionButton("crear_nuevo", "Importar Archivos", status = 'warning', icon = icon("file-lines"))),
+      ),
+      
     conditionalPanel(condition = "input.graph_selector == 'biplot2d'",
       fluidRow(class = "flex-container-sm",
         icon("arrow-up-right-dots", class = "mt-4"),
         h4("Análisis Bidimensional", class = "pagetitle2custom mt-2 mb-2")
       ),
+
+      
 
       fluidRow(class = "flex-container-sm",
         plotOutput("biplot2d_plot")
