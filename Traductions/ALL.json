@@ -14,7 +14,7 @@
         "ESP": "Username"
       },
       {
-        "ENG": "Contraseña",
+        "ENG": "Contrasena",
         "ESP": "Password"
       },
       {
@@ -264,7 +264,7 @@
       },
       {
         "ENG": "Layout:",
-        "ESP": "Diseño:"
+        "ESP": "Diseno:"
       },
       {
         "ENG": "circle",
@@ -304,7 +304,7 @@
       },
       {
         "ENG": "Vertex size:",
-        "ESP": "Tamaño de los vértices:"
+        "ESP": "Tamano de los vértices:"
       },
       {
         "ENG": "Edge width:",
