@@ -1,4 +1,6 @@
-import_excel_ui <-  div(
+import_excel_ui <-  fluidPage(
+     shiny.i18n::usei18n(i18n),
+div(
     h2("Importar datos desde archivo xlsx", class = "pagetitlecustom"),
     p("En esta página, puedes descargar plantillas de xlsx y documentos de ayuda, y subir archivos xlsx para importar datos.", class = "desccustom mb-3"),
 
@@ -31,4 +33,4 @@ import_excel_ui <-  div(
        a(icon("file-pdf"), "Documento de ayuda para WimpGrid", href = "ruta/al/archivo/ayuda_wimpgrid.pdf", target = "_blank", class = "link")
        ))
     )
-  )
+  ))

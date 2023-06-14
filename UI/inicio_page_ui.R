@@ -1,4 +1,7 @@
-inicio_ui <-  div(
+inicio_ui <- fluidPage( 
+  shiny.i18n::usei18n(i18n),
+  
+  div(
 
   h2("Inicia sesión para continuar", class = "pagetitlecustom mb-4"),
         fluidRow(
@@ -28,4 +31,4 @@ inicio_ui <-  div(
             p("Aquí se agregará más información sobre la aplicación y el método que se utiliza.")
           ))    
     )
-  )
+  ))

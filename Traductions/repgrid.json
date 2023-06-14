@@ -2,12 +2,100 @@
   "languages": ["ENG", "ESP"],
   "translation": [
     {
-      "ENG": "sigmoid",
-      "ESP": "sigmoide"
+      "ENG": "RepGrid Home",
+      "ESP": "Inicio de RepGrid"
     },
     {
-      "ENG": "exponential",
-      "ESP": "exponencial"
+      "ENG": "Esta página te permite visualizar y manipular los datos importados de RepGrid y acceder a diferentes tipos de análisis.",
+      "ESP": "This page allows you to view and manipulate the data imported from RepGrid and access different types of analysis."
+    },
+    {
+      "ENG": "Data Table",
+      "ESP": "Tabla de Datos"
+    },
+    {
+      "ENG": "Guardar",
+      "ESP": "Save"
+    },
+    {
+      "ENG": "Reiniciar",
+      "ESP": "Restart"
+    },
+    {
+      "ENG": "Editar",
+      "ESP": "Edit"
+    },
+    {
+      "ENG": "Análisis de RepGrid",
+      "ESP": "RepGrid Analysis"
+    },
+    {
+      "ENG": "Seleccione un gráfico:",
+      "ESP": "Select a graph:"
+    },
+    {
+      "ENG": "Análisis Bidimensional",
+      "ESP": "Two-Dimensional Analysis"
+    },
+    {
+      "ENG": "Análisis Tridimensional",
+      "ESP": "Three-Dimensional Analysis"
+    },
+    {
+      "ENG": "Análisis por Conglomerados",
+      "ESP": "Cluster Analysis"
+    },
+    {
+      "ENG": "Índices Cognitivos",
+      "ESP": "Cognitive Indices"
+    },
+    {
+      "ENG": "Dilemas",
+      "ESP": "Dilemmas"
+    },
+    {
+      "ENG": "Haz click y arrastra para Interactuar.",
+      "ESP": "Click and drag to Interact."
+    },
+    {
+      "ENG": "Constructs",
+      "ESP": "Constructos"
+    },
+    {
+      "ENG": "Elements",
+      "ESP": "Elementos"
+    },
+    {
+      "ENG": "Índices y Valores Matemáticos",
+      "ESP": "Indices and Mathematical Values"
+    },
+    {
+      "ENG": "Intensidad de Constructos",
+      "ESP": "Intensity of Constructs"
+    },
+    {
+      "ENG": "Intensidad de Elementos",
+      "ESP": "Intensity of Elements"
+    },
+    {
+      "ENG": "Congruent/Discrepant Constructs",
+      "ESP": "Constructos Congruentes/Discordantes"
+    },
+    {
+      "ENG": "Dilemmas",
+      "ESP": "Dilemas"
+    },
+    {
+      "ENG": "Índices y Valores Matemáticos",
+      "ESP": "Índices y Valores Matemáticos"
+    },
+    {
+      "ENG": "Data",
+      "ESP": "Datos"
+    },
+    {
+      "ENG": "Results",
+      "ESP": "Resultados"
     }
   ]
 }

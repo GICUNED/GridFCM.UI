@@ -1,0 +1,50 @@
+{
+    "languages": ["ENG", "ESP"],
+    "translation": [
+      {
+        "ENG": "Importar datos desde archivo xlsx",
+        "ESP": "Import data from xlsx file"
+      },
+      {
+        "ENG": "En esta página, puedes descargar plantillas de xlsx y documentos de ayuda, y subir archivos xlsx para importar datos.",
+        "ESP": "On this page, you can download xlsx templates and help documents, and upload xlsx files to import data."
+      },
+      {
+        "ENG": "Importar archivos xlsx",
+        "ESP": "Import xlsx files"
+      },
+      {
+        "ENG": "Seleccionar archivo RepGrid (.xlsx)",
+        "ESP": "Select RepGrid file (.xlsx)"
+      },
+      {
+        "ENG": "Seleccionar archivo WimpGrid (.xlsx)",
+        "ESP": "Select WimpGrid file (.xlsx)"
+      },
+      {
+        "ENG": "Importar datos",
+        "ESP": "Import data"
+      },
+      {
+        "ENG": "Plantillas y documentos de ayuda",
+        "ESP": "Templates and help documents"
+      },
+      {
+        "ENG": "Descargar plantilla RepGrid",
+        "ESP": "Download RepGrid template"
+      },
+      {
+        "ENG": "Descargar plantilla WimpGrid",
+        "ESP": "Download WimpGrid template"
+      },
+      {
+        "ENG": "Documento de ayuda para RepGrid",
+        "ESP": "Help document for RepGrid"
+      },
+      {
+        "ENG": "Documento de ayuda para WimpGrid",
+        "ESP": "Help document for WimpGrid"
+      }
+    ]
+  }
+  

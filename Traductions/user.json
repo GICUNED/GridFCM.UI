@@ -1,0 +1,22 @@
+{
+    "languages": ["ENG", "ESP"],
+    "translation": [
+      {
+        "ENG": "Bienvenido a la página de inicio del usuario",
+        "ESP": "Welcome to the user home page"
+      },
+      {
+        "ENG": "Aquí puedes agregar más contenido para mostrar al usuario después de iniciar sesión",
+        "ESP": "Here you can add more content to display to the user after logging in"
+      },
+      {
+        "ENG": "Nuevo análisis de rejilla",
+        "ESP": "New grid analysis"
+      },
+      {
+        "ENG": "rejillas_anteriores",
+        "ESP": "Previous grids"
+      }
+    ]
+  }
+  

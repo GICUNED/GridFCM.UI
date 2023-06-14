@@ -1,5 +1,6 @@
 # Unificar las interfaces de usuario
 repgrid_ui <- fluidPage(
+  shiny.i18n::usei18n(i18n),
   #h1("RepGrid - Análisis y Manipulación de Datos"),
   
   tabsetPanel(
