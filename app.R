@@ -110,9 +110,9 @@ ui <- dashboardPage(
         div(id="incio-page", class = "nav-item incio-page", menuItem("Inicio", href = route_link("/"), icon = icon("home"), newTab = FALSE)),
         div(id="import-page", class = "nav-item import-page", menuItem("Import", href = route_link("import"), icon = icon("file-arrow-up"), newTab = FALSE)),
         div(id="excel-page", class = "nav-item excel-page submenu-item", menuItem("Files", href = route_link("excel"), icon = icon("file-excel"), newTab = FALSE)),
-        div(id="form-page", class = "nav-item excel-page submenu-item", menuItem("Form", href = route_link("excel"), icon = icon("rectangle-list"), newTab = FALSE)),
-        div(id="repgrid-page", class = "nav-item excel-page", menuItem("Repgrid", href = route_link("repgrid"), icon = icon("magnifying-glass-chart"), newTab = FALSE)),
-        div(id = "wimpgrid-page", class = "nav-item excel-page", menuItem("Wimpgrid", href = route_link("wimpgrid"), icon = icon("chart-column"), newTab = FALSE))
+        div(id="form-page", class = "nav-item form-page submenu-item", menuItem("Form", href = route_link("excel"), icon = icon("rectangle-list"), newTab = FALSE)),
+        div(id="repgrid-page", class = "nav-item repg-page", menuItem("Repgrid", href = route_link("repgrid"), icon = icon("magnifying-glass-chart"), newTab = FALSE)),
+        div(id = "wimpgrid-page", class = "nav-item wimpg-page", menuItem("Wimpgrid", href = route_link("wimpgrid"), icon = icon("chart-column"), newTab = FALSE))
       )
     ),
 

@@ -8,15 +8,27 @@ import_excel_ui <-  div(
       column(6,
       box(
        width = 12,
-       title = "Importar archivos xlsx",
-       icon = icon("file-excel"),
+       title = "Importar archivos RepGrid",
+       icon = icon("magnifying-glass-chart"),
+       status = "success",
        collapsible = FALSE,
        fileInput("archivo_repgrid", "Seleccionar archivo RepGrid (.xlsx)"),
-       fileInput("archivo_wimpgrid", "Seleccionar archivo WimpGrid (.xlsx)"),
-       column(12, class="d-flex justify-content-center mb-2", actionButton("importar_datos", "Importar datos", status = 'secondary', icon = icon("file-import")))
+       column(12, class="d-flex justify-content-center mb-2", actionButton("importar_datos", "Importar Datos", status = 'success', icon = icon("file-import")))
       )),
-       # Enlaces a plantillas de xlsx y documentos de ayuda
+
       column(6,
+      box(
+       width = 12,
+       title = "Importar archivos WimpGrid",
+       icon = icon("border-none"),
+       status = "warning",
+       collapsible = FALSE,
+       fileInput("archivo_wimpgrid", "Seleccionar archivo WimpGrid (.xlsx)"),
+       column(12, class="d-flex justify-content-center mb-2", actionButton("importar_datos", "Importar Datos", status = 'warning', icon = icon("file-import")))
+      )),
+
+       # Enlaces a plantillas de xlsx y documentos de ayuda
+      column(12,
       box(
        width = 12,
        title = "Plantillas y documentos de ayuda",

@@ -1,4 +1,4 @@
-repgrid_analysis_ui <- fluidPage(
+repgrid_analysis_ui <- fluidPage( class="header-tab",
   
   fluidRow( class = ("flex-container-xl border-divider"),
 

@@ -8,6 +8,10 @@ $('#incio-page').on('click', function () {
         .find('.nav-link')
         .removeClass('active');
 
+        $('.user-page')
+        .find('.nav-link')
+        .removeClass('active');
+
       $(this)
         .find('.nav-link')
         .addClass('active');
@@ -22,6 +26,11 @@ $('#incio-page').on('click', function () {
         .find('.nav-link')
         .removeClass('active');
 
+        $('.user-page')
+        .find('.nav-link')
+        .removeClass('active');
+
+
       $(this)
         .find('.nav-link')
         .addClass('active');
@@ -34,6 +43,11 @@ $('#incio-page').on('click', function () {
       $('.nav-pills')
         .find('.nav-link')
         .removeClass('active');
+
+        $('.user-page')
+        .find('.nav-link')
+        .removeClass('active');
+
 
       $(this)
           .find('.nav-link')
@@ -49,6 +63,11 @@ $('#incio-page').on('click', function () {
         .find('.nav-link')
         .removeClass('active');
 
+    $('.user-page')
+        .find('.nav-link')
+        .removeClass('active');
+
+
     $(this)
         .find('.nav-link')
        .addClass('active')
@@ -62,6 +81,11 @@ $('#form-page').on('click', function () {
   $('.nav-pills')
       .find('.nav-link')
       .removeClass('active');
+
+  $('.user-page')
+      .find('.nav-link')
+      .removeClass('active');
+
 
   $(this)
       .find('.nav-link')
@@ -79,6 +103,11 @@ $('#form-page').on('click', function () {
         .find('.nav-link')
         .removeClass('active');
 
+    $('.user-page')
+        .find('.nav-link')
+        .removeClass('active');
+
+
     $(this)
         .find('.nav-link')
        .addClass('active');
@@ -91,6 +120,11 @@ $('#wimpgrid-page').on('click', function () {
   $('.nav-pills')
       .find('.nav-link')
       .removeClass('active');
+
+  $('.user-page')
+      .find('.nav-link')
+      .removeClass('active');
+
 
   $(this)
       .find('.nav-link')

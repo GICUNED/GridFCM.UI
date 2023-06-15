@@ -1,12 +1,12 @@
 
 #source("global.R")
-wimpgrid_analysis_ui <- fluidPage(
+wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
   #shiny.i18n::usei18n(i18n),
 
     tabsetPanel(
       tabPanel(i18n$t("Data"), id = "tab_data_w", icon = icon("table"),
   fluidRow( class = ("flex-container-xl border-divider"),
-    h2("WimpGrid Home", class = "pagetitlecustom  mt-4"),
+    h2("WimpGrid Home", class = "wg pagetitlecustom  mt-4"),
     p("Esta página te permite visualizar y manipular los datos importados de Wimpgrid y acceder a diferentes tipos de análisis.",  class = "desccustom mb-2"),
   ),
 
@@ -41,16 +41,15 @@ wimpgrid_analysis_ui <- fluidPage(
   ),
 
 
-
       ),
 
       tabPanel(i18n$t("Visualization"), id = "tab_visualizacion", icon = icon("square-poll-vertical"),
 
       fluidRow(class = ("flex-container-xl border-divider"),
-        h2(i18n$t("WimpGrid Analysis"), class = "pagetitlecustom  mt-4"),
+        h2(i18n$t("WimpGrid Analysis"), class = "wg pagetitlecustom  mt-4"),
         p("Esta página te permite...",  class = "desccustom mb-4"),
 
-        column(12, class = ("input-container"),
+        column(12, class = ("wg input-container"),
         # Agregar un selectInput para elegir el gráfico a mostrar
         selectInput("graph_selector_visualizacion",
                     i18n$t("Select a graph:"),
@@ -102,26 +101,41 @@ wimpgrid_analysis_ui <- fluidPage(
 
         ),
         conditionalPanel(condition = "input.graph_selector_visualizacion == 'wimpindices'",
-                        htmlOutput("dens"),
+        
+
+                      fluidRow(class = "table-container pb-0 flex-row kpi",
+                      h3("Desglose Índices", class = "mr-auto mb-0"),
+                      htmlOutput("dens")
+                      ),
+                        
                         rHandsontableOutput("distance"),
 
-                        titlePanel("Centralidad"),
+                        fluidRow(class = "subheader-tab flex-container-sm",
+                          icon("arrows-to-circle", class = "mt-4"),
+                          h4("Centralidad", class = "pagetitle2custom mt-2 mb-2"),
+                            
                         tabsetPanel(
-                            tabPanel("Degree", DT::dataTableOutput("table_degree")),
-                            tabPanel("Closeness", DT::dataTableOutput("table_closeness")),
-                            tabPanel("Betweenness", DT::dataTableOutput("table_betweenness"))
-                        ),
+                            tabPanel("Degree", DT::dataTableOutput("table_degree"), icon = icon("gauge-simple-high")),
+                            tabPanel("Closeness", DT::dataTableOutput("table_closeness"), icon = icon("person-walking-dashed-line-arrow-right")),
+                            tabPanel("Betweenness", DT::dataTableOutput("table_betweenness"), icon = icon("people-arrows"))
+                        )),
+
                         DT::dataTableOutput(("inconsistences"))),
-        plotOutput("graph_output_visualizacion")
+
+                        fluidRow(class = "flex-container-sm",
+                          icon("globe", class = "mt-4"),
+                          h4("Resultado gráfico", class = "pagetitle2custom mt-2 mb-4"),
+                          plotOutput("graph_output_visualizacion")
+                        ),
 
       ),
       tabPanel(i18n$t("Laboratory"), id = "tab_laboratorio", icon = icon("flask-vial"),
 
       fluidRow( class = ("flex-container-xl border-divider"),
-        h2(i18n$t("WimpGrid Analysis"), class = "pagetitlecustom  mt-4"),
+        h2(i18n$t("WimpGrid Analysis"), class = "wg pagetitlecustom  mt-4"),
         p("Esta página te permite...",  class = "desccustom mb-4"),
 
-        column(12, class = ("input-container"),
+        column(12, class = ("wg input-container "),
           # Agregar un selectInput para elegir el gráfico a mostrar
           selectInput("graph_selector_laboratorio",
                     i18n$t("Select a graph:"),
@@ -175,7 +189,14 @@ wimpgrid_analysis_ui <- fluidPage(
                           selected = i18n$t("linear")),
 
               numericInput("simdigraph_e", i18n$t("Differential value:"), value = 0.0001),
-              rHandsontableOutput("simdigraph_act_vector")
+
+              rHandsontableOutput("simdigraph_act_vector"),
+
+              fluidRow(class = "flex-container-sm",
+                          icon("globe", class = "mt-4"),
+                          h4("Resultado gráfico", class = "pagetitle2custom mt-2 mb-4")
+                        ),
+             
           ),
 
         conditionalPanel(class = ("flex-container-resp detail"),
@@ -225,16 +246,24 @@ wimpgrid_analysis_ui <- fluidPage(
               rHandsontableOutput("pcsdindices_act_vector"),
 
               htmlOutput("convergence"),
+
+              fluidRow(class = "subheader-tab flex-container-sm",
               tabsetPanel(
-                  tabPanel("Summary", DT::dataTableOutput("summary")),
-                  tabPanel("Auc", DT::dataTableOutput("auc")),
-                  tabPanel("Stability", DT::dataTableOutput("stability"))
-              )
+                  tabPanel("Summary", DT::dataTableOutput("summary"), icon = icon("book")),
+                  tabPanel("Auc", DT::dataTableOutput("auc"), icon = icon("cube")),
+                  tabPanel("Stability", DT::dataTableOutput("stability"), icon = icon("wave-square"))
+              )),
 
             ),
           div(id = "pscd_showw",
             # Mostrar los datos de tabla_datos_repgrid
-            plotlyOutput("pscd_show")
+            fluidRow(class = "flex-container-sm",
+                          icon("chart-line", class = "mt-4"),
+                          h4("Resultado gráfico", class = "pagetitle2custom mt-2 mb-4"),
+                          plotlyOutput("pscd_show")
+                        ),
+             
+            
           ),
           div(id = "lab_showw",plotOutput("graph_output_laboratorio"))
       )

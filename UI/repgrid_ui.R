@@ -1,5 +1,5 @@
 # Unificar las interfaces de usuario
-repgrid_ui <- fluidPage(
+repgrid_ui <- fluidPage( class="header-tab rg-diff",
   #h1("RepGrid - Análisis y Manipulación de Datos"),
   
   tabsetPanel(
