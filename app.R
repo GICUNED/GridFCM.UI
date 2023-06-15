@@ -115,7 +115,7 @@ ui <- dashboardPage(
     ),
       
   dashboardBody(
-    usei18n(translator = i18n),
+    #usei18n(translator = i18n),
     tags$script(src = "activescript.js"),
     useShinyjs(),
     router_ui(
