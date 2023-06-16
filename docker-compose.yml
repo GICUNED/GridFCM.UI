@@ -16,6 +16,7 @@ services:
       - "./www/:/srv/shiny-server/www/:ro"
       - "./app.R:/srv/shiny-server/app.R:ro"
       - "./global.R:/srv/shiny-server/global.R:ro"
+      - "./Traductions/:/srv/shiny-server/Traductions/:ro"
   
   shiny-postgres:
     image: "docker.io/postgres:latest"
