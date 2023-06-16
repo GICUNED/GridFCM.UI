@@ -26,7 +26,7 @@ div(
        status = "warning",
        collapsible = FALSE,
        fileInput("archivo_wimpgrid", "Seleccionar archivo WimpGrid (.xlsx)"),
-       column(12, class="d-flex justify-content-center mb-2", actionButton("importar_datos", "Importar Datos", status = 'warning', icon = icon("file-import")))
+       column(12, class="d-flex justify-content-center mb-2", actionButton("importar_datos_w", "Importar Datos", status = 'warning', icon = icon("file-import")))
       )),
 
        # Enlaces a plantillas de xlsx y documentos de ayuda
