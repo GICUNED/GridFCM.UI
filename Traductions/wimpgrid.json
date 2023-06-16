@@ -2,16 +2,44 @@
   "languages": ["ENG", "ESP"],
   "translation": [
     {
-      "ENG": "HOL Analysis",
-      "ESP": "HOL de WimpGrid"
+      "ENG": "Data",
+      "ESP": "Datos"
+    },
+    {
+      "ENG": "WimpGrid Home",
+      "ESP": "Inicio de WimpGrid"
+    },
+    {
+      "ENG": "Esta página te permite visualizar y manipular los datos importados de Wimpgrid y acceder a diferentes tipos de análisis.",
+      "ESP": "This page allows you to visualize and manipulate the data imported from WimpGrid and access different types of analysis."
+    },
+    {
+      "ENG": "Data Table",
+      "ESP": "Tabla de Datos"
+    },
+    {
+      "ENG": "Guardar",
+      "ESP": "Save"
+    },
+    {
+      "ENG": "Reiniciar",
+      "ESP": "Restart"
+    },
+    {
+      "ENG": "Editar",
+      "ESP": "Edit"
+    },
+    {
+      "ENG": "Visualization",
+      "ESP": "Visualización"
     },
     {
       "ENG": "WimpGrid Analysis",
       "ESP": "Análisis de WimpGrid"
     },
     {
-      "ENG": "Visualization",
-      "ESP": "Visualización"
+      "ENG": "Esta página te permite...",
+      "ESP": "This page allows you to..."
     },
     {
       "ENG": "Select a graph:",
@@ -58,15 +86,7 @@
       "ESP": "cuadrícula"
     },
     {
-      "ENG": "Tamaño de los vértices:",
-      "ESP": "Tamaño de los vértices:"
-    },
-    {
-      "ENG": "Ancho de las aristas:",
-      "ESP": "Ancho de las aristas:"
-    },
-    {
-      "ENG": "Paleta de colores:",
+      "ENG": "Color palette:",
       "ESP": "Paleta de colores:"
     },
     {
@@ -78,7 +98,15 @@
       "ESP": "escala de grises"
     },
     {
-      "ENG": "Ocultar relaciones directas",
+      "ENG": "Vertex size:",
+      "ESP": "Tamaño de los vértices:"
+    },
+    {
+      "ENG": "Edge width:",
+      "ESP": "Ancho de las aristas:"
+    },
+    {
+      "ENG": "Hide direct relationships",
       "ESP": "Ocultar relaciones directas"
     },
     {
@@ -98,19 +126,27 @@
       "ESP": "pcsdindices"
     },
     {
-      "ENG": "Número de la iteración:",
-      "ESP": "Número de la iteración:"
-    },
-    {
-      "ENG": "Archivo de entrada:",
+      "ENG": "Input file:",
       "ESP": "Archivo de entrada:"
     },
     {
-      "ENG": "Vector de cambios:",
+      "ENG": "Iteration number:",
+      "ESP": "Número de la iteración:"
+    },
+    {
+      "ENG": "Maximum number of iterations:",
+      "ESP": "Número de iteraciones máximas:"
+    },
+    {
+      "ENG": "Number of iterations without changes:",
+      "ESP": "Número de iteraciones sin cambios:"
+    },
+    {
+      "ENG": "Change vector:",
       "ESP": "Vector de cambios:"
     },
     {
-      "ENG": "Función de propagación:",
+      "ENG": "Propagation function:",
       "ESP": "Función de propagación:"
     },
     {
@@ -118,56 +154,24 @@
       "ESP": "transformación lineal"
     },
     {
-      "ENG": "otra opción",
-      "ESP": "otra opción"
-    },
-    {
-      "ENG": "Función umbral:",
+      "ENG": "Threshold function:",
       "ESP": "Función umbral:"
     },
     {
-      "ENG": "Número de iteraciones máximas:",
-      "ESP": "Número de iteraciones máximas:"
-    },
-    {
-      "ENG": "Valor diferencial:",
+      "ENG": "Differential value:",
       "ESP": "Valor diferencial:"
     },
     {
-      "ENG": "Número de iteraciones sin cambios:",
-      "ESP": "Número de iteraciones sin cambios:"
+      "ENG": "Summary",
+      "ESP": "Resumen"
     },
     {
-      "ENG": "WimpGrid_data.xlsx",
-      "ESP": "WimpGrid_data.xlsx"
+      "ENG": "Auc",
+      "ESP": "Auc"
     },
     {
-      "ENG": "data.csv",
-      "ESP": "data.csv"
-    },
-    {
-      "ENG": "datos.txt",
-      "ESP": "datos.txt"
-    },
-    {
-      "ENG": "Cambios a simular:",
-      "ESP": "Cambios a simular:"
-    },
-    {
-      "ENG": "sigmoid transform",
-      "ESP": "transformación sigmoide"
-    },
-    {
-      "ENG": "exponential transform",
-      "ESP": "transformación exponencial"
-    },
-    {
-      "ENG": "sigmoid",
-      "ESP": "sigmoide"
-    },
-    {
-      "ENG": "exponential",
-      "ESP": "exponencial"
+      "ENG": "Stability",
+      "ESP": "Estabilidad"
     }
   ]
 }

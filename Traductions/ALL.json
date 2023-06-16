@@ -1,0 +1,381 @@
+{
+    "languages": ["es", "en"],
+    "translation": [
+      {
+        "es": "Inicia sesion para continuar",
+        "en": "Log in to continue"
+      },
+      {
+        "es": "Inicio de sesion",
+        "en": "Log inn"
+      },
+      {
+        "es": "Nombre de usuario",
+        "en": "Username"
+      },
+      {
+        "es": "Contrasena",
+        "en": "Password"
+      },
+      {
+        "es": "Acceder",
+        "en": "Log in"
+      },
+      {
+        "es": "Sesion de invitado",
+        "en": "Guest session"
+      },
+      {
+        "es": "Informacion",
+        "en": "Information"
+      },
+      {
+        "es": "Aqui se agregara mas informacion sobre la aplicacion y el metodo que se utiliza",
+        "en": "More information about the application and the method used will be added here"
+      },
+      {
+        "es": "Bienvenido a la pagina de inicio del usuario",
+        "en": "Welcome to the user home page"
+      },
+      {
+        "es": "Aqui puedes agregar mas contenido para mostrar al usuario denues de iniciar sesion",
+        "en": "Here you can add more content to display to the user after logging in"
+      },
+      {
+        "es": "Nuevo analisis de rejilla",
+        "en": "New grid analysis"
+      },
+      {
+        "es": "rejillas_anteriores",
+        "en": "Previous grids"
+      },
+      {
+        "es": "Importar datos para un nuevo analisis de rejilla",
+        "en": "Import data for a new grid analysis"
+      },
+      {
+        "es": "En esta pagina, puedes aprender sobre los tres tipos de analisis de rejilla y elegir como importar tus datos",
+        "en": "On this page, you can learn about the three types of grid analysis and choose how to import your data"
+      },
+      {
+        "es": "Importar formulario",
+        "en": "Import form"
+      },
+      {
+        "es": "Importar archivo xlsx",
+        "en": "Import XLSX file"
+      },
+      {
+        "es": "RepGrid",
+        "en": "RepGrid"
+      },
+      {
+        "es": "WimpGrid",
+        "en": "WimpGrid"
+      },
+      {
+        "es": "FullGrid",
+        "en": "FullGrid"
+      },
+      {
+        "es": "Descripcion del analisis RepGrid",
+        "en": "Description of RepGrid analysis"
+      },
+      {
+        "es": "Descripcion del analisis WimpGrid",
+        "en": "Description of WimpGrid analysis"
+      },
+      {
+        "es": "Descripcion del analisis Fullgrid",
+        "en": "Description of FullGrid analysis"
+      },
+      {
+        "es": "Importar datos desde archivo xlsx",
+        "en": "Import data from xlsx file"
+      },
+      {
+        "es": "En esta pagina, puedes descargar plantillas de xlsx y documentos de ayuda, y subir archivos xlsx para importar datos",
+        "en": "On this page, you can download xlsx templates and help documents, and upload xlsx files to import data"
+      },
+      {
+        "es": "Importar archivos xlsx",
+        "en": "Import xlsx files"
+      },
+      {
+        "es": "Seleccionar archivo RepGrid (xlsx)",
+        "en": "Select RepGrid file (xlsx)"
+      },
+      {
+        "es": "Seleccionar archivo WimpGrid (xlsx)",
+        "en": "Select WimpGrid file (xlsx)"
+      },
+      {
+        "es": "Importar datos",
+        "en": "Import data"
+      },
+      {
+        "es": "Plantillas y documentos de ayuda",
+        "en": "Templates and help documents"
+      },
+      {
+        "es": "Descargar plantilla RepGrid",
+        "en": "Download RepGrid template"
+      },
+      {
+        "es": "Descargar plantilla WimpGrid",
+        "en": "Download WimpGrid template"
+      },
+      {
+        "es": "Documento de ayuda para RepGrid",
+        "en": "Help document for RepGrid"
+      },
+      {
+        "es": "Documento de ayuda para WimpGrid",
+        "en": "Help document for WimpGrid"
+      },
+      {
+        "es": "RepGrid Home",
+        "en": "Inicio de RepGrid"
+      },
+      {
+        "es": "Esta pagina te permite visualizar y manipular los datos importados de RepGrid y acceder a diferentes tipos de analisis",
+        "en": "This page allows you to view and manipulate the data imported from RepGrid and access different types of analysis"
+      },
+      {
+        "es": "Data Table",
+        "en": "Tabla de Datos"
+      },
+      {
+        "es": "Guardar",
+        "en": "Save"
+      },
+      {
+        "es": "Editar",
+        "en": "Edit"
+      },
+      {
+        "es": "Analisis de RepGrid",
+        "en": "RepGrid Analysis"
+      },
+      {
+        "es": "Seleccione un grafico:",
+        "en": "Select a graph:"
+      },
+      {
+        "es": "Analisis Bidimensional",
+        "en": "Two-Dimensional Analysis"
+      },
+      {
+        "es": "Analisis Tridimensional",
+        "en": "Three-Dimensional Analysis"
+      },
+      {
+        "es": "Analisis por Conglomerados",
+        "en": "Cluster Analysis"
+      },
+      {
+        "es": "indices Cognitivos",
+        "en": "Cognitive Indices"
+      },
+      {
+        "es": "Dilemas",
+        "en": "Dilemmas"
+      },
+      {
+        "es": "Haz click y arrastra para Interactuar",
+        "en": "Click and drag to Interact"
+      },
+      {
+        "es": "Constructs",
+        "en": "Constructos"
+      },
+      {
+        "es": "Elements",
+        "en": "Elementos"
+      },
+      {
+        "es": "indices y Valores Matematicos",
+        "en": "Indices and Mathematical Values"
+      },
+      {
+        "es": "Intensidad de Constructos",
+        "en": "Intensity of Constructs"
+      },
+      {
+        "es": "Intensidad de Elementos",
+        "en": "Intensity of Elements"
+      },
+      {
+        "es": "Congruent/Discrepant Constructs",
+        "en": "Constructos Congruentes/Discordantes"
+      },
+      {
+        "es": "Dilemmas",
+        "en": "Dilemas"
+      },
+      {
+        "es": "Results",
+        "en": "Resultados"
+      },
+      {
+        "es": "Data",
+        "en": "Datos"
+      },
+      {
+        "es": "WimpGrid Home",
+        "en": "Inicio de WimpGrid"
+      },
+      {
+        "es": "Esta pagina te permite visualizar y manipular los datos importados de Wimpgrid y acceder a diferentes tipos de analisis",
+        "en": "This page allows you to visualize and manipulate the data imported from WimpGrid and access different types of analysis"
+      },
+      {
+        "es": "Reiniciar",
+        "en": "Restart"
+      },
+      {
+        "es": "Visualization",
+        "en": "Visualizacion"
+      },
+      {
+        "es": "WimpGrid Analysis",
+        "en": "Analisis de WimpGrid"
+      },
+      {
+        "es": "Esta pagina te permite",
+        "en": "This page allows you to"
+      },
+      {
+        "es": "Select a graph:",
+        "en": "Seleccione un grafico:"
+      },
+      {
+        "es": "selfdigraph",
+        "en": "autodigrafo"
+      },
+      {
+        "es": "idealdigraph",
+        "en": "digrafo ideal"
+      },
+      {
+        "es": "wimpindices",
+        "en": "indices de Wimp"
+      },
+      {
+        "es": "Layout:",
+        "en": "Diseno:"
+      },
+      {
+        "es": "circle",
+        "en": "circulo"
+      },
+      {
+        "es": "rtcircle",
+        "en": "rtcirculo"
+      },
+      {
+        "es": "tree",
+        "en": "arbol"
+      },
+      {
+        "es": "graphopt",
+        "en": "graphopt"
+      },
+      {
+        "es": "mds",
+        "en": "mds"
+      },
+      {
+        "es": "grid",
+        "en": "cuadricula"
+      },
+      {
+        "es": "Color palette:",
+        "en": "Paleta de colores:"
+      },
+      {
+        "es": "red/green",
+        "en": "rojo/verde"
+      },
+      {
+        "es": "grey scale",
+        "en": "escala de grises"
+      },
+      {
+        "es": "Vertex size:",
+        "en": "Tamano de los vertices:"
+      },
+      {
+        "es": "Edge width:",
+        "en": "Ancho de las aristas:"
+      },
+      {
+        "es": "Hide direct relationships",
+        "en": "Ocultar relaciones directas"
+      },
+      {
+        "es": "Laboratory",
+        "en": "Laboratorio"
+      },
+      {
+        "es": "simdigraph",
+        "en": "simdigrafo"
+      },
+      {
+        "es": "pcsd",
+        "en": "pcsd"
+      },
+      {
+        "es": "pcsdindices",
+        "en": "pcsdindices"
+      },
+      {
+        "es": "Input file:",
+        "en": "Archivo de entrada:"
+      },
+      {
+        "es": "Iteration number:",
+        "en": "Numero de la iteracion:"
+      },
+      {
+        "es": "Maximum number of iterations:",
+        "en": "Numero de iteraciones maximas:"
+      },
+      {
+        "es": "Number of iterations without changes:",
+        "en": "Numero de iteraciones sin cambios:"
+      },
+      {
+        "es": "Change vector:",
+        "en": "Vector de cambios:"
+      },
+      {
+        "es": "Propagation function:",
+        "en": "Funcion de propagacion:"
+      },
+      {
+        "es": "linear transform",
+        "en": "transformacion lineal"
+      },
+      {
+        "es": "Threshold function:",
+        "en": "Funcion umbral:"
+      },
+      {
+        "es": "Differential value:",
+        "en": "Valor diferencial:"
+      },
+      {
+        "es": "Summary",
+        "en": "Resumen"
+      },
+      {
+        "es": "Auc",
+        "en": "Auc"
+      },
+      {
+        "es": "Stability",
+        "en": "Estabilidad"
+      }
+]}
+  

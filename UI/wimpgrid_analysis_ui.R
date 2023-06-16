@@ -2,13 +2,14 @@
 #source("global.R")
 wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
   #shiny.i18n::usei18n(i18n),
+  shiny.i18n::usei18n(i18n),
 
-    tabsetPanel(
+  tabsetPanel(
       tabPanel(i18n$t("Data"), id = "tab_data_w", icon = icon("table"),
-  fluidRow( class = ("flex-container-xl border-divider"),
-    h2("WimpGrid Home", class = "wg pagetitlecustom  mt-4"),
-    p("Esta página te permite visualizar y manipular los datos importados de Wimpgrid y acceder a diferentes tipos de análisis.",  class = "desccustom mb-2"),
-  ),
+          fluidRow( class = ("flex-container-xl border-divider"),
+                      h2(i18n$t("WimpGrid Home"),class = "wg pagetitlecustom  mt-4"),
+                      p(i18n$t("Esta página te permite visualizar y manipular los datos importados de Wimpgrid y acceder a diferentes tipos de análisis."),  class = "desccustom mb-2"),
+                  ),
 
   fluidRow(class="mb-4 mt-4 gap-2 justify-content-center error-help hidden",
         column(12, class = "row flex-column justify-content-center",
@@ -22,32 +23,27 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
   # Mostrar los datos importados en una tabla
   #tableOutput("tabla_datos_repgrid"),
   fluidRow( class="mb-4 button-container",
-    h3("Data Table", class = "mr-auto mb-0"),
-    actionButton("guardar_w", "Guardar", style = "display: none;", status = 'success', icon = icon("save")),
-    actionButton("reiniciar_w", "Reiniciar", style = "display: none;", status = 'danger', icon = icon("arrow-rotate-left")),
-    actionButton("editar_w", "Editar", icon = icon("edit")),
-  ),
-
-  shinyjs::hidden(
+    h3(i18n$t("Data Table"), class = "mr-auto mb-0"),
+    actionButton("guardar_w", i18n$t("Guardar"), style = "display: none;", status = 'success', icon = icon("save")),
+    actionButton("reiniciar_w", i18n$t("Reiniciar"), style = "display: none;", status = 'danger', icon = icon("arrow-rotate-left")),
+    actionButton("editar_w", i18n$t("Editar"), icon = icon("edit")),
+    ),
+    shinyjs::hidden(
     div(id = "tabla_datos_wimpgrid_container",
       # Mostrar los datos de tabla_datos_repgrid
       rHandsontableOutput("tabla_datos_wimpgrid")
-    )
-  ),
-
-  div(class=("row"), id = "prueba_container_w",
+      )
+    ),
+    div(class=("row"), id = "prueba_container_w",
     # Mostrar los datos de prueba
     plotOutput("bert_w")
-  ),
+    ),),
 
+  tabPanel(i18n$t("Visualization"), id = "tab_visualizacion", icon = icon("square-poll-vertical"),
 
-      ),
-
-      tabPanel(i18n$t("Visualization"), id = "tab_visualizacion", icon = icon("square-poll-vertical"),
-
-      fluidRow(class = ("flex-container-xl border-divider"),
+  fluidRow(class = ("flex-container-xl border-divider"),
         h2(i18n$t("WimpGrid Analysis"), class = "wg pagetitlecustom  mt-4"),
-        p("Esta página te permite...",  class = "desccustom mb-4"),
+        p(i18n$t("Esta página te permite..."),  class = "desccustom mb-4"),
 
         column(12, class = ("wg input-container"),
         # Agregar un selectInput para elegir el gráfico a mostrar
@@ -133,7 +129,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
 
       fluidRow( class = ("flex-container-xl border-divider"),
         h2(i18n$t("WimpGrid Analysis"), class = "wg pagetitlecustom  mt-4"),
-        p("Esta página te permite...",  class = "desccustom mb-4"),
+        p(i18n$t("Esta página te permite..."),  class = "desccustom mb-4"),
 
         column(12, class = ("wg input-container "),
           # Agregar un selectInput para elegir el gráfico a mostrar
@@ -158,7 +154,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
 
 
             shinyjs::hidden(
-    div(id = "simdig_inp",fileInput("simdigraph_wimp", i18n$t("Input file:"), accept = c(".xlsx")))),
+              div(id = "simdig_inp",fileInput("simdigraph_wimp", i18n$t("Input file:"), accept = c(".xlsx")))),
 
             selectInput("simdigraph_layout", i18n$t("Layout:"),
                           choices = c(i18n$t("circle"), i18n$t("rtcircle"), i18n$t("tree"), i18n$t("graphopt"), i18n$t("mds"), i18n$t("grid")),
@@ -168,23 +164,23 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                           choices = c(i18n$t("red/green"), i18n$t("grey scale")),
                           selected = i18n$t("red/green")),
 
-              numericInput("simdigraph_vertex_size", i18n$t("Vertex size:"), value = 1),
+            numericInput("simdigraph_vertex_size", i18n$t("Vertex size:"), value = 1),
 
-              numericInput("simdigraph_edge_width", i18n$t("Edge width:"), value = 1),
+            numericInput("simdigraph_edge_width", i18n$t("Edge width:"), value = 1),
 
-              numericInput("simdigraph_niter", i18n$t("Iteration number:"), value = 0),
+            numericInput("simdigraph_niter", i18n$t("Iteration number:"), value = 0),
 
-              numericInput("simdigraph_max_iter", i18n$t("Maximum number of iterations:"), value = 30),
+            numericInput("simdigraph_max_iter", i18n$t("Maximum number of iterations:"), value = 30),
 
-              numericInput("simdigraph_stop_iter", i18n$t("Number of iterations without changes:"), value = 3),
+            numericInput("simdigraph_stop_iter", i18n$t("Number of iterations without changes:"), value = 3),
 
-              #numericInput("simdigraph_act_vector", i18n$t("Change vector:"), value = 0, step = 0.01),
+            #numericInput("simdigraph_act_vector", i18n$t("Change vector:"), value = 0, step = 0.01),
 
-              selectInput("simdigraph_infer", i18n$t("Propagation function:"),
+            selectInput("simdigraph_infer", i18n$t("Propagation function:"),
                           choices = c(i18n$t("linear transform"), i18n$t("another option")),
                           selected = i18n$t("linear transform")),
 
-              selectInput("simdigraph_thr", i18n$t("Threshold function:"),
+            selectInput("simdigraph_thr", i18n$t("Threshold function:"),
                           choices = c(i18n$t("linear"), i18n$t("another option")),
                           selected = i18n$t("linear")),
 
@@ -249,9 +245,9 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
 
               fluidRow(class = "subheader-tab flex-container-sm",
               tabsetPanel(
-                  tabPanel("Summary", DT::dataTableOutput("summary"), icon = icon("book")),
-                  tabPanel("Auc", DT::dataTableOutput("auc"), icon = icon("cube")),
-                  tabPanel("Stability", DT::dataTableOutput("stability"), icon = icon("wave-square"))
+                  tabPanel(i18n$t("Summary"), DT::dataTableOutput("summary"), icon = icon("book")),
+                  tabPanel(i18n$t("Auc"), DT::dataTableOutput("auc"), icon = icon("cube")),
+                  tabPanel(i18n$t("Stability"), DT::dataTableOutput("stability"), icon = icon("wave-square"))
               )),
 
             ),

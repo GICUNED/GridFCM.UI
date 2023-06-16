@@ -1,0 +1,38 @@
+{
+    "languages": ["ENG", "ESP"],
+    "translation": [
+      {
+        "ENG": "Inicia sesión para continuar",
+        "ESP": "Log in to continue"
+      },
+      {
+        "ENG": "Inicio de sesión",
+        "ESP": "Log in"
+      },
+      {
+        "ENG": "Nombre de usuario",
+        "ESP": "Username"
+      },
+      {
+        "ENG": "Contraseña",
+        "ESP": "Password"
+      },
+      {
+        "ENG": "Acceder",
+        "ESP": "Log in"
+      },
+      {
+        "ENG": "Sesión de invitado",
+        "ESP": "Guest session"
+      },
+      {
+        "ENG": "Información",
+        "ESP": "Information"
+      },
+      {
+        "ENG": "Aquí se agregará más información sobre la aplicación y el método que se utiliza.",
+        "ESP": "More information about the application and the method used will be added here."
+      }
+    ]
+  }
+  

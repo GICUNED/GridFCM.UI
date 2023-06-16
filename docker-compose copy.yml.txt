@@ -1,0 +1,73 @@
+version: "3.9"
+
+services:
+
+  shiny-server:
+    image: "repo.stratebi.com/stratebi/shiny-server:v1.5.20.1002-7"
+    restart: "on-failure:3"
+    networks:
+      - "shiny-server"
+    ports:
+      - "${SHINY_SERVER_HOST-127.0.0.1}:${SHINY_SERVER_PORT-3838}:3838/tcp"
+    volumes:
+      - "./R/:/srv/shiny-server/R/:ro"
+      - "./Servers/:/srv/shiny-server/Servers/:ro"
+      - "./UI/:/srv/shiny-server/UI/:ro"
+      - "./www/:/srv/shiny-server/www/:ro"
+      - "./app.R:/srv/shiny-server/app.R:ro"
+      - "./global.R:/srv/shiny-server/global.R:ro"
+      - "./Traductions/:/srv/shiny-server/Traductions/:ro"
+  
+  shiny-postgres:
+    image: "docker.io/postgres:latest"
+    restart: "on-failure:3"
+    networks:
+      - "shiny-server"
+    ports:
+      - "${POSTGRES_HOST-127.0.0.1}:${POSTGRES_PORT-5432}:5432/tcp"
+    volumes:
+      - "postgres-data:/var/lib/postgresql/data/"
+    environment:
+      POSTGRES_USER: "${POSTGRES_USER:-keycloak}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:?}"
+      POSTGRES_DB: "${POSTGRES_DB:-keycloak}"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:?}"]
+      interval: "10s"
+      timeout: "5s"
+      retries: 5
+
+  shiny-keycloak:
+      image: "quay.io/keycloak/keycloak:latest"
+      restart: "on-failure:3"
+      networks:
+        - "shiny-server"
+      ports:
+        - "${KEYCLOAK_ADDR:-127.0.0.1}:${KEYCLOAK_PORT:-8080}:8080/tcp"
+    ##volumes:
+        ##- "./realm.json:/opt/keycloak/data/import/realm.json:ro"
+      environment:
+        DB_VENDOR: "${KC_DB_VENDOR:-POSTGRES}"
+        DB_ADDR: "${KC_DB_ADDR:-shiny-postgres}"
+        DB_DATABASE: "${KC_DB_DATABASE:-keycloak}"
+        DB_USER: "${KC_DB_USER:-keycloak}"
+        DB_SCHEMA: "${KC_DB_SCHEMA:-public}"
+        DB_PASSWORD: "${KC_DB_PASSWORD:?}"
+        KEYCLOAK_ADMIN: "${KC_ADMIN:-admin}"
+        KEYCLOAK_ADMIN_PASSWORD: "${KC_ADMIN_PASSWORD:?}"
+      ##command: "start --import-realm"  
+      command: "start"
+      depends_on:
+        shiny-postgres:
+          condition: "service_healthy"
+
+networks:
+
+  shiny-server:
+    driver: "bridge"
+    internal: false
+
+volumes:
+
+  postgres-data:
+
