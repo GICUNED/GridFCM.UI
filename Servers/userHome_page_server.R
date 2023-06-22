@@ -34,13 +34,6 @@ userHome_server <- function(input, output, session) {
         .addClass('active');
     ")
   })
-  observeEvent(input$ROUTE_PATH, {
-    route_path <- input$ROUTE_PATH
-    if (route_path == "/") {
-      updateTabItems(session, "sidebar", "page1", selected = TRUE)
-    } else if (route_path == "/user_home") {
-      updateTabItems(session, "sidebar", "page2", selected = TRUE)
-    }
-  })
+  
 
 }

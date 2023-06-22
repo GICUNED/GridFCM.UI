@@ -9,25 +9,25 @@ repgrid_analysis_ui <- fluidPage( class="header-tab",
       # Agregar un selectInput para elegir el gráfico a mostrar
       selectInput("graph_selector",
                   i18n$t("Seleccione un gráfico:"),
-                  choices = c(i18n$t("Análisis Bidimensional"),
-                              i18n$t("Análisis Tridimensional"),
-                              i18n$t("Análisis por Conglomerados"),
-                              i18n$t("Índices Cognitivos"),
-                              i18n$t("Dilemas")
+                  choices = c("Análisis Bidimensional",
+                              "Análisis Tridimensional",
+                              "Análisis por Conglomerados",
+                              "Índices Cognitivos",
+                              "Dilemas"
                   )) 
     ),
   ),
 
   # Mostrar el gráfico seleccionado usando conditionalPanel
 
-  fluidRow(class="mb-4 mt-4 gap-2 justify-content-center error-help hidden",
+  shinyjs::hidden(fluidRow(id = "repgrid_warning",class="mb-4 mt-4 gap-2 justify-content-center error-help hidden",
         column(12, class = "row flex-column justify-content-center",
           icon("triangle-exclamation", "fa-2x"),
           p("Para hacer el análisis es necesario importar un archivo o formulario. ",  class = "mt-2 mb-2"),
         ),
 
         column(12, class="d-flex justify-content-center", actionButton("crear_nuevo", "Importar Archivos", status = 'warning', icon = icon("file-lines"))),
-      ),
+      )),
       
     conditionalPanel(condition = "input.graph_selector == 'Análisis Bidimensional'  ||  input.graph_selector =='Two-Dimensional Analysis' ",
       fluidRow(class = "flex-container-sm",

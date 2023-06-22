@@ -134,16 +134,16 @@
         "en": "Help document for WimpGrid"
       },
       {
-        "es": "RepGrid Home",
-        "en": "Inicio de RepGrid"
+        "es": "Inicio: RepGrid",
+        "en": "RepGrid Home"
       },
       {
         "es": "Esta pagina te permite visualizar y manipular los datos importados de RepGrid y acceder a diferentes tipos de analisis",
         "en": "This page allows you to view and manipulate the data imported from RepGrid and access different types of analysis"
       },
       {
-        "es": "Data Table",
-        "en": "Tabla de Datos"
+        "es": "Tabla de Datos",
+        "en": "Data Table"
       },
       {
         "es": "Guardar",
@@ -206,24 +206,24 @@
         "en": "Intensity of Elements"
       },
       {
-        "es": "Congruent/Discrepant Constructs",
-        "en": "Constructos Congruentes/Discordantes"
+        "es": "Constructos Congruentes/Discordantes",
+        "en": "Congruent/Discrepant Constructs"
       },
       {
-        "es": "Dilemmas",
-        "en": "Dilemas"
+        "es": "Dilemas",
+        "en": "Dilemmas"
       },
       {
-        "es": "Results",
-        "en": "Resultados"
+        "es": "Resultados",
+        "en": "Results"
       },
       {
-        "es": "Data",
-        "en": "Datos"
+        "es": "Datos",
+        "en": "Data"
       },
       {
-        "es": "WimpGrid Home",
-        "en": "Inicio de WimpGrid"
+        "es": "Inicio: WimpGrid",
+        "en": "WimpGrid Home"
       },
       {
         "es": "Esta pagina te permite visualizar y manipular los datos importados de Wimpgrid y acceder a diferentes tipos de analisis",
@@ -234,48 +234,48 @@
         "en": "Restart"
       },
       {
-        "es": "Visualization",
-        "en": "Visualizacion"
+        "es": "Visualizacion",
+        "en": "Visualization"
       },
       {
-        "es": "WimpGrid Analysis",
-        "en": "Analisis de WimpGrid"
+        "es": "Analisis de WimpGrid",
+        "en": "WimpGrid Analysis"
       },
       {
         "es": "Esta pagina te permite",
         "en": "This page allows you to"
       },
       {
-        "es": "Select a graph:",
-        "en": "Seleccione un grafico:"
+        "es": "Seleccione un grafico:",
+        "en": "Select a graph:"
       },
       {
-        "es": "selfdigraph",
-        "en": "autodigrafo"
+        "es": "autodigrafo",
+        "en": "selfdigraph"
       },
       {
-        "es": "idealdigraph",
-        "en": "digrafo ideal"
+        "es": "digrafo ideal",
+        "en": "idealdigraph"
       },
       {
-        "es": "wimpindices",
-        "en": "indices de Wimp"
+        "es": "indices de Wimp",
+        "en": "wimpindices"
       },
       {
-        "es": "Layout:",
-        "en": "Diseno:"
+        "es": "Diseno:",
+        "en": "Layout:"
       },
       {
-        "es": "circle",
-        "en": "circulo"
+        "es": "circulo",
+        "en": "circle"
       },
       {
-        "es": "rtcircle",
-        "en": "rtcirculo"
+        "es": "rtcirculo",
+        "en": "rtcircle"
       },
       {
-        "es": "tree",
-        "en": "arbol"
+        "es": "arbol",
+        "en": "tree"
       },
       {
         "es": "graphopt",
@@ -286,40 +286,40 @@
         "en": "mds"
       },
       {
-        "es": "grid",
-        "en": "cuadricula"
+        "es": "cuadricula",
+        "en": "grid"
       },
       {
-        "es": "Color palette:",
-        "en": "Paleta de colores:"
+        "es": "Paleta de colores:",
+        "en": "Color palette:"
       },
       {
-        "es": "red/green",
-        "en": "rojo/verde"
+        "es": "rojo/verde",
+        "en": "red/green"
       },
       {
-        "es": "grey scale",
-        "en": "escala de grises"
+        "es": "escala de grises",
+        "en": "grey scale"
       },
       {
-        "es": "Vertex size:",
-        "en": "Tamano de los vertices:"
+        "es": "Tamano de los vertices:",
+        "en": "Vertex size:"
       },
       {
-        "es": "Edge width:",
-        "en": "Ancho de las aristas:"
+        "es": "Ancho de las aristas:",
+        "en": "Edge width:"
       },
       {
-        "es": "Hide direct relationships",
-        "en": "Ocultar relaciones directas"
+        "es": "Ocultar relaciones directas",
+        "en": "Hide direct relationships"
       },
       {
-        "es": "Laboratory",
-        "en": "Laboratorio"
+        "es": "Laboratorio",
+        "en": "Laboratory"
       },
       {
-        "es": "simdigraph",
-        "en": "simdigrafo"
+        "es": "simdigrafo",
+        "en": "simdigraph"
       },
       {
         "es": "pcsd",
@@ -330,52 +330,52 @@
         "en": "pcsdindices"
       },
       {
-        "es": "Input file:",
-        "en": "Archivo de entrada:"
+        "es": "Archivo de entrada:",
+        "en": "Input file:"
       },
       {
-        "es": "Iteration number:",
-        "en": "Numero de la iteracion:"
+        "es": "Numero de la iteracion:",
+        "en": "Iteration number:"
       },
       {
-        "es": "Maximum number of iterations:",
-        "en": "Numero de iteraciones maximas:"
+        "es": "Numero de iteraciones maximas:",
+        "en": "Maximum number of iterations:"
       },
       {
-        "es": "Number of iterations without changes:",
-        "en": "Numero de iteraciones sin cambios:"
+        "es": "Numero de iteraciones sin cambios:",
+        "en": "Number of iterations without changes:"
       },
       {
-        "es": "Change vector:",
-        "en": "Vector de cambios:"
+        "es": "Vector de cambios:",
+        "en": "Change vector:"
       },
       {
-        "es": "Propagation function:",
-        "en": "Funcion de propagacion:"
+        "es": "Funcion de propagacion:",
+        "en": "Propagation function:"
       },
       {
-        "es": "linear transform",
-        "en": "transformacion lineal"
+        "es": "transformacion lineal",
+        "en": "linear transform"
       },
       {
-        "es": "Threshold function:",
-        "en": "Funcion umbral:"
+        "es": "Funcion umbral:",
+        "en": "Threshold function:"
       },
       {
-        "es": "Differential value:",
-        "en": "Valor diferencial:"
+        "es": "Valor diferencial:",
+        "en": "Differential value:"
       },
       {
-        "es": "Summary",
-        "en": "Resumen"
+        "es": "Resumen",
+        "en": "Summary"
       },
       {
         "es": "Auc",
         "en": "Auc"
       },
       {
-        "es": "Stability",
-        "en": "Estabilidad"
-      }
+        "es": "Estabilidad",
+        "en": "Stability"
+      }      
 ]}
   

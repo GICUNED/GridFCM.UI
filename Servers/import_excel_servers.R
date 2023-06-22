@@ -24,19 +24,21 @@ import_excel_server <- function(input, output, session) {
     if (!is.null(datos_repgrid) && !is.null(datos_wimpgrid)) {
       # Ambos archivos cargados, navegar a FullGrid Home
       #
-    } else if (!is.null(datos_repgrid)) {
+    }  
+    if (!is.null(datos_repgrid)) {
       # Solo archivo RepGrid cargado, navegar a RepGrid Home
       print("ok")
       #print(session$userData$datos_repgrid)
       repgrid_home_server(input,output,session)
       runjs("window.location.href = '/#!/repgrid';")
-    } else if (!is.null(datos_wimpgrid)) {
+    } 
+    if (!is.null(datos_wimpgrid)) {
       # Solo archivo WimpGrid cargado, navegar a WimpGrid Home
       #
       print("ok")
       #print(session$userData$datos_repgrid)
-      wimpgrid_analysis_server(input,output,session)
-      runjs("window.location.href = '/#!/wimpgrid';")
+      #wimpgrid_analysis_server(input,output,session)
+      #runjs("window.location.href = '/#!/wimpgrid';")
     }}
  )
 
@@ -65,13 +67,15 @@ import_excel_server <- function(input, output, session) {
     if (!is.null(datos_repgrid) && !is.null(datos_wimpgrid)) {
       # Ambos archivos cargados, navegar a FullGrid Home
       #
-    } else if (!is.null(datos_repgrid)) {
+    } 
+    if (!is.null(datos_repgrid)) {
       # Solo archivo RepGrid cargado, navegar a RepGrid Home
       print("ok")
       #print(session$userData$datos_repgrid)
-      repgrid_home_server(input,output,session)
+      #repgrid_home_server(input,output,session)
       #runjs("window.location.href = '/#!/repgrid';")
-    } else if (!is.null(datos_wimpgrid)) {
+    } 
+    if (!is.null(datos_wimpgrid)) {
       # Solo archivo WimpGrid cargado, navegar a WimpGrid Home
       #
       print("ok")

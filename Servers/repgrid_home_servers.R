@@ -7,9 +7,11 @@ repgrid_home_server <- function(input, output, session) {
   print("Repgrid")
   print(session$userData$datos_repgrid)
   if (is.null(session$userData$datos_repgrid) || is.null(session$userData$datos_to_table)) {
+    shinyjs::show("repgrid_home_warn")
     repgrid_aux <- 0
     tabla_aux <- 0
   }else{
+    shinyjs::hide("repgrid_home_warn")
     repgrid_aux <- session$userData$datos_repgrid
     tabla_aux <- session$userData$datos_to_table
   }

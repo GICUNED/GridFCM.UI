@@ -1,13 +1,19 @@
 
 wimpgrid_analysis_server <- function(input, output, session) {
 # Lógica para la pestaña "Visualización"
-
+  
   print("Wimpgrid")
   print(session$userData$datos_wimpgrid)
   if (is.null(session$userData$datos_wimpgrid) || is.null(session$userData$datos_to_table_w)) {
+    show("id_warn")
+    show("vis_warn")
+    show("lab_warn")
     repgrid_aux <- 0
     tabla_aux <- 0
   }else{
+    hide("id_warn")
+    hide("vis_warn")
+    hide("lab_warn")
     repgrid_aux <- session$userData$datos_wimpgrid
     tabla_aux <- session$userData$datos_to_table_w
   }
@@ -88,48 +94,50 @@ observeEvent(input$reiniciar_w, {
 }})
 
 observeEvent(input$guardar_w, {
+    
     if (!is.null(session$userData$datos_wimpgrid)) {
-    tabla_final <- tabla_manipulable_w()
-    print("tabla_final: ")
-    my_dataframe <-tabla_final
-# Create a temporary file
-    temp_file <- tempfile(fileext = ".xlsx")
+      tabla_final <- tabla_manipulable_w()
+      print("tabla_final: ")
+      my_dataframe <-tabla_final
+      # Create a temporary file
+      temp_file <- tempfile(fileext = ".xlsx")
 
 
-    # Write the dataframe to the temporary file
-    write.xlsx(my_dataframe, temp_file)
+      # Write the dataframe to the temporary file
+      write.xlsx(my_dataframe, temp_file)
 
-    print(paste("Temporary file saved at: ", temp_file))
+      print(paste("Temporary file saved at: ", temp_file))
 
-    # Read the data from the temporary file
-    df_read <- importwimp(temp_file)
+      # Read the data from the temporary file
+      df_read <- importwimp(temp_file)
 
-    # Print the data
-    print(df_read)
-
-
-
-    # Create a repgrid object
-    #my_repgrid <- makeRepgrid(args)
-    #my_repgrid <- setScale(my_repgrid, minValue,maxValue)
-    my_repgrid <- df_read
-    print(my_repgrid)
+      # Print the data
+      print(df_read)
 
 
-    wimpgrid_a_mostrar(my_repgrid)
-    session$userData$datos_wimpgrid <- wimpgrid_a_mostrar()
-    session$userData$datos_to_table_w<- tabla_final
-    # Ocultar el botón "Guardar" y mostrar el botón "Editar"
-    shinyjs::hide("guarda_wr")
-    shinyjs::hide("reiniciar_w")
-    shinyjs::show("editar_w")
-    # Cambiar a modo de visualización
-    shinyjs::hide("tabla_datos_wimpgrid_container")
-    shinyjs::show("prueba_container_w")
-    dataaa_w(df_read)
+
+      # Create a repgrid object
+      #my_repgrid <- makeRepgrid(args)
+      #my_repgrid <- setScale(my_repgrid, minValue,maxValue)
+      my_repgrid <- df_read
+      print(my_repgrid)
 
 
-    }})
+      wimpgrid_a_mostrar(my_repgrid)
+      session$userData$datos_wimpgrid <- wimpgrid_a_mostrar()
+      session$userData$datos_to_table_w<- tabla_final
+      # Ocultar el botón "Guardar" y mostrar el botón "Editar"
+      shinyjs::hide("guarda_wr")
+      shinyjs::hide("reiniciar_w")
+      shinyjs::show("editar_w")
+      # Cambiar a modo de visualización
+      shinyjs::hide("tabla_datos_wimpgrid_container")
+      shinyjs::show("prueba_container_w")
+      dataaa_w(df_read)
+
+
+    }
+})
 
 #scn <- scenariomatrix(dataaa_w(),c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0))
 #VARIABLES OF THE FORM
@@ -229,8 +237,8 @@ output$dens <- renderText({
     INTe <- wimpindices(dataaa_w())[["density"]]
     knitr::kable(INTe, col.names = "density",format = "html") %>%
     kable_styling("striped", full_width = F) %>%
-    row_spec(0, bold = T, color = "white", background = "#005440") %>%
-    column_spec(1, bold = T, color = "#005440")
+    row_spec(0, bold = T, color = "white") %>%
+    column_spec(1, bold = T)
 })
 output$distance <- renderRHandsontable({
 
@@ -384,7 +392,10 @@ df_Vind <- reactiveVal(as.data.frame(t(v)))
 
 output$pcsdindices_act_vector <- renderRHandsontable({
   vv <- df_Vind()
- rhandsontable(vv )
+ col_highlight = c(0, 1)
+  row_highlight = c(3)
+ rhandsontable(vv , col_highlight = col_highlight, row_highlight = row_highlight)
+
 })
 
 observeEvent(input$pcsdindices_act_vector, {
@@ -520,35 +531,37 @@ output$convergence <- renderText({
     scn <- scenariomatrix(dataaa_w(),act.vector= c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),infer = infer(),
                            thr = thr(), max.iter = max_iter(), e = e(),
                            stop.iter = stop_iter())
-pscind <- pcsdindices(scn)
-
-
+    pscind <- pcsdindices(scn)
     knitr::kable(pscind$convergence, col.names = "convergence",format = "html") %>%
     kable_styling("striped", full_width = F) %>%
     row_spec(0, bold = T, color = "white", background = "#005440") %>%
     column_spec(1, bold = T, color = "#005440")
 })
+
+
 output$summary <- DT::renderDataTable({
   scn <- scenariomatrix(dataaa_w(),act.vector= c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),infer = infer(),
-                           thr = thr(), max.iter = max_iter(), e = e(),
-                           stop.iter = stop_iter())
-pscind <- pcsdindices(scn)
+                              thr = thr(), max.iter = max_iter(), e = e(),
+                              stop.iter = stop_iter())
+  pscind <- pcsdindices(scn)
 
-   DT::datatable(pscind$summary)
+  DT::datatable(pscind$summary)
 })
+
 output$auc <- DT::renderDataTable({
-  scn <- scenariomatrix(dataaa_w(),act.vector= c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),infer = infer(),
-                           thr = thr(), max.iter = max_iter(), e = e(),
-                           stop.iter = stop_iter())
-pscind <- pcsdindices(scn)
+      scn <- scenariomatrix(dataaa_w(),act.vector= c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),infer = infer(),
+                                thr = thr(), max.iter = max_iter(), e = e(),
+                                stop.iter = stop_iter())
+      pscind <- pcsdindices(scn)
 
-DT::datatable(pscind$auc)
+      DT::datatable(pscind$auc)
 })
+
 output$stability <- DT::renderDataTable({
-  scn <- scenariomatrix(dataaa_w(),act.vector= c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),infer = infer(),
+    scn <- scenariomatrix(dataaa_w(),act.vector= c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),infer = infer(),
                            thr = thr(), max.iter = max_iter(), e = e(),
                            stop.iter = stop_iter())
-pscind <- pcsdindices(scn)
+    pscind <- pcsdindices(scn)
 
     DT::datatable(pscind$stability)
 })
