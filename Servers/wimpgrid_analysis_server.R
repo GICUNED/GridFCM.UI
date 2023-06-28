@@ -4,7 +4,7 @@ wimpgrid_analysis_server <- function(input, output, session) {
   
   print("Wimpgrid")
   print(session$userData$datos_wimpgrid)
-  if (is.null(session$userData$datos_wimpgrid) || is.null(session$userData$datos_to_table_w)) {
+  if (is.null(session$userData$datos_wimpgrid)) {
     show("id_warn")
     show("vis_warn")
     show("lab_warn")
@@ -28,16 +28,14 @@ wimpgrid_a_mostrar <- reactiveVal(repgrid_aux)
 
 output$tabla_datos_wimpgrid <- renderRHandsontable({
   if (!is.null(session$userData$datos_wimpgrid)) {
-  print("tabla_manipulable_w:")
-  print(tabla_manipulable_w())
+    print("tabla_manipulable_w:")
+    print(tabla_manipulable_w())
 
-indicess <- c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24)
-hot_table <- rhandsontable(tabla_manipulable_w()) %>%
-    hot_table(highlightCol = TRUE, highlightRow = TRUE) %>%
-    hot_col(col = indicess, format = "1")
-
-
-hot_table
+    indicess <- c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24)
+    hot_table <- rhandsontable(tabla_manipulable_w()) %>%
+        hot_table(highlightCol = TRUE, highlightRow = TRUE) %>%
+        hot_col(col = indicess, format = "1")
+    hot_table
 
   }
 })
@@ -53,6 +51,7 @@ output$bert_w <- renderPlot({
     bertin(wimpgrid_a_mostrar()$openrepgrid , color=c("white", "#005440"))
     }
   })
+
 observeEvent(input$editar_w, {
     if (!is.null(session$userData$datos_wimpgrid)) {
     # Ocultar el botón "Editar" y mostrar el botón "Guardar"
@@ -64,6 +63,7 @@ observeEvent(input$editar_w, {
     shinyjs::show("tabla_datos_wimpgrid_container")
     }
   })
+
 
 
 observeEvent(input$reiniciar_w, {
@@ -102,26 +102,19 @@ observeEvent(input$guardar_w, {
       # Create a temporary file
       temp_file <- tempfile(fileext = ".xlsx")
 
-
       # Write the dataframe to the temporary file
       write.xlsx(my_dataframe, temp_file)
-
       print(paste("Temporary file saved at: ", temp_file))
 
       # Read the data from the temporary file
       df_read <- importwimp(temp_file)
-
       # Print the data
       print(df_read)
-
-
-
       # Create a repgrid object
       #my_repgrid <- makeRepgrid(args)
       #my_repgrid <- setScale(my_repgrid, minValue,maxValue)
       my_repgrid <- df_read
       print(my_repgrid)
-
 
       wimpgrid_a_mostrar(my_repgrid)
       session$userData$datos_wimpgrid <- wimpgrid_a_mostrar()
@@ -134,8 +127,6 @@ observeEvent(input$guardar_w, {
       shinyjs::hide("tabla_datos_wimpgrid_container")
       shinyjs::show("prueba_container_w")
       dataaa_w(df_read)
-
-
     }
 })
 
@@ -249,20 +240,20 @@ output$distance <- renderRHandsontable({
   hot_col(c(1,7), readOnly = TRUE)
 })
 
-  # Creamos las tablas dinámicas para cada subconjunto
-  output$table_degree <- DT::renderDataTable({
+# Creamos las tablas dinámicas para cada subconjunto
+output$table_degree <- DT::renderDataTable({
     centrality <- wimpindices(dataaa_w())[["centrality"]]
 
     DT::datatable(centrality$degree)
   })
 
-  output$table_closeness <- DT::renderDataTable({
+output$table_closeness <- DT::renderDataTable({
     centrality <- wimpindices(dataaa_w())[["centrality"]]
 
     DT::datatable(centrality$closeness)
   })
 
-  output$table_betweenness <- DT::renderDataTable({
+output$table_betweenness <- DT::renderDataTable({
     centrality <- wimpindices(dataaa_w())[["centrality"]]
 
     DT::datatable(centrality$betweenness)
@@ -290,22 +281,22 @@ simdigraph_e <- reactiveVal(0.0001)
 simdigraph_stop_iter <- reactiveVal(3)
 
 # Variables reactivas para almacenar los cambios de los inputs de pcsdindices
-  act_vector <- reactiveVal()
-  infer <- reactiveVal("linear transform")
-  thr <- reactiveVal("linear")
-  max_iter <- reactiveVal(30)
-  e <- reactiveVal(0.0001)
-  stop_iter <- reactiveVal(3)
+act_vector <- reactiveVal()
+infer <- reactiveVal("linear transform")
+thr <- reactiveVal("linear")
+max_iter <- reactiveVal(30)
+e <- reactiveVal(0.0001)
+stop_iter <- reactiveVal(3)
 
-  # Variables reactivas para almacenar los cambios de los inputs de pscd
-  pscd_iter <- reactiveVal(0)
-  pscd_wimp <- reactiveVal()
-  pscd_act_vector <- reactiveVal(0)
-  pscd_infer <- reactiveVal("linear transform")
-  pscd_thr <- reactiveVal("linear")
-  pscd_max_iter <- reactiveVal(30)
-  pscd_e <- reactiveVal(0.0001)
-  pscd_stop_iter <- reactiveVal(3)
+# Variables reactivas para almacenar los cambios de los inputs de pscd
+pscd_iter <- reactiveVal(0)
+pscd_wimp <- reactiveVal()
+pscd_act_vector <- reactiveVal(0)
+pscd_infer <- reactiveVal("linear transform")
+pscd_thr <- reactiveVal("linear")
+pscd_max_iter <- reactiveVal(30)
+pscd_e <- reactiveVal(0.0001)
+pscd_stop_iter <- reactiveVal(3)
 
 # Lógica para la pestaña "Laboratorio"
 observeEvent(input$tab_laboratorio, {
@@ -522,10 +513,8 @@ if (graph == "simdigraph") {
                            stop.iter = stop_iter())
   print(pcsdindices(scn))
 
-
 }
 })
-
 
 output$convergence <- renderText({
     scn <- scenariomatrix(dataaa_w(),act.vector= c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),infer = infer(),
@@ -537,7 +526,6 @@ output$convergence <- renderText({
     row_spec(0, bold = T, color = "white", background = "#005440") %>%
     column_spec(1, bold = T, color = "#005440")
 })
-
 
 output$summary <- DT::renderDataTable({
   scn <- scenariomatrix(dataaa_w(),act.vector= c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),infer = infer(),
@@ -553,7 +541,6 @@ output$auc <- DT::renderDataTable({
                                 thr = thr(), max.iter = max_iter(), e = e(),
                                 stop.iter = stop_iter())
       pscind <- pcsdindices(scn)
-
       DT::datatable(pscind$auc)
 })
 
@@ -562,7 +549,6 @@ output$stability <- DT::renderDataTable({
                            thr = thr(), max.iter = max_iter(), e = e(),
                            stop.iter = stop_iter())
     pscind <- pcsdindices(scn)
-
     DT::datatable(pscind$stability)
 })
 
