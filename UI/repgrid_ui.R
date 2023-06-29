@@ -4,6 +4,7 @@ repgrid_ui <- fluidPage( class="header-tab rg-diff",
   #h1("RepGrid - Análisis y Manipulación de Datos"),
   
   tabsetPanel(
+    id = "tabs_rep",
     tabPanel("Data", repgrid_home_ui, icon = icon("table")),
     tabPanel("Results", repgrid_analysis_ui, icon = icon("square-poll-vertical"))
   )

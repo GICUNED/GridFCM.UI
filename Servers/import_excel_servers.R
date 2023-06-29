@@ -6,11 +6,27 @@ import_excel_server <- function(input, output, session) {
       OpenRepGrid::importExcel(input$archivo_repgrid$datapath)
     }
     session$userData$datos_to_table<- if (!is.null(input$archivo_repgrid)) {read.xlsx(input$archivo_repgrid$datapath)}
+    num_columnas <- if (!is.null(input$archivo_repgrid)) {
+      ncol(session$userData$datos_to_table)
+    } else {
+      0
+    }
+    print(paste("num col", num_columnas))
+    session$userData$num_col_repgrid <- num_columnas
+
+    num_rows <- if (!is.null(input$archivo_repgrid)) {
+      nrow(session$userData$datos_to_table)
+    } else {
+      0
+    }
+    print(paste("num row", num_rows))
+    session$userData$num_row_repgrid <- num_rows
 
     datos_wimpgrid <- if (!is.null(input$archivo_wimpgrid)) {
       importwimp(input$archivo_wimpgrid$datapath)
     }
     session$userData$datos_to_table_w<-if (!is.null(input$archivo_wimpgrid)) { read.xlsx(input$archivo_wimpgrid$datapath)}
+  
 
     session$userData$datos_repgrid <- datos_repgrid
     session$userData$datos_wimpgrid <- datos_wimpgrid
@@ -23,7 +39,7 @@ import_excel_server <- function(input, output, session) {
     }
  )
 
-    observeEvent(input$importar_datos_w, {
+observeEvent(input$importar_datos_w, {
       # Importar datos de RepGrid y WimpGrid utilizando las funciones importwimp() y OpenRepGrid::importExcel() si los archivos están presentes
       datos_repgrid <- if (!is.null(input$archivo_repgrid)) {
         OpenRepGrid::importExcel(input$archivo_repgrid$datapath)
@@ -35,7 +51,21 @@ import_excel_server <- function(input, output, session) {
         importwimp(input$archivo_wimpgrid$datapath)
       }
       session$userData$datos_to_table_w<-if (!is.null(input$archivo_wimpgrid)) { read.xlsx(input$archivo_wimpgrid$datapath)}
+      num_columnas <- if (!is.null(input$archivo_wimpgrid)) {
+      ncol(session$userData$datos_to_table_w)
+    } else {
+      0
+    }
+    print(paste("num col", num_columnas))
+    session$userData$num_col_wimpgrid <- num_columnas
 
+    num_rows <- if (!is.null(input$archivo_wimpgrid)) {
+      nrow(session$userData$datos_to_table_w)
+    } else {
+      0
+    }
+    print(paste("num row", num_rows))
+    session$userData$num_row_wimpgrid <- num_rows
       # Almacenar los objetos importados en el entorno de la sesión para su uso posterior
       session$userData$datos_repgrid <- datos_repgrid
       #session$userData$datos_repgrid_df <- read.csv(input$archivo_repgrid$datapath)

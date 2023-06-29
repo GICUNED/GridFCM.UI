@@ -33,7 +33,9 @@ repgrid_home_server <- function(input, output, session) {
   if (!is.null(session$userData$datos_repgrid)) {
   print("tabla_manipulable:")
   print(tabla_manipulable)
-  indicess <- c(1,2,3,4,5,6,7,8,9,10,11,12,13,14)
+  #indicess <- c(1,2,3,4,5,6,7,8,9,10,11,12,13,14)
+  indices <- seq(1, session$userData$num_col_repgrid - 1)
+
 
   rhandsontable(tabla_manipulable()) %>%
     hot_table(highlightCol = TRUE, highlightRow = TRUE) %>%
@@ -87,15 +89,15 @@ output$bert <- renderPlot({
     tabla_final <- tabla_manipulable()
     print("tabla_final: ")
     my_dataframe <-tabla_final
-    print(my_dataframe[1:22,2:14])
-    element_names <- colnames(my_dataframe)[2:14]
+    print(my_dataframe[1:session$userData$num_row_repgrid,2:session$userData$num_col_repgrid-1])
+    element_names <- colnames(my_dataframe)[2:session$userData$num_col_repgrid-1]
 
     # Extract the left and right poles from the first column
     left_poles <- my_dataframe[, 1]
-    right_poles <- my_dataframe[, 15]
+    right_poles <- my_dataframe[, session$userData$num_col_repgrid]
 
     # Extract the scores from the data frame
-    scores <- as.vector(as.matrix(my_dataframe[1:22,2:14]))
+    scores <- as.vector(as.matrix(my_dataframe[1:session$userData$num_row_repgrid,2:session$userData$num_col_repgrid-1]))
     print("scores: ")
     print(scores)
     # Create the args list
@@ -146,15 +148,15 @@ output$bert <- renderPlot({
     tabla_final <- tabla_manipulable()
     print("tabla_final: ")
     my_dataframe <-tabla_final
-    print(my_dataframe[1:22,2:14])
-    element_names <- colnames(my_dataframe)[2:14]
+    print(my_dataframe[1:session$userData$num_row_repgrid,2:session$userData$num_col_repgrid-1])
+    element_names <- colnames(my_dataframe)[2:session$userData$num_col_repgrid-1]
 
     # Extract the left and right poles from the first column
     left_poles <- my_dataframe[, 1]
-    right_poles <- my_dataframe[, 15]
+    right_poles <- my_dataframe[, session$userData$num_col_repgrid]
 
     # Extract the scores from the data frame
-    scores <- as.vector(as.matrix(my_dataframe[1:22,2:14]))
+    scores <- as.vector(as.matrix(my_dataframe[1:session$userData$num_row_repgrid,2:session$userData$num_col_repgrid-1]))
     print("scores: ")
     print(scores)
     # Create the args list
@@ -208,7 +210,21 @@ output$bert <- renderPlot({
 
 
     }
+
+    
     repgrid_analisis_server(input,output,session)
   })
+  observeEvent(input$tabs_rep, {
+      print(paste("Tab seleccionado: ", input$tabs_rep))
+    
+    if (input$tabs_rep == "Data") {
+      print("Has seleccionado la pestaña Data")
+    } else if (input$tabs_rep == "Results") {
+      print("Has seleccionado la pestaña Results")
+      print("showing the results:")
+      repgrid_analisis_server(input,output,session)
+    }
+      
+    })
 }
 

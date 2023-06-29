@@ -8,6 +8,7 @@ repgrid_analisis_server <- function(input, output, session) {
     #datos_control <- session$userData$datos_repgrid
    # indice_control <-  gridindices(datos_control)
    #}
+   
 
   repgrid_data <- session$userData$datos_repgrid
   print(repgrid_data)
@@ -53,6 +54,8 @@ repgrid_analisis_server <- function(input, output, session) {
      #indices_list[["distances"]][["Constructs"]] 
     
   })
+
+  
 
   # Generar análisis por conglomerados
   output$cluster_plot_2 <- renderPlot({

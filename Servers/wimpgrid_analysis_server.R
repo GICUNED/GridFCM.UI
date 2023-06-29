@@ -31,7 +31,9 @@ output$tabla_datos_wimpgrid <- renderRHandsontable({
     print("tabla_manipulable_w:")
     print(tabla_manipulable_w())
 
-    indicess <- c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24)
+    #indicess <- c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24)
+    indicess <- seq(1, session$userData$num_col_wimpgrid - 1)
+
     hot_table <- rhandsontable(tabla_manipulable_w()) %>%
         hot_table(highlightCol = TRUE, highlightRow = TRUE) %>%
         hot_col(col = indicess, format = "1")
@@ -236,8 +238,9 @@ output$distance <- renderRHandsontable({
     INTe <- wimpindices(dataaa_w())[["distance"]]
     #DT::datatable(INTe)
     rhandsontable(INTe) %>%
-    hot_table(highlightCol = TRUE, highlightRow = TRUE) %>%
-  hot_col(c(1,7), readOnly = TRUE)
+    hot_table(highlightCol = TRUE, highlightRow = TRUE) 
+    #%>%
+  #hot_col(c(1,7), readOnly = TRUE)
 })
 
 # Creamos las tablas dinámicas para cada subconjunto
@@ -364,11 +367,17 @@ observeEvent(input$simdigraph_stop_iter, {
 })
 
 v <- rep(0, 22)
+max_v <- session$userData$num_col_wimpgrid - 3
+max_v <- max(1, max_v)
+
+print(paste("max_v: ",max_v))
+v <- rep(0, max_v)
+
 df_V <- reactiveVal(as.data.frame(t(v)))
 
 output$simdigraph_act_vector <- renderRHandsontable({
   vv <- df_V()
- rhandsontable(vv )
+  rhandsontable(vv)
 })
 
 observeEvent(input$simdigraph_act_vector, {
