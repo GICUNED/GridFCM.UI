@@ -34,7 +34,7 @@ repgrid_home_server <- function(input, output, session) {
   print("tabla_manipulable:")
   print(tabla_manipulable)
   #indicess <- c(1,2,3,4,5,6,7,8,9,10,11,12,13,14)
-  indices <- seq(1, session$userData$num_col_repgrid - 1)
+  indicess <- seq(1, session$userData$num_col_repgrid - 1)
 
 
   rhandsontable(tabla_manipulable()) %>%
