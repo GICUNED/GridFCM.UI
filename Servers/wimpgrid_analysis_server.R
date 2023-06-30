@@ -1,7 +1,7 @@
 
 wimpgrid_analysis_server <- function(input, output, session) {
 # Lógica para la pestaña "Visualización"
-  
+
   print("Wimpgrid")
   print(session$userData$datos_wimpgrid)
   if (is.null(session$userData$datos_wimpgrid)) {
@@ -80,18 +80,18 @@ observeEvent(input$reiniciar_w, {
     # Create a temporary file
     temp_file <- tempfile(fileext = ".xlsx")
     # Write the dataframe to the temporary file
-    write.xlsx(my_dataframe, temp_file)
+    OpenRepGrid::saveAsExcel(session$userData$datos_wimpgrid$openrepgrid, temp_file)
     print(paste("Temporary file saved at: ", temp_file))
 
     # Read the data from the temporary file
-    df_read <- importwimp(temp_file)
+    df_read <- read.xlsx(temp_file)
     # Print the data
     print(df_read)
     my_repgrid <- df_read
     print(my_repgrid)
     wimpgrid_a_mostrar(my_repgrid)
-    session$userData$datos_wimpgrid <- wimpgrid_a_mostrar()
-    session$userData$datos_to_table_w<- tabla_final
+    #session$userData$datos_wimpgrid <- wimpgrid_a_mostrar()
+    session$userData$datos_to_table_w<- my_repgrid
 
 }})
 
@@ -201,6 +201,8 @@ observeEvent(input$graph_selector_visualizacion, {
 })
 
 # Definir la lógica del servidor para la aplicación
+
+  
 output$graph_output_visualizacion <- renderPlot({
   # Verificar que input$graph_selector_visualizacion no es NULL
   req(input$graph_selector_visualizacion)
@@ -210,11 +212,29 @@ output$graph_output_visualizacion <- renderPlot({
   print("grapfh selected in view")
   print(graph)
   # Dependiendo de la selección del usuario, dibuja el gráfico correspondiente
-  if (graph == "selfdigraph") {
-    selfdigraph(dataaa_w(), layout = selfdigraph_layout(), vertex.size = selfdigraph_vertex_size(),edge.width = selfdigraph_edge_width(), color = selfdigraph_color())
-  } else if (graph == "idealdigraph") {
+  if (graph == "autodigrafo" || graph=="selfdigraph") {
+    
+    
+    print("hhhh")
+
+    if(i18n$get_key_translation()=="es")
+    {
+      
+      selfdigraph(dataaa_w(), layout = translate_word("en",selfdigraph_layout()), vertex.size = selfdigraph_vertex_size(),edge.width = selfdigraph_edge_width(), color = translate_word("en",selfdigraph_color()))
+      #selfdigraph(dataaa_w(), layout = selfdigraph_layout(), vertex.size = selfdigraph_vertex_size(),edge.width = selfdigraph_edge_width(), color = selfdigraph_color())
+    }
+    else{
+      selfdigraph(dataaa_w(), layout = selfdigraph_layout(), vertex.size = selfdigraph_vertex_size(),edge.width = selfdigraph_edge_width(), color = selfdigraph_color())
+    }
+  } else if (graph == i18n$t("digrafo ideal")) {
+    if(i18n$get_key_translation()=="es")
+    {
+        idealdigraph(dataaa_w(), inc = idealdigraph_inc(), layout = translate_word("en",idealdigraph_layout()), vertex.size = idealdigraph_vertex_size(), edge.width = idealdigraph_edge_width(),color = translate_word("en",idealdigraph_color()))
+
+    }else{
     idealdigraph(dataaa_w(), inc = idealdigraph_inc(), layout = idealdigraph_layout(), vertex.size = idealdigraph_vertex_size(), edge.width = idealdigraph_edge_width(),color = idealdigraph_color())
-  } else if (graph == "wimpindices") {
+    }
+  } else if (graph == i18n$t("indices de Wimp")) {
     print("wimpindices")
     # Get column names
     column_names <- names(wimpindices(dataaa_w()))
@@ -487,22 +507,34 @@ observeEvent(input$graph_selector_laboratorio, {
 output$graph_output_laboratorio <- renderPlot({
 # Verificar que input$graph_selector_visualizacion no es NULL
 req(input$graph_selector_laboratorio)
-
 # Asignar el input a una variable
 graph <- input$graph_selector_laboratorio
-
 # Dependiendo de la selección del usuario, dibuja el gráfico correspondiente
 print("grapfh selected in laboratory")
 print(graph)
-if (graph == "simdigraph") {
+if (graph == i18n$t("simdigrafo")) {
   shinyjs::show("lab_showw")
   shinyjs::hide("pscd_showw")
   sim_stop_it <- simdigraph_stop_iter()
-  scn <- scenariomatrix(dataaa_w(),act.vector= df_V(),infer = simdigraph_infer(),
-                           thr = simdigraph_thr(), max.iter = simdigraph_max_iter(), e = simdigraph_e(),
-                           stop.iter = sim_stop_it)
-  simdigraph(scn,niter=simdigraph_niter(), layout = simdigraph_layout(), vertex.size = simdigraph_vertex_size(),edge.width = simdigraph_edge_width(), color = simdigraph_color())
 
+  if(i18n$get_key_translation()=="es"){
+    print(paste("simdig:",i18n$get_key_translation()))
+    print(translate_word("en", simdigraph_infer()))
+    scn <- scenariomatrix(dataaa_w(),act.vector= df_V(),infer = "linear transform",
+                           thr = "linear", max.iter = simdigraph_max_iter(), e = simdigraph_e(),
+                           stop.iter = sim_stop_it)
+    simdigraph(scn,niter=simdigraph_niter(), layout = translate_word("en",simdigraph_layout()), vertex.size = simdigraph_vertex_size(),edge.width = simdigraph_edge_width(), color = translate_word("en",simdigraph_color()))
+ 
+  }
+  else{
+    #infer = simdigraph_infer(),
+    #                       thr = simdigraph_thr()
+    
+    scn <- scenariomatrix(dataaa_w(),act.vector= df_V(),infer = "linear transform",
+                           thr = "linear", max.iter = simdigraph_max_iter(), e = simdigraph_e(),
+                           stop.iter = sim_stop_it)
+    simdigraph(scn,niter=simdigraph_niter(), layout = simdigraph_layout(), vertex.size = simdigraph_vertex_size(),edge.width = simdigraph_edge_width(), color = simdigraph_color())
+  }
 
 } else if (graph == "pcsd") {
   #pscd_stop_it <- pscd_stop_iter()
@@ -537,7 +569,7 @@ output$convergence <- renderText({
 })
 
 output$summary <- DT::renderDataTable({
-  scn <- scenariomatrix(dataaa_w(),act.vector= c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),infer = infer(),
+  scn <- scenariomatrix(dataaa_w(),act.vector= df_V(),infer = infer(),
                               thr = thr(), max.iter = max_iter(), e = e(),
                               stop.iter = stop_iter())
   pscind <- pcsdindices(scn)
@@ -546,7 +578,7 @@ output$summary <- DT::renderDataTable({
 })
 
 output$auc <- DT::renderDataTable({
-      scn <- scenariomatrix(dataaa_w(),act.vector= c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),infer = infer(),
+      scn <- scenariomatrix(dataaa_w(),act.vector= df_V(),infer = infer(),
                                 thr = thr(), max.iter = max_iter(), e = e(),
                                 stop.iter = stop_iter())
       pscind <- pcsdindices(scn)
@@ -554,7 +586,7 @@ output$auc <- DT::renderDataTable({
 })
 
 output$stability <- DT::renderDataTable({
-    scn <- scenariomatrix(dataaa_w(),act.vector= c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),infer = infer(),
+    scn <- scenariomatrix(dataaa_w(),act.vector= df_V(),infer = infer(),
                            thr = thr(), max.iter = max_iter(), e = e(),
                            stop.iter = stop_iter())
     pscind <- pcsdindices(scn)
@@ -571,7 +603,7 @@ output$pscd_show <- renderPlotly({
       shinyjs::hide("lab_showw")
       shinyjs::show("pscd_showw")
     pscd_stop_it <- pscd_stop_iter()
-    scn <- scenariomatrix(dataaa_w(),act.vector= c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),infer = pscd_infer(),
+    scn <- scenariomatrix(dataaa_w(),act.vector= df_V(),infer = pscd_infer(),
                             thr = pscd_thr(), max.iter = pscd_max_iter(), e = pscd_e(),
                             stop.iter = pscd_stop_it)
     pscdit <- pscd_iter()

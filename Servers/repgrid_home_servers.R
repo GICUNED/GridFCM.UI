@@ -81,139 +81,98 @@ output$bert <- renderPlot({
   })
 
   observeEvent(input$reiniciar, {
+    print("reiniciar")
     if (!is.null(session$userData$datos_repgrid)) {
-    tabla_manipulable(tabla_final)
-    #session$userData$datos_repgrid <- tabla_manipulable()
-    #session$userData$datos_to_table<- tabla_final
+        tabla_manipulable(tabla_final)
 
-    tabla_final <- tabla_manipulable()
-    print("tabla_final: ")
-    my_dataframe <-tabla_final
-    print(my_dataframe[1:session$userData$num_row_repgrid,2:session$userData$num_col_repgrid-1])
-    element_names <- colnames(my_dataframe)[2:session$userData$num_col_repgrid-1]
+        tabla_final <- tabla_manipulable()
+        print("tabla_final: ")
+        my_dataframe <-tabla_final
 
-    # Extract the left and right poles from the first column
-    left_poles <- my_dataframe[, 1]
-    right_poles <- my_dataframe[, session$userData$num_col_repgrid]
+        # Create a temporary file
+        temp_file <- tempfile(fileext = ".xlsx")
 
-    # Extract the scores from the data frame
-    scores <- as.vector(as.matrix(my_dataframe[1:session$userData$num_row_repgrid,2:session$userData$num_col_repgrid-1]))
-    print("scores: ")
-    print(scores)
-    # Create the args list
-    args <- list(
-      name = element_names,
-      l.name = left_poles,
-      r.name = right_poles,
-      scores = scores
-    )
+        # Write the dataframe to the temporary file
+        OpenRepGrid::saveAsExcel(session$userData$datos_repgrid, temp_file)
+        print(paste("Temporary file saved at: ", temp_file))
 
+        # Check if the file exists and is not empty
+        if (file.exists(temp_file) && file.size(temp_file) > 0) {
+            # Read the data from the temporary file
+            df_read <- read.xlsx(temp_file)
+            # Print the data
+            print(df_read)
 
-    # Create a temporary file
-    temp_file <- tempfile(fileext = ".xlsx")
+            # Check if df_read is not NULL or empty
+            if (!is.null(df_read) && nrow(df_read) > 0) {
+                # Create a repgrid object
+                my_repgrid <- df_read
 
+                print(my_repgrid)
 
-    # Write the dataframe to the temporary file
-    write.xlsx(my_dataframe, temp_file)
+                repgrid_a_mostrar(session$userData$datos_repgrid)
+                #session$userData$datos_repgrid <- repgrid_a_mostrar()
+                session$userData$datos_to_table<- my_repgrid 
+            } else {
+                print("Error: df_read is NULL or empty.")
+            }
+        } else {
+            print("Error: The temporary file does not exist or is empty.")
+        }
+    }
+})
 
-    print(paste("Temporary file saved at: ", temp_file))
-
-    # Read the data from the temporary file
-    df_read <- OpenRepGrid::importExcel(temp_file)
-
-    # Print the data
-    print(df_read)
-
-
-   
-    # Create a repgrid object
-    #my_repgrid <- makeRepgrid(args)
-    #my_repgrid <- setScale(my_repgrid, minValue,maxValue)
-    my_repgrid <- df_read
-
-    # Create a repgrid object
-    #my_repgrid <- makeRepgrid(args)
-    #my_repgrid <- setScale(my_repgrid, 1,7)
-    print(my_repgrid)
-
-
-    repgrid_a_mostrar(my_repgrid)
-    session$userData$datos_repgrid <- repgrid_a_mostrar()
-    session$userData$datos_to_table<- tabla_final 
-
-  }})
 
   observeEvent(input$guardar, {
     if (!is.null(session$userData$datos_repgrid)) {
-    tabla_final <- tabla_manipulable()
-    print("tabla_final: ")
-    my_dataframe <-tabla_final
-    print(my_dataframe[1:session$userData$num_row_repgrid,2:session$userData$num_col_repgrid-1])
-    element_names <- colnames(my_dataframe)[2:session$userData$num_col_repgrid-1]
+        tabla_final <- tabla_manipulable()
+        print("tabla_final: ")
+        my_dataframe <-tabla_final
 
-    # Extract the left and right poles from the first column
-    left_poles <- my_dataframe[, 1]
-    right_poles <- my_dataframe[, session$userData$num_col_repgrid]
+        # Create a temporary file
+        temp_file <- tempfile(fileext = ".xlsx")
 
-    # Extract the scores from the data frame
-    scores <- as.vector(as.matrix(my_dataframe[1:session$userData$num_row_repgrid,2:session$userData$num_col_repgrid-1]))
-    print("scores: ")
-    print(scores)
-    # Create the args list
-    args <- list(
-      name = element_names,
-      l.name = left_poles,
-      r.name = right_poles,
-      scores = scores
-    )
+        # Write the dataframe to the temporary file
+        write.xlsx(my_dataframe, temp_file)
+        print(paste("Temporary file saved at: ", temp_file))
 
- 
-	  minValue <-min(unlist(scores), na.rm=TRUE) 
-	
-	  maxValue <-max(unlist(scores), na.rm=TRUE)  
-    
-    # Create a temporary file
-    temp_file <- tempfile(fileext = ".xlsx")
+        # Check if the file exists and is not empty
+        if (file.exists(temp_file) && file.size(temp_file) > 0) {
+            # Read the data from the temporary file
+            df_read <- OpenRepGrid::importExcel(temp_file)
 
+            # Print the data
+            print(df_read)
 
-    # Write the dataframe to the temporary file
-    write.xlsx(my_dataframe, temp_file)
+            # Check if df_read is not NULL or empty
+            if (!is.null(df_read) && nrow(df_read) > 0) {
+                # Create a repgrid object
+                my_repgrid <- df_read
 
-    print(paste("Temporary file saved at: ", temp_file))
+                print(my_repgrid)
 
-    # Read the data from the temporary file
-    df_read <- OpenRepGrid::importExcel(temp_file)
+                repgrid_a_mostrar(my_repgrid)
+                session$userData$datos_repgrid <- repgrid_a_mostrar()
+                session$userData$datos_to_table<- tabla_final
 
-    # Print the data
-    print(df_read)
+                # Hide the "Save" button and show the "Edit" button
+                shinyjs::hide("guardar")
+                shinyjs::hide("reiniciar")
+                shinyjs::show("editar")
 
-
-   
-    # Create a repgrid object
-    #my_repgrid <- makeRepgrid(args)
-    #my_repgrid <- setScale(my_repgrid, minValue,maxValue)
-    my_repgrid <- df_read
-    print(my_repgrid)
-   
-
-    repgrid_a_mostrar(my_repgrid)
-    session$userData$datos_repgrid <- repgrid_a_mostrar()
-    session$userData$datos_to_table<- tabla_final           
-    # Ocultar el botón "Guardar" y mostrar el botón "Editar"
-    shinyjs::hide("guardar")
-    shinyjs::hide("reiniciar")
-    shinyjs::show("editar")
-    # Cambiar a modo de visualización
-    shinyjs::hide("tabla_datos_repgrid_container")
-    shinyjs::show("prueba_container")
-    
-
-
+                # Switch to viewing mode
+                shinyjs::hide("tabla_datos_repgrid_container")
+                shinyjs::show("prueba_container")
+            } else {
+                print("Error: df_read is NULL or empty.")
+            }
+        } else {
+            print("Error: The temporary file does not exist or is empty.")
+        }
     }
-
-    
     repgrid_analisis_server(input,output,session)
-  })
+})
+
   observeEvent(input$tabs_rep, {
       print(paste("Tab seleccionado: ", input$tabs_rep))
     

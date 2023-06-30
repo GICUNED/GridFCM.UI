@@ -62,7 +62,8 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
         column(12, class="d-flex justify-content-center", actionButton("crear_nuevo", "Importar Archivos", status = 'warning', icon = icon("file-lines"))),
       )),
 
-        conditionalPanel(class = ("flex-container-resp"), condition = "input.graph_selector_visualizacion == 'selfdigraph'",
+        conditionalPanel(class = ("flex-container-resp"),   condition = "input.graph_selector_visualizacion == 'selfdigraph' || input.graph_selector_visualizacion == 'autodigrafo'",
+
 
                          selectInput("selfdigraph_layout", i18n$t("Layout:"),
                                      choices = c("circulo", "rtcirculo","arbol", "graphopt", "mds", "cuadricula"),
@@ -78,7 +79,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
 
 
         ),
-        conditionalPanel(class = ("flex-container-resp detail"), condition = "input.graph_selector_visualizacion == 'idealdigraph'",
+        conditionalPanel(class = ("flex-container-resp detail"), condition = "input.graph_selector_visualizacion == 'idealdigraph' || input.graph_selector_visualizacion == 'digrafo ideal'",
 
                          checkboxInput("idealdigraph_inc", i18n$t("Hide direct relationships"), value = FALSE),
 
@@ -96,7 +97,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
 
 
         ),
-        conditionalPanel(condition = "input.graph_selector_visualizacion == 'wimpindices'",
+        conditionalPanel(condition = "input.graph_selector_visualizacion == 'wimpindices' || input.graph_selector_visualizacion == 'indices de Wimp' ",
         
 
                       fluidRow(class = "table-container pb-0 flex-row kpi",
@@ -150,7 +151,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
       )),
       
         conditionalPanel(class = ("flex-container-resp detail"),
-          condition = "input.graph_selector_laboratorio == 'simdigraph'",
+          condition = "input.graph_selector_laboratorio == 'simdigraph' || input.graph_selector_laboratorio == 'simdigrafo'",
 
 
             shinyjs::hidden(
