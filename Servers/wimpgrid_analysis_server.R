@@ -50,7 +50,7 @@ observeEvent(input$tabla_datos_wimpgrid, {
 
 output$bert_w <- renderPlot({
     if (!is.null(session$userData$datos_wimpgrid)) {
-    bertin(wimpgrid_a_mostrar()$openrepgrid , color=c("white", "#005440"))
+    bertin(wimpgrid_a_mostrar()$openrepgrid , color=c("white", "#dfb639"))
     }
   })
 
@@ -250,7 +250,7 @@ output$dens <- renderText({
     INTe <- wimpindices(dataaa_w())[["density"]]
     knitr::kable(INTe, col.names = "density",format = "html") %>%
     kable_styling("striped", full_width = F) %>%
-    row_spec(0, bold = T, color = "white") %>%
+    row_spec(0, bold = T) %>%
     column_spec(1, bold = T)
 })
 output$distance <- renderRHandsontable({

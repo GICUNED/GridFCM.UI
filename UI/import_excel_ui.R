@@ -1,6 +1,6 @@
 import_excel_ui <-  fluidPage(
      shiny.i18n::usei18n(i18n),
-div(
+div(class = "custom-margins",
     h2("Importar datos desde archivo xlsx", class = "pagetitlecustom"),
     p("En esta página, puedes descargar plantillas de xlsx y documentos de ayuda, y subir archivos xlsx para importar datos.", class = "desccustom mb-3"),
 

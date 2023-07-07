@@ -1,7 +1,7 @@
 inicio_ui <- fluidPage( 
   shiny.i18n::usei18n(i18n),
   
-  div(
+  div(class = "custom-margins",
 
   h2("Inicia sesión para continuar", class = "pagetitlecustom mb-4"),
         fluidRow(

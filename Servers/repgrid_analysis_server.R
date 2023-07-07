@@ -115,7 +115,7 @@ repgrid_analisis_server <- function(input, output, session) {
     #print(indexDilemma(repgrid_data)[[1]])
     knitr::kable(INTc$construct_classification,format = "html") %>%
     #knitr::kable(INTc, col.names = "Intensity",format = "html") %>%
-    kable_styling("striped", full_width = F) %>%
+    kable_styling("striped", full_width = T) %>%
     row_spec(0, bold = T, color = "white", background = "#005440") %>%
     column_spec(1, bold = T)
     
