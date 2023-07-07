@@ -28,6 +28,7 @@ shinyjs::hidden(fluidRow(id="repgrid_home_warn",class="mb-4 mt-4 gap-2 justify-c
   shinyjs::hidden(
     div(id = "tabla_datos_repgrid_container",
       # Mostrar los datos de tabla_datos_repgrid
+      tags$style(".my-table .htCore .htNoWrap { white-space: normal; }"),
       rHandsontableOutput("tabla_datos_repgrid")
     )
   ),

@@ -8,7 +8,7 @@ repgrid_analysis_ui <- fluidPage( class="header-tab",
     column(12, class = ("input-container"),
       # Agregar un selectInput para elegir el gráfico a mostrar
       selectInput("graph_selector",
-                  i18n$t("Seleccione un gráfico:"),
+                  i18n$t("Seleccione un análisis:"),
                   choices = c("Análisis Bidimensional",
                               "Análisis Tridimensional",
                               "Análisis por Conglomerados",
@@ -76,7 +76,7 @@ repgrid_analysis_ui <- fluidPage( class="header-tab",
   conditionalPanel(condition = "input.graph_selector == 'Índices Cognitivos' || input.graph_selector=='Cognitive Indices'",
     fluidRow(class = "flex-container-sm",
       icon("brain", class = "mt-4"),
-      h4(i18n$t("Índices Cognitivos"), class = "pagetitle2custom mt-2 mb-2")
+      h4(i18n$t("Índices"), class = "pagetitle2custom mt-2 mb-2")
     ),
     fluidRow(class = "table-container",
       h4(i18n$t("Índices y Valores Matemáticos"), class = "pagesubtitlecustom mt-4 mb-4"),

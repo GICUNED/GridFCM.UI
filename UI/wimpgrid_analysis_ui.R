@@ -48,8 +48,8 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
         column(12, class = ("wg input-container"),
         # Agregar un selectInput para elegir el gráfico a mostrar
         selectInput("graph_selector_visualizacion",
-                    i18n$t("Seleccione un grafico:"),
-                    choices = c("autodigrafo","digrafo ideal","indices de Wimp")),
+                    i18n$t("Seleccione un análisis:"),
+                    choices = c("autodigrafo","digrafo del ideal","índices de Wimp")),
         ),
       ),
 

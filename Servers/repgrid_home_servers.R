@@ -14,7 +14,7 @@ repgrid_home_server <- function(input, output, session) {
     shinyjs::hide("repgrid_home_warn")
     repgrid_aux <- session$userData$datos_repgrid
     tabla_aux <- session$userData$datos_to_table
-  }
+  }  
 
   repgrid_inicial <- reactiveVal(repgrid_aux)
   repgrid_a_mostrar <- reactiveVal(repgrid_aux)
@@ -44,11 +44,63 @@ repgrid_home_server <- function(input, output, session) {
   }
 })
 
+## NEW ####################################################################
+
+# To validate that the values of the cells of the table are between 1 and 7
+validateValue <- function(changes, tabla) {
+
+  new_v = changes[[1]][[4]]
+
+  if(!is.na(new_v) && is.numeric(new_v) && (new_v > 7 || new_v < 1)) {
+    showModal(modalDialog(
+      title = "Error",
+      "El valor debe estar entre el rango 1-7.",
+      easyClose = TRUE
+    ))
+    return(FALSE)
+  }
+  return(TRUE)
+}
+
+#observeEvent(input$tabla_datos_repgrid$changes$changes, {
+#  
+#  changes <- input$tabla_datos_repgrid$changes$changes
+#
+#  if (!is.null(changes)) {
+#    val <- validateValue(changes, input$tabla_datos_repgrid)
+#    if(val) {
+#      
+#    }
+#  }
+#})
+
+## /NEW ###################################################################
+
 observeEvent(input$tabla_datos_repgrid, {
-  if (!is.null(session$userData$datos_repgrid)) {
-    tabla_manipulable(hot_to_r(input$tabla_datos_repgrid))
-    #tabla_manipulable <- tabla_manipulable
-}})
+
+  changes <- input$tabla_datos_repgrid$changes$changes
+
+  if (!is.null(changes)) {
+    val <- validateValue(changes, input$tabla_datos_repgrid)
+    if (!val) {
+      print(nrow(input$tabla_datos_repgrid))
+      print(ncol(input$tabla_datos_repgrid))
+      #xi = changes[[1]][[1]]
+      #yi = changes[[1]][[2]]
+      #old_v = changes[[1]][[3]]
+      #input$tabla_datos_repgrid[xi, yi] <- old_v
+      #tabla_manipulable(hot_to_r(input$tabla_datos_repgrid))
+
+    } else if (!is.null(session$userData$datos_repgrid)) {
+      tabla_manipulable(hot_to_r(input$tabla_datos_repgrid))
+    }
+  }
+
+  #if (!is.null(session$userData$datos_repgrid)) {
+  #  tabla_manipulable(hot_to_r(input$tabla_datos_repgrid))
+  #  #tabla_manipulable <- tabla_manipulable
+  #}
+})
 
 output$bert <- renderPlot({
     if (!is.null(session$userData$datos_repgrid)) {
