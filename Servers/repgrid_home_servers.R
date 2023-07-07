@@ -83,12 +83,12 @@ observeEvent(input$tabla_datos_repgrid, {
   if (!is.null(changes)) {
     val <- validateValue(changes, input$tabla_datos_repgrid)
     if (!val) {
-      print(nrow(input$tabla_datos_repgrid))
-      print(ncol(input$tabla_datos_repgrid))
-      #xi = changes[[1]][[1]]
-      #yi = changes[[1]][[2]]
-      #old_v = changes[[1]][[3]]
-      #input$tabla_datos_repgrid[xi, yi] <- old_v
+      tabla_aux <- tabla_manipulable()
+      xi = changes[[1]][[1]]
+      yi = changes[[1]][[2]]
+      old_v = changes[[1]][[3]]
+      print(tabla_aux)
+      #print(tabla_aux)
       #tabla_manipulable(hot_to_r(input$tabla_datos_repgrid))
 
     } else if (!is.null(session$userData$datos_repgrid)) {
