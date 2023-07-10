@@ -39,7 +39,7 @@ import_excel_server <- function(input, output, session) {
     }
  )
 
-observeEvent(input$importar_datos_w, {
+  observeEvent(input$importar_datos_w, {
       # Importar datos de RepGrid y WimpGrid utilizando las funciones importwimp() y OpenRepGrid::importExcel() si los archivos están presentes
       datos_repgrid <- if (!is.null(input$archivo_repgrid)) {
         OpenRepGrid::importExcel(input$archivo_repgrid$datapath)
@@ -78,4 +78,28 @@ observeEvent(input$importar_datos_w, {
         runjs("window.location.href = '/#!/wimpgrid';")
       }   
   })
+
+  ### NEW ######################################################################################
+  # Download handler function
+  output$download_link_repgrid <- downloadHandler(
+    # Specify the filename and content type
+    filename = function() {
+      "RepGrid_Template.xlsx"
+    },
+    content = function(file) {
+      template_path <- "/Servers/RepGrid_Template.xlsx"
+      file.copy(template_path, file)
+    }
+  )
+
+  output$downloadWimpGrid <- downloadHandler(
+    # Specify the filename and content type
+    filename = function() {
+      return("plantilla_wimpgrid.xlsx")
+    },
+    content = function(file) {
+      file <- "/UI/plantillas/WimpGrid_Template.xlsx"
+      return(file)  # Path to the file to be downloaded
+    }
+  )
 }
