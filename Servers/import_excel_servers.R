@@ -87,19 +87,17 @@ import_excel_server <- function(input, output, session) {
       "RepGrid_Template.xlsx"
     },
     content = function(file) {
-      template_path <- "/Servers/RepGrid_Template.xlsx"
-      file.copy(template_path, file)
+      file.copy("UI/plantillas/RepGrid_Template.xlsx", file)
     }
   )
 
-  output$downloadWimpGrid <- downloadHandler(
+  output$download_link_wimpgrid <- downloadHandler(
     # Specify the filename and content type
     filename = function() {
-      return("plantilla_wimpgrid.xlsx")
+      "WimpGrid_Template.xlsx"
     },
     content = function(file) {
-      file <- "/UI/plantillas/WimpGrid_Template.xlsx"
-      return(file)  # Path to the file to be downloaded
+      file.copy("UI/plantillas/WimpGrid_Template.xlsx", file)
     }
   )
 }
