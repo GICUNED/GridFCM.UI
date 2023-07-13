@@ -62,20 +62,6 @@ validateValue <- function(changes, tabla) {
   return(TRUE)
 }
 
-#observeEvent(input$tabla_datos_repgrid$changes$changes, {
-#  
-#  changes <- input$tabla_datos_repgrid$changes$changes
-#
-#  if (!is.null(changes)) {
-#    val <- validateValue(changes, input$tabla_datos_repgrid)
-#    if(val) {
-#      
-#    }
-#  }
-#})
-
-## /NEW ###################################################################
-
 observeEvent(input$tabla_datos_repgrid, {
 
   changes <- input$tabla_datos_repgrid$changes$changes
@@ -83,24 +69,21 @@ observeEvent(input$tabla_datos_repgrid, {
   if (!is.null(changes)) {
     val <- validateValue(changes, input$tabla_datos_repgrid)
     if (!val) {
-      tabla_aux <- tabla_manipulable()
       xi = changes[[1]][[1]]
       yi = changes[[1]][[2]]
       old_v = changes[[1]][[3]]
-      print(tabla_aux)
-      #print(tabla_aux)
-      #tabla_manipulable(hot_to_r(input$tabla_datos_repgrid))
+      
+      tabla_original <- hot_to_r(input$tabla_datos_repgrid)
+      tabla_original[xi+1, yi+1] <- old_v
+      tabla_manipulable(tabla_original)
 
     } else if (!is.null(session$userData$datos_repgrid)) {
       tabla_manipulable(hot_to_r(input$tabla_datos_repgrid))
     }
   }
-
-  #if (!is.null(session$userData$datos_repgrid)) {
-  #  tabla_manipulable(hot_to_r(input$tabla_datos_repgrid))
-  #  #tabla_manipulable <- tabla_manipulable
-  #}
 })
+
+## /NEW ###################################################################
 
 output$bert <- renderPlot({
     if (!is.null(session$userData$datos_repgrid)) {
