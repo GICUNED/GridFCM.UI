@@ -68,6 +68,9 @@ repgrid_analisis_server <- function(input, output, session) {
 
   # Generar tabla de índices y valores matemáticos
   output$gridindices_table <- renderText({
+
+    INTe <- indices_list[["intensity"]][["Elements"]]
+    print(INTe)
     
     PVEFF <- indices_list[["pvaff"]] 
     INT <- indices_list[["intensity"]][["Total"]] 
@@ -75,6 +78,7 @@ repgrid_analisis_server <- function(input, output, session) {
     BIA <- indices_list[["bias"]]
     GCONS <- indices_list[["intensity"]][["Global Constructs"]]
     GELEM <- indices_list[["intensity"]][["Global Elements"]]
+
     tabla_indices <- data.frame(PVEFF,INT,CON,BIA)
 
     # Encontrar el índice de la columna que contiene "max"

@@ -42,11 +42,43 @@ output$tabla_datos_wimpgrid <- renderRHandsontable({
   }
 })
 
+## NEW ######################################################
+
+validateValue <- function(changes, tabla) {
+  
+  new_v = changes[[1]][[4]]
+
+  if(!is.na(new_v) && is.numeric(new_v) && (new_v > 7 || new_v < 1)) {
+    showModal(modalDialog(
+      title = "Error",
+      "El valor debe estar entre el rango 1-7.",
+      easyClose = TRUE
+    ))
+    return(FALSE)
+  }
+  return(TRUE)
+}
+
 observeEvent(input$tabla_datos_wimpgrid, {
-  if (!is.null(session$userData$datos_wimpgrid)) {
-    tabla_manipulable_w(hot_to_r(input$tabla_datos_wimpgrid))
-    #tabla_manipulable_w <- tabla_manipulable_w
-}})
+
+  changes <- input$tabla_datos_wimpgrid$changes$changes
+
+  if(!is.null(changes)) {
+    val <- validateValue(changes, input$tabla_datos_wimpgrid)
+    if(!val) {
+      xi = changes[[1]][[1]]
+      yi = changes[[1]][[2]]
+      old_v = changes[[1]][[3]]
+
+      tabla_original <- hot_to_r(input$tabla_datos_wimpgrid)
+      tabla_original[xi+1, yi+1] <- old_v
+      tabla_manipulable_w(tabla_original)
+
+    } else if (!is.null(session$userData$datos_wimpgrid)) {
+      tabla_manipulable_w(hot_to_r(input$tabla_datos_wimpgrid))
+    }
+  }
+})
 
 output$bert_w <- renderPlot({
     if (!is.null(session$userData$datos_wimpgrid)) {
