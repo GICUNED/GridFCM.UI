@@ -73,6 +73,7 @@ repgrid_analysis_ui <- fluidPage( class="header-tab",
     )
   ),
 
+div(class = "custom-margins",
   conditionalPanel(condition = "input.graph_selector == 'Índices Cognitivos' || input.graph_selector=='Cognitive Indices'",
     fluidRow(class = "flex-container-sm",
       icon("brain", class = "mt-4"),
@@ -91,6 +92,7 @@ repgrid_analysis_ui <- fluidPage( class="header-tab",
       )
     )
   ),
+),
 
   conditionalPanel(condition = "input.graph_selector == 'Dilemas' || input.graph_selector == 'Dilemmas'",
     fluidRow(class = "flex-container-sm",

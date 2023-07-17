@@ -66,29 +66,14 @@ validateValue <- function(changes, tabla) {
 }
 
 observeEvent(input$tabla_datos_wimpgrid, {
-
-  changes <- input$tabla_datos_wimpgrid$changes$changes
-
-  if(!is.null(changes)) {
-    val <- validateValue(changes, input$tabla_datos_wimpgrid)
-    if(!val) {
-      xi = changes[[1]][[1]]
-      yi = changes[[1]][[2]]
-      old_v = changes[[1]][[3]]
-
-      tabla_original <- hot_to_r(input$tabla_datos_wimpgrid)
-      tabla_original[xi+1, yi+1] <- old_v
-      tabla_manipulable_w(tabla_original)
-
-    } else if (!is.null(session$userData$datos_wimpgrid)) {
-      tabla_manipulable_w(hot_to_r(input$tabla_datos_wimpgrid))
-    }
-  }
-})
+  if (!is.null(session$userData$datos_wimpgrid)) {
+    tabla_manipulable_w(hot_to_r(input$tabla_datos_wimpgrid))
+    #tabla_manipulable_w <- tabla_manipulable_w
+}})
 
 output$bert_w <- renderPlot({
     if (!is.null(session$userData$datos_wimpgrid)) {
-    bertin(wimpgrid_a_mostrar()$openrepgrid , color=c("white", "#005440"))
+    bertin(wimpgrid_a_mostrar()$openrepgrid , color=c("white", "#dfb639"))
     }
   })
 
@@ -264,7 +249,7 @@ output$graph_output_visualizacion <- renderPlot({
     else{
       selfdigraph(dataaa_w(), layout = selfdigraph_layout(), vertex.size = selfdigraph_vertex_size(),edge.width = selfdigraph_edge_width(), color = selfdigraph_color())
     }
-  } else if (graph == i18n$t("digrafo del ideal")) {
+  } else if (graph == i18n$t("digrafo ideal")) {
     if(i18n$get_key_translation()=="es")
     {
         idealdigraph(dataaa_w(), inc = idealdigraph_inc(), layout = translate_word("en",idealdigraph_layout()), vertex.size = idealdigraph_vertex_size(), edge.width = idealdigraph_edge_width(),color = translate_word("en",idealdigraph_color()))
@@ -272,7 +257,7 @@ output$graph_output_visualizacion <- renderPlot({
     }else{
     idealdigraph(dataaa_w(), inc = idealdigraph_inc(), layout = idealdigraph_layout(), vertex.size = idealdigraph_vertex_size(), edge.width = idealdigraph_edge_width(),color = idealdigraph_color())
     }
-  } else if (graph == i18n$t("índices de Wimp")) {
+  } else if (graph == i18n$t("indices de Wimp")) {
     print("wimpindices")
     # Get column names
     column_names <- names(wimpindices(dataaa_w()))
@@ -288,7 +273,7 @@ output$dens <- renderText({
     INTe <- wimpindices(dataaa_w())[["density"]]
     knitr::kable(INTe, col.names = "density",format = "html") %>%
     kable_styling("striped", full_width = F) %>%
-    row_spec(0, bold = T, color = "white") %>%
+    row_spec(0, bold = T) %>%
     column_spec(1, bold = T)
 })
 output$distance <- renderRHandsontable({
