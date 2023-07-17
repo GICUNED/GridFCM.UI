@@ -70,7 +70,7 @@ repgrid_analisis_server <- function(input, output, session) {
   output$gridindices_table <- renderText({
 
     INTe <- indices_list[["intensity"]][["Elements"]]
-    print(INTe)
+    YOIDEAL <- INTe[length(INTe)]
     
     PVEFF <- indices_list[["pvaff"]] 
     INT <- indices_list[["intensity"]][["Total"]] 
@@ -79,24 +79,19 @@ repgrid_analisis_server <- function(input, output, session) {
     GCONS <- indices_list[["intensity"]][["Global Constructs"]]
     GELEM <- indices_list[["intensity"]][["Global Elements"]]
 
-    tabla_indices <- data.frame(PVEFF,INT,CON,BIA)
-
-    # Encontrar el índice de la columna que contiene "max"
-    indice_max <- grep("max", colnames(tabla_indices))
-
-    # Eliminar la columna que contiene "max"
-    tabla_indices <- tabla_indices[, -indice_max]
-
+    tabla_indices <- data.frame(YOIDEAL,PVEFF,INT,CON,BIA,GCONS,GELEM)
     print(tabla_indices)
-    knitr::kable(data.frame(PVEFF,INT,CON,BIA,GCONS,GELEM),col.names = c("PVAFF","Intensity","Conflicts","BIAS","Constructs","Elements"),format = "html") %>%
+
+    knitr::kable(data.frame(YOIDEAL,PVEFF,INT,CON,BIA,GCONS,GELEM),col.names = c("Yo - Ideal", "PVAFF","Intensity","Conflicts","BIAS","Constructs","Elements"),format = "html") %>%
     kable_styling("striped", full_width = T) %>%
     row_spec(0, bold = T, color = "white", background = "#005440") %>%
-    column_spec(1, bold = T, width = "16%") %>%
-    column_spec(2, width = "16%") %>%
-    column_spec(3, width = "16%") %>%
-    column_spec(4, width = "16%") %>%
-    column_spec(5, width = "16%") %>%
-    column_spec(6, width = "16%")
+    column_spec(1, bold = T, width = "14%") %>%
+    column_spec(2, width = "14%") %>%
+    column_spec(3, width = "14%") %>%
+    column_spec(4, width = "14%") %>%
+    column_spec(5, width = "14%") %>%
+    column_spec(6, width = "14%") %>%
+    column_spec(7, width = "14%")
   })
   
   output$construct <- renderText({

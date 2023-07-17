@@ -47,11 +47,17 @@ output$tabla_datos_wimpgrid <- renderRHandsontable({
 validateValue <- function(changes, tabla) {
   
   new_v = changes[[1]][[4]]
+  tabla_r <- hot_to_r(tabla)
+  nombres_columnas <- colnames(tabla_r)
 
-  if(!is.na(new_v) && is.numeric(new_v) && (new_v > 7 || new_v < 1)) {
+  min_val = nombres_columnas[1]
+  max_val = nombres_columnas[length(nombres_columnas)]
+
+  if(!is.na(new_v) && is.numeric(new_v) && (new_v > max_val || new_v < min_val)) {
+    mensaje <- paste("El valor debe estar entre el rango", min_val, "-", max_val, ".")
     showModal(modalDialog(
       title = "Error",
-      "El valor debe estar entre el rango 1-7.",
+      mensaje,
       easyClose = TRUE
     ))
     return(FALSE)

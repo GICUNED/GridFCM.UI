@@ -29,7 +29,7 @@ repgrid_home_server <- function(input, output, session) {
   #                options = list(autoWidth = TRUE, columnDefs = list(list(width = '30px', targets = "_all"))), editable = TRUE)
   #})
 
-  output$tabla_datos_repgrid <- renderRHandsontable({
+output$tabla_datos_repgrid <- renderRHandsontable({
   if (!is.null(session$userData$datos_repgrid)) {
   print("tabla_manipulable:")
   print(tabla_manipulable)
@@ -50,11 +50,17 @@ repgrid_home_server <- function(input, output, session) {
 validateValue <- function(changes, tabla) {
 
   new_v = changes[[1]][[4]]
+  tabla_r <- hot_to_r(tabla)
+  nombres_columnas <- colnames(tabla_r)
 
-  if(!is.na(new_v) && is.numeric(new_v) && (new_v > 7 || new_v < 1)) {
+  min_val = nombres_columnas[1]
+  max_val = nombres_columnas[length(nombres_columnas)]
+
+  if(!is.na(new_v) && is.numeric(new_v) && (new_v > max_val || new_v < min_val)) {
+    mensaje <- paste("El valor debe estar entre el rango", min_val, "-", max_val, ".")
     showModal(modalDialog(
       title = "Error",
-      "El valor debe estar entre el rango 1-7.",
+      mensaje,
       easyClose = TRUE
     ))
     return(FALSE)
@@ -75,6 +81,7 @@ observeEvent(input$tabla_datos_repgrid, {
       
       tabla_original <- hot_to_r(input$tabla_datos_repgrid)
       tabla_original[xi+1, yi+1] <- old_v
+      print(old_v)
       tabla_manipulable(tabla_original)
 
     } else if (!is.null(session$userData$datos_repgrid)) {
