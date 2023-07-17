@@ -79,7 +79,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
 
 
         ),
-        conditionalPanel(class = ("flex-container-resp detail"), condition = "input.graph_selector_visualizacion == 'idealdigraph' || input.graph_selector_visualizacion == 'digrafo ideal'",
+        conditionalPanel(class = ("flex-container-resp detail"), condition = "input.graph_selector_visualizacion == 'idealdigraph' || input.graph_selector_visualizacion == 'digrafo del ideal'",
 
                          checkboxInput("idealdigraph_inc", i18n$t("Hide direct relationships"), value = FALSE),
 
@@ -97,7 +97,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
 
 
         ),
-        conditionalPanel(condition = "input.graph_selector_visualizacion == 'wimpindices' || input.graph_selector_visualizacion == 'indices de Wimp' ",
+        conditionalPanel(condition = "input.graph_selector_visualizacion == 'wimpindices' || input.graph_selector_visualizacion == 'índices de Wimp' ",
         
 
                       fluidRow(class = "table-container pb-0 flex-row kpi",
@@ -118,6 +118,12 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                         )),
 
                         fluidRow(DT::dataTableOutput(("inconsistences")))
+                        ),
+
+                        fluidRow(class = "flex-container-sm",
+                          icon("globe", class = "mt-4"),
+                          h4("Resultado gráfico", class = "pagetitle2custom mt-2 mb-4"),
+                          plotOutput("graph_output_visualizacion")
                         ),
 
 
@@ -192,7 +198,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
              
           ),
 
-        conditionalPanel(class = ("flex-container-resp"),
+        conditionalPanel(class = ("flex-container-resp detail"),
           condition = "input.graph_selector_laboratorio == 'pcsd'",
 
               #fileInput("pcsd_wimp", i18n$t("Input file:"), accept = c(".xlsx")),

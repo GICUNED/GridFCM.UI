@@ -1,6 +1,6 @@
 import_excel_ui <-  fluidPage(
      shiny.i18n::usei18n(i18n),
-div(class = "custom-margins",
+div(
     h2("Importar datos desde archivo xlsx", class = "pagetitlecustom"),
     p("En esta página, puedes descargar plantillas de xlsx y documentos de ayuda, y subir archivos xlsx para importar datos.", class = "desccustom mb-3"),
 
@@ -36,9 +36,9 @@ div(class = "custom-margins",
        title = "Plantillas y documentos de ayuda",
        icon = icon("folder-open"),
        collapsible = FALSE,
-       a(icon("download"), "Descargar plantilla RepGrid", href = "/UI/plantillas/RepGrid_Template.xlsx", download = "plantilla_repgrid.xlsx", class = "link"),
+       downloadButton("download_link_repgrid", "Descargar plantilla RepGrid"),
        br(),
-       a(icon("download"), "Descargar plantilla WimpGrid", href = "/UI/plantillas/WimpGrid_Template.xlsx", download = "plantilla_wimpgrid.xlsx", class = "link"),
+       downloadButton("download_link_wimpgrid", "Descargar plantilla WimpGrid"),
        br(),
        a(icon("file-pdf"), "Documento de ayuda para RepGrid", href = "ruta/al/archivo/ayuda_repgrid.pdf", target = "_blank", class = "link"),
        br(),
