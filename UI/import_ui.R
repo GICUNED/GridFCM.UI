@@ -1,6 +1,6 @@
 import_ui <-  fluidPage(
     shiny.i18n::usei18n(i18n),
-div(
+div(class = "custom-margins",
     h2("Importar datos para un nuevo análisis de rejilla", class = "pagetitlecustom"),
     p("En esta página, puedes aprender sobre los tres tipos de análisis de rejilla y elegir cómo importar tus datos.", class = "desccustom mb-4"),
 

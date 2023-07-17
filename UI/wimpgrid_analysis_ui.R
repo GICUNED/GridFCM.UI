@@ -79,7 +79,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
 
 
         ),
-        conditionalPanel(class = ("flex-container-resp detail"), condition = "input.graph_selector_visualizacion == 'idealdigraph' || input.graph_selector_visualizacion == 'digrafo del ideal'",
+        conditionalPanel(class = ("flex-container-resp detail"), condition = "input.graph_selector_visualizacion == 'idealdigraph' || input.graph_selector_visualizacion == 'digrafo ideal'",
 
                          checkboxInput("idealdigraph_inc", i18n$t("Hide direct relationships"), value = FALSE),
 
@@ -97,7 +97,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
 
 
         ),
-        conditionalPanel(condition = "input.graph_selector_visualizacion == 'wimpindices' || input.graph_selector_visualizacion == 'índices de Wimp' ",
+        conditionalPanel(condition = "input.graph_selector_visualizacion == 'wimpindices' || input.graph_selector_visualizacion == 'indices de Wimp' ",
         
 
                       fluidRow(class = "table-container pb-0 flex-row kpi",
@@ -117,13 +117,9 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                             tabPanel("Betweenness", DT::dataTableOutput("table_betweenness"), icon = icon("people-arrows"))
                         )),
 
-                        fluidRow(DT::dataTableOutput(("inconsistences")))),
-
-                        fluidRow(class = "flex-container-sm",
-                          icon("globe", class = "mt-4"),
-                          h4("Resultado gráfico", class = "pagetitle2custom mt-2 mb-4"),
-                          plotOutput("graph_output_visualizacion")
+                        fluidRow(DT::dataTableOutput(("inconsistences")))
                         ),
+
 
       ),
       tabPanel(i18n$t("Laboratory"), id = "tab_laboratorio", icon = icon("flask-vial"),
@@ -157,6 +153,14 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
             shinyjs::hidden(
               div(id = "simdig_inp",fileInput("simdigraph_wimp", i18n$t("Input file:"), accept = c(".xlsx")))),
 
+            selectInput("simdigraph_infer", i18n$t("Funcion de propagacion:"),
+                          choices = c("transformacion lineal", "another option"),
+                          selected = i18n$t("transformacion lineal")),
+
+            selectInput("simdigraph_thr", i18n$t("Funcion umbral:"),
+                          choices = c("linear","another option"),
+                          selected = i18n$t("linear")),
+
             selectInput("simdigraph_layout", i18n$t("Layout:"),
                           choices = c("circulo", "rtcirculo","arbol", "graphopt", "mds", "cuadricula"),
                           selected = i18n$t("circulo")),
@@ -177,14 +181,6 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
 
             #numericInput("simdigraph_act_vector", i18n$t("Change vector:"), value = 0, step = 0.01),
 
-            selectInput("simdigraph_infer", i18n$t("Funcion de propagacion:"),
-                          choices = c("transformacion lineal", "another option"),
-                          selected = i18n$t("transformacion lineal")),
-
-            selectInput("simdigraph_thr", i18n$t("Funcion umbral:"),
-                          choices = c("linear","another option"),
-                          selected = i18n$t("linear")),
-
               numericInput("simdigraph_e", i18n$t("Valor diferencial:"), value = 0.0001),
 
               rHandsontableOutput("simdigraph_act_vector"),
@@ -196,7 +192,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
              
           ),
 
-        conditionalPanel(class = ("flex-container-resp detail"),
+        conditionalPanel(class = ("flex-container-resp"),
           condition = "input.graph_selector_laboratorio == 'pcsd'",
 
               #fileInput("pcsd_wimp", i18n$t("Input file:"), accept = c(".xlsx")),

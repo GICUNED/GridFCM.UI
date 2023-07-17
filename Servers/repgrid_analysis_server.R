@@ -68,48 +68,26 @@ repgrid_analisis_server <- function(input, output, session) {
 
   # Generar tabla de índices y valores matemáticos
   output$gridindices_table <- renderText({
-
-    INTe <- indices_list[["intensity"]][["Elements"]]
-    print(INTe)
     
     PVEFF <- indices_list[["pvaff"]] 
     INT <- indices_list[["intensity"]][["Total"]] 
     CON <- indices_list[["conflict"]]
     BIA <- indices_list[["bias"]]
-    GCONS <- indices_list[["intensity"]][["Global Constructs"]]
-    GELEM <- indices_list[["intensity"]][["Global Elements"]]
-
-    tabla_indices <- data.frame(PVEFF,INT,CON,BIA)
-
-    # Encontrar el índice de la columna que contiene "max"
-    indice_max <- grep("max", colnames(tabla_indices))
-
-    # Eliminar la columna que contiene "max"
-    tabla_indices <- tabla_indices[, -indice_max]
-
-    print(tabla_indices)
-    knitr::kable(data.frame(PVEFF,INT,CON,BIA,GCONS,GELEM),col.names = c("PVAFF","Intensity","Conflicts","BIAS","Constructs","Elements"),format = "html") %>%
+    knitr::kable(data.frame(PVEFF,INT,CON,BIA),col.names = c("PVAFF","Intensity","Conflicts","BIAS"),format = "html") %>%
     kable_styling("striped", full_width = T) %>%
     row_spec(0, bold = T, color = "white", background = "#005440") %>%
-    column_spec(1, bold = T, width = "16%") %>%
-    column_spec(2, width = "16%") %>%
-    column_spec(3, width = "16%") %>%
-    column_spec(4, width = "16%") %>%
-    column_spec(5, width = "16%") %>%
-    column_spec(6, width = "16%")
+    column_spec(1, bold = T, width = "25%") %>%
+    column_spec(2, width = "25%") %>%
+    column_spec(3, width = "25%") %>%
+    column_spec(4, width = "25%")
+    
   })
   
   output$construct <- renderText({
     
-    INTc <- indices_list[["intensity"]][["Constructs"]]
+    INTc <- indices_list[["intensity"]][["Constructs"]] 
 
-    # Ordenar los datos en orden descendente
-    INTc_ordenado <- sort(INTc, decreasing = TRUE)
-
-    # Crear un data frame con los datos ordenados
-    INTc_df <- data.frame(Intensity = INTc_ordenado)
-
-    knitr::kable(INTc_df, col.names = "Intensity",format = "html") %>%
+    knitr::kable(INTc, col.names = "Intensity",format = "html") %>%
     kable_styling("striped", full_width = F) %>%
     row_spec(0, bold = T, color = "white", background = "#005440") %>%
     column_spec(1, bold = T)
@@ -119,12 +97,8 @@ repgrid_analisis_server <- function(input, output, session) {
 
  output$elementss <- renderText({
     
-    INTe <- indices_list[["intensity"]][["Elements"]]
-
-    INTe_ordenado <- sort(INTe, decreasing = TRUE)
-    INTe_df <- data.frame(Intensity = INTe_ordenado)
-
-    knitr::kable(INTe_df, col.names = "Intensity",format = "html") %>%
+    INTe <- indices_list[["intensity"]][["Elements"]] 
+    knitr::kable(INTe, col.names = "Intensity",format = "html") %>%
     kable_styling("striped", full_width = F) %>%
     row_spec(0, bold = T, color = "white", background = "#005440") %>%
     column_spec(1, bold = T)
@@ -141,7 +115,7 @@ repgrid_analisis_server <- function(input, output, session) {
     #print(indexDilemma(repgrid_data)[[1]])
     knitr::kable(INTc$construct_classification,format = "html") %>%
     #knitr::kable(INTc, col.names = "Intensity",format = "html") %>%
-    kable_styling("striped", full_width = F) %>%
+    kable_styling("striped", full_width = T) %>%
     row_spec(0, bold = T, color = "white", background = "#005440") %>%
     column_spec(1, bold = T)
     
