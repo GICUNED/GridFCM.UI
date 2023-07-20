@@ -28,7 +28,21 @@ repgrid_analisis_server <- function(input, output, session) {
     
       OpenRepGrid::biplot2d(repgrid_data, c.label.col = "#005440",c.grid = "gray", c.grid.lty = "dotted", c.grid.lwd = 0.5, cex.axis = 0.8, cex.labels = 0.8,)
     
-})
+  })
+
+  output$btn_download_2d <- downloadHandler(
+    filename = function() {
+      "grafico_bidimensional.png"
+    },
+    content = function(file) {
+      # Tomar una captura de pantalla del gráfico y guardarla en un archivo PNG
+      grDevices::png(file, width = 1200, height = 800, units = "px", res = 100)
+      grDevices::dev.capture(OpenRepGrid::biplot2d(repgrid_data, c.label.col = "#005440", c.grid = "gray", c.grid.lty = "dotted", c.grid.lwd = 0.5, cex.axis = 0.8, cex.labels = 0.8))
+      grDevices::dev.off()
+      file.copy("Rplot001.png", file)  # Copiar el archivo temporal a la ubicación deseada
+      file.remove("Rplot001.png")  # Eliminar el archivo temporal
+    }
+  )
 
   # Generar gráfico tridimensional
   output$biplot3d_plot <- renderRglwidget({
@@ -55,7 +69,27 @@ repgrid_analisis_server <- function(input, output, session) {
     
   })
 
-  
+  output$matrix_constructs <- renderRHandsontable({
+    rhandsontable(indices_list[["distances"]][["Constructs"]])
+  })
+
+  output$matrix_elements <- renderRHandsontable({
+    rhandsontable(indices_list[["distances"]][["Elements"]])
+  })
+
+  output$btn_download_cluster1 <- downloadHandler(
+    filename = function() {
+      "constructos.png"
+    },
+    content = function(file) {
+      # Tomar una captura de pantalla del gráfico y guardarla en un archivo PNG
+      grDevices::png(file, width = 1200, height = 800, units = "px", res = 100)
+      grDevices::dev.capture(OpenRepGrid::cluster(repgrid_data,along=1))
+      grDevices::dev.off()
+      file.copy("Rplot001.png", file)  # Copiar el archivo temporal a la ubicación deseada
+      file.remove("Rplot001.png")  # Eliminar el archivo temporal
+    }
+  )
 
   # Generar análisis por conglomerados
   output$cluster_plot_2 <- renderPlot({
@@ -65,6 +99,19 @@ repgrid_analisis_server <- function(input, output, session) {
     
   })
 
+  output$btn_download_cluster2 <- downloadHandler(
+    filename = function() {
+      "elementos.png"
+    },
+    content = function(file) {
+      # Tomar una captura de pantalla del gráfico y guardarla en un archivo PNG
+      grDevices::png(file, width = 1200, height = 800, units = "px", res = 100)
+      grDevices::dev.capture(OpenRepGrid::cluster(repgrid_data,along=2))
+      grDevices::dev.off()
+      file.copy("Rplot001.png", file)  # Copiar el archivo temporal a la ubicación deseada
+      file.remove("Rplot001.png")  # Eliminar el archivo temporal
+    }
+  )
 
   # Generar tabla de índices y valores matemáticos
   output$gridindices_table <- renderText({
@@ -80,49 +127,71 @@ repgrid_analisis_server <- function(input, output, session) {
     GELEM <- indices_list[["intensity"]][["Global Elements"]]
 
     tabla_indices <- data.frame(YOIDEAL,PVEFF,INT,CON,BIA,GCONS,GELEM)
+    tabla_indices_round <- round(tabla_indices, 3)
     print(tabla_indices)
 
-    knitr::kable(data.frame(YOIDEAL,PVEFF,INT,CON,BIA,GCONS,GELEM),col.names = c("Yo - Ideal", "PVAFF","Intensity","Conflicts","BIAS","Constructs","Elements"),format = "html") %>%
+    knitr::kable(tabla_indices_round,col.names = c("Yo - Ideal", "PVAFF","Intensity","Conflicts","BIAS","Intensidad Global de Constructos","Intensidad Global de Elementos"),format = "html") %>%
     kable_styling("striped", full_width = T) %>%
     row_spec(0, bold = T, color = "white", background = "#005440") %>%
-    column_spec(1, bold = T, width = "14%") %>%
-    column_spec(2, width = "14%") %>%
-    column_spec(3, width = "14%") %>%
-    column_spec(4, width = "14%") %>%
-    column_spec(5, width = "14%") %>%
-    column_spec(6, width = "14%") %>%
-    column_spec(7, width = "14%")
+    column_spec(1, bold = T, width = "10%") %>%
+    column_spec(2, width = "10%") %>%
+    column_spec(3, width = "10%") %>%
+    column_spec(4, width = "10%") %>%
+    column_spec(5, width = "10%") %>%
+    column_spec(6, width = "20%") %>%
+    column_spec(7, width = "20%")
   })
   
-  output$construct <- renderText({
+  output$construct <- renderDT({
     
     INTc <- indices_list[["intensity"]][["Constructs"]]
 
     # Ordenar los datos en orden descendente
-    INTc_ordenado <- sort(INTc, decreasing = TRUE)
+    #INTc_ordenado <- sort(INTc, decreasing = TRUE)
 
     # Crear un data frame con los datos ordenados
-    INTc_df <- data.frame(Intensity = INTc_ordenado)
+    INTc_df <- data.frame(Intensity = round(INTc, 3))
 
-    knitr::kable(INTc_df, col.names = "Intensity",format = "html") %>%
-    kable_styling("striped", full_width = F) %>%
-    row_spec(0, bold = T, color = "white", background = "#005440") %>%
-    column_spec(1, bold = T)
+    datatable(INTc_df, options = list(
+      dom = 't',
+      ordering = TRUE,
+      columnDefs = list(list(className = 'dt-center', targets = "_all")),
+      initComplete = JS(
+        "function(settings, json) {",
+        "$(this.api().table().header()).css({'background-color': '#005440', 'color': 'white'});",
+        "}"
+      )
+    ))
+
+    #knitr::kable(INTc_df, col.names = "Intensity",format = "html") %>%
+    #kable_styling("striped", full_width = F) %>%
+    #row_spec(0, bold = T, color = "white", background = "#005440") %>%
+    #column_spec(1, bold = T)
     
   })
 
 
- output$elementss <- renderText({
+ output$elementss <- renderDT({
     
     INTe <- indices_list[["intensity"]][["Elements"]]
 
-    INTe_ordenado <- sort(INTe, decreasing = TRUE)
-    INTe_df <- data.frame(Intensity = INTe_ordenado)
+    #INTe_ordenado <- sort(INTe, decreasing = TRUE)
+    INTe_df <- data.frame(Intensity = round(INTe, 3))
 
-    knitr::kable(INTe_df, col.names = "Intensity",format = "html") %>%
-    kable_styling("striped", full_width = F) %>%
-    row_spec(0, bold = T, color = "white", background = "#005440") %>%
-    column_spec(1, bold = T)
+    datatable(INTe_df, options = list(
+      dom = 't',
+      ordering = TRUE,
+      columnDefs = list(list(className = 'dt-center', targets = "_all")),
+      initComplete = JS(
+        "function(settings, json) {",
+        "$(this.api().table().header()).css({'background-color': '#005440', 'color': 'white'});",
+        "}")
+    ))
+
+    #knitr::kable(INTe_df, col.names = "Intensity",format = "html") %>%
+    #kable_styling("striped", full_width = F) %>%
+    #row_spec(0, bold = T, color = "white", background = "#005440") %>%
+    #column_spec(1, bold = T)
     
   })
 
@@ -141,7 +210,6 @@ repgrid_analisis_server <- function(input, output, session) {
     column_spec(1, bold = T)
     
   })
-
 
   output$dilemmasss <- renderText({
     
@@ -178,4 +246,6 @@ repgrid_analisis_server <- function(input, output, session) {
     #row_spec(0, bold = T, color = "white", background = "#005440") %>%
     #column_spec(1, bold = T, color = "#005440")
   })
+
+
 }

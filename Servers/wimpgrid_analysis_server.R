@@ -267,10 +267,10 @@ output$graph_output_visualizacion <- renderPlot({
   } else if (graph == i18n$t("digrafo del ideal")) {
     if(i18n$get_key_translation()=="es")
     {
-        idealdigraph(dataaa_w(), inc = idealdigraph_inc(), layout = translate_word("en",idealdigraph_layout()), vertex.size = idealdigraph_vertex_size(), edge.width = idealdigraph_edge_width(),color = translate_word("en",idealdigraph_color()))
+      idealdigraph(dataaa_w(), inc = idealdigraph_inc(), layout = translate_word("en",idealdigraph_layout()), vertex.size = idealdigraph_vertex_size(), edge.width = idealdigraph_edge_width(),color = translate_word("en",idealdigraph_color()))
 
     }else{
-    idealdigraph(dataaa_w(), inc = idealdigraph_inc(), layout = idealdigraph_layout(), vertex.size = idealdigraph_vertex_size(), edge.width = idealdigraph_edge_width(),color = idealdigraph_color())
+      idealdigraph(dataaa_w(), inc = idealdigraph_inc(), layout = idealdigraph_layout(), vertex.size = idealdigraph_vertex_size(), edge.width = idealdigraph_edge_width(),color = idealdigraph_color())
     }
   } else if (graph == i18n$t("índices de Wimp")) {
     print("wimpindices")
@@ -283,6 +283,25 @@ output$graph_output_visualizacion <- renderPlot({
         #wimpindices(dataaa_w())
   }
 })
+
+output$btn_download_visualizacion <- downloadHandler(
+  filename = function() {
+    "grafico_visualizacion.png"
+  },
+  content = function(file) {
+    # Tomar una captura de pantalla del gráfico y guardarla en un archivo PNG
+    graph <- output$graph_output_visualizacion()
+    print(class(graph))
+    print(names(graph))
+    print(graph)
+    grDevices::png(file, width = 1200, height = 800, units = "px", res = 100)
+    grDevices::dev.capture(graph)
+    grDevices::dev.off()
+    file.copy("Rplot001.png", file)  # Copiar el archivo temporal a la ubicación deseada
+    file.remove("Rplot001.png")  # Eliminar el archivo temporal
+  }
+)
+
 output$dens <- renderText({
 
     INTe <- wimpindices(dataaa_w())[["density"]]
@@ -594,6 +613,27 @@ if (graph == i18n$t("simdigrafo")) {
 
 }
 })
+
+  #output$btn_download <- downloadHandler(
+  #  filename = function() {
+  #    graph <- input$graph_selector_laboratorio
+  #    if(graph == i18n$t("simdigrafo")) {
+  #      "simdigrafo.png"
+  #    } else if(graph == "pcsd") {
+  #      "pcsd.png"
+  #    } else if(graph == "pcsdindices") {
+  #      "pcsdindices.png"
+  #    }
+  #  },
+  #  content = function(file) {
+  #    # Tomar una captura de pantalla del gráfico y guardarla en un archivo PNG
+  #    grDevices::png(file, width = 1200, height = 800, units = "px", res = 100)
+  #    grDevices::dev.capture("lab_showw")
+  #    grDevices::dev.off()
+  #    file.copy("Rplot001.png", file)  # Copiar el archivo temporal a la ubicación deseada
+  #    file.remove("Rplot001.png")  # Eliminar el archivo temporal
+  #  }
+  #)
 
 output$convergence <- renderText({
     scn <- scenariomatrix(dataaa_w(),act.vector= c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),infer = infer(),

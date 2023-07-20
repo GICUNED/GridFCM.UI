@@ -120,11 +120,14 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                         fluidRow(DT::dataTableOutput(("inconsistences")))
                         ),
 
-                        fluidRow(class = "flex-container-sm",
-                          icon("globe", class = "mt-4"),
-                          h4("Resultado gráfico", class = "pagetitle2custom mt-2 mb-4"),
-                          plotOutput("graph_output_visualizacion")
-                        ),
+        fluidRow(class = "flex-container-sm",
+          icon("globe", class = "mt-4"),
+          h4("Resultado gráfico", class = "pagetitle2custom mt-2 mb-4"),
+          plotOutput("graph_output_visualizacion")
+        ),
+        fluidRow(class = "flex-container-sm",
+          downloadButton("btn_download_visualizacion", "Desargar Gráfico")
+        )
 
 
       ),

@@ -36,8 +36,11 @@ repgrid_analysis_ui <- fluidPage( class="header-tab",
       ),
       fluidRow(class = "flex-container-sm",
         plotOutput("biplot2d_plot")
-        )
       ),
+      fluidRow(class = "flex-container-sm",
+        downloadButton("btn_download_2d", "Desargar Gráfico")
+      )
+    ),
 
     conditionalPanel(condition = "input.graph_selector == 'Three-Dimensional Analysis' || input.graph_selector == 'Análisis Tridimensional'",
       fluidRow(class = "flex-container-sm",
@@ -63,6 +66,9 @@ repgrid_analysis_ui <- fluidPage( class="header-tab",
         plotOutput("cluster_plot_1")
       )
     ),
+    fluidRow(class = "flex-container-sm",
+      downloadButton("btn_download_cluster1", "Desargar Gráfico")
+    ),
     fluidRow(
       # Segundo gráfico de cluster
       column(
@@ -70,6 +76,9 @@ repgrid_analysis_ui <- fluidPage( class="header-tab",
         h4(i18n$t("Elements"), class = "pagesubtitlecustom mt-4 mb-4"),
         plotOutput("cluster_plot_2")
       )
+    ),
+    fluidRow(class = "flex-container-sm",
+      downloadButton("btn_download_cluster2", "Desargar Gráfico")
     )
   ),
 
@@ -85,12 +94,17 @@ div(class = "custom-margins",
     ),
     fluidRow(
       column(6, h4(i18n$t("Intensidad de Constructos"), class = "pagesubtitlecustom mt-4 mb-4"),
-             fluidRow(class = "table-container", htmlOutput("construct"))
+             fluidRow(class = "table-container", DTOutput("construct"))
       ),
       column(6, h4(i18n$t("Intensidad de Elementos"), class = "pagesubtitlecustom mt-4 mb-4"),
-             fluidRow(class = "table-container", htmlOutput("elementss"))
+             fluidRow(class = "table-container", DTOutput("elementss"))
       )
-    )
+    ),
+    fluidRow(class = "flex-container",
+      rHandsontableOutput("matrix_constructs")
+    ),
+    fluidRow(class = "flex-container",
+      rHandsontableOutput("matrix_elements"))
   ),
 ),
 
