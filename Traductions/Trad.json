@@ -159,19 +159,19 @@
     },
     
     {
-      "es": "Analisis Bidimensional",
+      "es": "Análisis Bidimensional",
       "en": "Two-Dimensional Analysis"
     },
     {
-      "es": "Analisis Tridimensional",
+      "es": "Análisis Tridimensional",
       "en": "Three-Dimensional Analysis"
     },
     {
-      "es": "Analisis por Conglomerados",
+      "es": "Análisis por Conglomerados",
       "en": "Cluster Analysis"
     },
     {
-      "es": "indices Cognitivos",
+      "es": "Índices Cognitivos",
       "en": "Cognitive Indices"
     },
     {
@@ -183,15 +183,15 @@
       "en": "Click and drag to Interact"
     },
     {
-      "es": "Constructs",
-      "en": "Constructos"
+      "es": "Constructos",
+      "en": "Constructs"
     },
     {
-      "es": "Elements",
-      "en": "Elementos"
+      "es": "Elementos",
+      "en": "Elements"
     },
     {
-      "es": "indices y Valores Matematicos",
+      "es": "Índices y Valores Matematicos",
       "en": "Indices and Mathematical Values"
     },
     {
@@ -251,7 +251,7 @@
       "en": "idealdigraph"
     },
     {
-      "es": "índices de Wimp",
+      "es": "indices de Wimp",
       "en": "wimpindices"
     },
     {
@@ -377,5 +377,25 @@
     {
       "es": "binario",
       "en": "binary"
-    }       
+    },
+    {
+      "es": "otra opción",
+      "en": "another option"
+    },
+    {
+      "es": "índices de Wimp",
+      "en": "wimpindices"
+    },
+    {
+      "es": "lineal",
+      "en": "linear"
+    },
+    {
+      "es": "transformación sigmoidea",
+      "en": "sigmoid transform"
+    },
+    {
+      "es": "transformación binaria",
+      "en": "binary transform"
+    }
 ]}

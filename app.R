@@ -117,7 +117,7 @@ ui <- dashboardPage(
     ),
 
   dashboardBody(
-    #usei18n(translator = i18n),
+    usei18n(translator = i18n),
     tags$script(src = "activescript.js"),
     useShinyjs(),
     router_ui(
@@ -208,21 +208,21 @@ server <- function(input, output, session) {
 
 
     updateSelectInput(session, "simdigraph_infer",
-                      choices = i18n_r()$t(c("transformacion lineal", "another option")))
+                      choices = i18n_r()$t(c("transformacion lineal", "otra opción")))
     updateSelectInput(session, "simdigraph_thr",
-                      choices = i18n_r()$t(c("linear","another option")))
+                      choices = i18n_r()$t(c("lineal","otra opción")))
 
 
     updateSelectInput(session, "pcsd_infer",
-                      choices = i18n_r()$t(c("transformacion lineal", "another option")))
+                      choices = i18n_r()$t(c("transformacion lineal", "otra opción")))
     updateSelectInput(session, "pcsd_thr",
-                      choices = i18n_r()$t(c("linear", "another option")))
+                      choices = i18n_r()$t(c("lineal", "otra opción")))
 
 
     updateSelectInput(session, "pcsdindices_infer",
-                      choices = i18n_r()$t(c("transformacion lineal", "sigmoid transform", "binary transform")))
+                      choices = i18n_r()$t(c("transformacion lineal", "transformación sigmoidea", "transformación binaria")))
     updateSelectInput(session, "pcsdindices_thr",
-                      choices = i18n_r()$t(c("linear", "sigmoide", "binario")))
+                      choices = i18n_r()$t(c("lineal", "sigmoide", "binario")))
 
     updateSelectInput(session, "graph_selector",
                       choices = i18n_r()$t(c("Análisis Bidimensional",

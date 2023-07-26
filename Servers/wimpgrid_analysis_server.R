@@ -241,12 +241,13 @@ observeEvent(input$graph_selector_visualizacion, {
 # Definir la lógica del servidor para la aplicación
 
   
-output$graph_output_visualizacion <- renderPlot({
+generate_graph <- function(){
   # Verificar que input$graph_selector_visualizacion no es NULL
   req(input$graph_selector_visualizacion)
 
   # Asignar el input a una variable
   graph <- input$graph_selector_visualizacion
+  graph2 <- NULL
   print("grapfh selected in view")
   print(graph)
   # Dependiendo de la selección del usuario, dibuja el gráfico correspondiente
@@ -255,22 +256,22 @@ output$graph_output_visualizacion <- renderPlot({
     
     print("hhhh")
 
-    if(i18n$get_key_translation()=="es")
-    {
-      
-      selfdigraph(dataaa_w(), layout = translate_word("en",selfdigraph_layout()), vertex.size = selfdigraph_vertex_size(),edge.width = selfdigraph_edge_width(), color = translate_word("en",selfdigraph_color()))
+    if(i18n$get_key_translation()=="es") {
+      print("es")
+      graph2 <- selfdigraph(dataaa_w(), layout = translate_word("en",selfdigraph_layout()), vertex.size = selfdigraph_vertex_size(),edge.width = selfdigraph_edge_width(), color = translate_word("en",selfdigraph_color()))
       #selfdigraph(dataaa_w(), layout = selfdigraph_layout(), vertex.size = selfdigraph_vertex_size(),edge.width = selfdigraph_edge_width(), color = selfdigraph_color())
     }
-    else{
-      selfdigraph(dataaa_w(), layout = selfdigraph_layout(), vertex.size = selfdigraph_vertex_size(),edge.width = selfdigraph_edge_width(), color = selfdigraph_color())
+    else {
+      print("en")
+      graph2 <- selfdigraph(dataaa_w(), layout = selfdigraph_layout(), vertex.size = selfdigraph_vertex_size(),edge.width = selfdigraph_edge_width(), color = selfdigraph_color())
     }
   } else if (graph == i18n$t("digrafo del ideal")) {
     if(i18n$get_key_translation()=="es")
     {
-      idealdigraph(dataaa_w(), inc = idealdigraph_inc(), layout = translate_word("en",idealdigraph_layout()), vertex.size = idealdigraph_vertex_size(), edge.width = idealdigraph_edge_width(),color = translate_word("en",idealdigraph_color()))
+      graph2 <- idealdigraph(dataaa_w(), inc = idealdigraph_inc(), layout = translate_word("en",idealdigraph_layout()), vertex.size = idealdigraph_vertex_size(), edge.width = idealdigraph_edge_width(),color = translate_word("en",idealdigraph_color()))
 
-    }else{
-      idealdigraph(dataaa_w(), inc = idealdigraph_inc(), layout = idealdigraph_layout(), vertex.size = idealdigraph_vertex_size(), edge.width = idealdigraph_edge_width(),color = idealdigraph_color())
+    } else {
+      graph2 <- idealdigraph(dataaa_w(), inc = idealdigraph_inc(), layout = idealdigraph_layout(), vertex.size = idealdigraph_vertex_size(), edge.width = idealdigraph_edge_width(),color = idealdigraph_color())
     }
   } else if (graph == i18n$t("índices de Wimp")) {
     print("wimpindices")
@@ -282,6 +283,14 @@ output$graph_output_visualizacion <- renderPlot({
     print(wimpindices(dataaa_w())[["distance"]])
         #wimpindices(dataaa_w())
   }
+
+  print(graph2)
+
+  return(graph2)
+}
+
+output$graph_output_visualizacion <- renderPlot({
+  generate_graph()
 })
 
 output$btn_download_visualizacion <- downloadHandler(
@@ -289,16 +298,15 @@ output$btn_download_visualizacion <- downloadHandler(
     "grafico_visualizacion.png"
   },
   content = function(file) {
+
+    print("Botón de descarga presionado")
+
     # Tomar una captura de pantalla del gráfico y guardarla en un archivo PNG
-    graph <- output$graph_output_visualizacion()
-    print(class(graph))
-    print(names(graph))
-    print(graph)
-    grDevices::png(file, width = 1200, height = 800, units = "px", res = 100)
-    grDevices::dev.capture(graph)
-    grDevices::dev.off()
-    file.copy("Rplot001.png", file)  # Copiar el archivo temporal a la ubicación deseada
-    file.remove("Rplot001.png")  # Eliminar el archivo temporal
+    graph <- generate_graph()
+
+    print(str(graph))
+
+    ggsave(file, plot = graph, width = 1200, height = 800, units = "px", dpi = 100)
   }
 )
 

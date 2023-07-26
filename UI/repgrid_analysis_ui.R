@@ -101,9 +101,11 @@ div(class = "custom-margins",
       )
     ),
     fluidRow(class = "flex-container",
+      h4(i18n$t("Matrix de distancias de Constructos"), class = "pagesubtitlecustom mt-4 mb-4"),
       rHandsontableOutput("matrix_constructs")
     ),
     fluidRow(class = "flex-container",
+      h4(i18n$t("Matrix de distancias de Elementos"), class = "pagesubtitlecustom mt-4 mb-4"),
       rHandsontableOutput("matrix_elements"))
   ),
 ),

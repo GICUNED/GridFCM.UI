@@ -163,12 +163,12 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
               div(id = "simdig_inp",fileInput("simdigraph_wimp", i18n$t("Input file:"), accept = c(".xlsx")))),
 
             selectInput("simdigraph_infer", i18n$t("Funcion de propagacion:"),
-                          choices = c("transformacion lineal", "another option"),
+                          choices = c("transformacion lineal", "otra opción"),
                           selected = i18n$t("transformacion lineal")),
 
             selectInput("simdigraph_thr", i18n$t("Funcion umbral:"),
-                          choices = c("linear","another option"),
-                          selected = i18n$t("linear")),
+                          choices = c("lineal","otra opción"),
+                          selected = i18n$t("lineal")),
 
             selectInput("simdigraph_layout", i18n$t("Layout:"),
                           choices = c("circulo", "rtcirculo","arbol", "graphopt", "mds", "cuadricula"),
@@ -215,12 +215,12 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
               #numericInput("pcsd_act_vector", i18n$t("Change vector:"), value = 0, step = 0.01),
 
               selectInput("pcsd_infer", i18n$t("Funcion de propagacion:"),
-                          choices = c("transformacion lineal", "another option"),
+                          choices = c("transformacion lineal", "otra opción"),
                           selected = i18n$t("transformacion lineal")),
 
               selectInput("pcsd_thr", i18n$t("Funcion umbral:"),
-                          choices = c("linear", "another option"),
-                          selected = i18n$t("linear")),
+                          choices = c("lineal", "otra opción"),
+                          selected = i18n$t("lineal")),
 
 
               numericInput("pcsd_e", i18n$t("Valor diferencial:"), value = 0.0001),
@@ -233,12 +233,12 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                           #choices = c(i18n$t("WimpGrid_data.xlsx"), i18n$t("data.csv"), i18n$t("datos.txt"))),
 
               selectInput("pcsdindices_infer", i18n$t("Funcion de propagacion:"),
-                          choices = c("transformacion lineal", "sigmoid transform", "binary transform"),
+                          choices = c("transformacion lineal", "transformación sigmoidea", "transformación binaria"),
                           selected = i18n$t("transformacion lineal")),
 
               selectInput("pcsdindices_thr", i18n$t("Funcion umbral:"),
-                          choices = c("linear", "sigmoide", "binario"),
-                          selected = i18n$t("linear")),
+                          choices = c("lineal", "sigmoide", "binario"),
+                          selected = i18n$t("lineal")),
 
               #numericInput("pcsdindices_act_vector", i18n$t("Changes to simulate:"),
               #            value = 0, step = 0.01),
