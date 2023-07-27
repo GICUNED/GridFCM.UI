@@ -7,17 +7,17 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
   tabsetPanel(
       tabPanel(i18n$t("Data"), id = "tab_data_w", icon = icon("table"),
           fluidRow( class = ("flex-container-xl border-divider"),
-                      h2(i18n$t("WimpGrid Home"),class = "wg pagetitlecustom  mt-4"),
+                      h2(i18n$t("Inicio: WimpGrid"),class = "wg pagetitlecustom  mt-4"),
                       p(i18n$t("Esta página te permite visualizar y manipular los datos importados de Wimpgrid y acceder a diferentes tipos de análisis."),  class = "desccustom mb-2"),
                   ),
 
   shinyjs::hidden(fluidRow(id="id_warn",class="mb-4 mt-4 gap-2 justify-content-center error-help hidden",
         column(12, class = "row flex-column justify-content-center",
           icon("triangle-exclamation", "fa-2x"),
-          p("Para hacer el análisis es necesario importar un archivo o formulario. ",  class = "mt-2 mb-2"),
+          p(i18n$t("Para hacer el análisis es necesario importar un archivo o formulario"),  class = "mt-2 mb-2"),
         ),
 
-        column(12, class="d-flex justify-content-center", actionButton("crear_nuevo", "Importar Archivos", status = 'warning', icon = icon("file-lines"))),
+        column(12, class="d-flex justify-content-center", actionButton("crear_nuevo", i18n$t("Importar archivos"), status = 'warning', icon = icon("file-lines"))),
       )),
 
   # Mostrar los datos importados en una tabla
@@ -56,10 +56,10 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
       shinyjs::hidden(fluidRow(id="vis_warn",class="mb-4 mt-4 gap-2 justify-content-center error-help hidden",
         column(12, class = "row flex-column justify-content-center",
           icon("triangle-exclamation", "fa-2x"),
-          p("Para hacer el análisis es necesario importar un archivo o formulario. ",  class = "mt-2 mb-2"),
+          p(i18n$t("Para hacer el análisis es necesario importar un archivo o formulario"),  class = "mt-2 mb-2"),
         ),
 
-        column(12, class="d-flex justify-content-center", actionButton("crear_nuevo", "Importar Archivos", status = 'warning', icon = icon("file-lines"))),
+        column(12, class="d-flex justify-content-center", actionButton("crear_nuevo", "Importar archivos", status = 'warning', icon = icon("file-lines"))),
       )),
 
         conditionalPanel(class = ("flex-container-resp"),   condition = "input.graph_selector_visualizacion == 'selfdigraph' || input.graph_selector_visualizacion == 'autodigrafo'",
@@ -101,7 +101,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
         
 
                       fluidRow(class = "table-container pb-0 flex-row kpi",
-                      h3("Desglose Índices", class = "mr-auto mb-0"),
+                      h3(i18n$t("Desglose Índices"), class = "mr-auto mb-0"),
                       htmlOutput("dens")
                       ),
                         
@@ -126,7 +126,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
           plotOutput("graph_output_visualizacion")
         ),
         fluidRow(class = "flex-container-sm",
-          downloadButton("btn_download_visualizacion", "Desargar Gráfico")
+          downloadButton("btn_download_visualizacion", i18n$t("Descargar Gráfico"))
         )
 
 
@@ -149,10 +149,10 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
       shinyjs::hidden(fluidRow(id="lab_warn",class="mb-4 mt-4 gap-2 justify-content-center error-help hidden",
         column(12, class = "row flex-column justify-content-center",
           icon("triangle-exclamation", "fa-2x"),
-          p("Para hacer el análisis es necesario importar un archivo o formulario. ",  class = "mt-2 mb-2"),
+          p(i18n$t("Para hacer el análisis es necesario importar un archivo o formulario"),  class = "mt-2 mb-2"),
         ),
 
-        column(12, class="d-flex justify-content-center", actionButton("crear_nuevo", "Importar Archivos", status = 'warning', icon = icon("file-lines"))),
+        column(12, class="d-flex justify-content-center", actionButton("crear_nuevo", "Importar archivos", status = 'warning', icon = icon("file-lines"))),
       )),
       
         conditionalPanel(class = ("flex-container-resp detail"),
