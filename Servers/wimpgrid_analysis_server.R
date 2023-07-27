@@ -602,19 +602,19 @@ if (graph == i18n$t("simdigrafo")) {
   }
 
 } else if (graph == "pcsd") {
-  #pscd_stop_it <- pscd_stop_iter()
-  # <- scenariomatrix(dataaa_w(),act.vector= c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),infer = pscd_infer(),
-                  #         thr = pscd_thr(), max.iter = pscd_max_iter(), e = pscd_e(),
-                  #         stop.iter = pscd_stop_it)
-  #pscdit <- pscd_iter()
-  #pcsd(scn, vline =pscdit)
   shinyjs::hide("lab_showw")
   shinyjs::show("pscd_showw")
+  pscd_stop_it <- pscd_stop_iter()
+  scn <- scenariomatrix(dataaa_w(),act.vector= df_Vpcsd(),infer = pscd_infer(),
+                           thr = pscd_thr(), max.iter = pscd_max_iter(), e = pscd_e(),
+                           stop.iter = pscd_stop_it)
+  #pscdit <- pscd_iter()
+  #pcsd(scn, vline =pscdit)
 
 } else if (graph == "pcsdindices") {
   shinyjs::show("lab_showw")
   shinyjs::hide("pscd_showw")
-  scn <- scenariomatrix(dataaa_w(),act.vector= c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),infer = infer(),
+  scn <- scenariomatrix(dataaa_w(),act.vector= df_Vind(),infer = infer(),
                            thr = thr(), max.iter = max_iter(), e = e(),
                            stop.iter = stop_iter())
   print(pcsdindices(scn))
@@ -689,7 +689,7 @@ output$pscd_show <- renderPlotly({
       shinyjs::hide("lab_showw")
       shinyjs::show("pscd_showw")
     pscd_stop_it <- pscd_stop_iter()
-    scn <- scenariomatrix(dataaa_w(),act.vector= df_V(),infer = pscd_infer(),
+    scn <- scenariomatrix(dataaa_w(),act.vector= df_Vpcsd(),infer = pscd_infer(),
                             thr = pscd_thr(), max.iter = pscd_max_iter(), e = pscd_e(),
                             stop.iter = pscd_stop_it)
     pscdit <- pscd_iter()
