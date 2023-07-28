@@ -231,7 +231,7 @@
       "en": "Restart"
     },
     {
-      "es": "Visualizacion",
+      "es": "Visualización",
       "en": "Visualization"
     },
     {
@@ -243,7 +243,7 @@
       "en": "This page allows you to"
     },
     {
-      "es": "Seleccione un grafico:",
+      "es": "Seleccione un gráfico:",
       "en": "Select a graph:"
     },
     {
@@ -259,7 +259,7 @@
       "en": "wimpindices"
     },
     {
-      "es": "Diseno:",
+      "es": "Diseño:",
       "en": "Layout:"
     },
     {
@@ -299,7 +299,7 @@
       "en": "grey scale"
     },
     {
-      "es": "Tamano de los vertices:",
+      "es": "Tamaño de los vertices:",
       "en": "Vertex size:"
     },
     {
@@ -331,15 +331,15 @@
       "en": "Input file:"
     },
     {
-      "es": "Numero de la iteracion:",
+      "es": "Número de la iteración:",
       "en": "Iteration number:"
     },
     {
-      "es": "Numero de iteraciones maximas:",
+      "es": "Número de iteraciones máximas:",
       "en": "Maximum number of iterations:"
     },
     {
-      "es": "Numero de iteraciones sin cambios:",
+      "es": "Número de iteraciones sin cambios:",
       "en": "Number of iterations without changes:"
     },
     {
@@ -347,7 +347,7 @@
       "en": "Change vector:"
     },
     {
-      "es": "Funcion de propagacion:",
+      "es": "Función de propagación:",
       "en": "Propagation function:"
     },
     {
@@ -355,7 +355,7 @@
       "en": "linear transform"
     },
     {
-      "es": "Funcion umbral:",
+      "es": "Función umbral:",
       "en": "Threshold function:"
     },
     {
@@ -419,11 +419,11 @@
       "en": "Select an analysis"
     },
     {
-      "es": "Análisis de RepGrid",
+      "es": "Análisis RepGrid",
       "en": "RepGrid Analysis"
     },
     {
-      "es": "Análisis de WimpGrid",
+      "es": "Análisis WimpGrid",
       "en": "WimpGrid Analysis"
     },
     {
@@ -525,6 +525,18 @@
     {
       "es": "Desglose Índices",
       "en": "Indices Breakdown"
-    }        
-     
+    },
+    {
+      "es": "Esta página te permite...",
+      "en": "This page allows you to..."
+    },
+    {
+      "es": "Resultado gráfico",
+      "en": "Graphical Result"
+    },
+    {
+      "es": "Centralidad",
+      "en": "Centrality"
+    }
+    
 ]}

@@ -3,7 +3,7 @@ repgrid_analysis_ui <- fluidPage( class="header-tab",
 
   fluidRow( class = ("flex-container-xl border-divider"),
 
-    h2(i18n$t("Análisis de RepGrid"), class = "pagetitlecustom mt-4 mb-4"),
+    h2(i18n$t("Análisis RepGrid"), class = "pagetitlecustom mt-4 mb-4"),
 
     column(12, class = ("input-container"),
       # Agregar un selectInput para elegir el gráfico a mostrar
@@ -26,7 +26,7 @@ repgrid_analysis_ui <- fluidPage( class="header-tab",
           p(i18n$t("Para hacer el análisis es necesario importar un archivo o formulario"),  class = "mt-2 mb-2"),
         ),
 
-        column(12, class="d-flex justify-content-center", actionButton("crear_nuevo", "Importar archivos", status = 'warning', icon = icon("file-lines"))),
+        column(12, class="d-flex justify-content-center", actionButton("crear_nuevo", i18n$t("Importar archivos"), status = 'warning', icon = icon("file-lines"))),
       )),
       
     conditionalPanel(condition = "input.graph_selector == 'Análisis Bidimensional'  ||  input.graph_selector =='Two-Dimensional Analysis' ",

@@ -19,7 +19,7 @@ shinyjs::hidden(fluidRow(id="repgrid_home_warn",class="mb-4 mt-4 gap-2 justify-c
   # Mostrar los datos importados en una tabla
   #tableOutput("tabla_datos_repgrid"),
   fluidRow( class="mb-4 button-container",
-    h3(i18n$t("Data Table"), class = "mr-auto mb-0"),
+    h3(i18n$t("Tabla de Datos"), class = "mr-auto mb-0"),
     actionButton("guardar", i18n$t("Guardar"), style = "display: none;", status = 'success', icon = icon("save")),
     actionButton("reiniciar", i18n$t("Reiniciar"), style = "display: none;", status = 'danger', icon = icon("arrow-rotate-left")),
     actionButton("editar", i18n$t("Editar"), icon = icon("edit"))
