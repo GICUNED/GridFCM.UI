@@ -1,4 +1,3 @@
-
 wimpgrid_analysis_server <- function(input, output, session) {
 # Lógica para la pestaña "Visualización"
 
@@ -42,15 +41,54 @@ output$tabla_datos_wimpgrid <- renderRHandsontable({
   }
 })
 
+## NEW ######################################################
+
+validateValue <- function(changes, tabla) {
+  
+  new_v = changes[[1]][[4]]
+  tabla_r <- hot_to_r(tabla)
+  nombres_columnas <- colnames(tabla_r)
+
+  min_val = nombres_columnas[1]
+  max_val = nombres_columnas[length(nombres_columnas)]
+
+  if(!is.na(new_v) && is.numeric(new_v) && (new_v > max_val || new_v < min_val)) {
+    mensaje <- paste("El valor debe estar entre el rango", min_val, "-", max_val, ".")
+    showModal(modalDialog(
+      title = "Error",
+      mensaje,
+      easyClose = TRUE
+    ))
+    return(FALSE)
+  }
+  return(TRUE)
+}
+
 observeEvent(input$tabla_datos_wimpgrid, {
-  if (!is.null(session$userData$datos_wimpgrid)) {
-    tabla_manipulable_w(hot_to_r(input$tabla_datos_wimpgrid))
-    #tabla_manipulable_w <- tabla_manipulable_w
-}})
+
+  changes <- input$tabla_datos_wimpgrid$changes$changes
+
+  if(!is.null(changes)) {
+    val <- validateValue(changes, input$tabla_datos_wimpgrid)
+    if(!val) {
+      xi = changes[[1]][[1]]
+      yi = changes[[1]][[2]]
+      old_v = changes[[1]][[3]]
+
+      tabla_original <- hot_to_r(input$tabla_datos_wimpgrid)
+      tabla_original[xi+1, yi+1] <- old_v
+      tabla_manipulable_w(tabla_original)
+
+    } else if (!is.null(session$userData$datos_wimpgrid)) {
+      tabla_manipulable_w(hot_to_r(input$tabla_datos_wimpgrid))
+    }
+  }
+})
+
 
 output$bert_w <- renderPlot({
     if (!is.null(session$userData$datos_wimpgrid)) {
-    bertin(wimpgrid_a_mostrar()$openrepgrid , color=c("white", "#005440"))
+    bertin(wimpgrid_a_mostrar()$openrepgrid , color=c("white", "#dfb639"))
     }
   })
 
@@ -203,12 +241,13 @@ observeEvent(input$graph_selector_visualizacion, {
 # Definir la lógica del servidor para la aplicación
 
   
-output$graph_output_visualizacion <- renderPlot({
+generate_graph <- function(){
   # Verificar que input$graph_selector_visualizacion no es NULL
   req(input$graph_selector_visualizacion)
 
   # Asignar el input a una variable
   graph <- input$graph_selector_visualizacion
+  graph2 <- NULL
   print("grapfh selected in view")
   print(graph)
   # Dependiendo de la selección del usuario, dibuja el gráfico correspondiente
@@ -217,24 +256,24 @@ output$graph_output_visualizacion <- renderPlot({
     
     print("hhhh")
 
-    if(i18n$get_key_translation()=="es")
-    {
-      
-      selfdigraph(dataaa_w(), layout = translate_word("en",selfdigraph_layout()), vertex.size = selfdigraph_vertex_size(),edge.width = selfdigraph_edge_width(), color = translate_word("en",selfdigraph_color()))
+    if(i18n$get_key_translation()=="es") {
+      print("es")
+      graph2 <- selfdigraph(dataaa_w(), layout = translate_word("en",selfdigraph_layout()), vertex.size = selfdigraph_vertex_size(),edge.width = selfdigraph_edge_width(), color = translate_word("en",selfdigraph_color()))
       #selfdigraph(dataaa_w(), layout = selfdigraph_layout(), vertex.size = selfdigraph_vertex_size(),edge.width = selfdigraph_edge_width(), color = selfdigraph_color())
     }
-    else{
-      selfdigraph(dataaa_w(), layout = selfdigraph_layout(), vertex.size = selfdigraph_vertex_size(),edge.width = selfdigraph_edge_width(), color = selfdigraph_color())
+    else {
+      print("en")
+      graph2 <- selfdigraph(dataaa_w(), layout = selfdigraph_layout(), vertex.size = selfdigraph_vertex_size(),edge.width = selfdigraph_edge_width(), color = selfdigraph_color())
     }
-  } else if (graph == i18n$t("digrafo ideal")) {
+  } else if (graph == i18n$t("digrafo del ideal")) {
     if(i18n$get_key_translation()=="es")
     {
-        idealdigraph(dataaa_w(), inc = idealdigraph_inc(), layout = translate_word("en",idealdigraph_layout()), vertex.size = idealdigraph_vertex_size(), edge.width = idealdigraph_edge_width(),color = translate_word("en",idealdigraph_color()))
+      graph2 <- idealdigraph(dataaa_w(), inc = idealdigraph_inc(), layout = translate_word("en",idealdigraph_layout()), vertex.size = idealdigraph_vertex_size(), edge.width = idealdigraph_edge_width(),color = translate_word("en",idealdigraph_color()))
 
-    }else{
-    idealdigraph(dataaa_w(), inc = idealdigraph_inc(), layout = idealdigraph_layout(), vertex.size = idealdigraph_vertex_size(), edge.width = idealdigraph_edge_width(),color = idealdigraph_color())
+    } else {
+      graph2 <- idealdigraph(dataaa_w(), inc = idealdigraph_inc(), layout = idealdigraph_layout(), vertex.size = idealdigraph_vertex_size(), edge.width = idealdigraph_edge_width(),color = idealdigraph_color())
     }
-  } else if (graph == i18n$t("indices de Wimp")) {
+  } else if (graph == i18n$t("índices de Wimp")) {
     print("wimpindices")
     # Get column names
     column_names <- names(wimpindices(dataaa_w()))
@@ -244,13 +283,39 @@ output$graph_output_visualizacion <- renderPlot({
     print(wimpindices(dataaa_w())[["distance"]])
         #wimpindices(dataaa_w())
   }
+
+  print(graph2)
+
+  return(graph2)
+}
+
+output$graph_output_visualizacion <- renderPlot({
+  generate_graph()
 })
+
+output$btn_download_visualizacion <- downloadHandler(
+  filename = function() {
+    "grafico_visualizacion.png"
+  },
+  content = function(file) {
+
+    print("Botón de descarga presionado")
+
+    # Tomar una captura de pantalla del gráfico y guardarla en un archivo PNG
+    graph <- generate_graph()
+
+    print(str(graph))
+
+    ggsave(file, plot = graph, width = 1200, height = 800, units = "px", dpi = 100)
+  }
+)
+
 output$dens <- renderText({
 
     INTe <- wimpindices(dataaa_w())[["density"]]
     knitr::kable(INTe, col.names = "density",format = "html") %>%
     kable_styling("striped", full_width = F) %>%
-    row_spec(0, bold = T, color = "white") %>%
+    row_spec(0, bold = T) %>%
     column_spec(1, bold = T)
 })
 output$distance <- renderRHandsontable({
@@ -537,25 +602,46 @@ if (graph == i18n$t("simdigrafo")) {
   }
 
 } else if (graph == "pcsd") {
-  #pscd_stop_it <- pscd_stop_iter()
-  # <- scenariomatrix(dataaa_w(),act.vector= c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),infer = pscd_infer(),
-                  #         thr = pscd_thr(), max.iter = pscd_max_iter(), e = pscd_e(),
-                  #         stop.iter = pscd_stop_it)
-  #pscdit <- pscd_iter()
-  #pcsd(scn, vline =pscdit)
   shinyjs::hide("lab_showw")
   shinyjs::show("pscd_showw")
+  pscd_stop_it <- pscd_stop_iter()
+  scn <- scenariomatrix(dataaa_w(),act.vector= df_Vpcsd(),infer = pscd_infer(),
+                           thr = pscd_thr(), max.iter = pscd_max_iter(), e = pscd_e(),
+                           stop.iter = pscd_stop_it)
+  #pscdit <- pscd_iter()
+  #pcsd(scn, vline =pscdit)
 
 } else if (graph == "pcsdindices") {
   shinyjs::show("lab_showw")
   shinyjs::hide("pscd_showw")
-  scn <- scenariomatrix(dataaa_w(),act.vector= c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),infer = infer(),
+  scn <- scenariomatrix(dataaa_w(),act.vector= df_Vind(),infer = infer(),
                            thr = thr(), max.iter = max_iter(), e = e(),
                            stop.iter = stop_iter())
   print(pcsdindices(scn))
 
 }
 })
+
+  #output$btn_download <- downloadHandler(
+  #  filename = function() {
+  #    graph <- input$graph_selector_laboratorio
+  #    if(graph == i18n$t("simdigrafo")) {
+  #      "simdigrafo.png"
+  #    } else if(graph == "pcsd") {
+  #      "pcsd.png"
+  #    } else if(graph == "pcsdindices") {
+  #      "pcsdindices.png"
+  #    }
+  #  },
+  #  content = function(file) {
+  #    # Tomar una captura de pantalla del gráfico y guardarla en un archivo PNG
+  #    grDevices::png(file, width = 1200, height = 800, units = "px", res = 100)
+  #    grDevices::dev.capture("lab_showw")
+  #    grDevices::dev.off()
+  #    file.copy("Rplot001.png", file)  # Copiar el archivo temporal a la ubicación deseada
+  #    file.remove("Rplot001.png")  # Eliminar el archivo temporal
+  #  }
+  #)
 
 output$convergence <- renderText({
     scn <- scenariomatrix(dataaa_w(),act.vector= c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),infer = infer(),
@@ -603,7 +689,7 @@ output$pscd_show <- renderPlotly({
       shinyjs::hide("lab_showw")
       shinyjs::show("pscd_showw")
     pscd_stop_it <- pscd_stop_iter()
-    scn <- scenariomatrix(dataaa_w(),act.vector= df_V(),infer = pscd_infer(),
+    scn <- scenariomatrix(dataaa_w(),act.vector= df_Vpcsd(),infer = pscd_infer(),
                             thr = pscd_thr(), max.iter = pscd_max_iter(), e = pscd_e(),
                             stop.iter = pscd_stop_it)
     pscdit <- pscd_iter()

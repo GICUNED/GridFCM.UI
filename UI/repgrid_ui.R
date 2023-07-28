@@ -5,7 +5,7 @@ repgrid_ui <- fluidPage( class="header-tab rg-diff",
   
   tabsetPanel(
     id = "tabs_rep",
-    tabPanel("Data", repgrid_home_ui, icon = icon("table")),
-    tabPanel("Results", repgrid_analysis_ui, icon = icon("square-poll-vertical"))
+    tabPanel(i18n$t("Datos"), repgrid_home_ui, icon = icon("table")),
+    tabPanel(i18n$t("Resultados"), repgrid_analysis_ui, icon = icon("square-poll-vertical"))
   )
 )
