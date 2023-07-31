@@ -664,7 +664,7 @@ output$summary <- DT::renderDataTable({
 })
 
 output$auc <- DT::renderDataTable({
-      scn <- scenariomatrix(dataaa_w(),act.vector= df_V(),infer = infer(),
+      scn <- scenariomatrix(dataaa_w(),act.vector= df_Vind(),infer = infer(),
                                 thr = thr(), max.iter = max_iter(), e = e(),
                                 stop.iter = stop_iter())
       pscind <- pcsdindices(scn)
@@ -672,7 +672,7 @@ output$auc <- DT::renderDataTable({
 })
 
 output$stability <- DT::renderDataTable({
-    scn <- scenariomatrix(dataaa_w(),act.vector= df_V(),infer = infer(),
+    scn <- scenariomatrix(dataaa_w(),act.vector= df_Vind(),infer = infer(),
                            thr = thr(), max.iter = max_iter(), e = e(),
                            stop.iter = stop_iter())
     pscind <- pcsdindices(scn)
