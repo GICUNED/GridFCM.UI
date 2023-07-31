@@ -253,10 +253,10 @@ generate_graph <- function(){
   # Dependiendo de la selección del usuario, dibuja el gráfico correspondiente
   if (graph == "autodigrafo" || graph=="selfdigraph") {
     
-    
+    print(i18n$get_translation_language())
     print("hhhh")
 
-    if(i18n$get_key_translation()=="es") {
+    if(i18n$get_translation_language()=="es") {
       print("es")
       graph2 <- selfdigraph(dataaa_w(), layout = translate_word("en",selfdigraph_layout()), vertex.size = selfdigraph_vertex_size(),edge.width = selfdigraph_edge_width(), color = translate_word("en",selfdigraph_color()))
       #selfdigraph(dataaa_w(), layout = selfdigraph_layout(), vertex.size = selfdigraph_vertex_size(),edge.width = selfdigraph_edge_width(), color = selfdigraph_color())
@@ -266,7 +266,7 @@ generate_graph <- function(){
       graph2 <- selfdigraph(dataaa_w(), layout = selfdigraph_layout(), vertex.size = selfdigraph_vertex_size(),edge.width = selfdigraph_edge_width(), color = selfdigraph_color())
     }
   } else if (graph == i18n$t("digrafo del ideal")) {
-    if(i18n$get_key_translation()=="es")
+    if(i18n$get_translation_language()=="es")
     {
       graph2 <- idealdigraph(dataaa_w(), inc = idealdigraph_inc(), layout = translate_word("en",idealdigraph_layout()), vertex.size = idealdigraph_vertex_size(), edge.width = idealdigraph_edge_width(),color = translate_word("en",idealdigraph_color()))
 
@@ -582,8 +582,8 @@ if (graph == i18n$t("simdigrafo")) {
   shinyjs::hide("pscd_showw")
   sim_stop_it <- simdigraph_stop_iter()
 
-  if(i18n$get_key_translation()=="es"){
-    print(paste("simdig:",i18n$get_key_translation()))
+  if(i18n$get_translation_language()=="es"){
+    print(paste("simdig:",i18n$get_translation_language()))
     print(translate_word("en", simdigraph_infer()))
     scn <- scenariomatrix(dataaa_w(),act.vector= df_V(),infer = "linear transform",
                            thr = "linear", max.iter = simdigraph_max_iter(), e = simdigraph_e(),
@@ -655,7 +655,7 @@ output$convergence <- renderText({
 })
 
 output$summary <- DT::renderDataTable({
-  scn <- scenariomatrix(dataaa_w(),act.vector= df_V(),infer = infer(),
+  scn <- scenariomatrix(dataaa_w(),act.vector= df_Vind(),infer = infer(),
                               thr = thr(), max.iter = max_iter(), e = e(),
                               stop.iter = stop_iter())
   pscind <- pcsdindices(scn)
@@ -664,7 +664,7 @@ output$summary <- DT::renderDataTable({
 })
 
 output$auc <- DT::renderDataTable({
-      scn <- scenariomatrix(dataaa_w(),act.vector= df_V(),infer = infer(),
+      scn <- scenariomatrix(dataaa_w(),act.vector= df_Vind(),infer = infer(),
                                 thr = thr(), max.iter = max_iter(), e = e(),
                                 stop.iter = stop_iter())
       pscind <- pcsdindices(scn)
@@ -672,7 +672,7 @@ output$auc <- DT::renderDataTable({
 })
 
 output$stability <- DT::renderDataTable({
-    scn <- scenariomatrix(dataaa_w(),act.vector= df_V(),infer = infer(),
+    scn <- scenariomatrix(dataaa_w(),act.vector= df_Vind(),infer = infer(),
                            thr = thr(), max.iter = max_iter(), e = e(),
                            stop.iter = stop_iter())
     pscind <- pcsdindices(scn)

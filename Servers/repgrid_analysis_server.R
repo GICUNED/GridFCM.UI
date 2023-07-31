@@ -36,7 +36,7 @@ repgrid_analisis_server <- function(input, output, session) {
     },
     content = function(file) {
       # Tomar una captura de pantalla del gráfico y guardarla en un archivo PNG
-      grDevices::png(file, width = 1200, height = 800, units = "px", res = 100)
+      grDevices::png(file, width = 1200, height = 1200, units = "px", res = 100)
       grDevices::dev.capture(OpenRepGrid::biplot2d(repgrid_data, c.label.col = "#005440", c.grid = "gray", c.grid.lty = "dotted", c.grid.lwd = 0.5, cex.axis = 0.8, cex.labels = 0.8))
       grDevices::dev.off()
       file.copy("Rplot001.png", file)  # Copiar el archivo temporal a la ubicación deseada
