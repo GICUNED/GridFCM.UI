@@ -96,7 +96,7 @@ ui <- dashboardPage(
 
     tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "customization.css")),
     tags$li(style = "padding: 10px; list-style:none;",
-    div(class = 'language-selector',selectInput('selected_language',i18n$t("Idioma"), choices = i18n$get_languages(),selected = i18n$get_key_translation()))),
+    div(class = 'language-selector',selectInput('selected_language',i18n$t("Idioma"), choices = i18n$get_languages(),selected = i18n$get_translation_language()))),
     title = tags$a(href='https://www.uned.es/', target ="_blank", class = "logocontainer",
     tags$img(src='LogoUNED.svg',height='56',width='', class = "logoimg")),
     div(id="user-page", class = "nav-item user-page user-page-btn" , menuItem("User", href = route_link("user_home"), icon = icon("house-user"), newTab = FALSE))
@@ -180,6 +180,7 @@ server <- function(input, output, session) {
     shiny.i18n::update_lang(input$selected_language)
     i18n_r()$set_translation_language(input$selected_language)
     print(paste("Lanfffguage change!", input$selected_language))
+    print(i18n_r()$get_translation_language())
 
     updateSelectInput(session, "graph_selector_visualizacion",
                       choices = i18n_r()$t(c("autodigrafo", "digrafo del ideal", "índices de Wimp")))
