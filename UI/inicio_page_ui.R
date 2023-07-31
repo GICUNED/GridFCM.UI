@@ -3,32 +3,32 @@ inicio_ui <- fluidPage(
   
   div(class = "custom-margins",
 
-  h2("Inicia sesión para continuar", class = "pagetitlecustom mb-4"),
+  h2(i18n$t("Inicia sesión para continuar"), class = "pagetitlecustom mb-4"),
         fluidRow(
           column(7,
           box(
             id = "login_box",
-            title = "Inicio de sesión",
+            title = i18n$t("Inicio de sesión"),
             icon = icon("right-to-bracket"),
             status = "primary",
             solidHeader = TRUE,
             width = 12,
-            textInput("usuario", "Nombre de usuario", placeholder = 'Introduce tu usuario'),
-            passwordInput("contrasena", "Contraseña", placeholder = '■ ■ ■ ■ ■ ■ ■ ■'),
+            textInput("usuario", i18n$t("Nombre de usuario"), placeholder = 'Introduce usuario'),
+            passwordInput("contrasena", i18n$t("Contraseña"), placeholder = '■ ■ ■ ■ ■ ■ ■ ■'),
 
-            column(12, class="d-flex justify-content-center mb-2", actionButton("ingresar", "Acceder", status = 'primary', icon = icon("arrow-up"),)),
-            column(12, class="d-flex justify-content-center", actionButton("invitado", "Sesión de invitado", icon = icon("user")))
+            column(12, class="d-flex justify-content-center mb-2", actionButton("ingresar", i18n$t("Acceder"), status = 'primary', icon = icon("arrow-up"),)),
+            column(12, class="d-flex justify-content-center", actionButton("invitado", i18n$t("Sesión de invitado"), icon = icon("user")))
 
           )),
           column(5,
           #tags$ul(tags$li(a(class = "item", href = route_link("user_home"), "user home")))
           box(
-            title = "Información",
+            title = i18n$t("Información"),
             icon = icon("circle-info"),
             status = "success",
             solidHeader = TRUE,
             width = 12,
-            p("Aquí se agregará más información sobre la aplicación y el método que se utiliza.")
+            p(i18n$t("Aquí se agregará más información sobre la aplicación y el método que se utiliza."))
           ))    
     )
   ))

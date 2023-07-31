@@ -7,17 +7,17 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
   tabsetPanel(
       tabPanel(i18n$t("Data"), id = "tab_data_w", icon = icon("table"),
           fluidRow( class = ("flex-container-xl border-divider"),
-                      h2(i18n$t("WimpGrid Home"),class = "wg pagetitlecustom  mt-4"),
+                      h2(i18n$t("Inicio: WimpGrid"),class = "wg pagetitlecustom  mt-4"),
                       p(i18n$t("Esta página te permite visualizar y manipular los datos importados de Wimpgrid y acceder a diferentes tipos de análisis."),  class = "desccustom mb-2"),
                   ),
 
   shinyjs::hidden(fluidRow(id="id_warn",class="mb-4 mt-4 gap-2 justify-content-center error-help hidden",
         column(12, class = "row flex-column justify-content-center",
           icon("triangle-exclamation", "fa-2x"),
-          p("Para hacer el análisis es necesario importar un archivo o formulario. ",  class = "mt-2 mb-2"),
+          p(i18n$t("Para hacer el análisis es necesario importar un archivo o formulario"),  class = "mt-2 mb-2"),
         ),
 
-        column(12, class="d-flex justify-content-center", actionButton("crear_nuevo", "Importar Archivos", status = 'warning', icon = icon("file-lines"))),
+        column(12, class="d-flex justify-content-center", actionButton("crear_nuevo", i18n$t("Importar archivos"), status = 'warning', icon = icon("file-lines"))),
       )),
 
   # Mostrar los datos importados en una tabla
@@ -56,10 +56,10 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
       shinyjs::hidden(fluidRow(id="vis_warn",class="mb-4 mt-4 gap-2 justify-content-center error-help hidden",
         column(12, class = "row flex-column justify-content-center",
           icon("triangle-exclamation", "fa-2x"),
-          p("Para hacer el análisis es necesario importar un archivo o formulario. ",  class = "mt-2 mb-2"),
+          p(i18n$t("Para hacer el análisis es necesario importar un archivo o formulario"),  class = "mt-2 mb-2"),
         ),
 
-        column(12, class="d-flex justify-content-center", actionButton("crear_nuevo", "Importar Archivos", status = 'warning', icon = icon("file-lines"))),
+        column(12, class="d-flex justify-content-center", actionButton("crear_nuevo", "Importar archivos", status = 'warning', icon = icon("file-lines"))),
       )),
 
         conditionalPanel(class = ("flex-container-resp"),   condition = "input.graph_selector_visualizacion == 'selfdigraph' || input.graph_selector_visualizacion == 'autodigrafo'",
@@ -101,7 +101,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
         
 
                       fluidRow(class = "table-container pb-0 flex-row kpi",
-                      h3("Desglose Índices", class = "mr-auto mb-0"),
+                      h3(i18n$t("Desglose Índices"), class = "mr-auto mb-0"),
                       htmlOutput("dens")
                       ),
                         
@@ -120,11 +120,14 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                         fluidRow(DT::dataTableOutput(("inconsistences")))
                         ),
 
-                        fluidRow(class = "flex-container-sm",
-                          icon("globe", class = "mt-4"),
-                          h4("Resultado gráfico", class = "pagetitle2custom mt-2 mb-4"),
-                          plotOutput("graph_output_visualizacion")
-                        ),
+        fluidRow(class = "flex-container-sm",
+          icon("globe", class = "mt-4"),
+          h4("Resultado gráfico", class = "pagetitle2custom mt-2 mb-4"),
+          plotOutput("graph_output_visualizacion")
+        ),
+        fluidRow(class = "flex-container-sm",
+          downloadButton("btn_download_visualizacion", i18n$t("Descargar Gráfico"))
+        )
 
 
       ),
@@ -146,10 +149,10 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
       shinyjs::hidden(fluidRow(id="lab_warn",class="mb-4 mt-4 gap-2 justify-content-center error-help hidden",
         column(12, class = "row flex-column justify-content-center",
           icon("triangle-exclamation", "fa-2x"),
-          p("Para hacer el análisis es necesario importar un archivo o formulario. ",  class = "mt-2 mb-2"),
+          p(i18n$t("Para hacer el análisis es necesario importar un archivo o formulario"),  class = "mt-2 mb-2"),
         ),
 
-        column(12, class="d-flex justify-content-center", actionButton("crear_nuevo", "Importar Archivos", status = 'warning', icon = icon("file-lines"))),
+        column(12, class="d-flex justify-content-center", actionButton("crear_nuevo", "Importar archivos", status = 'warning', icon = icon("file-lines"))),
       )),
       
         conditionalPanel(class = ("flex-container-resp detail"),
@@ -160,12 +163,12 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
               div(id = "simdig_inp",fileInput("simdigraph_wimp", i18n$t("Input file:"), accept = c(".xlsx")))),
 
             selectInput("simdigraph_infer", i18n$t("Funcion de propagacion:"),
-                          choices = c("transformacion lineal", "another option"),
+                          choices = c("transformacion lineal", "otra opción"),
                           selected = i18n$t("transformacion lineal")),
 
             selectInput("simdigraph_thr", i18n$t("Funcion umbral:"),
-                          choices = c("linear","another option"),
-                          selected = i18n$t("linear")),
+                          choices = c("lineal","otra opción"),
+                          selected = i18n$t("lineal")),
 
             selectInput("simdigraph_layout", i18n$t("Layout:"),
                           choices = c("circulo", "rtcirculo","arbol", "graphopt", "mds", "cuadricula"),
@@ -212,12 +215,12 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
               #numericInput("pcsd_act_vector", i18n$t("Change vector:"), value = 0, step = 0.01),
 
               selectInput("pcsd_infer", i18n$t("Funcion de propagacion:"),
-                          choices = c("transformacion lineal", "another option"),
+                          choices = c("transformacion lineal", "otra opción"),
                           selected = i18n$t("transformacion lineal")),
 
               selectInput("pcsd_thr", i18n$t("Funcion umbral:"),
-                          choices = c("linear", "another option"),
-                          selected = i18n$t("linear")),
+                          choices = c("lineal", "otra opción"),
+                          selected = i18n$t("lineal")),
 
 
               numericInput("pcsd_e", i18n$t("Valor diferencial:"), value = 0.0001),
@@ -230,12 +233,12 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                           #choices = c(i18n$t("WimpGrid_data.xlsx"), i18n$t("data.csv"), i18n$t("datos.txt"))),
 
               selectInput("pcsdindices_infer", i18n$t("Funcion de propagacion:"),
-                          choices = c("transformacion lineal", "sigmoid transform", "binary transform"),
+                          choices = c("transformacion lineal", "transformación sigmoidea", "transformación binaria"),
                           selected = i18n$t("transformacion lineal")),
 
               selectInput("pcsdindices_thr", i18n$t("Funcion umbral:"),
-                          choices = c("linear", "sigmoide", "binario"),
-                          selected = i18n$t("linear")),
+                          choices = c("lineal", "sigmoide", "binario"),
+                          selected = i18n$t("lineal")),
 
               #numericInput("pcsdindices_act_vector", i18n$t("Changes to simulate:"),
               #            value = 0, step = 0.01),
