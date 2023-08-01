@@ -84,10 +84,10 @@ importwimp <- function(path, sheet = 1, opr = TRUE){
     if(i != 0){
       standarized.hypothetical[n] <- standarized.self[n] / (-1 * abs(standarized.self[n]))
     }
-    if(i == 0 && !(0 %in% standarized.ideal)){
+    if(i == 0 && !(0 %in% standarized.ideal[n])){
       standarized.hypothetical[n] <- standarized.ideal[n] / abs(standarized.ideal[n])
     }
-    if(i == 0 && (0 %in% standarized.ideal)){
+    if(i == 0 && (0 %in% standarized.ideal[n])){
       standarized.hypothetical[n] <- 1
     }
     n <- n + 1

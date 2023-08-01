@@ -95,6 +95,8 @@ ui <- dashboardPage(
   dashboardHeader(
 
     tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "customization.css")),
+    tags$li(style = "padding: 10px; list-style:none;",
+    div(class = 'language-selector',selectInput('selected_language',i18n$t("Idioma"), choices = i18n$get_languages(),selected = i18n$get_translation_language()))),
     title = tags$a(href='https://www.uned.es/', target ="_blank", class = "logocontainer",
     tags$img(src='LogoUNED.svg',height='56',width='', class = "logoimg")),
     div(id="user-page", class = "nav-item user-page user-page-btn" , menuItem("User", href = route_link("user_home"), icon = icon("house-user"), newTab = FALSE))
@@ -105,18 +107,17 @@ ui <- dashboardPage(
 
     sidebarMenu(
         id = "sidebar-principal",
-        div(id="incio-page", class = "nav-item incio-page", menuItem("Inicio", href = route_link("/"), icon = icon("home"), newTab = FALSE)),
-        div(id="import-page", class = "nav-item import-page", menuItem("Import", href = route_link("import"), icon = icon("file-arrow-up"), newTab = FALSE)),
-        div(id="excel-page", class = "nav-item excel-page submenu-item", menuItem("Files", href = route_link("excel"), icon = icon("file-excel"), newTab = FALSE)),
-        div(id="form-page", class = "nav-item form-page submenu-item", menuItem("Form", href = route_link("excel"), icon = icon("rectangle-list"), newTab = FALSE)),
+        div(id="incio-page", class = "nav-item incio-page", menuItem(i18n$t("Inicio"), href = route_link("/"), icon = icon("home"), newTab = FALSE)),
+        div(id="import-page", class = "nav-item import-page", menuItem(i18n$t("Importar"), href = route_link("import"), icon = icon("file-arrow-up"), newTab = FALSE)),
+        div(id="excel-page", class = "nav-item excel-page submenu-item", menuItem(i18n$t("Ficheros"), href = route_link("excel"), icon = icon("file-excel"), newTab = FALSE)),
+        div(id="form-page", class = "nav-item form-page submenu-item", menuItem(i18n$t("Formularios"), href = route_link("excel"), icon = icon("rectangle-list"), newTab = FALSE)),
         div(id="repgrid-page", class = "nav-item repg-page", menuItem("Repgrid", href = route_link("repgrid"), icon = icon("magnifying-glass-chart"), newTab = FALSE)),
         div(id = "wimpgrid-page", class = "nav-item wimpg-page", menuItem("Wimpgrid", href = route_link("wimpgrid"), icon = icon("chart-column"), newTab = FALSE)),
-        div(class = 'language-selector',selectInput('selected_language',"Idioma", choices = i18n$get_languages(),selected = i18n$get_key_translation()))
       )
     ),
 
   dashboardBody(
-    #usei18n(translator = i18n),
+    usei18n(translator = i18n),
     tags$script(src = "activescript.js"),
     useShinyjs(),
     router_ui(
@@ -163,11 +164,11 @@ ui <- dashboardPage(
 
 server <- function(input, output, session) {
 
-  
+
   i18n_r <- reactive({
     i18n
   })
-  
+
 
   observeEvent(input$volver_a_inicio, {
     runjs("window.location.href = '/#!/';")
@@ -179,50 +180,51 @@ server <- function(input, output, session) {
     shiny.i18n::update_lang(input$selected_language)
     i18n_r()$set_translation_language(input$selected_language)
     print(paste("Lanfffguage change!", input$selected_language))
-    
+    print(i18n_r()$get_translation_language())
+
     updateSelectInput(session, "graph_selector_visualizacion",
-                      choices = i18n_r()$t(c("autodigrafo", "digrafo ideal", "indices de Wimp")))
-    
+                      choices = i18n_r()$t(c("autodigrafo", "digrafo del ideal", "índices de Wimp")))
+
 
 
     updateSelectInput(session, "selfdigraph_layout",
                       choices = i18n_r()$t(c("circulo", "rtcirculo","arbol", "graphopt", "mds", "cuadricula")))
     updateSelectInput(session, "selfdigraph_color",
                       choices = i18n_r()$t(c("rojo/verde", "escala de grises")))
-    
+
     updateSelectInput(session, "idealdigraph_layout",
                       choices = i18n_r()$t(c("circulo", "rtcirculo","arbol", "graphopt", "mds", "cuadricula")))
     updateSelectInput(session, "idealdigraph_color",
                       choices = i18n_r()$t(c("rojo/verde", "escala de grises")))
-    
 
-    
+
+
     updateSelectInput(session, "graph_selector_laboratorio",
                       choices = i18n_r()$t(c("simdigrafo","pcsd", "pcsdindices")))
-    
+
     updateSelectInput(session, "simdigraph_layout",
                       choices = i18n_r()$t(c("circulo", "rtcirculo","arbol", "graphopt", "mds", "cuadricula")))
     updateSelectInput(session, "simdigraph_color",
                       choices = i18n_r()$t(c("rojo/verde", "escala de grises")))
-    
-    
+
+
     updateSelectInput(session, "simdigraph_infer",
-                      choices = i18n_r()$t(c("transformacion lineal", "another option")))
+                      choices = i18n_r()$t(c("transformacion lineal", "otra opción")))
     updateSelectInput(session, "simdigraph_thr",
-                      choices = i18n_r()$t(c("linear","another option")))
-    
-    
+                      choices = i18n_r()$t(c("lineal","otra opción")))
+
+
     updateSelectInput(session, "pcsd_infer",
-                      choices = i18n_r()$t(c("transformacion lineal", "another option")))
+                      choices = i18n_r()$t(c("transformacion lineal", "otra opción")))
     updateSelectInput(session, "pcsd_thr",
-                      choices = i18n_r()$t(c("linear", "another option")))
-    
-    
+                      choices = i18n_r()$t(c("lineal", "otra opción")))
+
+
     updateSelectInput(session, "pcsdindices_infer",
-                      choices = i18n_r()$t(c("transformacion lineal", "sigmoid transform", "binary transform")))
+                      choices = i18n_r()$t(c("transformacion lineal", "transformación sigmoidea", "transformación binaria")))
     updateSelectInput(session, "pcsdindices_thr",
-                      choices = i18n_r()$t(c("linear", "sigmoide", "binario")))
-    
+                      choices = i18n_r()$t(c("lineal", "sigmoide", "binario")))
+
     updateSelectInput(session, "graph_selector",
                       choices = i18n_r()$t(c("Análisis Bidimensional",
                               "Análisis Tridimensional","Análisis por Conglomerados","Índices Cognitivos","Dilemas")))

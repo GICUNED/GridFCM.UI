@@ -14,7 +14,7 @@
       "en": "Username"
     },
     {
-      "es": "Contrasena",
+      "es": "Contraseña",
       "en": "Password"
     },
     {
@@ -22,15 +22,15 @@
       "en": "Log in"
     },
     {
-      "es": "Sesion de invitado",
+      "es": "Sesión de invitado",
       "en": "Guest session"
     },
     {
-      "es": "Informacion",
+      "es": "Información",
       "en": "Information"
     },
     {
-      "es": "Aqui se agregara mas informacion sobre la aplicacion y el metodo que se utiliza",
+      "es": "Aquí se agregará más información sobre la aplicación y el método que se utiliza.",
       "en": "More information about the application and the method used will be added here"
     },
     {
@@ -114,6 +114,14 @@
       "en": "Import data"
     },
     {
+      "es": "Importar Datos",
+      "en": "Import Data"
+    },
+    {
+      "es": "Importar archivos",
+      "en": "Import files"
+    },
+    {
       "es": "Plantillas y documentos de ayuda",
       "en": "Templates and help documents"
     },
@@ -159,19 +167,19 @@
     },
     
     {
-      "es": "Analisis Bidimensional",
+      "es": "Análisis Bidimensional",
       "en": "Two-Dimensional Analysis"
     },
     {
-      "es": "Analisis Tridimensional",
+      "es": "Análisis Tridimensional",
       "en": "Three-Dimensional Analysis"
     },
     {
-      "es": "Analisis por Conglomerados",
+      "es": "Análisis por Conglomerados",
       "en": "Cluster Analysis"
     },
     {
-      "es": "indices Cognitivos",
+      "es": "Índices Cognitivos",
       "en": "Cognitive Indices"
     },
     {
@@ -179,19 +187,15 @@
       "en": "Dilemmas"
     },
     {
-      "es": "Haz click y arrastra para Interactuar",
-      "en": "Click and drag to Interact"
+      "es": "Constructos",
+      "en": "Constructs"
     },
     {
-      "es": "Constructs",
-      "en": "Constructos"
+      "es": "Elementos",
+      "en": "Elements"
     },
     {
-      "es": "Elements",
-      "en": "Elementos"
-    },
-    {
-      "es": "indices y Valores Matematicos",
+      "es": "Índices y Valores Matematicos",
       "en": "Indices and Mathematical Values"
     },
     {
@@ -227,7 +231,7 @@
       "en": "Restart"
     },
     {
-      "es": "Visualizacion",
+      "es": "Visualización",
       "en": "Visualization"
     },
     {
@@ -239,7 +243,7 @@
       "en": "This page allows you to"
     },
     {
-      "es": "Seleccione un grafico:",
+      "es": "Seleccione un gráfico:",
       "en": "Select a graph:"
     },
     {
@@ -247,7 +251,7 @@
       "en": "selfdigraph"
     },
     {
-      "es": "digrafo ideal",
+      "es": "digrafo del ideal",
       "en": "idealdigraph"
     },
     {
@@ -255,7 +259,7 @@
       "en": "wimpindices"
     },
     {
-      "es": "Diseno:",
+      "es": "Diseño:",
       "en": "Layout:"
     },
     {
@@ -295,7 +299,7 @@
       "en": "grey scale"
     },
     {
-      "es": "Tamano de los vertices:",
+      "es": "Tamaño de los vértices:",
       "en": "Vertex size:"
     },
     {
@@ -327,15 +331,15 @@
       "en": "Input file:"
     },
     {
-      "es": "Numero de la iteracion:",
+      "es": "Número de la iteración:",
       "en": "Iteration number:"
     },
     {
-      "es": "Numero de iteraciones maximas:",
+      "es": "Número de iteraciones máximas:",
       "en": "Maximum number of iterations:"
     },
     {
-      "es": "Numero de iteraciones sin cambios:",
+      "es": "Número de iteraciones sin cambios:",
       "en": "Number of iterations without changes:"
     },
     {
@@ -343,7 +347,7 @@
       "en": "Change vector:"
     },
     {
-      "es": "Funcion de propagacion:",
+      "es": "Función de propagación:",
       "en": "Propagation function:"
     },
     {
@@ -351,7 +355,7 @@
       "en": "linear transform"
     },
     {
-      "es": "Funcion umbral:",
+      "es": "Función umbral:",
       "en": "Threshold function:"
     },
     {
@@ -377,5 +381,162 @@
     {
       "es": "binario",
       "en": "binary"
-    }       
+    },
+    {
+      "es": "otra opción",
+      "en": "another option"
+    },
+    {
+      "es": "índices de Wimp",
+      "en": "wimpindices"
+    },
+    {
+      "es": "lineal",
+      "en": "linear"
+    },
+    {
+      "es": "transformación sigmoidea",
+      "en": "sigmoid transform"
+    },
+    {
+      "es": "transformación binaria",
+      "en": "binary transform"
+    },
+    {
+      "es": "Idioma",
+      "en": "Language"
+    },
+    {
+      "es": "En esta página, puedes descargar plantillas de xlsx y documentos de ayuda, y subir archivos xlsx para importar datos.",
+      "en": "On this page, you can download xlsx templates and help documents, and upload xlsx files to import data."
+    },
+    {
+      "es": "Esta página te permite visualizar y manipular los datos importados de RepGrid y acceder a diferentes tipos de análisis.",
+      "en": "This page allows you to visualize and manipulate the data imported from RepGrid and access different types of analysis."
+    },
+    {
+      "es": "Seleccione un análisis:",
+      "en": "Select an analysis"
+    },
+    {
+      "es": "Análisis RepGrid",
+      "en": "RepGrid Analysis"
+    },
+    {
+      "es": "Análisis WimpGrid",
+      "en": "WimpGrid Analysis"
+    },
+    {
+      "es": "Inicio",
+      "en": "Home"
+    },
+    {
+      "es": "Importar",
+      "en": "Import"
+    },
+    {
+      "es": "Ficheros",
+      "en": "Files"
+    },
+    {
+      "es": "Formularios",
+      "en": "Forms"
+    },
+    {
+      "es": "Importar datos para un nuevo análisis de rejilla",
+      "en": "Import data for a new grid analysis"
+    },
+    {
+      "es": "En esta página, puedes aprender sobre los tres tipos de análisis de rejilla y elegir cómo importar tus datos.",
+      "en": "On this page, you can learn about the three types of grid analysis and choose how to import your data."
+    },
+    {
+      "es": "Descripción del análisis RepGrid.",
+      "en": "Description of the RepGrid analysis."
+    },
+    {
+      "es": "Descripción del análisis WimpGrid.",
+      "en": "Description of the WimpGrid analysis."
+    },
+    {
+      "es": "Descripción del análisis Fullgrid.",
+      "en": "Description of the FullGrid analysis."
+    },
+    {
+      "es": "Inicia sesión para continuar",
+      "en": "Log in to continue"
+    },
+    {
+      "es": "Inicio de sesión",
+      "en": "Login"
+    },
+    {
+      "es": "Introduce tu usuario",
+      "en": "Enter your username"
+    },
+    {
+      "es": "Importar archivos RepGrid",
+      "en": "Import RepGrid files"
+    },
+    {
+      "es": "Importar archivos WimpGrid",
+      "en": "Import WimpGrid files"
+    },
+    {
+      "es": "Seleccionar archivo RepGrid (.xlsx)",
+      "en": "Select RepGrid file (.xlsx)"
+    },
+    {
+      "es": "Seleccionar archivo WimpGrid (.xlsx)",
+      "en": "Select WimpGrid file (.xlsx)"
+    },
+    {
+      "es": "Para hacer el análisis es necesario importar un archivo o formulario",
+      "en": "To perform the analysis, it is necessary to import a file or form"
+    },
+    {
+      "es": "Esta página te permite visualizar y manipular los datos importados de Wimpgrid y acceder a diferentes tipos de análisis.",
+      "en": "This page allows you to visualize and manipulate the data imported from WimpGrid and access different types of analysis."
+    },
+    {
+      "es": "Haz click y arrastra para Interactuar.",
+      "en": "Click and drag to Interact."
+    },
+    {
+      "es": "Matriz de distancias de Constructos",
+      "en": "Constructs Distance Matrix"
+    },
+    {
+      "es": "Matriz de distancias de Elementos",
+      "en": "Elements Distance Matrix"
+    },
+    {
+      "es": "Índices y Valores Matemáticos",
+      "en": "Mathematical Indices and Values"
+    },
+    {
+      "es": "Descargar Gráfico",
+      "en": "Download Chart"
+    },
+    {
+      "es": "Índices",
+      "en": "Indices"
+    },
+    {
+      "es": "Desglose Índices",
+      "en": "Indices Breakdown"
+    },
+    {
+      "es": "Esta página te permite...",
+      "en": "This page allows you to..."
+    },
+    {
+      "es": "Resultado gráfico",
+      "en": "Graphical Result"
+    },
+    {
+      "es": "Centralidad",
+      "en": "Centrality"
+    }
+    
 ]}
