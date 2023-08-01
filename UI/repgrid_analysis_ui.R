@@ -1,4 +1,4 @@
-repgrid_analysis_ui <- fluidPage( class="header-tab",
+repgrid_analysis_ui <- fluidPage( class="header-tab rg-diff",
     shiny.i18n::usei18n(i18n),
 
   fluidRow( class = ("flex-container-xl border-divider"),

@@ -186,6 +186,31 @@ margin: 0 !important;
   text-align: center;
 }
 
+.main-header{
+  transition: all .3s ease-in-out !important;
+}
+
+@media (min-width: 992px){
+body:not(.sidebar-mini-md) .main-header {
+
+    width: calc(100% - 250px);
+
+  }
+}
+
+@media (min-width: 992px){
+.sidebar-mini.sidebar-collapse .main-header {
+    width: calc(100% - 74px);
+
+  }
+}
+
+@media (min-width: 992px){
+  .sidebar-mini.sidebar-collapse .main-sidebar:hover, .sidebar-mini.sidebar-collapse .main-sidebar.sidebar-focused {
+    width: 250px;
+  }
+}
+
 .logocontainer{
   width: 100%;
   display: flex;
@@ -232,11 +257,21 @@ margin: 0 !important;
 
 .reducirfix{margin-bottom: -0.1px;}
 
-.shiny-input-container:not(.shiny-input-container-inline) {
-  width: fit-content !important;
-  min-width: 250px !important;
-  /*margin-inline: auto;*/
+@media (min-width: 1024px){
+
+  .wg-diff .shiny-input-container:not(.shiny-input-container-inline), .rg-diff .shiny-input-container:not(.shiny-input-container-inline)  {
+    width: fit-content !important;
+    min-width: 200px !important;
+    /*margin-inline: auto;*/
+  }
+  
 }
+
+.shiny-input-container:not(.shiny-input-container-inline) {
+  width: 250px;
+  margin-inline: auto;
+}
+
 
 .flex-container-resp{
   display: flex;
@@ -447,23 +482,32 @@ color: #8b0000;
   background-color: #343A40 !important;
 }
 
-.input-container .form-group{
-  height: 80px;
-  margin-bottom: 0 !important;
+.radiobtn.active, .radiobtn.active:hover{
+  font-weight: 700;
+  background-color: #ffffff !important;
 }
 
-.language-selector .form-group{
-  display: flex;
-  align-items: center;
-  margin-bottom: 0 !important;
+.radiobtn{
+  background-color: #f0f0f0 !important;
+  border: none !important;
+}
+
+.language-selector{
+  border-radius: .5rem;
+  margin-top: 1rem;
+  background-color: #f0f0f0;
+}
+
+.dark-mode .language-selector{
+  background-color: #262626;
 }
 
 .language-selector .form-group label{
-  margin: 0 .2rem 0 0 !important;
+  margin: 0 0 .5rem !important;
 }
 
 .language-selector .form-group div{
-  width: 120px !important;
+  width: 80% !important;
 }
 
 .language-selector .form-group div .selectize-control .selectize-input{
@@ -666,11 +710,6 @@ color: #fff;
 .nav-sidebar .nav-item{
   width: 100%;
 }
-
-.nav-sidebar .submenu-item{
-  width: inherit !important;
-}
-
 
 /*header normal*/
 
