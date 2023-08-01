@@ -95,8 +95,6 @@ ui <- dashboardPage(
   dashboardHeader(
 
     tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "customization.css")),
-    tags$li(style = "padding: 10px; list-style:none;",
-    div(class = 'language-selector',selectInput('selected_language',"Idioma", choices = i18n$get_languages(),selected = i18n$get_key_translation()))),
     title = tags$a(href='https://www.uned.es/', target ="_blank", class = "logocontainer",
     tags$img(src='LogoUNED.svg',height='56',width='', class = "logoimg")),
     div(id="user-page", class = "nav-item user-page user-page-btn" , menuItem("User", href = route_link("user_home"), icon = icon("house-user"), newTab = FALSE))
@@ -112,7 +110,8 @@ ui <- dashboardPage(
         div(id="excel-page", class = "nav-item excel-page submenu-item", menuItem("Files", href = route_link("excel"), icon = icon("file-excel"), newTab = FALSE)),
         div(id="form-page", class = "nav-item form-page submenu-item", menuItem("Form", href = route_link("excel"), icon = icon("rectangle-list"), newTab = FALSE)),
         div(id="repgrid-page", class = "nav-item repg-page", menuItem("Repgrid", href = route_link("repgrid"), icon = icon("magnifying-glass-chart"), newTab = FALSE)),
-        div(id = "wimpgrid-page", class = "nav-item wimpg-page", menuItem("Wimpgrid", href = route_link("wimpgrid"), icon = icon("chart-column"), newTab = FALSE))
+        div(id = "wimpgrid-page", class = "nav-item wimpg-page", menuItem("Wimpgrid", href = route_link("wimpgrid"), icon = icon("chart-column"), newTab = FALSE)),
+        div(class = 'language-selector',selectInput('selected_language',"Idioma", choices = i18n$get_languages(),selected = i18n$get_key_translation()))
       )
     ),
 
