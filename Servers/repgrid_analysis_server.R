@@ -1,5 +1,24 @@
 repgrid_analisis_server <- function(input, output, session) {
 
+  observeEvent(input$importar_page_r, {
+    # Navega a la página de creación de un nuevo análisis de rejilla
+    # route_link("nombre_de_la_pagina_de_creacion")
+    runjs("window.location.href = '/#!/import';")
+    runjs("
+      $('.nav-pills')
+        .find('.nav-link')
+        .removeClass('active');
+
+      $('.user-page')
+        .find('.nav-link')
+        .removeClass('active');
+
+      $('#import-page')
+        .find('.nav-link')
+        .addClass('active');
+    ")
+  })
+
   
   #if (is.null(session$userData$datos_repgrid)) {
   #  datos_control <- 0

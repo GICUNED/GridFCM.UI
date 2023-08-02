@@ -140,13 +140,14 @@ ui <- dashboardPage(
             ui = wimpgrid_analysis_ui),
       page_404 = page404(shiny::tags$div(
         h1("Error 404", class = "pagetitlecustom"),
+        h3("Página no encontrada.", class = "pagesubtitlecustom", status = 'danger'),
         img(
           src = 'LogoUNED_error404.svg',
           height = '300',
           width = '',
           class = "logoimg404"
         ),
-        h3("Página no encontrada.", class = "pagesubtitlecustom", status = 'danger'),
+        
         column(
           12,
           class = "d-flex mb-4 justify-content-center",

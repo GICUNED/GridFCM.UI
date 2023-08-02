@@ -35,6 +35,15 @@ import_excel_server <- function(input, output, session) {
       # Solo archivo RepGrid cargado, navegar a RepGrid Home
       repgrid_home_server(input,output,session)
       runjs("window.location.href = '/#!/repgrid';")
+      runjs("
+      $('.nav-pills')
+        .find('.nav-link')
+        .removeClass('active');
+
+      $('#repgrid-page')
+        .find('.nav-link')
+        .addClass('active');
+      ")
     } 
     }
  )
@@ -76,6 +85,15 @@ import_excel_server <- function(input, output, session) {
         # Solo archivo WimpGrid cargado, navegar a WimpGrid Home
         wimpgrid_analysis_server(input,output,session)
         runjs("window.location.href = '/#!/wimpgrid';")
+         runjs("
+        $('.nav-pills')
+          .find('.nav-link')
+          .removeClass('active');
+
+        $('#wimpgrid-page')
+          .find('.nav-link')
+          .addClass('active');
+      ")
       }   
   })
 
