@@ -1,5 +1,5 @@
 
-#source("global.R")
+#source("global.R") 
 wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
   #shiny.i18n::usei18n(i18n),
   shiny.i18n::usei18n(i18n),
