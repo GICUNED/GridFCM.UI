@@ -165,6 +165,8 @@ output$bert <- renderPlot({
 })
 
 
+
+
   observeEvent(input$guardar, {
     if (!is.null(session$userData$datos_repgrid)) {
         tabla_final <- tabla_manipulable()

@@ -1,11 +1,40 @@
 import_excel_server <- function(input, output, session) {
 
- observeEvent(input$importar_datos, {
+  # Function to remove accents and special characters from a string
+  # Function to remove accents and replace "ñ" with "n"
+  preprocess_data <- function(text) {
+    # Replace accented characters with their unaccented counterparts
+    text <- iconv(text, "UTF-8", "ASCII//TRANSLIT")
+    
+    # Replace "ñ" with "n"
+    text <- gsub("ñ", "n", text, ignore.case = TRUE)
+    
+  return(text)
+}
+
+
+  observeEvent(input$importar_datos, {
     # Importar datos de RepGrid y WimpGrid utilizando las funciones importwimp() y OpenRepGrid::importExcel() si los archivos están presentes
     datos_repgrid <- if (!is.null(input$archivo_repgrid)) {
       OpenRepGrid::importExcel(input$archivo_repgrid$datapath)
     }
     session$userData$datos_to_table<- if (!is.null(input$archivo_repgrid)) {read.xlsx(input$archivo_repgrid$datapath)}
+
+    #Preprocess column names
+    if(!is.null(input$archivo_repgrid)) {
+      col_names <- colnames(session$userData$datos_to_table)
+      col_names_preprocessed <- lapply(col_names, preprocess_data)
+      print(col_names_preprocessed)
+      colnames(session$userData$datos_to_table) <- col_names_preprocessed
+    }
+
+    if (!is.null(input$archivo_repgrid)) {
+      row_names <- rownames(session$userData$datos_to_table)
+      row_names_preprocessed <- lapply(row_names, preprocess_data)
+      print(row_names_preprocessed)
+      rownames(session$userData$datos_to_table) <- row_names_preprocessed
+    }
+    
     num_columnas <- if (!is.null(input$archivo_repgrid)) {
       ncol(session$userData$datos_to_table)
     } else {
@@ -26,7 +55,12 @@ import_excel_server <- function(input, output, session) {
       importwimp(input$archivo_wimpgrid$datapath)
     }
     session$userData$datos_to_table_w<-if (!is.null(input$archivo_wimpgrid)) { read.xlsx(input$archivo_wimpgrid$datapath)}
-  
+
+    if(!is.null(input$archivo_wimpgrid)) {
+      col_names_wimp <- colnames(session$userData$datos_to_table_w)
+      col_names_wimp_preprocessed <- remove_accents(col_names_wimp)
+      colnames(session$userData$datos_to_table_w) <- col_names_wimp_preprocessed
+    }
 
     session$userData$datos_repgrid <- datos_repgrid
     session$userData$datos_wimpgrid <- datos_wimpgrid

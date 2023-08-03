@@ -16,6 +16,7 @@ library(plotly)
 library(stats)
 library(shiny.router)
 library(shiny.i18n)
+library(stringi)
 knitr::knit_hooks$set(webgl = hook_webgl)
 
 
