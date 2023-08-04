@@ -260,6 +260,7 @@ generate_graph <- function(){
       print("es")
       graph2 <- selfdigraph(dataaa_w(), layout = translate_word("en",selfdigraph_layout()), vertex.size = selfdigraph_vertex_size(),edge.width = selfdigraph_edge_width(), color = translate_word("en",selfdigraph_color()))
       #selfdigraph(dataaa_w(), layout = selfdigraph_layout(), vertex.size = selfdigraph_vertex_size(),edge.width = selfdigraph_edge_width(), color = selfdigraph_color())
+      print(graph2)
     }
     else {
       print("en")
@@ -295,18 +296,33 @@ output$graph_output_visualizacion <- renderPlot({
 
 output$btn_download_visualizacion <- downloadHandler(
   filename = function() {
-    "grafico_visualizacion.png"
+    gsub(" ", "", paste("grafico_visualizacion_",input$graph_selector_visualizacion,".png"))
   },
   content = function(file) {
 
     print("Botón de descarga presionado")
+    graph <- input$graph_selector_visualizacion
 
-    # Tomar una captura de pantalla del gráfico y guardarla en un archivo PNG
-    graph <- generate_graph()
+    grDevices::png(file, width = 1200, height = 1200, units = "px", res = 100)
 
-    print(str(graph))
-
-    ggsave(file, plot = graph, width = 1200, height = 800, units = "px", dpi = 100)
+    if(graph == i18n$t("autodigrafo")) {
+      if(i18n$get_translation_language()=="es") {
+        grDevices::dev.capture(selfdigraph(dataaa_w(), layout = translate_word("en",selfdigraph_layout()), vertex.size = selfdigraph_vertex_size(),edge.width = selfdigraph_edge_width(), color = translate_word("en",selfdigraph_color())))
+      } else {
+        grDevices::dev.capture(selfdigraph(dataaa_w(), layout = selfdigraph_layout(), vertex.size = selfdigraph_vertex_size(),edge.width = selfdigraph_edge_width(), color = selfdigraph_color()))
+      }
+    } else if(graph == i18n$t("digrafo del ideal")) {
+      if(i18n$get_translation_language()=="es") {
+        grDevices::dev.capture(idealdigraph(dataaa_w(), inc = idealdigraph_inc(), layout = translate_word("en",idealdigraph_layout()), vertex.size = idealdigraph_vertex_size(), edge.width = idealdigraph_edge_width(),color = translate_word("en",idealdigraph_color())))
+      } else {
+        grDevices::dev.capture(idealdigraph(dataaa_w(), inc = idealdigraph_inc(), layout = idealdigraph_layout(), vertex.size = idealdigraph_vertex_size(), edge.width = idealdigraph_edge_width(),color = idealdigraph_color()))
+      }
+    }  
+    
+    grDevices::dev.off()
+    file.copy("Rplot001.png", file)  # Copiar el archivo temporal a la ubicación deseada
+    file.remove("Rplot001.png")  # Eliminar el archivo temporal
+    #ggsave(file, plot = graph, width = 1200, height = 800, units = "px", dpi = 100)
   }
 )
 
@@ -614,9 +630,16 @@ if (graph == i18n$t("simdigrafo")) {
 } else if (graph == "pcsdindices") {
   shinyjs::show("lab_showw")
   shinyjs::hide("pscd_showw")
-  scn <- scenariomatrix(dataaa_w(),act.vector= df_Vind(),infer = infer(),
+  if(i18n$get_translation_language()=="es") {
+    scn <- scenariomatrix(dataaa_w(),act.vector= df_Vind(),infer = translate_word("en",infer()),
+                           thr = translate_word("en",thr()), max.iter = max_iter(), e = e(),
+                           stop.iter = stop_iter())
+  } else {
+    scn <- scenariomatrix(dataaa_w(),act.vector= df_Vind(),infer = infer(),
                            thr = thr(), max.iter = max_iter(), e = e(),
                            stop.iter = stop_iter())
+  }
+  
   print(pcsdindices(scn))
 
 }
@@ -644,9 +667,15 @@ if (graph == i18n$t("simdigrafo")) {
   #)
 
 output$convergence <- renderText({
-    scn <- scenariomatrix(dataaa_w(),act.vector= c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),infer = infer(),
+    if(i18n$get_translation_language()=="es") {
+    scn <- scenariomatrix(dataaa_w(),act.vector= df_Vind(),infer = translate_word("en",infer()),
+                           thr = translate_word("en",thr()), max.iter = max_iter(), e = e(),
+                           stop.iter = stop_iter())
+  } else {
+    scn <- scenariomatrix(dataaa_w(),act.vector= df_Vind(),infer = infer(),
                            thr = thr(), max.iter = max_iter(), e = e(),
                            stop.iter = stop_iter())
+  }
     pscind <- pcsdindices(scn)
     knitr::kable(pscind$convergence, col.names = "convergence",format = "html") %>%
     kable_styling("striped", full_width = F) %>%
@@ -655,9 +684,15 @@ output$convergence <- renderText({
 })
 
 output$summary <- DT::renderDataTable({
-  scn <- scenariomatrix(dataaa_w(),act.vector= df_Vind(),infer = infer(),
-                              thr = thr(), max.iter = max_iter(), e = e(),
-                              stop.iter = stop_iter())
+  if(i18n$get_translation_language()=="es") {
+    scn <- scenariomatrix(dataaa_w(),act.vector= df_Vind(),infer = translate_word("en",infer()),
+                           thr = translate_word("en",thr()), max.iter = max_iter(), e = e(),
+                           stop.iter = stop_iter())
+  } else {
+    scn <- scenariomatrix(dataaa_w(),act.vector= df_Vind(),infer = infer(),
+                           thr = thr(), max.iter = max_iter(), e = e(),
+                           stop.iter = stop_iter())
+  }
   pscind <- pcsdindices(scn)
 
   DT::datatable(pscind$summary)
