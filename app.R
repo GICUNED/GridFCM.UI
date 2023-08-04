@@ -95,7 +95,7 @@ ui <- dashboardPage(
   freshTheme = theme,
   dashboardHeader(
 
-    tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "customization.css")),
+    tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "customization.css"), tags$link(rel = "icon", type = "image/x-icon", href = "www/favicon.png"), tags$title("UNED | GridCFM")),
     title = tags$a(href='https://www.uned.es/', target ="_blank", class = "logocontainer",
     tags$img(src='LogoUNED.svg',height='56',width='', class = "logoimg")),
     div(id="user-page", class = "nav-item user-page user-page-btn" , menuItem("User", href = route_link("user_home"), icon = icon("house-user"), newTab = FALSE))

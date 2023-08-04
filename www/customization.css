@@ -408,6 +408,10 @@ body:not(.sidebar-mini-md) .main-header {
   }
 }
 
+.logoimg:hover{
+  opacity: .9 !important;
+  transition: opacity .2s ease-in-out !important;
+}
 
 .logocontainer{
   width: 100%;
