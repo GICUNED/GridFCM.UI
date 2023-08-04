@@ -1,4 +1,4 @@
-repgrid_analysis_ui <- fluidPage( class="header-tab",
+repgrid_analysis_ui <- fluidPage( class="header-tab rg-diff",
     shiny.i18n::usei18n(i18n),
 
   fluidRow( class = ("flex-container-xl border-divider"),
@@ -26,7 +26,7 @@ repgrid_analysis_ui <- fluidPage( class="header-tab",
           p(i18n$t("Para hacer el análisis es necesario importar un archivo o formulario"),  class = "mt-2 mb-2"),
         ),
 
-        column(12, class="d-flex justify-content-center", actionButton("crear_nuevo", i18n$t("Importar archivos"), status = 'warning', icon = icon("file-lines"))),
+        column(12, class="d-flex justify-content-center", actionButton("importar_page_r", "Importar archivos", status = 'warning', icon = icon("file-lines"))),
       )),
       
     conditionalPanel(condition = "input.graph_selector == 'Análisis Bidimensional'  ||  input.graph_selector =='Two-Dimensional Analysis' ",

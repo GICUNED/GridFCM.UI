@@ -130,16 +130,16 @@
       "ESP": "Archivo de entrada:"
     },
     {
-      "ENG": "Iteration number:",
-      "ESP": "Número de la iteración:"
+      "ENG": "Iteration numbrer:",
+      "ESP": "Nº de la iteración:"
     },
     {
-      "ENG": "Maximum number of iterations:",
-      "ESP": "Número de iteraciones máximas:"
+      "ENG": "Maximum Nº of iterations:",
+      "ESP": "Nº de iteraciones máximas:"
     },
     {
-      "ENG": "Number of iterations without changes:",
-      "ESP": "Número de iteraciones sin cambios:"
+      "ENG": "Nº of iterations without changes:",
+      "ESP": "Nº de iteraciones sin cambios:"
     },
     {
       "ENG": "Change vector:",

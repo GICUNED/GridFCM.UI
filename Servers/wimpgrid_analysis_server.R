@@ -1,6 +1,63 @@
 wimpgrid_analysis_server <- function(input, output, session) {
 # Lógica para la pestaña "Visualización"
 
+  observeEvent(input$importar_page_d, {
+    # Navega a la página de creación de un nuevo análisis de rejilla
+    # route_link("nombre_de_la_pagina_de_creacion")
+    runjs("window.location.href = '/#!/import';")
+    runjs("
+      $('.nav-pills')
+        .find('.nav-link')
+        .removeClass('active');
+
+      $('.user-page')
+        .find('.nav-link')
+        .removeClass('active');
+
+      $('#import-page')
+        .find('.nav-link')
+        .addClass('active');
+    ")
+  })
+
+  observeEvent(input$importar_page_v, {
+    # Navega a la página de creación de un nuevo análisis de rejilla
+    # route_link("nombre_de_la_pagina_de_creacion")
+    runjs("window.location.href = '/#!/import';")
+    runjs("
+      $('.nav-pills')
+        .find('.nav-link')
+        .removeClass('active');
+
+      $('.user-page')
+        .find('.nav-link')
+        .removeClass('active');
+
+      $('#import-page')
+        .find('.nav-link')
+        .addClass('active');
+    ")
+  })
+
+  observeEvent(input$importar_page_l, {
+    # Navega a la página de creación de un nuevo análisis de rejilla
+    # route_link("nombre_de_la_pagina_de_creacion")
+    runjs("window.location.href = '/#!/import';")
+    runjs("
+      $('.nav-pills')
+        .find('.nav-link')
+        .removeClass('active');
+
+      $('.user-page')
+        .find('.nav-link')
+        .removeClass('active');
+
+      $('#import-page')
+        .find('.nav-link')
+        .addClass('active');
+    ")
+  })
+
   print("Wimpgrid")
   print(session$userData$datos_wimpgrid)
   if (is.null(session$userData$datos_wimpgrid)) {

@@ -29,6 +29,10 @@ userHome_server <- function(input, output, session) {
         .find('.nav-link')
         .removeClass('active');
 
+      $('.user-page')
+        .find('.nav-link')
+        .removeClass('active');
+
       $('#import-page')
         .find('.nav-link')
         .addClass('active');

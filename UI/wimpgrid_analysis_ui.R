@@ -7,7 +7,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
   tabsetPanel(
       tabPanel(i18n$t("Datos"), id = "tab_data_w", icon = icon("table"),
           fluidRow( class = ("flex-container-xl border-divider"),
-                      h2(i18n$t("Inicio: WimpGrid"),class = "wg pagetitlecustom  mt-4"),
+                      h2(i18n$t("Inicio de WimpGrid"),class = "wg pagetitlecustom  mt-4"),
                       p(i18n$t("Esta página te permite visualizar y manipular los datos importados de Wimpgrid y acceder a diferentes tipos de análisis."),  class = "desccustom mb-2"),
                   ),
 
@@ -17,7 +17,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
           p(i18n$t("Para hacer el análisis es necesario importar un archivo o formulario"),  class = "mt-2 mb-2"),
         ),
 
-        column(12, class="d-flex justify-content-center", actionButton("crear_nuevo", i18n$t("Importar archivos"), status = 'warning', icon = icon("file-lines"))),
+        column(12, class="d-flex justify-content-center", actionButton("importar_page_d", i18n$t("Importar archivos"), status = 'warning', icon = icon("file-lines"))),
       )),
 
   # Mostrar los datos importados en una tabla
@@ -59,7 +59,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
           p(i18n$t("Para hacer el análisis es necesario importar un archivo o formulario"),  class = "mt-2 mb-2"),
         ),
 
-        column(12, class="d-flex justify-content-center", actionButton("crear_nuevo", "Importar archivos", status = 'warning', icon = icon("file-lines"))),
+        column(12, class="d-flex justify-content-center", actionButton("importar_page_v", "Importar archivos", status = 'warning', icon = icon("file-lines"))),
       )),
 
         conditionalPanel(class = ("flex-container-resp"),   condition = "input.graph_selector_visualizacion == 'selfdigraph' || input.graph_selector_visualizacion == 'autodigrafo'",
@@ -133,6 +133,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
         ))
 
 
+
       ),
       tabPanel(i18n$t("Laboratorio"), id = "tab_laboratorio", icon = icon("flask-vial"),
 
@@ -155,7 +156,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
           p(i18n$t("Para hacer el análisis es necesario importar un archivo o formulario"),  class = "mt-2 mb-2"),
         ),
 
-        column(12, class="d-flex justify-content-center", actionButton("crear_nuevo", "Importar archivos", status = 'warning', icon = icon("file-lines"))),
+        column(12, class="d-flex justify-content-center", actionButton("importar_page_l", "Importar archivos", status = 'warning', icon = icon("file-lines"))),
       )),
       
         conditionalPanel(class = ("flex-container-resp detail"),
@@ -185,11 +186,11 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
 
             numericInput("simdigraph_edge_width", i18n$t("Ancho de las aristas:"), value = 1),
 
-            numericInput("simdigraph_niter", i18n$t("Número de la iteración:"), value = 0),
+            numericInput("simdigraph_niter", i18n$t("Nº de la iteración:"), value = 0),
 
-            numericInput("simdigraph_max_iter", i18n$t("Número de iteraciones máximas:"), value = 30),
+            numericInput("simdigraph_max_iter", i18n$t("Nº de iteraciones máximas:"), value = 30),
 
-            numericInput("simdigraph_stop_iter", i18n$t("Número de iteraciones sin cambios:"), value = 3),
+            numericInput("simdigraph_stop_iter", i18n$t("Nº de iteraciones sin cambios:"), value = 3),
 
             #numericInput("simdigraph_act_vector", i18n$t("Change vector:"), value = 0, step = 0.01),
 
@@ -204,16 +205,16 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
              
           ),
 
-        conditionalPanel(class = ("flex-container-resp detail"),
+        conditionalPanel(class = ("flex-container-resp"),
           condition = "input.graph_selector_laboratorio == 'pcsd'",
 
               #fileInput("pcsd_wimp", i18n$t("Input file:"), accept = c(".xlsx")),
 
-              numericInput("pcsd_iter", i18n$t("Número de la iteración:"), value = 0),
+              numericInput("pcsd_iter", i18n$t("Nº de la iteración:"), value = 0),
 
-              numericInput("pcsd_max_iter", i18n$t("Número de iteraciones máximas:"), value = 30),
+              numericInput("pcsd_max_iter", i18n$t("Nº de iteraciones máximas:"), value = 30),
 
-              numericInput("pcsd_stop_iter", i18n$t("Número de iteraciones sin cambios:"), value = 3),
+              numericInput("pcsd_stop_iter", i18n$t("Nº de iteraciones sin cambios:"), value = 3),
 
               #numericInput("pcsd_act_vector", i18n$t("Change vector:"), value = 0, step = 0.01),
 
@@ -245,9 +246,9 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
 
               #numericInput("pcsdindices_act_vector", i18n$t("Changes to simulate:"),
               #            value = 0, step = 0.01),
-              numericInput("pcsdindices_max_iter", i18n$t("Número de iteraciones maximas:"), value = 30),
+              numericInput("pcsdindices_max_iter", i18n$t("Nº de iteraciones maximas:"), value = 30),
               numericInput("pcsdindices_e", i18n$t("Valor diferencial:"), value = 0.0001),
-              numericInput("pcsdindices_stop_iter", i18n$t("Número de iteraciones sin cambios:"), value = 3),
+              numericInput("pcsdindices_stop_iter", i18n$t("Nº de iteraciones sin cambios:"), value = 3),
               rHandsontableOutput("pcsdindices_act_vector"),
 
               htmlOutput("convergence"),

@@ -3,7 +3,7 @@ library(jsonlite)
 print("hello")
 i18n <- Translator$new(translation_json_path = "Traductions/Trad.json")
 #i18n <- Translator$new(automatic = TRUE)
-i18n$set_translation_language("es")
+i18n$set_translation_language("ESP")
 
 json_path <- "Traductions/Trad.json"
 json_data <- fromJSON(json_path)
@@ -23,4 +23,4 @@ translate_word <- function(language, word) {
   return(translation_row[[language]])
 }
 
-print(translate_word("en", "Inicio de sesion") ) # Debería devolver "Log inn"
+print(translate_word("ENG", "Inicio de sesion") ) # Debería devolver "Log inn"
