@@ -1155,7 +1155,7 @@ margin: auto;
 
 .rhandsontable{
 
-  width: max-content !important;
+  width: 100% !important;
   border-radius: .5rem;
   border: 1px solid #fff;
 }
