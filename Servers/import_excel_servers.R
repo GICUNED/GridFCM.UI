@@ -58,7 +58,7 @@ import_excel_server <- function(input, output, session) {
 
     if(!is.null(input$archivo_wimpgrid)) {
       col_names_wimp <- colnames(session$userData$datos_to_table_w)
-      col_names_wimp_preprocessed <- remove_accents(col_names_wimp)
+      col_names_wimp_preprocessed <- preprocess_data(col_names_wimp)
       colnames(session$userData$datos_to_table_w) <- col_names_wimp_preprocessed
     }
 

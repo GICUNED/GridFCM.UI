@@ -117,9 +117,12 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                             tabPanel("Betweenness", DT::dataTableOutput("table_betweenness"), icon = icon("people-arrows"))
                         )),
 
-                        fluidRow(DT::dataTableOutput(("inconsistences")))
+                        fluidRow(class = "subheader-tab flex-container-sm",
+                          icon("arrows-to-circle", class = "mt-4"),
+                          h4(i18n$t("Inconsistencias"), class = "pagetitle2custom mt-2 mb-2"),
+                          DT::dataTableOutput(("inconsistences")))
                         ),
-
+        conditionalPanel(condition = "input.graph_selector_visualizacion == 'idealdigraph' || input.graph_selector_visualizacion == 'digrafo del ideal' || input.graph_selector_visualizacion == 'selfdigraph' || input.graph_selector_visualizacion == 'autodigrafo'",
         fluidRow(class = "flex-container-sm",
           icon("globe", class = "mt-4"),
           h4(i18n$t("Resultado gráfico"), class = "pagetitle2custom mt-2 mb-4"),
@@ -127,7 +130,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
         ),
         fluidRow(class = "flex-container-sm",
           downloadButton("btn_download_visualizacion", i18n$t("Descargar Gráfico"))
-        )
+        ))
 
 
       ),
