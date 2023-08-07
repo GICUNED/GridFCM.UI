@@ -1,9 +1,11 @@
 import_excel_ui <-  fluidPage(
      shiny.i18n::usei18n(i18n),
-div(
-    h2(i18n$t("Importar datos desde archivo xlsx"), class = "pagetitlecustom"),
-    p(i18n$t("En esta página, puedes descargar plantillas de xlsx y documentos de ayuda, y subir archivos xlsx para importar datos."), class = "desccustom mb-3"),
+div(class = "custom-margins flex-container-xl",
 
+   fluidRow( class = ("flex-container-xl"),
+      h2(i18n$t("Importar datos desde archivo xlsx"), class = "pagetitlecustom"),
+      p(i18n$t("En esta página, puedes descargar plantillas de xlsx y documentos de ayuda, y subir archivos xlsx para importar datos."), class = "desccustom mb-3"),
+   ),
     
     fluidRow(
        # Widgets para importar archivos xlsx y seleccionar el tipo de datos
@@ -30,19 +32,23 @@ div(
       )),
 
        # Enlaces a plantillas de xlsx y documentos de ayuda
-      column(12,
       box(
        width = 12,
        title = i18n$t("Plantillas y documentos de ayuda"),
        icon = icon("folder-open"),
        collapsible = FALSE,
-       downloadButton("download_link_repgrid", i18n$t("Descargar plantilla RepGrid")),
-       br(),
-       downloadButton("download_link_wimpgrid", i18n$t("Descargar plantilla WimpGrid")),
-       br(),
-       a(icon("file-pdf"), i18n$t("Documento de ayuda para RepGrid"), href = "ruta/al/archivo/ayuda_repgrid.pdf", target = "_blank", class = "link"),
-       br(),
-       a(icon("file-pdf"), i18n$t("Documento de ayuda para WimpGrid"), href = "ruta/al/archivo/ayuda_wimpgrid.pdf", target = "_blank", class = "link")
-       ))
+       class="flex-container-docs",
+
+       div(class="flex-container-resp-col download-container gap-2 justify-content-center",
+         a(icon("file-pdf"), i18n$t("Documento de ayuda para RepGrid"), href = "ruta/al/archivo/ayuda_repgrid.pdf", target = "_blank", class = "link"),
+         downloadButton("download_link_repgrid", i18n$t("Descargar plantilla RepGrid"), class = 'repgrid-btn'),
+       ),
+
+       div(class="flex-container-resp-col download-container gap-2 justify-content-center",
+         a(icon("file-pdf"), i18n$t("Documento de ayuda para WimpGrid"), href = "ruta/al/archivo/ayuda_wimpgrid.pdf", target = "_blank", class = "link"),
+         downloadButton("download_link_wimpgrid", i18n$t("Descargar plantilla WimpGrid"), class = 'wimpgrid-btn')
+       )
+
+       )
     )
   ))

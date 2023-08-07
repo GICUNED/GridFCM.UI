@@ -1,5 +1,6 @@
 library(shiny)
 library(shinyjs)
+library(shinyWidgets)
 library(shinydashboard)
 library(OpenRepGrid)
 library(toastui)
@@ -95,9 +96,7 @@ ui <- dashboardPage(
   freshTheme = theme,
   dashboardHeader(
 
-    tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "customization.css")),
-    tags$li(style = "padding: 10px; list-style:none;",
-    div(class = 'language-selector',selectInput('selected_language',i18n$t("Idioma"), choices = i18n$get_languages(),selected = i18n$get_translation_language()))),
+    tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "customization.css"), tags$link(rel = "icon", type = "image/x-icon", href = "www/favicon.png"), tags$title("UNED | GridFCM")),
     title = tags$a(href='https://www.uned.es/', target ="_blank", class = "logocontainer",
     tags$img(src='LogoUNED.svg',height='56',width='', class = "logoimg")),
     div(id="user-page", class = "nav-item user-page user-page-btn" , menuItem("User", href = route_link("user_home"), icon = icon("house-user"), newTab = FALSE))
@@ -113,7 +112,9 @@ ui <- dashboardPage(
         div(id="excel-page", class = "nav-item excel-page submenu-item", menuItem(i18n$t("Ficheros"), href = route_link("excel"), icon = icon("file-excel"), newTab = FALSE)),
         div(id="form-page", class = "nav-item form-page submenu-item", menuItem(i18n$t("Formularios"), href = route_link("excel"), icon = icon("rectangle-list"), newTab = FALSE)),
         div(id="repgrid-page", class = "nav-item repg-page", menuItem("Repgrid", href = route_link("repgrid"), icon = icon("magnifying-glass-chart"), newTab = FALSE)),
-        div(id = "wimpgrid-page", class = "nav-item wimpg-page", menuItem("Wimpgrid", href = route_link("wimpgrid"), icon = icon("chart-column"), newTab = FALSE))
+        div(id = "wimpgrid-page", class = "nav-item wimpg-page", menuItem("Wimpgrid", href = route_link("wimpgrid"), icon = icon("chart-column"), newTab = FALSE)),
+        #div(class = 'language-selector',selectInput('selected_language',i18n$t("Idioma"), choices = i18n$get_languages(),selected = i18n$get_translation_language())),
+        div(class = 'language-selector',radioGroupButtons('selected_language',i18n$t("Idioma"), choices = i18n$get_languages(),selected = i18n$get_translation_language(),width='100%', checkIcon = list()))
       )
     ),
 
@@ -140,13 +141,14 @@ ui <- dashboardPage(
             ui = wimpgrid_analysis_ui),
       page_404 = page404(shiny::tags$div(
         h1("Error 404", class = "pagetitlecustom"),
+        h3("Página no encontrada.", class = "pagesubtitlecustom", status = 'danger'),
         img(
           src = 'LogoUNED_error404.svg',
           height = '300',
           width = '',
           class = "logoimg404"
         ),
-        h3("Página no encontrada.", class = "pagesubtitlecustom", status = 'danger'),
+        
         column(
           12,
           class = "d-flex mb-4 justify-content-center",

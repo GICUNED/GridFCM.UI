@@ -142,7 +142,7 @@
       "en": "Help document for WimpGrid"
     },
     {
-      "es": "Inicio: RepGrid",
+      "es": "Inicio de RepGrid",
       "en": "RepGrid Home"
     },
     {
@@ -219,7 +219,7 @@
       "en": "Data"
     },
     {
-      "es": "Inicio: WimpGrid",
+      "es": "Inicio de WimpGrid",
       "en": "WimpGrid Home"
     },
     {
@@ -331,15 +331,15 @@
       "en": "Input file:"
     },
     {
-      "es": "Número de la iteración:",
+      "es": "Nº de la iteración:",
       "en": "Iteration number:"
     },
     {
-      "es": "Número de iteraciones máximas:",
+      "es": "Nº de iteraciones máximas:",
       "en": "Maximum number of iterations:"
     },
     {
-      "es": "Número de iteraciones sin cambios:",
+      "es": "Nº de iteraciones sin cambios:",
       "en": "Number of iterations without changes:"
     },
     {

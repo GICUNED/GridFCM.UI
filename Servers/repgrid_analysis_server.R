@@ -1,5 +1,24 @@
 repgrid_analisis_server <- function(input, output, session) {
 
+  observeEvent(input$importar_page_r, {
+    # Navega a la página de creación de un nuevo análisis de rejilla
+    # route_link("nombre_de_la_pagina_de_creacion")
+    runjs("window.location.href = '/#!/import';")
+    runjs("
+      $('.nav-pills')
+        .find('.nav-link')
+        .removeClass('active');
+
+      $('.user-page')
+        .find('.nav-link')
+        .removeClass('active');
+
+      $('#import-page')
+        .find('.nav-link')
+        .addClass('active');
+    ")
+  })
+
   
   #if (is.null(session$userData$datos_repgrid)) {
   #  datos_control <- 0
@@ -205,7 +224,7 @@ repgrid_analisis_server <- function(input, output, session) {
     #print(indexDilemma(repgrid_data)[[1]])
     knitr::kable(INTc$construct_classification,format = "html") %>%
     #knitr::kable(INTc, col.names = "Intensity",format = "html") %>%
-    kable_styling("striped", full_width = F) %>%
+    kable_styling("striped", full_width = T) %>%
     row_spec(0, bold = T, color = "white", background = "#005440") %>%
     column_spec(1, bold = T)
     
