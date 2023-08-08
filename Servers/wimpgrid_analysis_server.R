@@ -654,13 +654,13 @@ generate_graph <- function(){
 
     {
 
-      graph2 <- idealdigraph(dataaa_w(), inc = idealdigraph_inc(), layout = translate_word("en",idealdigraph_layout()), vertex.size = idealdigraph_vertex_size(), edge.width = idealdigraph_edge_width(),color = translate_word("en",idealdigraph_color()))
+      graph2 <- idealdigraph.vis(dataaa_w(), inc = idealdigraph_inc(), layout = translate_word("en",idealdigraph_layout()), color = translate_word("en",idealdigraph_color()))
 
  
 
     } else {
 
-      graph2 <- idealdigraph(dataaa_w(), inc = idealdigraph_inc(), layout = idealdigraph_layout(), vertex.size = idealdigraph_vertex_size(), edge.width = idealdigraph_edge_width(),color = idealdigraph_color())
+      graph2 <- idealdigraph.vis(dataaa_w(), inc = idealdigraph_inc(), layout = idealdigraph_layout(),color = idealdigraph_color())
 
     }
 

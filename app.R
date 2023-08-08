@@ -18,6 +18,8 @@ library(stats)
 library(shiny.router)
 library(shiny.i18n)
 library(stringi)
+library(visNetwork)
+library(dplyr)
 knitr::knit_hooks$set(webgl = hook_webgl)
 
 
@@ -33,6 +35,7 @@ source("R/IndicesSummary.R")
 source("R/PCSDindicesFunctions.R")
 source("R/SimulationFunctions.R")
 source("R/WimpIndicesFunctions.R")
+source("R/visnetworks.R")
 # UI
 source("UI/home_page_ui.R")
 source("UI/another_page_ui.R")
@@ -148,7 +151,7 @@ ui <- dashboardPage(
           width = '',
           class = "logoimg404"
         ),
-        
+
         column(
           12,
           class = "d-flex mb-4 justify-content-center",
