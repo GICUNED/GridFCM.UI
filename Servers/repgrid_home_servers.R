@@ -7,13 +7,24 @@ repgrid_home_server <- function(input, output, session) {
   print("Repgrid")
   print(session$userData$datos_repgrid)
   if (is.null(session$userData$datos_repgrid) || is.null(session$userData$datos_to_table)) {
-    shinyjs::show("repgrid_home_warn")
+    show("repgrid_home_warn")
+    show("repgrid_warning")
+
+    hide("rg-data-content")
+    hide("rg-analysis-content")
+
+    
     repgrid_aux <- 0
     tabla_aux <- 0
   }else{
-    shinyjs::hide("repgrid_home_warn")
+    hide("repgrid_home_warn")
+    hide("repgrid_warning")
+    
     repgrid_aux <- session$userData$datos_repgrid
     tabla_aux <- session$userData$datos_to_table
+
+    show("rg-data-content")
+    show("rg-analysis-content")
   }  
 
   repgrid_inicial <- reactiveVal(repgrid_aux)

@@ -134,6 +134,11 @@ wimpgrid_analysis_server <- function(input, output, session) {
 
     tabla_aux <- 0
 
+    hide("wg-data-content")
+    hide("wg-vis-content")
+    hide("wg-lab-content")
+
+
   }else{
 
     hide("id_warn")
@@ -145,6 +150,12 @@ wimpgrid_analysis_server <- function(input, output, session) {
     repgrid_aux <- session$userData$datos_wimpgrid
 
     tabla_aux <- session$userData$datos_to_table_w
+
+    show("wg-data-content")
+    show("wg-vis-content")
+    show("wg-lab-content")
+    
+    
 
   }
 
