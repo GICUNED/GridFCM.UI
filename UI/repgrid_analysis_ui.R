@@ -116,8 +116,8 @@ div(class = "custom-margins",
       h4(i18n$t("Índices y Valores Matemáticos"), class = "pagetitle2custom mt-2 mb-2")
     ),
     fluidRow(
-      column(6, h4(i18n$t("Congruent/Discrepant Constructs"), class = "pagesubtitlecustom mt-4 mb-4"), htmlOutput("constructs")),
-      column(6, h4(i18n$t("Dilemmas"), class = "pagesubtitlecustom mt-4 mb-4"), htmlOutput("dilemmasss"))
+      column(6, h4(i18n$t("Constructos Congruentes/Discordantes"), class = "pagesubtitlecustom mt-4 mb-4"), htmlOutput("constructs")),
+      column(6, h4(i18n$t("Dilemas"), class = "pagesubtitlecustom mt-4 mb-4"), htmlOutput("dilemmasss"))
     )
   )
 )

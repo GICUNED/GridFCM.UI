@@ -122,15 +122,16 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                           h4(i18n$t("Inconsistencias"), class = "pagetitle2custom mt-2 mb-2"),
                           DT::dataTableOutput(("inconsistences")))
                         ),
-        conditionalPanel(condition = "input.graph_selector_visualizacion == 'idealdigraph' || input.graph_selector_visualizacion == 'digrafo del ideal' || input.graph_selector_visualizacion == 'selfdigraph' || input.graph_selector_visualizacion == 'autodigrafo'",
-        fluidRow(class = "flex-container-sm",
-          icon("globe", class = "mt-4"),
-          h4(i18n$t("Resultado gráfico"), class = "pagetitle2custom mt-2 mb-4"),
-          plotOutput("graph_output_visualizacion")
-        ),
-        fluidRow(class = "flex-container-sm",
-          downloadButton("btn_download_visualizacion", i18n$t("Descargar Gráfico"))
-        ))
+                        
+                        conditionalPanel(condition = "input.graph_selector_visualizacion == 'idealdigraph' || input.graph_selector_visualizacion == 'digrafo del ideal' || input.graph_selector_visualizacion == 'selfdigraph' || input.graph_selector_visualizacion == 'autodigrafo'",
+                        fluidRow(class = "flex-container-sm",
+                          icon("globe", class = "mt-4"),
+                          h4(i18n$t("Resultado gráfico"), class = "pagetitle2custom mt-2 mb-4"),
+                          uiOutput("graph_output_visualizacion")
+                        ),
+                        fluidRow(class = "flex-container-sm",
+                          downloadButton("btn_download_visualizacion", i18n$t("Descargar Gráfico"))
+                        ))
 
 
 
@@ -200,7 +201,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
 
               fluidRow(class = "flex-container-sm",
                           icon("globe", class = "mt-4"),
-                          h4("Resultado gráfico", class = "pagetitle2custom mt-2 mb-4")
+                          h4(i18n$t("Resultado gráfico"), class = "pagetitle2custom mt-2 mb-4")
                         ),
              
           ),
@@ -246,7 +247,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
 
               #numericInput("pcsdindices_act_vector", i18n$t("Changes to simulate:"),
               #            value = 0, step = 0.01),
-              numericInput("pcsdindices_max_iter", i18n$t("Nº de iteraciones maximas:"), value = 30),
+              numericInput("pcsdindices_max_iter", i18n$t("Nº de iteraciones máximas:"), value = 30),
               numericInput("pcsdindices_e", i18n$t("Valor diferencial:"), value = 0.0001),
               numericInput("pcsdindices_stop_iter", i18n$t("Nº de iteraciones sin cambios:"), value = 3),
               rHandsontableOutput("pcsdindices_act_vector"),
@@ -265,13 +266,13 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
             # Mostrar los datos de tabla_datos_repgrid
             fluidRow(class = "flex-container-sm",
                           icon("chart-line", class = "mt-4"),
-                          h4("Resultado gráfico", class = "pagetitle2custom mt-2 mb-4"),
+                          h4(i18n$t("Resultado gráfico"), class = "pagetitle2custom mt-2 mb-4"),
                           plotlyOutput("pscd_show")
                         ),
              
             
           ),
-          div(id = "lab_showw",plotOutput("graph_output_laboratorio"))
+          div(id = "laboratory",uiOutput("graph_output_laboratorio"))
       )
     )
   )

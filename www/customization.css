@@ -181,7 +181,7 @@ margin: 0 !important;
 }
 
 .navbar::before {
-  content:"GridCFM";
+  content:"GridFCM";
   display: block;
   position: absolute;
   font-size: 24px;

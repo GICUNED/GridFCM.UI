@@ -1,8 +1,5 @@
 //botón de Inicio
 
-$('#sidebarId').addClass('sidebar-light-primary');
-$('#sidebarId').removeClass('sidebar-dark-primary');
-
 $('#incio-page').find('.nav-link').addClass('active');
 
 $('#incio-page').on('click', function () {
@@ -116,7 +113,7 @@ $('#form-page').on('click', function () {
        .addClass('active');
 })
 
-//botón de WimpGrid
+//botón de Repgrid
 
 $('#wimpgrid-page').on('click', function () {
 

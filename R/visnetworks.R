@@ -212,8 +212,11 @@ digraph <- function(wimp, vertex.vector = NA, ideal.vector = NA, width="100%",
 #'
 
 idealdigraph.vis <- function(wimp, inc=TRUE, layout = "circle", ...){
-
+  print("entro en idealdigraph.vis")
   ideal.vector <- wimp$ideal[[2]]
+  print("ideal.vector: ") 
+  print(ideal.vector)
+  print(inc)
   digraph(wimp = wimp, hide.inverse = inc, vertex.vector = ideal.vector, layout = layout, ...)
 }
 

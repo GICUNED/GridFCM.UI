@@ -5,13 +5,18 @@ repgrid_home_server <- function(input, output, session) {
     #}
   #session$userData$datos_to_table<- read.xlsx("Servers/Repgrid_data.xlsx")
   print("Repgrid")
-  print(session$userData$datos_repgrid)
+  print("Esta a null datos repgrid?")
+  print(is.null(session$userData$datos_to_table))
+  print(is.null(session$userData$datos_repgrid))
   if (is.null(session$userData$datos_repgrid) || is.null(session$userData$datos_to_table)) {
     shinyjs::show("repgrid_home_warn")
+    shinyjs::show("repgrid_warning")
     repgrid_aux <- 0
     tabla_aux <- 0
   }else{
+    print("debería ocultar el warning....")
     shinyjs::hide("repgrid_home_warn")
+    shinyjs::hide("repgrid_warning")
     repgrid_aux <- session$userData$datos_repgrid
     tabla_aux <- session$userData$datos_to_table
   }  
@@ -31,15 +36,15 @@ repgrid_home_server <- function(input, output, session) {
 
 output$tabla_datos_repgrid <- renderRHandsontable({
   if (!is.null(session$userData$datos_repgrid)) {
-  print("tabla_manipulable:")
-  print(tabla_manipulable)
-  #indicess <- c(1,2,3,4,5,6,7,8,9,10,11,12,13,14)
-  indicess <- seq(1, session$userData$num_col_repgrid - 1)
+    print("tabla_manipulable:")
+    print(tabla_manipulable)
+    #indicess <- c(1,2,3,4,5,6,7,8,9,10,11,12,13,14)
+    indicess <- seq(1, session$userData$num_col_repgrid - 1)
 
 
-  rhandsontable(tabla_manipulable()) %>%
-    hot_table(highlightCol = TRUE, highlightRow = TRUE) %>%
-      hot_col(col = indicess, format = "1")
+    rhandsontable(tabla_manipulable()) %>%
+      hot_table(highlightCol = TRUE, highlightRow = TRUE) %>%
+        hot_col(col = indicess, format = "1")
 
   }
 })
@@ -69,9 +74,7 @@ validateValue <- function(changes, tabla) {
 }
 
 observeEvent(input$tabla_datos_repgrid, {
-
   changes <- input$tabla_datos_repgrid$changes$changes
-
   if (!is.null(changes)) {
     val <- validateValue(changes, input$tabla_datos_repgrid)
     if (!val) {

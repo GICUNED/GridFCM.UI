@@ -1,542 +1,542 @@
 {
-  "languages": ["ESP", "ENG"],
+  "languages": ["es", "en"],
   "translation": [
     {
-      "ESP": "Inicia sesion para continuar",
-      "ENG": "Log in to continue"
+      "es": "Inicia sesion para continuar",
+      "en": "Log in to continue"
     },
     {
-      "ESP": "Inicio de sesion",
-      "ENG": "Log inn"
+      "es": "Inicio de sesion",
+      "en": "Log inn"
     },
     {
-      "ESP": "Nombre de usuario",
-      "ENG": "Username"
+      "es": "Nombre de usuario",
+      "en": "Username"
     },
     {
-      "ESP": "Contraseña",
-      "ENG": "Password"
+      "es": "Contraseña",
+      "en": "Password"
     },
     {
-      "ESP": "Acceder",
-      "ENG": "Log in"
+      "es": "Acceder",
+      "en": "Log in"
     },
     {
-      "ESP": "Sesión de invitado",
-      "ENG": "Guest session"
+      "es": "Sesión de invitado",
+      "en": "Guest session"
     },
     {
-      "ESP": "Información",
-      "ENG": "Information"
+      "es": "Información",
+      "en": "Information"
     },
     {
-      "ESP": "Aquí se agregará más información sobre la aplicación y el método que se utiliza.",
-      "ENG": "More information about the application and the method used will be added here"
+      "es": "Aquí se agregará más información sobre la aplicación y el método que se utiliza.",
+      "en": "More information about the application and the method used will be added here"
     },
     {
-      "ESP": "Bienvenido a la pagina de inicio del usuario",
-      "ENG": "Welcome to the user home page"
+      "es": "Bienvenido a la pagina de inicio del usuario",
+      "en": "Welcome to the user home page"
     },
     {
-      "ESP": "Aqui puedes agregar mas contenido para mostrar al usuario denues de iniciar sesion",
-      "ENG": "Here you can add more content to display to the user after logging in"
+      "es": "Aqui puedes agregar mas contenido para mostrar al usuario denues de iniciar sesion",
+      "en": "Here you can add more content to display to the user after logging in"
     },
     {
-      "ESP": "Nuevo analisis de rejilla",
-      "ENG": "New grid analysis"
+      "es": "Nuevo analisis de rejilla",
+      "en": "New grid analysis"
     },
     {
-      "ESP": "rejillas_anteriores",
-      "ENG": "Previous grids"
+      "es": "rejillas_anteriores",
+      "en": "Previous grids"
     },
     {
-      "ESP": "Importar datos para un nuevo analisis de rejilla",
-      "ENG": "Import data for a new grid analysis"
+      "es": "Importar datos para un nuevo analisis de rejilla",
+      "en": "Import data for a new grid analysis"
     },
     {
-      "ESP": "En esta pagina, puedes aprender sobre los tres tipos de analisis de rejilla y elegir como importar tus datos",
-      "ENG": "On this page, you can learn about the three types of grid analysis and choose how to import your data"
+      "es": "En esta pagina, puedes aprender sobre los tres tipos de analisis de rejilla y elegir como importar tus datos",
+      "en": "On this page, you can learn about the three types of grid analysis and choose how to import your data"
     },
     {
-      "ESP": "Importar formulario",
-      "ENG": "Import form"
+      "es": "Importar formulario",
+      "en": "Import form"
     },
     {
-      "ESP": "Importar archivo xlsx",
-      "ENG": "Import XLSX file"
+      "es": "Importar archivo xlsx",
+      "en": "Import XLSX file"
     },
     {
-      "ESP": "RepGrid",
-      "ENG": "RepGrid"
+      "es": "RepGrid",
+      "en": "RepGrid"
     },
     {
-      "ESP": "WimpGrid",
-      "ENG": "WimpGrid"
+      "es": "WimpGrid",
+      "en": "WimpGrid"
     },
     {
-      "ESP": "FullGrid",
-      "ENG": "FullGrid"
+      "es": "FullGrid",
+      "en": "FullGrid"
     },
     {
-      "ESP": "Descripcion del analisis RepGrid",
-      "ENG": "Description of RepGrid analysis"
+      "es": "Descripcion del analisis RepGrid",
+      "en": "Description of RepGrid analysis"
     },
     {
-      "ESP": "Descripcion del analisis WimpGrid",
-      "ENG": "Description of WimpGrid analysis"
+      "es": "Descripcion del analisis WimpGrid",
+      "en": "Description of WimpGrid analysis"
     },
     {
-      "ESP": "Descripcion del analisis Fullgrid",
-      "ENG": "Description of FullGrid analysis"
+      "es": "Descripcion del analisis Fullgrid",
+      "en": "Description of FullGrid analysis"
     },
     {
-      "ESP": "Importar datos desde archivo xlsx",
-      "ENG": "Import data from xlsx file"
+      "es": "Importar datos desde archivo xlsx",
+      "en": "Import data from xlsx file"
     },
     {
-      "ESP": "En esta pagina, puedes descargar plantillas de xlsx y documentos de ayuda, y subir archivos xlsx para importar datos",
-      "ENG": "On this page, you can download xlsx templates and help documents, and upload xlsx files to import data"
+      "es": "En esta pagina, puedes descargar plantillas de xlsx y documentos de ayuda, y subir archivos xlsx para importar datos",
+      "en": "On this page, you can download xlsx templates and help documents, and upload xlsx files to import data"
     },
     {
-      "ESP": "Importar archivos xlsx",
-      "ENG": "Import xlsx files"
+      "es": "Importar archivos xlsx",
+      "en": "Import xlsx files"
     },
     {
-      "ESP": "Seleccionar archivo RepGrid (xlsx)",
-      "ENG": "Select RepGrid file (xlsx)"
+      "es": "Seleccionar archivo RepGrid (xlsx)",
+      "en": "Select RepGrid file (xlsx)"
     },
     {
-      "ESP": "Seleccionar archivo WimpGrid (xlsx)",
-      "ENG": "Select WimpGrid file (xlsx)"
+      "es": "Seleccionar archivo WimpGrid (xlsx)",
+      "en": "Select WimpGrid file (xlsx)"
     },
     {
-      "ESP": "Importar datos",
-      "ENG": "Import data"
+      "es": "Importar datos",
+      "en": "Import data"
     },
     {
-      "ESP": "Importar Datos",
-      "ENG": "Import Data"
+      "es": "Importar Datos",
+      "en": "Import Data"
     },
     {
-      "ESP": "Importar archivos",
-      "ENG": "Import files"
+      "es": "Importar archivos",
+      "en": "Import files"
     },
     {
-      "ESP": "Plantillas y documentos de ayuda",
-      "ENG": "Templates and help documents"
+      "es": "Plantillas y documentos de ayuda",
+      "en": "Templates and help documents"
     },
     {
-      "ESP": "Descargar plantilla RepGrid",
-      "ENG": "Download RepGrid template"
+      "es": "Descargar plantilla RepGrid",
+      "en": "Download RepGrid template"
     },
     {
-      "ESP": "Descargar plantilla WimpGrid",
-      "ENG": "Download WimpGrid template"
+      "es": "Descargar plantilla WimpGrid",
+      "en": "Download WimpGrid template"
     },
     {
-      "ESP": "Documento de ayuda para RepGrid",
-      "ENG": "Help document for RepGrid"
+      "es": "Documento de ayuda para RepGrid",
+      "en": "Help document for RepGrid"
     },
     {
-      "ESP": "Documento de ayuda para WimpGrid",
-      "ENG": "Help document for WimpGrid"
+      "es": "Documento de ayuda para WimpGrid",
+      "en": "Help document for WimpGrid"
     },
     {
-      "ESP": "Inicio: RepGrid",
-      "ENG": "RepGrid Home"
+      "es": "Inicio de RepGrid",
+      "en": "RepGrid Home"
     },
     {
-      "ESP": "Esta pagina te permite visualizar y manipular los datos importados de RepGrid y acceder a diferentes tipos de analisis",
-      "ENG": "This page allows you to view and manipulate the data imported from RepGrid and access different types of analysis"
+      "es": "Esta pagina te permite visualizar y manipular los datos importados de RepGrid y acceder a diferentes tipos de analisis",
+      "en": "This page allows you to view and manipulate the data imported from RepGrid and access different types of analysis"
     },
     {
-      "ESP": "Tabla de Datos",
-      "ENG": "Data Table"
+      "es": "Tabla de Datos",
+      "en": "Data Table"
     },
     {
-      "ESP": "Guardar",
-      "ENG": "Save"
+      "es": "Guardar",
+      "en": "Save"
     },
     {
-      "ESP": "Editar",
-      "ENG": "Edit"
+      "es": "Editar",
+      "en": "Edit"
     },
     {
-      "ESP": "Analisis de RepGrid",
-      "ENG": "RepGrid Analysis"
+      "es": "Analisis de RepGrid",
+      "en": "RepGrid Analysis"
     },
     
     {
-      "ESP": "Análisis Bidimensional",
-      "ENG": "Two-Dimensional Analysis"
+      "es": "Análisis Bidimensional",
+      "en": "Two-Dimensional Analysis"
     },
     {
-      "ESP": "Análisis Tridimensional",
-      "ENG": "Three-Dimensional Analysis"
+      "es": "Análisis Tridimensional",
+      "en": "Three-Dimensional Analysis"
     },
     {
-      "ESP": "Análisis por Conglomerados",
-      "ENG": "Cluster Analysis"
+      "es": "Análisis por Conglomerados",
+      "en": "Cluster Analysis"
     },
     {
-      "ESP": "Índices Cognitivos",
-      "ENG": "Cognitive Indices"
+      "es": "Índices Cognitivos",
+      "en": "Cognitive Indices"
     },
     {
-      "ESP": "Dilemas",
-      "ENG": "Dilemmas"
+      "es": "Dilemas",
+      "en": "Dilemmas"
     },
     {
-      "ESP": "Constructos",
-      "ENG": "Constructs"
+      "es": "Constructos",
+      "en": "Constructs"
     },
     {
-      "ESP": "Elementos",
-      "ENG": "Elements"
+      "es": "Elementos",
+      "en": "Elements"
     },
     {
-      "ESP": "Índices y Valores Matematicos",
-      "ENG": "Indices and Mathematical Values"
+      "es": "Índices y Valores Matematicos",
+      "en": "Indices and Mathematical Values"
     },
     {
-      "ESP": "Intensidad de Constructos",
-      "ENG": "Intensity of Constructs"
+      "es": "Intensidad de Constructos",
+      "en": "Intensity of Constructs"
     },
     {
-      "ESP": "Intensidad de Elementos",
-      "ENG": "Intensity of Elements"
+      "es": "Intensidad de Elementos",
+      "en": "Intensity of Elements"
     },
     {
-      "ESP": "Constructos Congruentes/Discordantes",
-      "ENG": "Congruent/Discrepant Constructs"
+      "es": "Constructos Congruentes/Discordantes",
+      "en": "Congruent/Discrepant Constructs"
     },
     {
-      "ESP": "Resultados",
-      "ENG": "Results"
+      "es": "Resultados",
+      "en": "Results"
     },
     {
-      "ESP": "Datos",
-      "ENG": "Data"
+      "es": "Datos",
+      "en": "Data"
     },
     {
-      "ESP": "Inicio: WimpGrid",
-      "ENG": "WimpGrid Home"
+      "es": "Inicio de WimpGrid",
+      "en": "WimpGrid Home"
     },
     {
-      "ESP": "Esta pagina te permite visualizar y manipular los datos importados de Wimpgrid y acceder a diferentes tipos de analisis",
-      "ENG": "This page allows you to visualize and manipulate the data imported from WimpGrid and access different types of analysis"
+      "es": "Esta pagina te permite visualizar y manipular los datos importados de Wimpgrid y acceder a diferentes tipos de analisis",
+      "en": "This page allows you to visualize and manipulate the data imported from WimpGrid and access different types of analysis"
     },
     {
-      "ESP": "Reiniciar",
-      "ENG": "Restart"
+      "es": "Reiniciar",
+      "en": "Restart"
     },
     {
-      "ESP": "Visualización",
-      "ENG": "Visualization"
+      "es": "Visualización",
+      "en": "Visualization"
     },
     {
-      "ESP": "Analisis de WimpGrid",
-      "ENG": "WimpGrid Analysis"
+      "es": "Analisis de WimpGrid",
+      "en": "WimpGrid Analysis"
     },
     {
-      "ESP": "Esta pagina te permite",
-      "ENG": "This page allows you to"
+      "es": "Esta pagina te permite",
+      "en": "This page allows you to"
     },
     {
-      "ESP": "Seleccione un gráfico:",
-      "ENG": "Select a graph:"
+      "es": "Seleccione un gráfico:",
+      "en": "Select a graph:"
     },
     {
-      "ESP": "autodigrafo",
-      "ENG": "selfdigraph"
+      "es": "autodigrafo",
+      "en": "selfdigraph"
     },
     {
-      "ESP": "digrafo del ideal",
-      "ENG": "idealdigraph"
+      "es": "digrafo del ideal",
+      "en": "idealdigraph"
     },
     {
-      "ESP": "indices de Wimp",
-      "ENG": "wimpindices"
+      "es": "indices de Wimp",
+      "en": "wimpindices"
     },
     {
-      "ESP": "Diseño:",
-      "ENG": "Layout:"
+      "es": "Diseño:",
+      "en": "Layout:"
     },
     {
-      "ESP": "circulo",
-      "ENG": "circle"
+      "es": "circulo",
+      "en": "circle"
     },
     {
-      "ESP": "rtcirculo",
-      "ENG": "rtcircle"
+      "es": "rtcirculo",
+      "en": "rtcircle"
     },
     {
-      "ESP": "arbol",
-      "ENG": "tree"
+      "es": "arbol",
+      "en": "tree"
     },
     {
-      "ESP": "graphopt",
-      "ENG": "graphopt"
+      "es": "graphopt",
+      "en": "graphopt"
     },
     {
-      "ESP": "mds",
-      "ENG": "mds"
+      "es": "mds",
+      "en": "mds"
     },
     {
-      "ESP": "cuadricula",
-      "ENG": "grid"
+      "es": "cuadricula",
+      "en": "grid"
     },
     {
-      "ESP": "Paleta de colores:",
-      "ENG": "Color palette:"
+      "es": "Paleta de colores:",
+      "en": "Color palette:"
     },
     {
-      "ESP": "rojo/verde",
-      "ENG": "red/green"
+      "es": "rojo/verde",
+      "en": "red/green"
     },
     {
-      "ESP": "escala de grises",
-      "ENG": "grey scale"
+      "es": "escala de grises",
+      "en": "grey scale"
     },
     {
-      "ESP": "Tamaño de los vértices:",
-      "ENG": "Vertex size:"
+      "es": "Tamaño de los vértices:",
+      "en": "Vertex size:"
     },
     {
-      "ESP": "Ancho de las aristas:",
-      "ENG": "Edge width:"
+      "es": "Ancho de las aristas:",
+      "en": "Edge width:"
     },
     {
-      "ESP": "Ocultar relaciones directas",
-      "ENG": "Hide direct relationships"
+      "es": "Ocultar relaciones directas",
+      "en": "Hide direct relationships"
     },
     {
-      "ESP": "Laboratorio",
-      "ENG": "Laboratory"
+      "es": "Laboratorio",
+      "en": "Laboratory"
     },
     {
-      "ESP": "simdigrafo",
-      "ENG": "simdigraph"
+      "es": "simdigrafo",
+      "en": "simdigraph"
     },
     {
-      "ESP": "pcsd",
-      "ENG": "pcsd"
+      "es": "pcsd",
+      "en": "pcsd"
     },
     {
-      "ESP": "pcsdindices",
-      "ENG": "pcsdindices"
+      "es": "pcsdindices",
+      "en": "pcsdindices"
     },
     {
-      "ESP": "Archivo de entrada:",
-      "ENG": "Input file:"
+      "es": "Archivo de entrada:",
+      "en": "Input file:"
     },
     {
-      "ESP": "Nº de la iteración:",
-      "ENG": "Iteration Nº:"
+      "es": "Nº de la iteración:",
+      "en": "Iteration number:"
     },
     {
-      "ESP": "Nº de iteraciones máximas:",
-      "ENG": "Maximum Nº of iterations:"
+      "es": "Nº de iteraciones máximas:",
+      "en": "Maximum number of iterations:"
     },
     {
-      "ESP": "Nº de iteraciones sin cambios:",
-      "ENG": "Nº of iterations without changes:"
+      "es": "Nº de iteraciones sin cambios:",
+      "en": "Number of iterations without changes:"
     },
     {
-      "ESP": "Vector de cambios:",
-      "ENG": "Change vector:"
+      "es": "Vector de cambios:",
+      "en": "Change vector:"
     },
     {
-      "ESP": "Función de propagación:",
-      "ENG": "Propagation function:"
+      "es": "Función de propagación:",
+      "en": "Propagation function:"
     },
     {
-      "ESP": "transformacion lineal",
-      "ENG": "linear transform"
+      "es": "transformacion lineal",
+      "en": "linear transform"
     },
     {
-      "ESP": "Función umbral:",
-      "ENG": "Threshold function:"
+      "es": "Función umbral:",
+      "en": "Threshold function:"
     },
     {
-      "ESP": "Valor diferencial:",
-      "ENG": "Differential value:"
+      "es": "Valor diferencial:",
+      "en": "Differential value:"
     },
     {
-      "ESP": "Resumen",
-      "ENG": "Summary"
+      "es": "Resumen",
+      "en": "Summary"
     },
     {
-      "ESP": "Auc",
-      "ENG": "Auc"
+      "es": "Auc",
+      "en": "Auc"
     },
     {
-      "ESP": "Estabilidad",
-      "ENG": "Stability"
+      "es": "Estabilidad",
+      "en": "Stability"
     },
     {
-      "ESP": "sigmoide",
-      "ENG": "sigmoid"
+      "es": "sigmoide",
+      "en": "sigmoid"
     },
     {
-      "ESP": "binario",
-      "ENG": "binary"
+      "es": "binario",
+      "en": "binary"
     },
     {
-      "ESP": "otra opción",
-      "ENG": "another option"
+      "es": "otra opción",
+      "en": "another option"
     },
     {
-      "ESP": "índices de Wimp",
-      "ENG": "wimpindices"
+      "es": "índices de Wimp",
+      "en": "wimpindices"
     },
     {
-      "ESP": "lineal",
-      "ENG": "linear"
+      "es": "lineal",
+      "en": "linear"
     },
     {
-      "ESP": "transformación sigmoidea",
-      "ENG": "sigmoid transform"
+      "es": "transformación sigmoidea",
+      "en": "sigmoid transform"
     },
     {
-      "ESP": "transformación binaria",
-      "ENG": "binary transform"
+      "es": "transformación binaria",
+      "en": "binary transform"
     },
     {
-      "ESP": "Idioma",
-      "ENG": "Language"
+      "es": "Idioma",
+      "en": "Language"
     },
     {
-      "ESP": "En esta página, puedes descargar plantillas de xlsx y documentos de ayuda, y subir archivos xlsx para importar datos.",
-      "ENG": "On this page, you can download xlsx templates and help documents, and upload xlsx files to import data."
+      "es": "En esta página, puedes descargar plantillas de xlsx y documentos de ayuda, y subir archivos xlsx para importar datos.",
+      "en": "On this page, you can download xlsx templates and help documents, and upload xlsx files to import data."
     },
     {
-      "ESP": "Esta página te permite visualizar y manipular los datos importados de RepGrid y acceder a diferentes tipos de análisis.",
-      "ENG": "This page allows you to visualize and manipulate the data imported from RepGrid and access different types of analysis."
+      "es": "Esta página te permite visualizar y manipular los datos importados de RepGrid y acceder a diferentes tipos de análisis.",
+      "en": "This page allows you to visualize and manipulate the data imported from RepGrid and access different types of analysis."
     },
     {
-      "ESP": "Seleccione un análisis:",
-      "ENG": "Select an analysis"
+      "es": "Seleccione un análisis:",
+      "en": "Select an analysis"
     },
     {
-      "ESP": "Análisis RepGrid",
-      "ENG": "RepGrid Analysis"
+      "es": "Análisis RepGrid",
+      "en": "RepGrid Analysis"
     },
     {
-      "ESP": "Análisis WimpGrid",
-      "ENG": "WimpGrid Analysis"
+      "es": "Análisis WimpGrid",
+      "en": "WimpGrid Analysis"
     },
     {
-      "ESP": "Inicio",
-      "ENG": "Home"
+      "es": "Inicio",
+      "en": "Home"
     },
     {
-      "ESP": "Importar",
-      "ENG": "Import"
+      "es": "Importar",
+      "en": "Import"
     },
     {
-      "ESP": "Ficheros",
-      "ENG": "Files"
+      "es": "Ficheros",
+      "en": "Files"
     },
     {
-      "ESP": "Formularios",
-      "ENG": "Forms"
+      "es": "Formularios",
+      "en": "Forms"
     },
     {
-      "ESP": "Importar datos para un nuevo análisis de rejilla",
-      "ENG": "Import data for a new grid analysis"
+      "es": "Importar datos para un nuevo análisis de rejilla",
+      "en": "Import data for a new grid analysis"
     },
     {
-      "ESP": "En esta página, puedes aprender sobre los tres tipos de análisis de rejilla y elegir cómo importar tus datos.",
-      "ENG": "On this page, you can learn about the three types of grid analysis and choose how to import your data."
+      "es": "En esta página, puedes aprender sobre los tres tipos de análisis de rejilla y elegir cómo importar tus datos.",
+      "en": "On this page, you can learn about the three types of grid analysis and choose how to import your data."
     },
     {
-      "ESP": "Descripción del análisis RepGrid.",
-      "ENG": "Description of the RepGrid analysis."
+      "es": "Descripción del análisis RepGrid.",
+      "en": "Description of the RepGrid analysis."
     },
     {
-      "ESP": "Descripción del análisis WimpGrid.",
-      "ENG": "Description of the WimpGrid analysis."
+      "es": "Descripción del análisis WimpGrid.",
+      "en": "Description of the WimpGrid analysis."
     },
     {
-      "ESP": "Descripción del análisis Fullgrid.",
-      "ENG": "Description of the FullGrid analysis."
+      "es": "Descripción del análisis Fullgrid.",
+      "en": "Description of the FullGrid analysis."
     },
     {
-      "ESP": "Inicia sesión para continuar",
-      "ENG": "Log in to continue"
+      "es": "Inicia sesión para continuar",
+      "en": "Log in to continue"
     },
     {
-      "ESP": "Inicio de sesión",
-      "ENG": "Login"
+      "es": "Inicio de sesión",
+      "en": "Login"
     },
     {
-      "ESP": "Introduce tu usuario",
-      "ENG": "Enter your username"
+      "es": "Introduce tu usuario",
+      "en": "Enter your username"
     },
     {
-      "ESP": "Importar archivos RepGrid",
-      "ENG": "Import RepGrid files"
+      "es": "Importar archivos RepGrid",
+      "en": "Import RepGrid files"
     },
     {
-      "ESP": "Importar archivos WimpGrid",
-      "ENG": "Import WimpGrid files"
+      "es": "Importar archivos WimpGrid",
+      "en": "Import WimpGrid files"
     },
     {
-      "ESP": "Seleccionar archivo RepGrid (.xlsx)",
-      "ENG": "Select RepGrid file (.xlsx)"
+      "es": "Seleccionar archivo RepGrid (.xlsx)",
+      "en": "Select RepGrid file (.xlsx)"
     },
     {
-      "ESP": "Seleccionar archivo WimpGrid (.xlsx)",
-      "ENG": "Select WimpGrid file (.xlsx)"
+      "es": "Seleccionar archivo WimpGrid (.xlsx)",
+      "en": "Select WimpGrid file (.xlsx)"
     },
     {
-      "ESP": "Para hacer el análisis es necesario importar un archivo o formulario",
-      "ENG": "To perform the analysis, it is necessary to import a file or form"
+      "es": "Para hacer el análisis es necesario importar un archivo o formulario",
+      "en": "To perform the analysis, it is necessary to import a file or form"
     },
     {
-      "ESP": "Esta página te permite visualizar y manipular los datos importados de Wimpgrid y acceder a diferentes tipos de análisis.",
-      "ENG": "This page allows you to visualize and manipulate the data imported from WimpGrid and access different types of analysis."
+      "es": "Esta página te permite visualizar y manipular los datos importados de Wimpgrid y acceder a diferentes tipos de análisis.",
+      "en": "This page allows you to visualize and manipulate the data imported from WimpGrid and access different types of analysis."
     },
     {
-      "ESP": "Haz click y arrastra para Interactuar.",
-      "ENG": "Click and drag to Interact."
+      "es": "Haz click y arrastra para Interactuar.",
+      "en": "Click and drag to Interact."
     },
     {
-      "ESP": "Matriz de distancias de Constructos",
-      "ENG": "Constructs Distance Matrix"
+      "es": "Matriz de distancias de Constructos",
+      "en": "Constructs Distance Matrix"
     },
     {
-      "ESP": "Matriz de distancias de Elementos",
-      "ENG": "Elements Distance Matrix"
+      "es": "Matriz de distancias de Elementos",
+      "en": "Elements Distance Matrix"
     },
     {
-      "ESP": "Índices y Valores Matemáticos",
-      "ENG": "Mathematical Indices and Values"
+      "es": "Índices y Valores Matemáticos",
+      "en": "Mathematical Indices and Values"
     },
     {
-      "ESP": "Descargar Gráfico",
-      "ENG": "Download Chart"
+      "es": "Descargar Gráfico",
+      "en": "Download Chart"
     },
     {
-      "ESP": "Índices",
-      "ENG": "Indices"
+      "es": "Índices",
+      "en": "Indices"
     },
     {
-      "ESP": "Desglose Índices",
-      "ENG": "Indices Breakdown"
+      "es": "Desglose Índices",
+      "en": "Indices Breakdown"
     },
     {
-      "ESP": "Esta página te permite...",
-      "ENG": "This page allows you to..."
+      "es": "Esta página te permite...",
+      "en": "This page allows you to..."
     },
     {
-      "ESP": "Resultado gráfico",
-      "ENG": "Graphical Result"
+      "es": "Resultado gráfico",
+      "en": "Graphical Result"
     },
     {
-      "ESP": "Centralidad",
-      "ENG": "Centrality"
+      "es": "Centralidad",
+      "en": "Centrality"
     }
     
 ]}
