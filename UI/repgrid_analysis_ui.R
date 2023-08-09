@@ -1,7 +1,7 @@
 repgrid_analysis_ui <- fluidPage( class="header-tab rg-diff",
     shiny.i18n::usei18n(i18n),
 
-  fluidRow( class = ("flex-container-xl border-divider"),
+  fluidRow( class = ("flex-container-xl"),
 
     h2(i18n$t("Análisis RepGrid"), class = "pagetitlecustom mt-4 mb-4"),
 
@@ -29,10 +29,11 @@ repgrid_analysis_ui <- fluidPage( class="header-tab rg-diff",
         column(12, class="d-flex justify-content-center", actionButton("importar_page_r", "Importar archivos", status = 'warning', icon = icon("file-lines"))),
       )),
       
+shinyjs::hidden(div(id = "rg-analysis-content",
     conditionalPanel(condition = "input.graph_selector == 'Análisis Bidimensional'  ||  input.graph_selector =='Two-Dimensional Analysis' ",
-      fluidRow(class = "flex-container-sm",
-        icon("arrow-up-right-dots", class = "mt-4"),
-        h4(i18n$t("Análisis Bidimensional"), class = "pagetitle2custom mt-2 mb-2")
+      fluidRow(class = "flex-container-sm mt-4 mb-4",
+        icon("arrow-up-right-dots"),
+        h4(i18n$t("Análisis Bidimensional"), class = "pagetitle2custom mt-2")
       ),
       fluidRow(class = "flex-container-sm",
         plotOutput("biplot2d_plot")
@@ -43,19 +44,23 @@ repgrid_analysis_ui <- fluidPage( class="header-tab rg-diff",
     ),
 
     conditionalPanel(condition = "input.graph_selector == 'Three-Dimensional Analysis' || input.graph_selector == 'Análisis Tridimensional'",
+  
+      fluidRow(class = "flex-container-sm mt-4 mb-4",
+        icon("cube"),
+        h4(i18n$t("Análisis Tridimensional"), class = "pagetitle2custom mt-2"),
+      ), 
+      p(i18n$t("Haz click y arrastra para Interactuar."),  class = "desccustom-hint mb-4"),
+      
       fluidRow(class = "flex-container-sm",
-        icon("cube", class = "mt-4"),
-        h4(i18n$t("Análisis Tridimensional"), class = "pagetitle2custom mt-2 mb-2"),
-        p(i18n$t("Haz click y arrastra para Interactuar."),  class = "desccustom-hint mb-2")
-      ), fluidRow(class = "flex-container-sm",
+      
       rglwidgetOutput("biplot3d_plot")
-    )
+    ),
   ),
   
   conditionalPanel(condition = "input.graph_selector == 'Cluster Analysis' || input.graph_selector == 'Análisis por Conglomerados'",
-    fluidRow(class = "flex-container-sm",
-      icon("network-wired", class = "mt-4"),
-      h4(i18n$t("Análisis por Conglomerados"), class = "pagetitle2custom mt-2 mb-2")
+    fluidRow(class = "flex-container-sm mt-4 mb-4",
+      icon("network-wired"),
+      h4(i18n$t("Análisis por Conglomerados"), class = "pagetitle2custom mt-2")
     ),
 
     fluidRow(
@@ -82,37 +87,37 @@ repgrid_analysis_ui <- fluidPage( class="header-tab rg-diff",
     )
   ),
 
-div(class = "custom-margins",
-  conditionalPanel(condition = "input.graph_selector == 'Índices Cognitivos' || input.graph_selector=='Cognitive Indices'",
-    fluidRow(class = "flex-container-sm",
-      icon("brain", class = "mt-4"),
-      h4(i18n$t("Índices"), class = "pagetitle2custom mt-2 mb-2")
-    ),
-    fluidRow(class = "table-container",
-      h4(i18n$t("Índices y Valores Matemáticos"), class = "pagesubtitlecustom mt-4 mb-4"),
-      htmlOutput("gridindices_table")
-    ),
-    fluidRow(
-      column(6, h4(i18n$t("Intensidad de Constructos"), class = "pagesubtitlecustom mt-4 mb-4"),
-             fluidRow(class = "table-container", DTOutput("construct"))
+  div(class = "custom-margins",
+    conditionalPanel(condition = "input.graph_selector == 'Índices Cognitivos' || input.graph_selector=='Cognitive Indices'",
+      fluidRow(class = "flex-container-sm mt-4",
+        icon("brain"),
+        h4(i18n$t("Índices"), class = "pagetitle2custom mt-2 mb-2")
       ),
-      column(6, h4(i18n$t("Intensidad de Elementos"), class = "pagesubtitlecustom mt-4 mb-4"),
-             fluidRow(class = "table-container", DTOutput("elementss"))
-      )
+      fluidRow(class = "table-container mt-4",
+        h4(i18n$t("Índices y Valores Matemáticos"), class = "pagesubtitlecustom mb-4"),
+        htmlOutput("gridindices_table")
+      ),
+      fluidRow(
+        column(6, h4(i18n$t("Intensidad de Constructos"), class = "pagesubtitlecustom mt-4 mb-4"),
+              fluidRow(class = "table-container", DTOutput("construct"))
+        ),
+        column(6, h4(i18n$t("Intensidad de Elementos"), class = "pagesubtitlecustom mt-4 mb-4"),
+              fluidRow(class = "table-container", DTOutput("elementss"))
+        )
+      ),
+      fluidRow(class = "flex-container",
+        h4(i18n$t("Matriz de distancias de Constructos"), class = "pagesubtitlecustom mt-4 mb-4"),
+        rHandsontableOutput("matrix_constructs")
+      ),
+      fluidRow(class = "flex-container",
+        h4(i18n$t("Matriz de distancias de Elementos"), class = "pagesubtitlecustom mt-4 mb-4"),
+        rHandsontableOutput("matrix_elements"))
     ),
-    fluidRow(class = "flex-container",
-      h4(i18n$t("Matriz de distancias de Constructos"), class = "pagesubtitlecustom mt-4 mb-4"),
-      rHandsontableOutput("matrix_constructs")
-    ),
-    fluidRow(class = "flex-container",
-      h4(i18n$t("Matriz de distancias de Elementos"), class = "pagesubtitlecustom mt-4 mb-4"),
-      rHandsontableOutput("matrix_elements"))
   ),
-),
 
   conditionalPanel(condition = "input.graph_selector == 'Dilemas' || input.graph_selector == 'Dilemmas'",
-    fluidRow(class = "flex-container-sm",
-      icon("calculator", class = "mt-4"),
+    fluidRow(class = "flex-container-sm mt-4",
+      icon("calculator"),
       h4(i18n$t("Índices y Valores Matemáticos"), class = "pagetitle2custom mt-2 mb-2")
     ),
     fluidRow(
@@ -120,4 +125,5 @@ div(class = "custom-margins",
       column(6, h4(i18n$t("Dilemas"), class = "pagesubtitlecustom mt-4 mb-4"), htmlOutput("dilemmasss"))
     )
   )
+  ))
 )

@@ -134,6 +134,11 @@ wimpgrid_analysis_server <- function(input, output, session) {
 
     tabla_aux <- 0
 
+    hide("wg-data-content")
+    hide("wg-vis-content")
+    hide("wg-lab-content")
+
+
   }else{
 
     hide("id_warn")
@@ -145,6 +150,12 @@ wimpgrid_analysis_server <- function(input, output, session) {
     repgrid_aux <- session$userData$datos_wimpgrid
 
     tabla_aux <- session$userData$datos_to_table_w
+
+    show("wg-data-content")
+    show("wg-vis-content")
+    show("wg-lab-content")
+    
+    
 
   }
 
@@ -620,16 +631,23 @@ generate_graph <- function(){
 
   if (graph == "autodigrafo" || graph=="selfdigraph") {
     print(i18n$get_translation_language())
+
     print("hhhh")
 
+ 
+
     if(i18n$get_translation_language()=="es") {
+
       print("es")
      
       #graph2 <- selfdigraph(dataaa_w(), layout = translate_word("en",selfdigraph_layout()), vertex.size = selfdigraph_vertex_size(),edge.width = selfdigraph_edge_width(), color = translate_word("en",selfdigraph_color())) 
       graph2 <- digraph(dataaa_w(), layout = translate_word("en",selfdigraph_layout()), color = translate_word("en",selfdigraph_color()))
       print(graph2)
+
     }
+
     else {
+
       print("en")
       #graph2 <- selfdigraph(dataaa_w(), layout = selfdigraph_layout(), vertex.size = selfdigraph_vertex_size(),edge.width = selfdigraph_edge_width(), color = selfdigraph_color())
       graph2 <- digraph(dataaa_w(), layout = selfdigraph_layout(), color = selfdigraph_color())
@@ -639,6 +657,7 @@ generate_graph <- function(){
   } else if (graph == i18n$t("digrafo del ideal")) {
 
     if(i18n$get_translation_language()=="es")
+
     {
       graph2 <- idealdigraph.vis(wimp = dataaa_w(), inc = idealdigraph_inc(), layout = translate_word("en",idealdigraph_layout()), color = translate_word("en",idealdigraph_color()))
 
@@ -677,6 +696,8 @@ generate_graph <- function(){
   return(graph2)
 
 }
+
+ 
 
  
 
@@ -1270,6 +1291,8 @@ observeEvent(input$graph_selector_laboratorio, {
 
  
 
+ 
+
 output$graph_output_laboratorio <- renderUI({
 
     # Verificar que input$graph_selector_visualizacion no es NULL
@@ -1469,12 +1492,17 @@ output$summary <- DT::renderDataTable({
                            stop.iter = stop_iter())
 
   }
+
   pscind <- pcsdindices(scn)
+
+ 
 
   summary <- data.frame(Sum = round(pscind$summary, 3))
   DT::datatable(summary)
 
 })
+
+ 
 
 output$auc <- DT::renderDataTable({
 

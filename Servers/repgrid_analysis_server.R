@@ -34,12 +34,7 @@ repgrid_analisis_server <- function(input, output, session) {
   
   if (is.null(session$userData$datos_repgrid))
   {
-    runjs("window.location.href = '/#!/import';")
-    show("repgrid_warning")
-    repgrid_data <- boeker
-  } else {
-    print("hide")
-    hide("repgrid_warning")
+    repgrid_data <-boeker
   }
 
   indices_list <- gridindices(repgrid_data)
