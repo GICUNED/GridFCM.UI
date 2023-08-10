@@ -713,7 +713,7 @@ output$btn_download_visualizacion <- downloadHandler(
 
   filename = function() {
 
-    gsub(" ", "", paste("grafico_visualizacion_",input$graph_selector_visualizacion,".png"))
+    gsub(" ", "", paste("grafico_visualizacion_",input$graph_selector_visualizacion,".html"))
 
   },
 
@@ -723,23 +723,17 @@ output$btn_download_visualizacion <- downloadHandler(
 
     print("Botón de descarga presionado")
 
-    graph <- input$graph_selector_visualizacion
-
- 
-
-    grDevices::png(file, width = 1200, height = 1200, units = "px", res = 100)
-
- 
+    graph <- input$graph_selector_visualizacion 
 
     if(graph == i18n$t("autodigrafo")) {
 
       if(i18n$get_translation_language()=="es") {
 
-        grDevices::dev.capture(selfdigraph(dataaa_w(), layout = translate_word("en",selfdigraph_layout()), vertex.size = selfdigraph_vertex_size(),edge.width = selfdigraph_edge_width(), color = translate_word("en",selfdigraph_color())))
+        saveWidget(widget = digraph(dataaa_w(), layout = translate_word("en",selfdigraph_layout()), color = translate_word("en",selfdigraph_color())), file = file, selfcontained = TRUE)
 
       } else {
 
-        grDevices::dev.capture(selfdigraph(dataaa_w(), layout = selfdigraph_layout(), vertex.size = selfdigraph_vertex_size(),edge.width = selfdigraph_edge_width(), color = selfdigraph_color()))
+        saveWidget(widget = digraph(dataaa_w(), layout = selfdigraph_layout(), color = selfdigraph_color()), file = file, selfcontained = TRUE)
 
       }
 
@@ -747,11 +741,11 @@ output$btn_download_visualizacion <- downloadHandler(
 
       if(i18n$get_translation_language()=="es") {
 
-        grDevices::dev.capture(idealdigraph(dataaa_w(), inc = idealdigraph_inc(), layout = translate_word("en",idealdigraph_layout()), vertex.size = idealdigraph_vertex_size(), edge.width = idealdigraph_edge_width(),color = translate_word("en",idealdigraph_color())))
+        saveWidget(widget = idealdigraph.vis(wimp = dataaa_w(), inc = idealdigraph_inc(), layout = translate_word("en",idealdigraph_layout()), color = translate_word("en",idealdigraph_color())), file = file, selfcontained = TRUE)
 
       } else {
 
-        grDevices::dev.capture(idealdigraph(dataaa_w(), inc = idealdigraph_inc(), layout = idealdigraph_layout(), vertex.size = idealdigraph_vertex_size(), edge.width = idealdigraph_edge_width(),color = idealdigraph_color()))
+        saveWidget(widget = idealdigraph.vis(wimp = dataaa_w(), inc = idealdigraph_inc(), layout = idealdigraph_layout(), color = idealdigraph_color()), file = file, selfcontained = TRUE)
 
       }
 
@@ -759,11 +753,11 @@ output$btn_download_visualizacion <- downloadHandler(
 
    
 
-    grDevices::dev.off()
+    #grDevices::dev.off()
 
-    file.copy("Rplot001.png", file)  # Copiar el archivo temporal a la ubicación deseada
+    #file.copy("Rplot001.png", file)  # Copiar el archivo temporal a la ubicación deseada
 
-    file.remove("Rplot001.png")  # Eliminar el archivo temporal
+    #file.remove("Rplot001.png")  # Eliminar el archivo temporal
 
     #ggsave(file, plot = graph, width = 1200, height = 800, units = "px", dpi = 100)
 
