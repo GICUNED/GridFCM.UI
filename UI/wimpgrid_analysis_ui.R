@@ -123,7 +123,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                 ),
                 downloadButton(class = "btn-download", "btn_download_visualizacion", i18n$t("Descargar Gráfico"))
               ),
-              plotOutput("graph_output_visualizacion")
+              uiOutput("graph_output_visualizacion")
               )
           ),
         ),
