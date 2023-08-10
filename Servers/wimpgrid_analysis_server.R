@@ -765,12 +765,46 @@ output$btn_download_visualizacion <- downloadHandler(
 
 )
 
+output$boton_download_laboratory <- downloadHandler(
+  filename = function() {
+
+    gsub(" ", "", paste("grafico_laboratorio_", input$graph_selector_visualizacion,".html"))
+
+  },
+
+  content = function(file) {
+
+    graph <- input$graph_selector_laboratorio
+    sim_stop_it <- simdigraph_stop_iter()
+
+    if(graph == i18n$t("simdigrafo")) {
+
+      if(i18n$get_translation_language()=="es") {
+        scn <- scenariomatrix(dataaa_w(),act.vector= df_V(),infer = "linear transform",
+
+                              thr = "linear", max.iter = simdigraph_max_iter(), e = simdigraph_e(),
+
+                              stop.iter = sim_stop_it)
+
+        widget_sim <- simdigraph.vis(scn,niter=simdigraph_niter(), layout = translate_word("en",simdigraph_layout()), color = translate_word("en",simdigraph_color()))
+        saveWidget(widget = widget_sim, file = file, selfcontained = TRUE)
+      } else {
+        scn <- scenariomatrix(dataaa_w(),act.vector= df_V(),infer = "linear transform",
+
+                              thr = "linear", max.iter = simdigraph_max_iter(), e = simdigraph_e(),
+
+                              stop.iter = sim_stop_it)
+
+        widget_sim_en <- simdigraph.vis(scn,niter=simdigraph_niter(), layout = simdigraph_layout(), color = simdigraph_color())
+        saveWidget(widget = widget_sim_en, file = file, selfcontained = TRUE)
+      }
+    }
+  }
+)
+
  
 
 output$dens <- renderText({
-
- 
-
     INTe <- wimpindices(dataaa_w())[["density"]]
 
     knitr::kable(INTe, col.names = "density",format = "html") %>%

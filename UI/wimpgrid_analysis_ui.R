@@ -115,16 +115,16 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
           ),
 
           conditionalPanel(class = "col-sm-9 graphic-container bg-white rounded-lg", condition = "input.graph_selector_visualizacion == 'idealdigraph' || input.graph_selector_visualizacion == 'digrafo del ideal' || input.graph_selector_visualizacion == 'selfdigraph' || input.graph_selector_visualizacion == 'autodigrafo'",
-          column(12, class = " gap-2",
-              fluidRow(class = "flex-container-resp",
-                div(class = "flex-container-sm align-left-title",
-                  icon("globe"),
-                  h4(i18n$t("Resultado gráfico"), class = "pagetitle2custom mt-2"),
+            column(12, class = " gap-2",
+                fluidRow(class = "flex-container-resp",
+                  div(class = "flex-container-sm align-left-title",
+                    icon("globe"),
+                    h4(i18n$t("Resultado gráfico"), class = "pagetitle2custom mt-2"),
+                  ),
+                  downloadButton(class = "btn-download", "btn_download_visualizacion", i18n$t("Descargar Gráfico"))
                 ),
-                downloadButton(class = "btn-download", "btn_download_visualizacion", i18n$t("Descargar Gráfico"))
-              ),
-              uiOutput("graph_output_visualizacion")
-              )
+                uiOutput("graph_output_visualizacion")
+            )
           ),
         ),
 
@@ -282,6 +282,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                       div(class = "flex-container-sm align-left-title",
                         icon("globe"),
                         h4(i18n$t("Resultado gráfico"), class = "pagetitle2custom mt-2"),
+                        downloadButton(class = "btn-download", "boton_download_laboratory", i18n$t("Descargar Gráfico"))
                       ),
                     rHandsontableOutput("simdigraph_act_vector"),
                     ),
@@ -315,7 +316,6 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                     
               div(id = "pscd_showw",plotlyOutput("pscd_show")),
               div(id = "laboratory",uiOutput("graph_output_laboratorio"))
-            
             ),
 
         )
