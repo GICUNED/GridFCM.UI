@@ -43,8 +43,7 @@ div(id="open-controls-container-rg", div(id="open-controls-rg", class="open-cont
         ) ,
     ),
   ),
-column(9, id="graphics-rg",
-      conditionalPanel(class = "graphic-container bg-white rounded-lg", condition = "input.graph_selector == 'Análisis Bidimensional'  ||  input.graph_selector =='Two-Dimensional Analysis' || input.graph_selector == 'Three-Dimensional Analysis' || input.graph_selector == 'Análisis Tridimensional'",
+  conditionalPanel(class = "graphics-rg col-sm-9 graphic-container bg-white rounded-lg", condition = "input.graph_selector == 'Análisis Bidimensional'  ||  input.graph_selector =='Two-Dimensional Analysis' || input.graph_selector == 'Three-Dimensional Analysis' || input.graph_selector == 'Análisis Tridimensional'",
           
         conditionalPanel(condition = "input.graph_selector == 'Análisis Bidimensional'  ||  input.graph_selector =='Two-Dimensional Analysis'",
             fluidRow(class = "flex-container-resp  p-2 border-divider",
@@ -73,7 +72,6 @@ column(9, id="graphics-rg",
           
         ),
     ),
-),
         ),
 
   conditionalPanel(class = "graphic-container bg-white rounded-lg", condition = "input.graph_selector == 'Cluster Analysis' || input.graph_selector == 'Análisis por Conglomerados'",
@@ -139,7 +137,7 @@ column(9, id="graphics-rg",
     ),
     fluidRow(
       column(6, h4(i18n$t("Constructos Congruentes/Discordantes"), class = "pagesubtitlecustom mt-4 mb-4"), htmlOutput("constructs")),
-      column(6, h4(i18n$t("Dilemas"), class = "pagesubtitlecustom mt-4 mb-4"), htmlOutput("dilemmasss"))
+      column(6, h4(i18n$t("Dilemas"), class = "pagesubtitlecustom mb-4"), htmlOutput("dilemmasss"))
     )
   )
   ))

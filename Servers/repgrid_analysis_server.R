@@ -41,7 +41,8 @@ repgrid_analisis_server <- function(input, output, session) {
 
   output$biplot2d_plot <- renderPlot({
     
-      OpenRepGrid::biplot2d(repgrid_data, c.label.col = "#005440",c.grid = "gray", c.grid.lty = "dotted", c.grid.lwd = 0.5, cex.axis = 0.8, cex.labels = 0.8,)
+      OpenRepGrid::biplot2d(repgrid_data, c.label.col = "#005440",c.grid = "gray", c.grid.lty = "dotted", e.point.cex = 1,
+   e.label.cex = 1.1, c.point.cex = 1, c.label.cex = 1,c.grid.lwd = 0.7, cex.axis = 1, cex.labels = 1, var.cex = 1)
     
   })
 
@@ -52,7 +53,8 @@ repgrid_analisis_server <- function(input, output, session) {
     content = function(file) {
       # Tomar una captura de pantalla del gráfico y guardarla en un archivo PNG
       grDevices::png(file, width = 1200, height = 1200, units = "px", res = 100)
-      grDevices::dev.capture(OpenRepGrid::biplot2d(repgrid_data, c.label.col = "#005440", c.grid = "gray", c.grid.lty = "dotted", c.grid.lwd = 0.5, cex.axis = 0.8, cex.labels = 0.8))
+      grDevices::dev.capture(OpenRepGrid::biplot2d(repgrid_data, c.label.col = "#005440",c.grid = "gray", c.grid.lty = "dotted", e.point.cex = 1,
+   e.label.cex = 1.1, c.point.cex = 1, c.label.cex = 1,c.grid.lwd = 0.7, cex.axis = 1, cex.labels = 1, var.cex = 1))
       grDevices::dev.off()
       file.copy("Rplot001.png", file)  # Copiar el archivo temporal a la ubicación deseada
       file.remove("Rplot001.png")  # Eliminar el archivo temporal
@@ -67,7 +69,7 @@ repgrid_analisis_server <- function(input, output, session) {
     try(close3d())
     #points3d(1:10, 1:10, 1:10)
     #axes3d()
-    OpenRepGrid::biplot3d(repgrid_data)
+    OpenRepGrid::biplot3d(repgrid_data, c.cex = 1, c.text.col = "#005440",e.cex = 1, scale.e = 1.2)
     rglwidget()
     #try(close3d())
     #OpenRepGrid::biplot3d(repgrid_data)
@@ -79,7 +81,8 @@ repgrid_analisis_server <- function(input, output, session) {
   # Generar análisis por conglomerados
   output$cluster_plot_1 <- renderPlot({
     
-     OpenRepGrid::cluster(repgrid_data,along=1)
+     OpenRepGrid::cluster(repgrid_data, along=1, cex = 0,
+   lab.cex = 1, cex.main = 1)
      #indices_list[["distances"]][["Constructs"]] 
     
   })
@@ -99,7 +102,8 @@ repgrid_analisis_server <- function(input, output, session) {
     content = function(file) {
       # Tomar una captura de pantalla del gráfico y guardarla en un archivo PNG
       grDevices::png(file, width = 1200, height = 800, units = "px", res = 100)
-      grDevices::dev.capture(OpenRepGrid::cluster(repgrid_data,along=1))
+      grDevices::dev.capture(OpenRepGrid::cluster(repgrid_data,along=1, along=1, cex = 0,
+   lab.cex = 1, cex.main = 1))
       grDevices::dev.off()
       file.copy("Rplot001.png", file)  # Copiar el archivo temporal a la ubicación deseada
       file.remove("Rplot001.png")  # Eliminar el archivo temporal
@@ -109,7 +113,8 @@ repgrid_analisis_server <- function(input, output, session) {
   # Generar análisis por conglomerados
   output$cluster_plot_2 <- renderPlot({
     
-    OpenRepGrid::cluster(repgrid_data,along=2)
+    OpenRepGrid::cluster(repgrid_data,along=2, cex = 0,
+   lab.cex = 1, cex.main = 1)
     #indices_list[["distances"]][["Elements"]] 
     
   })
@@ -121,7 +126,8 @@ repgrid_analisis_server <- function(input, output, session) {
     content = function(file) {
       # Tomar una captura de pantalla del gráfico y guardarla en un archivo PNG
       grDevices::png(file, width = 1200, height = 800, units = "px", res = 100)
-      grDevices::dev.capture(OpenRepGrid::cluster(repgrid_data,along=2))
+      grDevices::dev.capture(OpenRepGrid::cluster(repgrid_data,along=2,  cex = 0,
+   lab.cex = 1, cex.main = 1))
       grDevices::dev.off()
       file.copy("Rplot001.png", file)  # Copiar el archivo temporal a la ubicación deseada
       file.remove("Rplot001.png")  # Eliminar el archivo temporal

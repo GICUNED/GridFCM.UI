@@ -24,15 +24,15 @@ runjs("
 
 $('#exit-controls-rg').on('click', function (){
 
-  $('#graphics-rg').addClass('mw-100');
-  $('#graphics-rg').addClass('flex-bs-100');
+  $('.graphics-rg').addClass('mw-100');
+  $('.graphics-rg').addClass('flex-bs-100');
 
 });
 
 $('#open-controls-rg').on('click', function (){
 
-  $('#graphics-rg').removeClass('mw-100');
-  $('#graphics-rg').removeClass('flex-bs-100');
+  $('.graphics-rg').removeClass('mw-100');
+  $('.graphics-rg').removeClass('flex-bs-100');
 
 });")
 

@@ -3,7 +3,8 @@
 wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
   #shiny.i18n::usei18n(i18n),
   shiny.i18n::usei18n(i18n),
-  chooseSliderSkin("Nice"),
+  chooseSliderSkin("Flat"),
+
 
   tabsetPanel(
     
@@ -114,8 +115,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
             ),
 
           ),
-          column(9, id="graphics-vis",
-          conditionalPanel(class = "graphic-container bg-white rounded-lg gap-2", condition = "input.graph_selector_visualizacion == 'idealdigraph' || input.graph_selector_visualizacion == 'digrafo del ideal' || input.graph_selector_visualizacion == 'selfdigraph' || input.graph_selector_visualizacion == 'autodigrafo'",
+          conditionalPanel(class = "graphics-vis col-sm-9 graphic-container bg-white rounded-lg gap-2", condition = "input.graph_selector_visualizacion == 'idealdigraph' || input.graph_selector_visualizacion == 'digrafo del ideal' || input.graph_selector_visualizacion == 'selfdigraph' || input.graph_selector_visualizacion == 'autodigrafo'",
               fluidRow(class = "flex-container-resp p-2 pb-3 border-divider",
                 div(class = "flex-container-sm align-left-title",
                   icon("globe"),
@@ -125,7 +125,6 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
               ),
               uiOutput("graph_output_visualizacion")
             ),
-          ),
         ),
 
         conditionalPanel(class="graphic-container bg-white rounded-lg",condition = "input.graph_selector_visualizacion == 'wimpindices' || input.graph_selector_visualizacion == 'índices de Wimp' ",
@@ -279,13 +278,14 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
 
             column(9, id="graphics-lab", class = "graphic-container bg-white rounded-lg gap-2",
                 fluidRow(class = "flex-container-resp mb-2",
-                    
                     conditionalPanel(class = "graphic-subcontainer", condition = "input.graph_selector_laboratorio == 'simdigraph' || input.graph_selector_laboratorio == 'simdigrafo'",
-                      div(class = "flex-container-sm align-left-title p-2 pb-3 border-divider",
-                        icon("globe"),
-                        h4(i18n$t("Resultado gráfico"), class = "pagetitle2custom mt-2"),
-                        downloadButton(class = "btn-download", "boton_download_laboratory", i18n$t("Descargar Gráfico"))
-                      ),
+                      fluidRow(class = "flex-container-resp p-2 pb-3 border-divider",
+                        div(class = "flex-container-sm align-left-title",
+                          icon("globe"),
+                          h4(i18n$t("Resultado gráfico"), class = "pagetitle2custom"),
+                         ),
+                          downloadButton(class = "btn-download", "boton_download_laboratory", i18n$t("Descargar Gráfico"))
+                        ),
                     rHandsontableOutput("simdigraph_act_vector"),
                     ),
 

@@ -31,32 +31,21 @@ shinyjs::hide("open-controls-container-vis")
   
   onevent("click", "open-controls-lab", shinyjs::hide("open-controls-container-lab"), add = TRUE)
   onevent("click", "open-controls-lab", shinyjs::show("controls-panel-lab"), add = TRUE)
- 
-
-#runjs("
- # if ($('#controls-panel').css('display') == 'none')
-  #{
-   #   $('#graphics').css('max-width') == '100%';
-    #  $('#graphics').css('flex-basis') == '100%';
-#  }else {
- #     $('#graphics').css('max-width') == '75%';
-  #    $('#graphics').css('flex-basis') == '75%';
- # }")
 
 
 runjs("
 
 $('#exit-controls-vis').on('click', function (){
 
-  $('#graphics-vis').addClass('mw-100');
-  $('#graphics-vis').addClass('flex-bs-100');
+  $('.graphics-vis').addClass('mw-100');
+  $('.graphics-vis').addClass('flex-bs-100');
 
 });
 
 $('#open-controls-vis').on('click', function (){
 
-  $('#graphics-vis').removeClass('mw-100');
-  $('#graphics-vis').removeClass('flex-bs-100');
+  $('.graphics-vis').removeClass('mw-100');
+  $('.graphics-vis').removeClass('flex-bs-100');
 
 });
 
