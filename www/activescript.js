@@ -21,6 +21,8 @@ $('#incio-page').on('click', function () {
 
   });
 
+  
+
 //botón de User
 
   $('#user-page').on('click', function () {

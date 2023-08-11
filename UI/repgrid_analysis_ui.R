@@ -3,19 +3,7 @@ repgrid_analysis_ui <- fluidPage( class="header-tab rg-diff",
 
   fluidRow( class = ("flex-container-xl"),
 
-    h2(i18n$t("Análisis RepGrid"), class = "pagetitlecustom mt-4 mb-4"),
-
-    column(12, class = ("input-container"),
-      # Agregar un selectInput para elegir el gráfico a mostrar
-      selectInput("graph_selector",
-                  i18n$t("Seleccione un análisis:"),
-                  choices = c("Análisis Bidimensional",
-                              "Análisis Tridimensional",
-                              "Análisis por Conglomerados",
-                              "Índices Cognitivos",
-                              "Dilemas"
-                  )) 
-    ),
+    h2(i18n$t("Análisis RepGrid"), class = "pagetitlecustom mt-4"),
   ),
 
   # Mostrar el gráfico seleccionado usando conditionalPanel
@@ -30,66 +18,95 @@ repgrid_analysis_ui <- fluidPage( class="header-tab rg-diff",
       )),
       
 shinyjs::hidden(div(id = "rg-analysis-content",
-    conditionalPanel(condition = "input.graph_selector == 'Análisis Bidimensional'  ||  input.graph_selector =='Two-Dimensional Analysis' ",
-      fluidRow(class = "flex-container-sm mt-4 mb-4",
-        icon("arrow-up-right-dots"),
-        h4(i18n$t("Análisis Bidimensional"), class = "pagetitle2custom mt-2")
-      ),
-      fluidRow(class = "flex-container-sm",
+
+div(id="open-controls-container-rg", div(id="open-controls-rg", class="open-controls-btn", p(i18n$t("Controles")), icon(class="mr-2", "bars-progress"))),
+        fluidRow(class = "input-graphic-container",
+            column(3, id="controls-panel-rg", class = "input-field-container rounded-lg",
+              div(class = "flex-container-sm p-2 pb-3 border-divider",
+                div(class = "flex-container-sm align-left-title",
+                      icon("bars-progress"),
+                      h4(i18n$t("Controles"), class = "pagetitle2custom"),
+                ),
+                icon("window-minimize", id="exit-controls-rg", class="close-controls-btn tooltip-icon ml-2 fa-solid"),
+                ),
+
+    column(12, class = ("input-container"),
+           # Agregar un selectInput para elegir el gráfico a mostrar
+        selectInput("graph_selector",
+                  i18n$t("Seleccione un análisis:"),
+                  choices = c("Análisis Bidimensional",
+                              "Análisis Tridimensional",
+                              "Análisis por Conglomerados",
+                              "Índices Cognitivos",
+                              "Dilemas"
+                  ),
+        ) ,
+    ),
+  ),
+column(9, id="graphics-rg",
+      conditionalPanel(class = "graphic-container bg-white rounded-lg", condition = "input.graph_selector == 'Análisis Bidimensional'  ||  input.graph_selector =='Two-Dimensional Analysis' || input.graph_selector == 'Three-Dimensional Analysis' || input.graph_selector == 'Análisis Tridimensional'",
+          
+        conditionalPanel(condition = "input.graph_selector == 'Análisis Bidimensional'  ||  input.graph_selector =='Two-Dimensional Analysis'",
+            fluidRow(class = "flex-container-resp  p-2 border-divider",
+              div(class = "flex-container-sm align-left-title",
+                icon("arrow-up-right-dots"),
+                h4(i18n$t("Análisis Bidimensional"), class = "pagetitle2custom")
+              ),
+              downloadButton("btn_download_2d", i18n$t("Descargar Gráfico")),
+            ),
         plotOutput("biplot2d_plot")
+        ),
+        
+        conditionalPanel(condition = "input.graph_selector == 'Three-Dimensional Analysis' || input.graph_selector == 'Análisis Tridimensional'",
+  
+          fluidRow(class = "flex-container-resp p-2 border-divider",
+            div(class = "flex-container-sm align-left-title",
+              icon("cube"),
+              h4(i18n$t("Análisis Tridimensional"), class = "pagetitle2custom"),
+            ),
+            div(class = "flex-container-sm",
+              icon("circle-info"),
+              p(i18n$t("Haz click y arrastra para Interactuar."),  class = "desccustom-hint"),
+            ),
+          ),
+          rglwidgetOutput("biplot3d_plot")
+          
+        ),
+    ),
+),
+        ),
+
+  conditionalPanel(class = "graphic-container bg-white rounded-lg", condition = "input.graph_selector == 'Cluster Analysis' || input.graph_selector == 'Análisis por Conglomerados'",
+      fluidRow(class = "flex-container-sm p-2 pb-3 border-divider",
+        icon("network-wired"),
+        h4(i18n$t("Análisis por Conglomerados"), class = "pagetitle2custom")
       ),
-      fluidRow(class = "flex-container-sm",
-        downloadButton("btn_download_2d", i18n$t("Descargar Gráfico"))
-      )
-    ),
 
-    conditionalPanel(condition = "input.graph_selector == 'Three-Dimensional Analysis' || input.graph_selector == 'Análisis Tridimensional'",
-  
-      fluidRow(class = "flex-container-sm mt-4 mb-4",
-        icon("cube"),
-        h4(i18n$t("Análisis Tridimensional"), class = "pagetitle2custom mt-2"),
-      ), 
-      p(i18n$t("Haz click y arrastra para Interactuar."),  class = "desccustom-hint mb-4"),
-      
-      fluidRow(class = "flex-container-sm",
-      
-      rglwidgetOutput("biplot3d_plot")
-    ),
-  ),
-  
-  conditionalPanel(condition = "input.graph_selector == 'Cluster Analysis' || input.graph_selector == 'Análisis por Conglomerados'",
-    fluidRow(class = "flex-container-sm mt-4 mb-4",
-      icon("network-wired"),
-      h4(i18n$t("Análisis por Conglomerados"), class = "pagetitle2custom mt-2")
-    ),
+      fluidRow( class="flex-container-graph",        # Primer gráfico de cluster
+        column(
+          6,class ="mb-4 pl-4 pr-4",
+          fluidRow(class = "flex-container-subtitle",
+            h4(i18n$t("Constructos"), class = "pagesubtitlecustom"),
+            downloadButton("btn_download_cluster1", i18n$t("Descargar Gráfico")),
+          ),
 
-    fluidRow(
-      # Primer gráfico de cluster
-      column(
-        12,
-        h4(i18n$t("Constructos"), class = "pagesubtitlecustom mb-4"),
-        plotOutput("cluster_plot_1")
-      )
-    ),
-    fluidRow(class = "flex-container-sm",
-      downloadButton("btn_download_cluster1", i18n$t("Descargar Gráfico"))
-    ),
-    fluidRow(
-      # Segundo gráfico de cluster
-      column(
-        12,
-        h4(i18n$t("Elementos"), class = "pagesubtitlecustom mt-4 mb-4"),
-        plotOutput("cluster_plot_2")
-      )
-    ),
-    fluidRow(class = "flex-container-sm",
-      downloadButton("btn_download_cluster2", i18n$t("Descargar Gráfico"))
-    )
+          plotOutput("cluster_plot_1")
+        ),
+        # Segundo gráfico de cluster
+        column(
+          6, class ="mb-4 pl-4 pr-4 border-divider-l",
+          fluidRow(class = "flex-container-subtitle",
+            h4(i18n$t("Elementos"), class = "pagesubtitlecustom"),
+            downloadButton("btn_download_cluster2", i18n$t("Descargar Gráfico")),
+          ),
+          plotOutput("cluster_plot_2")
+          ),
+      ),
   ),
 
-  div(class = "custom-margins",
-    conditionalPanel(condition = "input.graph_selector == 'Índices Cognitivos' || input.graph_selector=='Cognitive Indices'",
-      fluidRow(class = "flex-container-sm mt-4",
+  conditionalPanel(class = "custom-margins-lg graphic-container bg-white rounded-lg", condition = "input.graph_selector == 'Índices Cognitivos' || input.graph_selector=='Cognitive Indices'",
+      
+      fluidRow(class = "flex-container-sm p-2 pb-3 border-divider",
         icon("brain"),
         h4(i18n$t("Índices"), class = "pagetitle2custom mt-2 mb-2")
       ),
@@ -112,11 +129,11 @@ shinyjs::hidden(div(id = "rg-analysis-content",
       fluidRow(class = "flex-container",
         h4(i18n$t("Matriz de distancias de Elementos"), class = "pagesubtitlecustom mt-4 mb-4"),
         rHandsontableOutput("matrix_elements"))
-    ),
   ),
 
-  conditionalPanel(condition = "input.graph_selector == 'Dilemas' || input.graph_selector == 'Dilemmas'",
-    fluidRow(class = "flex-container-sm mt-4",
+
+  conditionalPanel(class="graphic-container bg-white rounded-lg", condition = "input.graph_selector == 'Dilemas' || input.graph_selector == 'Dilemmas'",
+    fluidRow(class = "flex-container-sm p-2 pb-3 border-divider",
       icon("calculator"),
       h4(i18n$t("Índices y Valores Matemáticos"), class = "pagetitle2custom mt-2 mb-2")
     ),

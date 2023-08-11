@@ -4,6 +4,39 @@ repgrid_home_server <- function(input, output, session) {
       #OpenRepGrid::importExcel("Servers/Repgrid_data.xlsx")
     #}
   #session$userData$datos_to_table<- read.xlsx("Servers/Repgrid_data.xlsx")
+  
+
+  #hide and show tooltips
+  shinyjs::hide("context-rg-home")
+  onevent("click", "tooltip-rg-home", shinyjs::show("context-rg-home"))
+  onevent("click", "exit-rg-tooltip", shinyjs::hide("context-rg-home"))
+  
+  shinyjs::hide("open-controls-container-rg")
+  onevent("click", "exit-controls-rg", shinyjs::show("open-controls-container-rg"), add = TRUE)
+  onevent("click", "exit-controls-rg", shinyjs::hide("controls-panel-rg"), add = TRUE)
+  
+  
+  onevent("click", "open-controls-rg", shinyjs::hide("open-controls-container-rg"), add = TRUE)
+  onevent("click", "open-controls-rg", shinyjs::show("controls-panel-rg"), add = TRUE)
+
+
+runjs("
+
+$('#exit-controls-rg').on('click', function (){
+
+  $('#graphics-rg').addClass('mw-100');
+  $('#graphics-rg').addClass('flex-bs-100');
+
+});
+
+$('#open-controls-rg').on('click', function (){
+
+  $('#graphics-rg').removeClass('mw-100');
+  $('#graphics-rg').removeClass('flex-bs-100');
+
+});")
+
+
   print("Repgrid")
   print("Esta a null datos repgrid?")
   print(is.null(session$userData$datos_to_table))
@@ -105,7 +138,8 @@ observeEvent(input$tabla_datos_repgrid, {
 
 output$bert <- renderPlot({
     if (!is.null(session$userData$datos_repgrid)) {
-    bertin(repgrid_a_mostrar() , color=c("white", "#005440"))
+    bertin(repgrid_a_mostrar() , color=c("white", "#005440"), cex.elements = 1,
+  cex.constructs = 1, cex.text = 1, lheight = 1.25)
     }
   })
 

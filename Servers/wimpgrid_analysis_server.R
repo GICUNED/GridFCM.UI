@@ -1,5 +1,81 @@
 wimpgrid_analysis_server <- function(input, output, session) {
 
+
+shinyjs::hide("context-wg-home")
+  onevent("click", "tooltip-wg-home", shinyjs::show("context-wg-home"))
+  onevent("click", "exit-wg-tooltip", shinyjs::hide("context-wg-home"))
+
+shinyjs::hide("context-wg-2-home")
+  onevent("click", "tooltip-wg-2-home", shinyjs::show("context-wg-2-home"))
+  onevent("click", "exit-wg-2-tooltip", shinyjs::hide("context-wg-2-home"))
+
+shinyjs::hide("context-wg-3-home")
+  onevent("click", "tooltip-wg-3-home", shinyjs::show("context-wg-3-home"))
+  onevent("click", "exit-wg-3-tooltip", shinyjs::hide("context-wg-3-home"))
+
+
+#Ver y Ocultar panel de control izquierdo
+shinyjs::hide("open-controls-container-vis")
+  onevent("click", "exit-controls-vis", shinyjs::show("open-controls-container-vis"), add = TRUE)
+  onevent("click", "exit-controls-vis", shinyjs::hide("controls-panel-vis"), add = TRUE)
+  
+  
+  onevent("click", "open-controls-vis", shinyjs::hide("open-controls-container-vis"), add = TRUE)
+  onevent("click", "open-controls-vis", shinyjs::show("controls-panel-vis"), add = TRUE)
+ 
+
+ shinyjs::hide("open-controls-container-lab")
+  onevent("click", "exit-controls-lab", shinyjs::show("open-controls-container-lab"), add = TRUE)
+  onevent("click", "exit-controls-lab", shinyjs::hide("controls-panel-lab"), add = TRUE)
+  
+  
+  onevent("click", "open-controls-lab", shinyjs::hide("open-controls-container-lab"), add = TRUE)
+  onevent("click", "open-controls-lab", shinyjs::show("controls-panel-lab"), add = TRUE)
+ 
+
+#runjs("
+ # if ($('#controls-panel').css('display') == 'none')
+  #{
+   #   $('#graphics').css('max-width') == '100%';
+    #  $('#graphics').css('flex-basis') == '100%';
+#  }else {
+ #     $('#graphics').css('max-width') == '75%';
+  #    $('#graphics').css('flex-basis') == '75%';
+ # }")
+
+
+runjs("
+
+$('#exit-controls-vis').on('click', function (){
+
+  $('#graphics-vis').addClass('mw-100');
+  $('#graphics-vis').addClass('flex-bs-100');
+
+});
+
+$('#open-controls-vis').on('click', function (){
+
+  $('#graphics-vis').removeClass('mw-100');
+  $('#graphics-vis').removeClass('flex-bs-100');
+
+});
+
+$('#exit-controls-lab').on('click', function (){
+
+  $('#graphics-lab').addClass('mw-100');
+  $('#graphics-lab').addClass('flex-bs-100');
+
+});
+
+$('#open-controls-lab').on('click', function (){
+
+  $('#graphics-lab').removeClass('mw-100');
+  $('#graphics-lab').removeClass('flex-bs-100');
+
+});
+
+")
+
 # Lógica para la pestaña "Visualización"
 
  
@@ -303,7 +379,8 @@ output$bert_w <- renderPlot({
 
     if (!is.null(session$userData$datos_wimpgrid)) {
 
-    bertin(wimpgrid_a_mostrar()$openrepgrid , color=c("white", "#dfb639"))
+    bertin(wimpgrid_a_mostrar()$openrepgrid , color=c("white", "#dfb639"), cex.elements = 1,
+  cex.constructs = 1, cex.text = 1, lheight = 1.25)
 
     }
 
@@ -1459,11 +1536,12 @@ output$convergence <- renderText({
 
     kable_styling("striped", full_width = F) %>%
 
-    row_spec(0, bold = T, color = "white", background = "#005440") %>%
+    row_spec(0, bold = T) %>%
 
-    column_spec(1, bold = T, color = "#005440")
+    column_spec(1, bold = T)
 
 })
+
 
  
 

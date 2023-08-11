@@ -4,7 +4,7 @@ div(class = "custom-margins flex-container-xl",
 
    fluidRow( class = ("flex-container-xl"),
       h2(i18n$t("Importar datos desde archivo xlsx"), class = "pagetitlecustom"),
-      p(i18n$t("En esta página, puedes descargar plantillas de xlsx y documentos de ayuda, y subir archivos xlsx para importar datos."), class = "desccustom mb-3"),
+      p(i18n$t("En esta página, puedes descargar plantillas de xlsx y documentos de ayuda, y subir archivos xlsx para importar datos."), class = "desccustom mb-4"),
    ),
     
     fluidRow(
