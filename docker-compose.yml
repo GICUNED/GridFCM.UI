@@ -1,25 +1,41 @@
-version: "3.9"
+# yaml-language-server: $schema=https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json
+name: "shiny-server"
+
+# https://repo.stratebi.com
+x-shiny-server-image: &shiny-server-image "repo.stratebi.com/stratebi/shiny-server:v1.5.20.1002-11"
 
 services:
 
   shiny-server:
-    image: "repo.stratebi.com/stratebi/shiny-server:v1.5.20.1002-10"
-    restart: "on-failure:3"
+    image: *shiny-server-image
+    restart: "always"
+    container_name: "shiny-server"
+    hostname: "shiny-server"
     networks:
       - "shiny-server"
     ports:
-      - "${SHINY_SERVER_HOST-127.0.0.1}:${SHINY_SERVER_PORT-3838}:3838/tcp"
+      - "${SHINY_SERVER_HOST:-127.0.0.1}:${SHINY_SERVER_PORT:-3838}:3838/tcp"
     volumes:
       - "./R/:/srv/shiny-server/R/:ro"
       - "./Servers/:/srv/shiny-server/Servers/:ro"
+      - "./Traductions/:/srv/shiny-server/Traductions/:ro"
       - "./UI/:/srv/shiny-server/UI/:ro"
       - "./www/:/srv/shiny-server/www/:ro"
+      - "./DESCRIPTION:/srv/shiny-server/DESCRIPTION:ro"
       - "./app.R:/srv/shiny-server/app.R:ro"
       - "./global.R:/srv/shiny-server/global.R:ro"
-      - "./Traductions/:/srv/shiny-server/Traductions/:ro"
+      - "r-data:/data/"
+    environment:
+      SHINY_DEPLOY_SAMPLE_APPS: "${SHINY_DEPLOY_SAMPLE_APPS:-true}"
+
+volumes:
+
+  r-data:
+    name: "shiny-server-r-data"
 
 networks:
 
   shiny-server:
+    name: "shiny-server"
     driver: "bridge"
     internal: false
