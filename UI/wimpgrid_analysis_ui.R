@@ -283,7 +283,8 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                     conditionalPanel(class = "graphic-subcontainer", condition = "input.graph_selector_laboratorio == 'simdigraph' || input.graph_selector_laboratorio == 'simdigrafo'",
                       div(class = "flex-container-sm align-left-title p-2 pb-3 border-divider",
                         icon("globe"),
-                        h4(i18n$t("Resultado gráfico"), class = "pagetitle2custom"),
+                        h4(i18n$t("Resultado gráfico"), class = "pagetitle2custom mt-2"),
+                        downloadButton(class = "btn-download", "boton_download_laboratory", i18n$t("Descargar Gráfico"))
                       ),
                     rHandsontableOutput("simdigraph_act_vector"),
                     ),
@@ -317,7 +318,6 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                     
               div(id = "pscd_showw",plotlyOutput("pscd_show")),
               div(id = "laboratory",uiOutput("graph_output_laboratorio"))
-            
             ),
 
         )
