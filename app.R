@@ -1,3 +1,4 @@
+options(shiny.autoreload = TRUE)
 library(shiny)
 library(shinyjs)
 library(shinyWidgets)
