@@ -37,7 +37,6 @@ import_excel_server <- function(input, output, session) {
       if (!is.null(datos_repgrid)) {
         # Solo archivo RepGrid cargado, navegar a RepGrid Home
         repgrid_home_server(input,output,session)
-        #repgrid_analisis_server(input, output, session) 
         runjs("window.location.href = '/#!/repgrid';")
       } 
       }

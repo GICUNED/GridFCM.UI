@@ -1,4 +1,5 @@
 repgrid_home_server <- function(input, output, session) {
+  
   # Mostrar los datos importados en una tabla
   #session$userData$datos_repgrid <- if (!is.null("Servers/Repgrid_data.xlsx")) {
       #OpenRepGrid::importExcel("Servers/Repgrid_data.xlsx")
@@ -60,6 +61,7 @@ $('#open-controls-rg').on('click', function (){
 
     show("rg-data-content")
     show("rg-analysis-content")
+    
   }  
   
   repgrid_inicial <- reactiveVal(repgrid_aux)
@@ -142,8 +144,8 @@ observeEvent(input$tabla_datos_repgrid, {
 
 output$bert <- renderPlot({
     if (!is.null(session$userData$datos_repgrid)) {
-    bertin(repgrid_a_mostrar() , color=c("white", "#005440"), cex.elements = 1,
-  cex.constructs = 1, cex.text = 1, lheight = 1.25)
+        bertin(repgrid_a_mostrar() , color=c("white", "#005440"), cex.elements = 1,
+      cex.constructs = 1, cex.text = 1, lheight = 1.25)
     }
   })
 
@@ -213,9 +215,6 @@ output$bert <- renderPlot({
     }
 })
 
-
-
-
   observeEvent(input$guardar, {
     if (!is.null(session$userData$datos_repgrid)) {
         tabla_final <- tabla_manipulable()
@@ -264,7 +263,7 @@ output$bert <- renderPlot({
         }
     }
     repgrid_analisis_server(input,output,session)
-})
+  })
 
   observeEvent(input$tabs_rep, {
     
@@ -295,5 +294,7 @@ output$bert <- renderPlot({
         .addClass('active');
     ")
   })
+
+  repgrid_analisis_server(input,output,session)
 }
 
