@@ -26,7 +26,6 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
       )),
 
   # Mostrar los datos importados en una tabla
-  #tableOutput("tabla_datos_repgrid"),
   shinyjs::hidden(div(class = "custom-margins-lg", id="wg-data-content",
     fluidRow( class="mb-2 button-container",
       h3(i18n$t("Tabla de Datos"), class = "mr-auto mb-0"),
@@ -36,7 +35,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
       ),
       shinyjs::hidden(
       div(id = "tabla_datos_wimpgrid_container",
-        # Mostrar los datos de tabla_datos_repgrid
+        # Mostrar los datos de tabla_datos
         rHandsontableOutput("tabla_datos_wimpgrid")
         )
       ),

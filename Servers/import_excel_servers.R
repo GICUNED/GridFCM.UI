@@ -14,8 +14,6 @@ import_excel_server <- function(input, output, session) {
       print(paste("num col", num_columnas))
       session$userData$num_col_repgrid <- num_columnas
 
-  
-
       num_rows <- if (!is.null(input$archivo_repgrid)) {
         nrow(session$userData$datos_to_table)
       } else {
@@ -23,8 +21,6 @@ import_excel_server <- function(input, output, session) {
       }
       print(paste("num row", num_rows))
       session$userData$num_row_repgrid <- num_rows
-
-  
 
       datos_wimpgrid <- if (!is.null(input$archivo_wimpgrid)) {
         importwimp(input$archivo_wimpgrid$datapath)
@@ -37,11 +33,11 @@ import_excel_server <- function(input, output, session) {
       session$userData$datos_repgrid <- datos_repgrid
       session$userData$datos_wimpgrid <- datos_wimpgrid
 
-  
 
       if (!is.null(datos_repgrid)) {
         # Solo archivo RepGrid cargado, navegar a RepGrid Home
         repgrid_home_server(input,output,session)
+        #repgrid_analisis_server(input, output, session) 
         runjs("window.location.href = '/#!/repgrid';")
       } 
       }
@@ -56,9 +52,6 @@ import_excel_server <- function(input, output, session) {
         }
         session$userData$datos_to_table<- if (!is.null(input$archivo_repgrid)) {read.xlsx(input$archivo_repgrid$datapath)}
 
-  
-
-        print(datos_repgrid)
         datos_wimpgrid <- if (!is.null(input$archivo_wimpgrid)) {
           importwimp(input$archivo_wimpgrid$datapath)
         }
@@ -81,6 +74,7 @@ import_excel_server <- function(input, output, session) {
       print(paste("num row", num_rows))
       session$userData$num_row_wimpgrid <- num_rows
         # Almacenar los objetos importados en el entorno de la sesión para su uso posterior
+        
         session$userData$datos_repgrid <- datos_repgrid
         #session$userData$datos_repgrid_df <- read.csv(input$archivo_repgrid$datapath)
 

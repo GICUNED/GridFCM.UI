@@ -37,10 +37,10 @@ $('#open-controls-rg').on('click', function (){
 });")
 
 
-  print("Repgrid")
-  print("Esta a null datos repgrid?")
-  print(is.null(session$userData$datos_to_table))
-  print(is.null(session$userData$datos_repgrid))
+  #print("Repgrid")
+  #print("Esta a null datos repgrid?")
+  #print(is.null(session$userData$datos_to_table))
+  #print(is.null(session$userData$datos_repgrid))
   if (is.null(session$userData$datos_repgrid) || is.null(session$userData$datos_to_table)) {
     show("repgrid_home_warn")
     show("repgrid_warning")
@@ -61,11 +61,12 @@ $('#open-controls-rg').on('click', function (){
     show("rg-data-content")
     show("rg-analysis-content")
   }  
-
+  
   repgrid_inicial <- reactiveVal(repgrid_aux)
   repgrid_a_mostrar <- reactiveVal(repgrid_aux)
 
   tabla_manipulable <- reactiveVal(tabla_aux)
+  
   #tabla_manipulable <- session$userData$datos_to_table
   tabla_final <- tabla_aux
   
@@ -74,6 +75,9 @@ $('#open-controls-rg').on('click', function (){
   #                class = 'my-custom-table', 
   #                options = list(autoWidth = TRUE, columnDefs = list(list(width = '30px', targets = "_all"))), editable = TRUE)
   #})
+
+  #print("Muestro repgrid_inicial: ")
+  #print(repgrid_inicial)
 
 output$tabla_datos_repgrid <- renderRHandsontable({
   if (!is.null(session$userData$datos_repgrid)) {
@@ -263,7 +267,6 @@ output$bert <- renderPlot({
 })
 
   observeEvent(input$tabs_rep, {
-      print(paste("Tab seleccionado: ", input$tabs_rep))
     
     if (input$tabs_rep == "Data") {
       print("Has seleccionado la pestaña Data")

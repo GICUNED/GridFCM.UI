@@ -21,9 +21,14 @@ library(shiny.i18n)
 library(visNetwork)
 library(dplyr)
 knitr::knit_hooks$set(webgl = hook_webgl)
-
-
 source("global.R")
+
+
+
+
+
+
+
 
 
 #GRID
@@ -180,12 +185,8 @@ server <- function(input, output, session) {
   })
 
   observeEvent(input$selected_language, {
-    print(paste("Language change!", input$selected_language))
-    print(paste("Language change!", input$selected_language))
     shiny.i18n::update_lang(input$selected_language)
     i18n_r()$set_translation_language(input$selected_language)
-    print(paste("Lanfffguage change!", input$selected_language))
-    print(i18n_r()$get_translation_language())
 
     updateSelectInput(session, "graph_selector_visualizacion",
                       choices = i18n_r()$t(c("autodigrafo", "digrafo del ideal", "índices de Wimp")))

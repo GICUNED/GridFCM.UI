@@ -1,5 +1,15 @@
 repgrid_analisis_server <- function(input, output, session) {
 
+  if (is.null(session$userData$datos_repgrid)){
+    repgrid_data <- 0
+  }
+  else{
+    repgrid_data <- session$userData$datos_repgrid
+
+  }
+  message("Repgrid data en analysis server:")
+  message(repgrid_data)
+
   observeEvent(input$importar_page_r, {
     # Navega a la página de creación de un nuevo análisis de rejilla
     # route_link("nombre_de_la_pagina_de_creacion")
@@ -29,11 +39,11 @@ repgrid_analisis_server <- function(input, output, session) {
    #}
    
 
-  repgrid_data <- session$userData$datos_repgrid
-  print(repgrid_data)
   
+ 
   if (is.null(session$userData$datos_repgrid))
   {
+    message("datos repgrid null <- boeker")
     repgrid_data <-boeker
   }
 
@@ -221,8 +231,7 @@ repgrid_analisis_server <- function(input, output, session) {
     
     INTc <- indices_list[["dilemmas"]][["Congruency"]] #Constructs congruency
     INTc <- indexDilemma(repgrid_data,self=1,ideal=13, diff.congruent = 1, diff.discrepant = 4)
-    print("dilemmmmmmmm")
-    print(INTc$construct_classification)
+    
     #print(indexDilemma(repgrid_data)[[1]])
     knitr::kable(INTc$construct_classification,format = "html") %>%
     #knitr::kable(INTc, col.names = "Intensity",format = "html") %>%
