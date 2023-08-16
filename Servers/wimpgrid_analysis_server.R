@@ -517,7 +517,7 @@ observeEvent(input$guardar_w, {
 
       # Ocultar el botón "Guardar" y mostrar el botón "Editar"
 
-      shinyjs::hide("guarda_wr")
+      shinyjs::hide("guardar_w")
 
       shinyjs::hide("reiniciar_w")
 
