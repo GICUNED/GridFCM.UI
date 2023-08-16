@@ -122,17 +122,24 @@ validateValue <- function(changes, tabla) {
 
 observeEvent(input$tabla_datos_repgrid, {
   changes <- input$tabla_datos_repgrid$changes$changes
+  message(changes)
   if (!is.null(changes)) {
     val <- validateValue(changes, input$tabla_datos_repgrid)
     if (!val) {
+
       xi = changes[[1]][[1]]
       yi = changes[[1]][[2]]
       old_v = changes[[1]][[3]]
-      
-      tabla_original <- hot_to_r(input$tabla_datos_repgrid)
+
+      tabla_original <- hot_to_r(input$tabla_datos_repgrid) 
       tabla_original[xi+1, yi+1] <- old_v
-      print(old_v)
       tabla_manipulable(tabla_original)
+
+      output$tabla_datos_repgrid <- renderRHandsontable({
+        rhandsontable(tabla_original) %>%
+          hot_table(highlightCol = TRUE, highlightRow = TRUE) %>%
+          hot_col(col = seq(1, session$userData$num_col_repgrid - 1), format = "1")
+      })
 
     } else if (!is.null(session$userData$datos_repgrid)) {
       tabla_manipulable(hot_to_r(input$tabla_datos_repgrid))
@@ -218,7 +225,6 @@ output$bert <- renderPlot({
   observeEvent(input$guardar, {
     if (!is.null(session$userData$datos_repgrid)) {
         tabla_final <- tabla_manipulable()
-        print("tabla_final: ")
         my_dataframe <-tabla_final
 
         # Create a temporary file
@@ -230,36 +236,34 @@ output$bert <- renderPlot({
 
         # Check if the file exists and is not empty
         if (file.exists(temp_file) && file.size(temp_file) > 0) {
-            # Read the data from the temporary file
-            df_read <- OpenRepGrid::importExcel(temp_file)
+          # Read the data from the temporary file
+          df_read <- OpenRepGrid::importExcel(temp_file)
 
-            # Print the data
-            print(df_read)
+          # Print the data
+          print(df_read)
 
-            # Check if df_read is not NULL or empty
-            if (!is.null(df_read) && nrow(df_read) > 0) {
-                # Create a repgrid object
-                my_repgrid <- df_read
+          # Check if df_read is not NULL or empty
+          if (!is.null(df_read) && nrow(df_read) > 0) {
+            # Create a repgrid object
+            my_repgrid <- df_read
+            print(my_repgrid)
 
-                print(my_repgrid)
+            repgrid_a_mostrar(my_repgrid)
+            session$userData$datos_repgrid <- repgrid_a_mostrar()
+            session$userData$datos_to_table<- tabla_final
 
-                repgrid_a_mostrar(my_repgrid)
-                session$userData$datos_repgrid <- repgrid_a_mostrar()
-                session$userData$datos_to_table<- tabla_final
-
-                # Hide the "Save" button and show the "Edit" button
-                shinyjs::hide("guardar")
-                shinyjs::hide("reiniciar")
-                shinyjs::show("editar")
-
-                # Switch to viewing mode
-                shinyjs::hide("tabla_datos_repgrid_container")
-                shinyjs::show("prueba_container")
-            } else {
-                print("Error: df_read is NULL or empty.")
-            }
+            # Hide the "Save" button and show the "Edit" button
+            shinyjs::hide("guardar")
+            shinyjs::hide("reiniciar")
+            shinyjs::show("editar")
+            # Switch to viewing mode
+            shinyjs::hide("tabla_datos_repgrid_container")
+            shinyjs::show("prueba_container")
+          } else {
+              message("Error: df_read is NULL or empty.")
+          }
         } else {
-            print("Error: The temporary file does not exist or is empty.")
+            message("Error: The temporary file does not exist or is empty.")
         }
     }
     repgrid_analisis_server(input,output,session)

@@ -347,7 +347,11 @@ observeEvent(input$tabla_datos_wimpgrid, {
       tabla_original[xi+1, yi+1] <- old_v
 
       tabla_manipulable_w(tabla_original)
-
+      output$tabla_datos_wimpgrid <- renderRHandsontable({
+        rhandsontable(tabla_original) %>%
+          hot_table(highlightCol = TRUE, highlightRow = TRUE) %>%
+          hot_col(col = seq(1, session$userData$num_col_wimpgrid - 1), format = "1")
+      })
  
 
     } else if (!is.null(session$userData$datos_wimpgrid)) {
