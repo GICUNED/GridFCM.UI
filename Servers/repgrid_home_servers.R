@@ -122,6 +122,8 @@ validateValue <- function(changes, tabla) {
 observeEvent(input$tabla_datos_repgrid, {
   changes <- input$tabla_datos_repgrid$changes$changes
   if (!is.null(changes)) {
+    shinyjs::hide("volver")
+    shinyjs::show("guardar")
     val <- validateValue(changes, input$tabla_datos_repgrid)
     if (!val) {
       xi = changes[[1]][[1]]
@@ -167,19 +169,33 @@ output$bert <- renderPlot({
 
   observeEvent(input$editar, {
     if (!is.null(session$userData$datos_repgrid)) {
-    # Ocultar el botón "Editar" y mostrar el botón "Guardar"
-    shinyjs::hide("editar")
-    shinyjs::show("guardar")
-    shinyjs::show("reiniciar")
-    # Cambiar a modo de edición
-    shinyjs::hide("prueba_container")
-    shinyjs::show("tabla_datos_repgrid_container")
+      # Ocultar el botón "Editar" y mostrar el botón "Guardar"
+      shinyjs::hide("editar")
+      shinyjs::show("volver")
+      #shinyjs::hide("guardarBD")
+      shinyjs::show("reiniciar")
+      # Cambiar a modo de edición
+      shinyjs::hide("prueba_container")
+      shinyjs::show("tabla_datos_repgrid_container")
     }
+  })
+
+  observeEvent(input$volver,{
+      shinyjs::hide("volver")
+      shinyjs::show("editar")
+      shinyjs::hide("guardar")
+      #shinyjs::show("guardarBD")
+      shinyjs::hide("reiniciar")
+      # Cambiar a modo de tabla
+      shinyjs::show("prueba_container")
+      shinyjs::hide("tabla_datos_repgrid_container")
   })
 
   observeEvent(input$reiniciar, {
     print("reiniciar")
     if (!is.null(session$userData$datos_repgrid)) {
+
+        shinyjs::show("volver")
         tabla_manipulable(tabla_final)
 
         tabla_final <- tabla_manipulable()
@@ -208,8 +224,8 @@ output$bert <- renderPlot({
                 print(my_repgrid)
 
                 repgrid_a_mostrar(session$userData$datos_repgrid)
-                #session$userData$datos_repgrid <- repgrid_a_mostrar()
-                session$userData$datos_to_table<- my_repgrid 
+                session$userData$datos_repgrid <- repgrid_a_mostrar()
+                session$userData$datos_to_table<- tabla_final#my_repgrid 
             } else {
                 print("Error: df_read is NULL or empty.")
             }
@@ -250,9 +266,10 @@ output$bert <- renderPlot({
             session$userData$datos_to_table<- tabla_final
 
             # Hide the "Save" button and show the "Edit" button
-            shinyjs::hide("guardar")
             shinyjs::hide("reiniciar")
             shinyjs::show("editar")
+            shinyjs::hide("guardar")
+            #shinyjs::show("guardarBD")
             # Switch to viewing mode
             shinyjs::hide("tabla_datos_repgrid_container")
             shinyjs::show("prueba_container")
