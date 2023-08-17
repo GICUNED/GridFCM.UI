@@ -105,9 +105,8 @@ validateValue <- function(changes, tabla) {
   tabla_r <- hot_to_r(tabla)
   nombres_columnas <- colnames(tabla_r)
 
-  min_val = nombres_columnas[1]
-  max_val = nombres_columnas[length(nombres_columnas)]
-
+  min_val <- as.integer(nombres_columnas[1])
+  max_val <- as.integer(nombres_columnas[length(nombres_columnas)])
   if(!is.na(new_v) && is.numeric(new_v) && (new_v > max_val || new_v < min_val)) {
     mensaje <- paste("El valor debe estar entre el rango", min_val, "-", max_val, ".")
     showModal(modalDialog(
@@ -122,11 +121,9 @@ validateValue <- function(changes, tabla) {
 
 observeEvent(input$tabla_datos_repgrid, {
   changes <- input$tabla_datos_repgrid$changes$changes
-  message(changes)
   if (!is.null(changes)) {
     val <- validateValue(changes, input$tabla_datos_repgrid)
     if (!val) {
-
       xi = changes[[1]][[1]]
       yi = changes[[1]][[2]]
       old_v = changes[[1]][[3]]

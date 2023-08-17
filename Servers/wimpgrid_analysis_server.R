@@ -290,9 +290,9 @@ validateValue <- function(changes, tabla) {
 
  
 
-  min_val = nombres_columnas[1]
+  min_val <- as.integer(nombres_columnas[1])
 
-  max_val = nombres_columnas[length(nombres_columnas)]
+  max_val <- as.integer(nombres_columnas[length(nombres_columnas)])
 
  
 
