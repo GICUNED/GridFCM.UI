@@ -321,15 +321,10 @@ validateValue <- function(changes, tabla) {
  
 
 observeEvent(input$tabla_datos_wimpgrid, {
-
- 
-
   changes <- input$tabla_datos_wimpgrid$changes$changes
-
- 
-
   if(!is.null(changes)) {
-
+    shinyjs::hide("volver_w")
+    shinyjs::show("guardar_w")
     val <- validateValue(changes, input$tabla_datos_wimpgrid)
 
     if(!val) {
@@ -339,9 +334,6 @@ observeEvent(input$tabla_datos_wimpgrid, {
       yi = changes[[1]][[2]]
 
       old_v = changes[[1]][[3]]
-
- 
-
       tabla_original <- hot_to_r(input$tabla_datos_wimpgrid)
 
       tabla_original[xi+1, yi+1] <- old_v
@@ -384,81 +376,57 @@ output$bert_w <- renderPlot({
 observeEvent(input$editar_w, {
 
     if (!is.null(session$userData$datos_wimpgrid)) {
-
     # Ocultar el botón "Editar" y mostrar el botón "Guardar"
-
     shinyjs::hide("editar_w")
-
-    shinyjs::show("guardar_w")
-
+    shinyjs::show("volver_w")
     shinyjs::show("reiniciar_w")
-
     # Cambiar a modo de edición
-
     shinyjs::hide("prueba_container_w")
-
     shinyjs::show("tabla_datos_wimpgrid_container")
-
     }
-
   })
 
- 
+  observeEvent(input$volver_w,{
+      shinyjs::hide("volver_w")
+      shinyjs::show("editar_w")
+      shinyjs::hide("guardar_w")
+      #shinyjs::show("guardarBD")
+      shinyjs::hide("reiniciar_w")
+      # Cambiar a modo de tabla
+      shinyjs::show("prueba_container_w")
+      shinyjs::hide("tabla_datos_wimpgrid_container")
+  })
 
- 
-
- 
 
 observeEvent(input$reiniciar_w, {
 
     if (!is.null(session$userData$datos_wimpgrid)) {
 
-    tabla_manipulable_w(tabla_final)
+      tabla_manipulable_w(tabla_final)
 
-    #session$userData$datos_wimpgrid <- tabla_manipulable()
+      #session$userData$datos_wimpgrid <- tabla_manipulable()
 
-    #session$userData$datos_to_table<- tabla_final
+      #session$userData$datos_to_table<- tabla_final
+      shinyjs::show("volver_w")
+      shinyjs::hide("guardar_w") # para que no explote
+      tabla_final <- tabla_manipulable_w()
+      print("tabla_final: ")
+      my_dataframe <-tabla_final
+      # Create a temporary file
+      temp_file <- tempfile(fileext = ".xlsx")
+      # Write the dataframe to the temporary file
+      OpenRepGrid::saveAsExcel(session$userData$datos_wimpgrid$openrepgrid, temp_file)
 
- 
-
-    tabla_final <- tabla_manipulable_w()
-
-    print("tabla_final: ")
-
-    my_dataframe <-tabla_final
-
-    # Create a temporary file
-
-    temp_file <- tempfile(fileext = ".xlsx")
-
-    # Write the dataframe to the temporary file
-
-    OpenRepGrid::saveAsExcel(session$userData$datos_wimpgrid$openrepgrid, temp_file)
-
-    print(paste("Temporary file saved at: ", temp_file))
-
- 
-
-    # Read the data from the temporary file
-
-    df_read <- read.xlsx(temp_file)
-
-    # Print the data
-
-    print(df_read)
-
-    my_repgrid <- df_read
-
-    print(my_repgrid)
-
-    wimpgrid_a_mostrar(my_repgrid)
-
-    #session$userData$datos_wimpgrid <- wimpgrid_a_mostrar()
-
-    session$userData$datos_to_table_w<- my_repgrid
-
- 
-
+      print(paste("Temporary file saved at: ", temp_file))
+      # Read the data from the temporary file
+      df_read <- read.xlsx(temp_file)
+      # Print the data
+      print(df_read)
+      my_repgrid <- df_read
+      print(my_repgrid)
+      wimpgrid_a_mostrar(my_repgrid)
+      #session$userData$datos_wimpgrid <- wimpgrid_a_mostrar()
+      session$userData$datos_to_table_w<- my_repgrid
 }})
 
  
@@ -516,13 +484,9 @@ observeEvent(input$guardar_w, {
       session$userData$datos_to_table_w<- tabla_final
 
       # Ocultar el botón "Guardar" y mostrar el botón "Editar"
-
-      shinyjs::hide("guardar_w")
-
       shinyjs::hide("reiniciar_w")
-
       shinyjs::show("editar_w")
-
+      shinyjs::hide("guardar_w")
       # Cambiar a modo de visualización
 
       shinyjs::hide("tabla_datos_wimpgrid_container")

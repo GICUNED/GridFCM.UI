@@ -196,6 +196,7 @@ output$bert <- renderPlot({
     if (!is.null(session$userData$datos_repgrid)) {
 
         shinyjs::show("volver")
+        shinyjs::hide("guardar") # esto para que no explote
         tabla_manipulable(tabla_final)
 
         tabla_final <- tabla_manipulable()
@@ -225,7 +226,7 @@ output$bert <- renderPlot({
 
                 repgrid_a_mostrar(session$userData$datos_repgrid)
                 session$userData$datos_repgrid <- repgrid_a_mostrar()
-                session$userData$datos_to_table<- tabla_final#my_repgrid 
+                session$userData$datos_to_table<- my_repgrid 
             } else {
                 print("Error: df_read is NULL or empty.")
             }
