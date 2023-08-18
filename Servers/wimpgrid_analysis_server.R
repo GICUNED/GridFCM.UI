@@ -393,7 +393,9 @@ observeEvent(input$editar_w, {
       #shinyjs::show("guardarBD")
       shinyjs::hide("reiniciar_w")
       # Cambiar a modo de tabla
+      message("muestro container")
       shinyjs::show("prueba_container_w")
+      message("muestro tabla de datos wimpgrid")
       shinyjs::hide("tabla_datos_wimpgrid_container")
   })
 
@@ -418,23 +420,24 @@ observeEvent(input$reiniciar_w, {
       OpenRepGrid::saveAsExcel(session$userData$datos_wimpgrid$openrepgrid, temp_file)
 
       print(paste("Temporary file saved at: ", temp_file))
-      # Read the data from the temporary file
-      df_read <- read.xlsx(temp_file)
-      # Print the data
-      print(df_read)
-      my_repgrid <- df_read
-      print(my_repgrid)
-      wimpgrid_a_mostrar(my_repgrid)
-      #session$userData$datos_wimpgrid <- wimpgrid_a_mostrar()
-      session$userData$datos_to_table_w<- my_repgrid
+      if (file.exists(temp_file) && file.size(temp_file) > 0) {
+        # Read the data from the temporary file
+        df_read <- read.xlsx(temp_file)
+        # Print the data
+        print(df_read)
+        if (!is.null(df_read) && nrow(df_read) > 0) {
+          my_repgrid <- df_read
+          print(my_repgrid)
+          wimpgrid_a_mostrar(my_repgrid)
+          session$userData$datos_wimpgrid <- wimpgrid_a_mostrar()
+          session$userData$datos_to_table_w<- my_repgrid
+        }
+      }
 }})
 
  
 
 observeEvent(input$guardar_w, {
-
-   
-
     if (!is.null(session$userData$datos_wimpgrid)) {
 
       tabla_final <- tabla_manipulable_w()
@@ -446,9 +449,6 @@ observeEvent(input$guardar_w, {
       # Create a temporary file
 
       temp_file <- tempfile(fileext = ".xlsx")
-
- 
-
       # Write the dataframe to the temporary file
 
       write.xlsx(my_dataframe, temp_file)

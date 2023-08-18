@@ -204,16 +204,16 @@ output$bert <- renderPlot({
         my_dataframe <-tabla_final
 
         # Create a temporary file
-        temp_file <- tempfile(fileext = ".xlsx")
+        temp_file_rep <- tempfile(fileext = ".xlsx")
 
         # Write the dataframe to the temporary file
-        OpenRepGrid::saveAsExcel(session$userData$datos_repgrid, temp_file)
-        print(paste("Temporary file saved at: ", temp_file))
+        OpenRepGrid::saveAsExcel(session$userData$datos_repgrid, temp_file_rep)
+        print(paste("Temporary file saved at: ", temp_file_rep))
 
         # Check if the file exists and is not empty
-        if (file.exists(temp_file) && file.size(temp_file) > 0) {
+        if (file.exists(temp_file_rep) && file.size(temp_file_rep) > 0) {
             # Read the data from the temporary file
-            df_read <- read.xlsx(temp_file)
+            df_read <- read.xlsx(temp_file_rep)
             # Print the data
             print(df_read)
 
@@ -242,16 +242,16 @@ output$bert <- renderPlot({
         my_dataframe <-tabla_final
 
         # Create a temporary file
-        temp_file <- tempfile(fileext = ".xlsx")
+        temp_file_rep <- tempfile(fileext = ".xlsx")
 
         # Write the dataframe to the temporary file
-        write.xlsx(my_dataframe, temp_file)
-        print(paste("Temporary file saved at: ", temp_file))
+        write.xlsx(my_dataframe, temp_file_rep)
+        print(paste("Temporary file saved at: ", temp_file_rep))
 
         # Check if the file exists and is not empty
-        if (file.exists(temp_file) && file.size(temp_file) > 0) {
+        if (file.exists(temp_file_rep) && file.size(temp_file_rep) > 0) {
           # Read the data from the temporary file
-          df_read <- OpenRepGrid::importExcel(temp_file)
+          df_read <- OpenRepGrid::importExcel(temp_file_rep)
 
           # Print the data
           print(df_read)
