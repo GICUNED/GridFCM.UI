@@ -28,10 +28,25 @@ services:
     environment:
       SHINY_DEPLOY_SAMPLE_APPS: "${SHINY_DEPLOY_SAMPLE_APPS:-true}"
 
+  postgres:
+
+    image: "${POSTGRES_IMAGE-docker.io/postgres:15-bookworm}"
+    restart: "on-failure:3"
+    networks:
+      - "shiny-server"
+    ports:
+      - "${POSTGRES_HOST-127.0.0.1}:${POSTGRES_PORT-5433}:5432/tcp" # puerto original: 5432
+    volumes:
+      - "postgres-data:/var/lib/postgresql/data/"
+    environment:
+      POSTGRES_PASSWORD: "${DB_PASSWORD:-password}"
+
 volumes:
 
   r-data:
     name: "shiny-server-r-data"
+  postgres-data:
+    name: "shiny-postgres-data"
 
 networks:
 
