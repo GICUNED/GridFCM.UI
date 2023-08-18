@@ -214,7 +214,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                                   choices = c("rojo/verde", "escala de grises"),
                                   selected = i18n$t("rojo/verde")),
 
-                    sliderInput("simdigraph_niter", i18n$t("Nº de la iteración:"), 0, 25, 0),
+                    sliderInput("simdigraph_niter", i18n$t("Nº de la iteración:"), 0, 3, 0),
 
                     sliderInput("simdigraph_max_iter", i18n$t("Nº de iteraciones máximas:"), 3, 100, 30),
 
