@@ -545,6 +545,10 @@
     {
       "es": "Volver",
       "en": "Return"
+    },
+    {
+      "es": "Guardar BD",
+      "en": "Save DB"
     }
     
 ]}

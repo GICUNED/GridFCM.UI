@@ -167,6 +167,39 @@ output$bert <- renderPlot({
   #tabla_manipulable$data[row, col] <- value  
   #})
 
+  establishDBConnection <- function() {
+    db_user <- 'postgres'
+    db_password <- 'password'
+    db_host <- 'postgres'
+    db_port <- '5432'
+    db_name <- 'postgres'
+    
+    # Create a connection
+    
+    con <- DBI::dbConnect(
+              RPostgres::Postgres(),
+              user = db_user,
+              password = db_password,
+              host = db_host,
+              port = db_port,
+              dbname = db_name)
+
+    return(con)
+  }
+
+  observeEvent(input$guardarBD, {
+    if (!is.null(session$userData$datos_repgrid)) {
+      con <- establishDBConnection()
+      # DBI::dbExecute(con, "INSERT INTO repgrid VALUES(60, 2)")
+      # Print or process the list of tables
+      query <- DBI::dbGetQuery(con, "SELECT * FROM repgrid")
+      message(paste("query result: ",query))
+      # Close the connection when done
+      DBI::dbDisconnect(con)
+    }
+
+  })
+
   observeEvent(input$editar, {
     if (!is.null(session$userData$datos_repgrid)) {
       # Ocultar el botón "Editar" y mostrar el botón "Guardar"
