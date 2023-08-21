@@ -190,10 +190,51 @@ output$bert <- renderPlot({
   observeEvent(input$guardarBD, {
     if (!is.null(session$userData$datos_repgrid)) {
       con <- establishDBConnection()
-      # DBI::dbExecute(con, "INSERT INTO repgrid VALUES(60, 2)")
+
+      
+      # FALSE
+
+      # Generar datos del objeto persona
+      id <- 1
+      edad <- 10
+      peso <- 10
+      altura <- 10
+      sexo <- "H"
+      datos <- data.frame(id, edad, peso, altura, sexo) 
+      #tryCatch({
+      if(!DBI::dbExistsTable(con, "tabla_de_personal")){
+        DBI::dbWriteTable(con, "tabla_de_personal", 
+             value = datos, append = TRUE, row.names = FALSE)
+      }
+      else{
+        nueva_edad <- 15
+        nuevo_peso <- 12
+        nueva_altura <- 150
+        nuevo_sexo <- "M"
+        id_a_actualizar <- 1  # Supongamos que quieres actualizar el registro con id 1
+
+        # Consulta SQL para la actualización
+        consulta <- glue::glue("
+          UPDATE tabla_de_personal
+          SET edad = {nueva_edad},
+              peso = {nuevo_peso},
+              altura = {nueva_altura},
+              sexo = '{nuevo_sexo}'
+          WHERE id = {id_a_actualizar}
+        ")
+
+        # Ejecutar la consulta de actualización
+        DBI::dbExecute(con, consulta)
+      }
+        
+      #DBI::dbExecute(con, "INSERT INTO repgrid(col1) VALUES(2)")
+      #}, error = function(e) {
+       # message(paste("Ocurrió un error:", e$message))
+      #})
+      datos_postgres <- DBI::dbGetQuery(con, "SELECT * from tabla_de_personal")
       # Print or process the list of tables
-      query <- DBI::dbGetQuery(con, "SELECT * FROM repgrid")
-      message(paste("query result: ",query))
+      #query <- DBI::dbGetQuery(con, "SELECT * FROM repgrid")
+      message(paste("query result: ", datos_postgres, " "))
       # Close the connection when done
       DBI::dbDisconnect(con)
     }
