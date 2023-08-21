@@ -21,29 +21,7 @@ shinyjs::hidden(div(id = "rg-analysis-content",
 
 div(id="open-controls-container-rg", div(id="open-controls-rg", class="open-controls-btn", p(i18n$t("Controles")), icon(class="mr-2", "bars-progress"))),
         fluidRow(class = "input-graphic-container",
-            column(3, id="controls-panel-rg", class = "input-field-container rounded-lg",
-              div(class = "flex-container-sm p-2 pb-3 border-divider",
-                div(class = "flex-container-sm align-left-title",
-                      icon("bars-progress"),
-                      h4(i18n$t("Controles"), class = "pagetitle2custom"),
-                ),
-                icon("window-minimize", id="exit-controls-rg", class="close-controls-btn tooltip-icon ml-2 fa-solid"),
-                ),
-
-    column(12, class = ("input-container"),
-           # Agregar un selectInput para elegir el gráfico a mostrar
-        selectInput("graph_selector",
-                  i18n$t("Seleccione un análisis:"),
-                  choices = c("Análisis Bidimensional",
-                              "Análisis Tridimensional",
-                              "Análisis por Conglomerados",
-                              "Índices Cognitivos",
-                              "Dilemas"
-                  ),
-        ) ,
-    ),
-  ),
-  conditionalPanel(class = "graphics-rg col-sm-9 graphic-container bg-white rounded-lg", condition = "input.graph_selector == 'Análisis Bidimensional'  ||  input.graph_selector =='Two-Dimensional Analysis' || input.graph_selector == 'Three-Dimensional Analysis' || input.graph_selector == 'Análisis Tridimensional'",
+          conditionalPanel(class = "graphics-rg col-sm-9 graphic-container bg-white rounded-lg", condition = "input.graph_selector == 'Análisis Bidimensional'  ||  input.graph_selector =='Two-Dimensional Analysis' || input.graph_selector == 'Three-Dimensional Analysis' || input.graph_selector == 'Análisis Tridimensional'",
           
         conditionalPanel(condition = "input.graph_selector == 'Análisis Bidimensional'  ||  input.graph_selector =='Two-Dimensional Analysis'",
             fluidRow(class = "flex-container-resp  p-2 border-divider",
@@ -72,6 +50,29 @@ div(id="open-controls-container-rg", div(id="open-controls-rg", class="open-cont
           
         ),
     ),
+          column(3, id="controls-panel-rg", class = "input-field-container rounded-lg",
+              div(class = "flex-container-sm p-2 pb-3 border-divider",
+                div(class = "flex-container-sm align-left-title",
+                      icon("bars-progress"),
+                      h4(i18n$t("Controles"), class = "pagetitle2custom"),
+                ),
+                icon("window-minimize", id="exit-controls-rg", class="close-controls-btn tooltip-icon ml-2 fa-solid"),
+                ),
+
+    column(12, class = ("input-container"),
+           # Agregar un selectInput para elegir el gráfico a mostrar
+        selectInput("graph_selector",
+                  i18n$t("Seleccione un análisis:"),
+                  choices = c("Análisis Bidimensional",
+                              "Análisis Tridimensional",
+                              "Análisis por Conglomerados",
+                              "Índices Cognitivos",
+                              "Dilemas"
+                  ),
+        ) ,
+    ),
+    ),
+ 
         ),
 
   conditionalPanel(class = "graphic-container bg-white rounded-lg", condition = "input.graph_selector == 'Cluster Analysis' || input.graph_selector == 'Análisis por Conglomerados'",

@@ -15,6 +15,49 @@ shinyjs::hide("context-wg-3-home")
 
 
 #Ver y Ocultar panel de control izquierdo
+runjs("
+
+$('#exit-controls-vis').on('click', function (){
+
+  $('.graphics-vis').addClass('mw-100');
+  $('.graphics-vis').addClass('flex-bs-100');
+
+  $('#controls-panel-vis').removeClass('anim-fade-in');
+  $('#controls-panel-vis').addClass('anim-fade-out');
+
+});
+
+$('#open-controls-vis').on('click', function (){
+
+  $('.graphics-vis').removeClass('mw-100');
+  $('.graphics-vis').removeClass('flex-bs-100');
+
+  $('#controls-panel-vis').removeClass('anim-fade-out');
+  $('#controls-panel-vis').addClass('anim-fade-in');
+
+});
+
+$('#exit-controls-lab').on('click', function (){
+
+  $('#graphics-lab').addClass('mw-100');
+  $('#graphics-lab').addClass('flex-bs-100');
+
+  $('#controls-panel-lab').removeClass('anim-fade-in');
+  $('#controls-panel-lab').addClass('anim-fade-out');
+});
+
+$('#open-controls-lab').on('click', function (){
+
+  $('#graphics-lab').removeClass('mw-100');
+  $('#graphics-lab').removeClass('flex-bs-100');
+
+  $('#controls-panel-lab').removeClass('anim-fade-out');
+  $('#controls-panel-lab').addClass('anim-fade-in');
+
+});
+
+")
+
 shinyjs::hide("open-controls-container-vis")
   onevent("click", "exit-controls-vis", shinyjs::show("open-controls-container-vis"), add = TRUE)
   onevent("click", "exit-controls-vis", shinyjs::hide("controls-panel-vis"), add = TRUE)
@@ -31,40 +74,6 @@ shinyjs::hide("open-controls-container-vis")
   
   onevent("click", "open-controls-lab", shinyjs::hide("open-controls-container-lab"), add = TRUE)
   onevent("click", "open-controls-lab", shinyjs::show("controls-panel-lab"), add = TRUE)
-
-
-runjs("
-
-$('#exit-controls-vis').on('click', function (){
-
-  $('.graphics-vis').addClass('mw-100');
-  $('.graphics-vis').addClass('flex-bs-100');
-
-});
-
-$('#open-controls-vis').on('click', function (){
-
-  $('.graphics-vis').removeClass('mw-100');
-  $('.graphics-vis').removeClass('flex-bs-100');
-
-});
-
-$('#exit-controls-lab').on('click', function (){
-
-  $('#graphics-lab').addClass('mw-100');
-  $('#graphics-lab').addClass('flex-bs-100');
-
-});
-
-$('#open-controls-lab').on('click', function (){
-
-  $('#graphics-lab').removeClass('mw-100');
-  $('#graphics-lab').removeClass('flex-bs-100');
-
-});
-
-")
-
 # Lógica para la pestaña "Visualización"
 
  

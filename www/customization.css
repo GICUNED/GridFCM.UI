@@ -39,6 +39,27 @@
  flex: 0 0 100% !important;
 }
 
+/*transition animations*/
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-out {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+
 /*totlips descripción de páginas*/
 
 .tooltip-container{
@@ -52,6 +73,8 @@
   margin-bottom: 1rem;
   width: 400px;
   box-shadow: 0 2px 10px #11111176;
+
+  animation: fade-in 500ms forwards;
 }
 
 @media ( max-width: 1356px ){
@@ -699,6 +722,14 @@ max-width:  calc(25% - 1rem) !important;
 
 }
 
+.anim-fade-in{
+  animation: fade-in 500ms forwards;
+}
+
+.anim-fade-out{
+  animation: fade-out 500ms forwards;
+}
+
 .dark-mode .input-field-container{
   background-color: #23272A;
 
@@ -708,6 +739,10 @@ max-width:  calc(25% - 1rem) !important;
 .graphic-container{
 padding: .5rem 1rem !important;
 height: fit-content;
+
+transform-origin: right;
+
+transition: max-width .3s ease-in-out !important;
 }
 
 .dark-mode .graphic-container{
@@ -717,7 +752,8 @@ height: fit-content;
 .input-graphic-container{
   display: flex;
   flex-wrap: wrap;
-  justify-content: start;
+  flex-direction:row-reverse;
+  justify-content: end;
   gap: 1rem;
   margin: 0 auto 1rem auto !important;
 }
@@ -734,7 +770,7 @@ width: 100% !important;
 
 @media (max-width: 1417px){
   .input-graphic-container{
-    flex-direction: column;
+    flex-direction: column-reverse;
   }
   .graphic-container, #graphics-vis, #graphics-rg{
     max-width: 100% !important;

@@ -67,6 +67,16 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
       shinyjs::hidden(div(id="wg-vis-content",
       div(id="open-controls-container-vis", div(id="open-controls-vis", class="open-controls-btn", p(i18n$t("Controles")), icon(class="mr-2", "bars-progress"))),
         fluidRow(class = "input-graphic-container",
+            conditionalPanel(class = "graphics-vis col-sm-9 graphic-container bg-white rounded-lg gap-2", condition = "input.graph_selector_visualizacion == 'idealdigraph' || input.graph_selector_visualizacion == 'digrafo del ideal' || input.graph_selector_visualizacion == 'selfdigraph' || input.graph_selector_visualizacion == 'autodigrafo'",
+              fluidRow(class = "flex-container-resp p-2 pb-3 border-divider",
+                div(class = "flex-container-sm align-left-title",
+                  icon("globe"),
+                  h4(i18n$t("Resultado gráfico"), class = "pagetitle2custom"),
+                ),
+                downloadButton(class = "btn-download", "btn_download_visualizacion", i18n$t("Descargar Gráfico"))
+              ),
+              uiOutput("graph_output_visualizacion")
+            ),
             column(3, id="controls-panel-vis", class = "input-field-container rounded-lg",
               div(class = "flex-container-sm p-2 pb-3 border-divider",
                 div(class = "flex-container-sm align-left-title",
@@ -115,16 +125,6 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
             ),
 
           ),
-          conditionalPanel(class = "graphics-vis col-sm-9 graphic-container bg-white rounded-lg gap-2", condition = "input.graph_selector_visualizacion == 'idealdigraph' || input.graph_selector_visualizacion == 'digrafo del ideal' || input.graph_selector_visualizacion == 'selfdigraph' || input.graph_selector_visualizacion == 'autodigrafo'",
-              fluidRow(class = "flex-container-resp p-2 pb-3 border-divider",
-                div(class = "flex-container-sm align-left-title",
-                  icon("globe"),
-                  h4(i18n$t("Resultado gráfico"), class = "pagetitle2custom"),
-                ),
-                downloadButton(class = "btn-download", "btn_download_visualizacion", i18n$t("Descargar Gráfico"))
-              ),
-              uiOutput("graph_output_visualizacion")
-            ),
         ),
 
         conditionalPanel(class="graphic-container bg-white rounded-lg",condition = "input.graph_selector_visualizacion == 'wimpindices' || input.graph_selector_visualizacion == 'índices de Wimp' ",
@@ -176,6 +176,49 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
       shinyjs::hidden(div(id="wg-lab-content",
       div(id="open-controls-container-lab", div(id="open-controls-lab", class="open-controls-btn", p(i18n$t("Controles")), icon(class="mr-2", "bars-progress"))),
         fluidRow(class = "input-graphic-container",
+            column(9, id="graphics-lab", class = "graphic-container bg-white rounded-lg gap-2",
+                fluidRow(class = "flex-container-resp mb-2",
+                    conditionalPanel(class = "graphic-subcontainer", condition = "input.graph_selector_laboratorio == 'simdigraph' || input.graph_selector_laboratorio == 'simdigrafo'",
+                      fluidRow(class = "flex-container-resp p-2 pb-3 border-divider",
+                        div(class = "flex-container-sm align-left-title",
+                          icon("globe"),
+                          h4(i18n$t("Resultado gráfico"), class = "pagetitle2custom"),
+                         ),
+                          downloadButton(class = "btn-download", "boton_download_laboratory", i18n$t("Descargar Gráfico"))
+                        ),
+                    rHandsontableOutput("simdigraph_act_vector"),
+                    ),
+
+                    conditionalPanel(class = "graphic-subcontainer", condition = "input.graph_selector_laboratorio == 'pcsd'",
+                      div(class = "flex-container-sm align-left-title p-2 pb-3 border-divider",
+                        icon("line-chart"),
+                        h4(i18n$t("Resultado gráfico"), class = "pagetitle2custom"),
+                      ),
+                      rHandsontableOutput("pcsd_act_vector"),
+                    ),
+
+                    conditionalPanel(class = "graphic-subcontainer",  condition = "input.graph_selector_laboratorio == 'pcsdindices'",
+                      div(class = "flex-container-sm align-left-title p-2 pb-3 border-divider",
+                        icon("table"),
+                        h4(i18n$t("Resultados"), class = "pagetitle2custom"),
+                      ),
+                      rHandsontableOutput("pcsdindices_act_vector"),
+                    
+      
+                    fluidRow(class = "subheader-tab flex-container-sm",
+                      tabsetPanel(
+                          tabPanel(i18n$t("Resumen"), DT::dataTableOutput("summary"), icon = icon("book")),
+                          tabPanel(i18n$t("Auc"), DT::dataTableOutput("auc"), icon = icon("cube")),
+                          tabPanel(i18n$t("Estabilidad"), DT::dataTableOutput("stability"), icon = icon("wave-square"))
+                      )),
+
+                      ),
+
+                    ),
+                    
+              div(id = "pscd_showw",plotlyOutput("pscd_show")),
+              div(id = "laboratory",uiOutput("graph_output_laboratorio"))
+            ),
             column(3, id="controls-panel-lab", class = "input-field-container rounded-lg",
               div(class = "flex-container-sm p-2 pb-3 border-divider",
                 div(class = "flex-container-sm align-left-title",
@@ -276,49 +319,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
 
             ),
 
-            column(9, id="graphics-lab", class = "graphic-container bg-white rounded-lg gap-2",
-                fluidRow(class = "flex-container-resp mb-2",
-                    conditionalPanel(class = "graphic-subcontainer", condition = "input.graph_selector_laboratorio == 'simdigraph' || input.graph_selector_laboratorio == 'simdigrafo'",
-                      fluidRow(class = "flex-container-resp p-2 pb-3 border-divider",
-                        div(class = "flex-container-sm align-left-title",
-                          icon("globe"),
-                          h4(i18n$t("Resultado gráfico"), class = "pagetitle2custom"),
-                         ),
-                          downloadButton(class = "btn-download", "boton_download_laboratory", i18n$t("Descargar Gráfico"))
-                        ),
-                    rHandsontableOutput("simdigraph_act_vector"),
-                    ),
-
-                    conditionalPanel(class = "graphic-subcontainer", condition = "input.graph_selector_laboratorio == 'pcsd'",
-                      div(class = "flex-container-sm align-left-title p-2 pb-3 border-divider",
-                        icon("line-chart"),
-                        h4(i18n$t("Resultado gráfico"), class = "pagetitle2custom"),
-                      ),
-                      rHandsontableOutput("pcsd_act_vector"),
-                    ),
-
-                    conditionalPanel(class = "graphic-subcontainer",  condition = "input.graph_selector_laboratorio == 'pcsdindices'",
-                      div(class = "flex-container-sm align-left-title p-2 pb-3 border-divider",
-                        icon("table"),
-                        h4(i18n$t("Resultados"), class = "pagetitle2custom"),
-                      ),
-                      rHandsontableOutput("pcsdindices_act_vector"),
-                    
-      
-                    fluidRow(class = "subheader-tab flex-container-sm",
-                      tabsetPanel(
-                          tabPanel(i18n$t("Resumen"), DT::dataTableOutput("summary"), icon = icon("book")),
-                          tabPanel(i18n$t("Auc"), DT::dataTableOutput("auc"), icon = icon("cube")),
-                          tabPanel(i18n$t("Estabilidad"), DT::dataTableOutput("stability"), icon = icon("wave-square"))
-                      )),
-
-                      ),
-
-                    ),
-                    
-              div(id = "pscd_showw",plotlyOutput("pscd_show")),
-              div(id = "laboratory",uiOutput("graph_output_laboratorio"))
-            ),
+            
 
         )
       ))

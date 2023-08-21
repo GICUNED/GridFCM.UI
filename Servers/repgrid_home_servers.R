@@ -28,12 +28,18 @@ $('#exit-controls-rg').on('click', function (){
   $('.graphics-rg').addClass('mw-100');
   $('.graphics-rg').addClass('flex-bs-100');
 
+  $('#controls-panel-rg').removeClass('anim-fade-in');
+  $('#controls-panel-rg').addClass('anim-fade-out');
+
 });
 
 $('#open-controls-rg').on('click', function (){
 
   $('.graphics-rg').removeClass('mw-100');
   $('.graphics-rg').removeClass('flex-bs-100');
+
+  $('#controls-panel-rg').addClass('anim-fade-in');
+  $('#controls-panel-rg').removeClass('anim-fade-out');
 
 });")
 
