@@ -7,7 +7,7 @@ div(class = "custom-margins",
 # información para cada tipo de análisis
 
   fluidRow(class="mb-4 mt-4 gap-2 justify-content-center",
-    actionButton(class ="mb-2 ml-2 mr-2", "importar_formulario", i18n$t("Importar formulario"), status = 'secondary', icon = icon("file-lines")),
+    actionButton(class ="mb-2 ml-2 mr-2", "importar_formulario", i18n$t("Iniciar formulario"), status = 'secondary', icon = icon("file-lines")),
     actionButton(class ="mb-2 ml-2 mr-2", "importar_xlsx", i18n$t("Importar archivo xlsx"), status = 'primary', icon = icon("file-excel")),
   ),
 

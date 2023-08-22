@@ -29,6 +29,19 @@ inicio_ui <- fluidPage(
             solidHeader = TRUE,
             width = 12,
             p(i18n$t("Aquí se agregará más información sobre la aplicación y el método que se utiliza."))
-          ))    
+          ),
+          
+          # debera ser oculto hasta que el psicologo inicie sesion
+          # al darle que se despliege el sidebarpanel de abajo
+          actionButton("addPatient", i18n$t("Añadir paciente")),#, icon = icon(""))
+          
+          sidebarPanel(
+            textInput("nombre", "Nombre:"),
+            numericInput("edad", "Edad:", value = 0),
+            selectInput("genero", "Género:", c("hombre", "mujer", "no definido")),
+            textInput("anotaciones", "Anotaciones:"),
+            actionButton("guardarAddPatient", "Guardar")
+          )
+          )    
     )
   ))

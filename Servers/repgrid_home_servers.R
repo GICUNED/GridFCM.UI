@@ -167,41 +167,18 @@ output$bert <- renderPlot({
   #tabla_manipulable$data[row, col] <- value  
   #})
 
-  establishDBConnection <- function() {
-    db_user <- 'postgres'
-    db_password <- 'password'
-    db_host <- 'postgres'
-    db_port <- '5432'
-    db_name <- 'postgres'
-    
-    # Create a connection
-    
-    con <- DBI::dbConnect(
-              RPostgres::Postgres(),
-              user = db_user,
-              password = db_password,
-              host = db_host,
-              port = db_port,
-              dbname = db_name)
 
-    return(con)
-  }
-
-  observeEvent(input$guardarBD, {
+ #observeEvent(input$guardarBD, { si lo dejamos así se ejecuta 3 veces y no es correcto
+ # de esta manera con un onevent solo se hace una vez y es lo correcto
+  shinyjs::onevent("click", "guardarBD", {
     if (!is.null(session$userData$datos_repgrid)) {
       con <- establishDBConnection()
-
-      
-      # FALSE
-
-      # Generar datos del objeto persona
       id <- 1
       edad <- 10
       peso <- 10
       altura <- 10
       sexo <- "H"
       datos <- data.frame(id, edad, peso, altura, sexo) 
-      #tryCatch({
       if(!DBI::dbExistsTable(con, "tabla_de_personal")){
         DBI::dbWriteTable(con, "tabla_de_personal", 
              value = datos, append = TRUE, row.names = FALSE)

@@ -58,8 +58,8 @@
       "en": "On this page, you can learn about the three types of grid analysis and choose how to import your data"
     },
     {
-      "es": "Importar formulario",
-      "en": "Import form"
+      "es": "Iniciar formulario",
+      "en": "Initiate form"
     },
     {
       "es": "Importar archivo xlsx",
@@ -549,6 +549,30 @@
     {
       "es": "Guardar BD",
       "en": "Save DB"
+    },
+    {
+      "es": "Inicio formulario RepGrid",
+      "en": "RepGrid form home"
+    },
+    {
+      "es": "Nombres Guardados:",
+      "en": "Saved Names:"
+    },
+    {
+      "es": "Añadir",
+      "en": "Add"
+    },
+    {
+      "es": "Nombre:",
+      "en": "Name:"
+    },
+    {
+      "es": "Continuar",
+      "en": "Next"
+    },
+    {
+      "es": "Introduzca elementos a valorar",
+      "en": "Enter items to evaluate"
     }
     
 ]}
