@@ -12,17 +12,30 @@ patient_server <- function(input, output, session){
         fecha_registro <- as.POSIXct(Sys.time(), tz = "Europe/Madrid")
         fk_psicologo <- 1 # de momento 
 
+        if (is.numeric(edad) && edad >= 0 && edad <= 120) {
+            # Insertar los datos en la base de datos
+            query <- sprintf("INSERT INTO paciente (nombre, edad, genero, anotaciones, fecha_registro, fk_psicologo) VALUES ('%s', %d, '%s', '%s', '%s', '%d')",
+                            nombre, edad, genero, anotaciones, fecha_registro, fk_psicologo)
+            DBI::dbExecute(con, query)
+            DBI::dbDisconnect(con)
 
-        # Insertar los datos en la base de datos
-        query <- sprintf("INSERT INTO paciente (nombre, edad, genero, anotaciones, fecha_registro, fk_psicologo) VALUES ('%s', %d, '%s', '%s', '%s', '%d')",
-                        nombre, edad, genero, anotaciones, fecha_registro, fk_psicologo)
-        DBI::dbExecute(con, query)
+            # Vaciar los campos del formulario
+            updateTextInput(session, "nombre", value = "")
+            updateNumericInput(session, "edad", value = 0)
+            updateSelectInput(session, "genero", selected = "")
+            updateTextInput(session, "anotaciones", value = "")
+        }
+        # falta el else con el mensaje de error
+    })
+
+    output$user_table <- renderTable({
+        con <- establishDBConnection()
+        query <- "SELECT * FROM paciente"
+        users <- DBI::dbGetQuery(con, query)
         DBI::dbDisconnect(con)
-
-        # Vaciar los campos del formulario
-        updateTextInput(session, "nombre", value = "")
-        updateNumericInput(session, "edad", value = 0)
-        updateSelectInput(session, "genero", selected = "")
-        updateTextInput(session, "anotaciones", value = "")
+        
+        users$genero <- as.factor(users$genero)
+        
+        users
     })
 }
