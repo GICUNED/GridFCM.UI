@@ -290,16 +290,32 @@ margin: 0 !important;
   margin-top: 56.8px;
 }
 
-.navbar::before {
+.navbar::after {
   content:"GridFCM";
   display: block;
   position: absolute;
   font-size: 24px;
-  left: 60px;
+  left: 110px;
   width: 100%;
   font-weight: bolder;
   text-align: left;
 }
+
+.dark-mode .navbar::before {
+  background-image: url('../LogoGIC_white.svg');
+}
+
+.navbar::before {
+  content:"";
+  display: block;
+  position: absolute;
+  width: 40px;
+  left: 60px;
+  height: 40px;
+  background-image: url('../LogoGIC_green.svg');
+  background-size: contain;
+}
+
 
 .main-header{
   transition: all .3s ease-in-out !important;
@@ -1392,6 +1408,13 @@ color: #8b0000;
   box-shadow: 0 0 3px #13906d !important;
   font-weight: 700;
 }
+
+.patient-page .nav-item .nav-link.active{
+  background-color: #90214a !important;
+  box-shadow: 0 0 3px #90214a !important;
+  font-weight: 700;
+}
+
 
 /**/
 

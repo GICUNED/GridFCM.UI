@@ -40,6 +40,25 @@ $('#incio-page').on('click', function () {
         .find('.nav-link')
         .addClass('active');
   });
+
+  //botón de Patient
+
+  
+
+  $('#patient-page').on('click', function () {
+
+    $('.nav-pills')
+      .find('.nav-link')
+      .removeClass('active');
+
+      $('.user-page')
+      .find('.nav-link')
+      .removeClass('active');
+
+    $(this)
+      .find('.nav-link')
+      .addClass('active');
+});
   
   //botón de Import
   

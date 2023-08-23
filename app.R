@@ -120,7 +120,7 @@ ui <- dashboardPage(
     sidebarMenu(
         id = "sidebar-principal",
         div(id="incio-page", class = "nav-item incio-page", menuItem(i18n$t("Inicio"), href = route_link("/"), icon = icon("home"), newTab = FALSE)),
-         div(id="patient-page", class = "nav-item incio-page", menuItem(i18n$t("Pacientes"), href = route_link("patient"), icon = icon("users"), newTab = FALSE)),
+         div(id="patient-page", class = "nav-item patient-page", menuItem(i18n$t("Pacientes"), href = route_link("patient"), icon = icon("users"), newTab = FALSE)),
         div(id="import-page", class = "nav-item import-page", menuItem(i18n$t("Importar"), href = route_link("import"), icon = icon("file-arrow-up"), newTab = FALSE)),
         div(id="excel-page", class = "nav-item excel-page submenu-item", menuItem(i18n$t("Ficheros"), href = route_link("excel"), icon = icon("file-excel"), newTab = FALSE)),
         div(id="form-page", class = "nav-item form-page submenu-item", menuItem(i18n$t("Formularios"), href = route_link("form"), icon = icon("rectangle-list"), newTab = FALSE)),
@@ -140,8 +140,6 @@ ui <- dashboardPage(
                       ui = home_page),
       route(path = "/",
             ui = inicio_ui),
-      route(path = "another",
-            ui = another_page),
       route(path = "user_home",
             ui = user_home_ui),
       route(path = "import",
