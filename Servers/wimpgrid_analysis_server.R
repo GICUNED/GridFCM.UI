@@ -25,6 +25,9 @@ $('#exit-controls-vis').on('click', function (){
   $('#controls-panel-vis').removeClass('anim-fade-in');
   $('#controls-panel-vis').addClass('anim-fade-out');
 
+  $('#open-controls-container-vis').removeClass('anim-fade-out');
+  $('#open-controls-container-vis').addClass('anim-fade-in');
+
 });
 
 $('#open-controls-vis').on('click', function (){
@@ -35,6 +38,9 @@ $('#open-controls-vis').on('click', function (){
   $('#controls-panel-vis').removeClass('anim-fade-out');
   $('#controls-panel-vis').addClass('anim-fade-in');
 
+  $('#open-controls-container-vis').addClass('anim-fade-out');
+  $('#open-controls-container-vis').removeClass('anim-fade-in');
+
 });
 
 $('#exit-controls-lab').on('click', function (){
@@ -44,6 +50,9 @@ $('#exit-controls-lab').on('click', function (){
 
   $('#controls-panel-lab').removeClass('anim-fade-in');
   $('#controls-panel-lab').addClass('anim-fade-out');
+
+  $('#open-controls-container-lab').removeClass('anim-fade-out');
+  $('#open-controls-container-lab').addClass('anim-fade-in');
 });
 
 $('#open-controls-lab').on('click', function (){
@@ -54,26 +63,45 @@ $('#open-controls-lab').on('click', function (){
   $('#controls-panel-lab').removeClass('anim-fade-out');
   $('#controls-panel-lab').addClass('anim-fade-in');
 
+  $('#open-controls-container-lab').addClass('anim-fade-out');
+  $('#open-controls-container-lab').removeClass('anim-fade-in');
+
 });
 
 ")
 
 shinyjs::hide("open-controls-container-vis")
-  onevent("click", "exit-controls-vis", shinyjs::show("open-controls-container-vis"), add = TRUE)
-  onevent("click", "exit-controls-vis", shinyjs::hide("controls-panel-vis"), add = TRUE)
+  onevent("click", "exit-controls-vis", {
   
-  
-  onevent("click", "open-controls-vis", shinyjs::hide("open-controls-container-vis"), add = TRUE)
-  onevent("click", "open-controls-vis", shinyjs::show("controls-panel-vis"), add = TRUE)
- 
+    shinyjs::show("open-controls-container-vis")
+    delay(100, shinyjs::hide("controls-panel-vis"))
+    
+  }, add = TRUE)
 
- shinyjs::hide("open-controls-container-lab")
-  onevent("click", "exit-controls-lab", shinyjs::show("open-controls-container-lab"), add = TRUE)
-  onevent("click", "exit-controls-lab", shinyjs::hide("controls-panel-lab"), add = TRUE)
+  onevent("click", "open-controls-vis", {
   
+    delay(100, shinyjs::hide("open-controls-container-vis"))
+    shinyjs::show("controls-panel-vis")
+    
+  }, add = TRUE)
+
+  shinyjs::hide("open-controls-container-lab")
+
+  onevent("click", "exit-controls-lab", {
   
-  onevent("click", "open-controls-lab", shinyjs::hide("open-controls-container-lab"), add = TRUE)
-  onevent("click", "open-controls-lab", shinyjs::show("controls-panel-lab"), add = TRUE)
+    shinyjs::show("open-controls-container-lab")
+    delay(100, shinyjs::hide("controls-panel-lab"))
+    
+  }, add = TRUE)
+
+  onevent("click", "open-controls-lab", {
+  
+    delay(100, shinyjs::hide("open-controls-container-lab"))
+    shinyjs::show("controls-panel-lab")
+    
+  }, add = TRUE)
+
+
 # Lógica para la pestaña "Visualización"
 
  

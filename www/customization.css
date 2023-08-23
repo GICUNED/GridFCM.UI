@@ -74,7 +74,7 @@
   width: 400px;
   box-shadow: 0 2px 10px #11111176;
 
-  animation: fade-in 500ms forwards;
+  animation: fade-in 200ms forwards;
 }
 
 @media ( max-width: 1356px ){
@@ -108,6 +108,14 @@
 }
 
 .exit-tooltip:hover{
+  opacity: 0.5;
+}
+
+.exit-patients{
+  cursor: pointer;
+}
+
+.exit-patients:hover{
   opacity: 0.5;
 }
 
@@ -165,6 +173,12 @@ li.nav-item::marker{
   border-color: #00795d;
 }
 
+.btn-info.focus, .btn-info:focus {
+  color: #fff;
+  background-color: #90214a;
+  border-color: #5d102c;
+}
+
 .link{
   color: #022a0c;
 }
@@ -184,7 +198,7 @@ li.nav-item::marker{
 }
 .pagetitlecustom::after {
   display: block;
-  margin: 1.2rem auto;
+  margin: .7rem auto 0;
   content: "";
   background-color: #005440;
   height: 3px;
@@ -193,13 +207,7 @@ li.nav-item::marker{
 }
 
 .dark-mode .pagetitlecustom::after {
-  display: block;
-  margin: 1.2rem auto;
-  content: "";
   background-color: #C6F1E0;
-  height: 3px;
-  width: 3rem;
-  border-radius: 10rem;
 }
 
 
@@ -287,7 +295,7 @@ margin: 0 !important;
 }
 
 .content{
-  margin-top: 56.8px;
+  margin-top: 36px;
 }
 
 .navbar::after {
@@ -295,27 +303,10 @@ margin: 0 !important;
   display: block;
   position: absolute;
   font-size: 24px;
-  left: 110px;
-  width: 100%;
+  left: 60px;
   font-weight: bolder;
   text-align: left;
 }
-
-.dark-mode .navbar::before {
-  background-image: url('../LogoGIC_white.svg');
-}
-
-.navbar::before {
-  content:"";
-  display: block;
-  position: absolute;
-  width: 40px;
-  left: 60px;
-  height: 40px;
-  background-image: url('../LogoGIC_green.svg');
-  background-size: contain;
-}
-
 
 .main-header{
   transition: all .3s ease-in-out !important;
@@ -620,6 +611,16 @@ body:not(.sidebar-mini-md) .main-header {
 }
 
 .logoimg{
+  background: no-repeat center url('../LogoUNED-light.svg');
+  background-size: contain;
+}
+.dark-mode .logoimg{
+  background: no-repeat center url('../LogoUNED-dark.svg');
+  background-size: contain;
+}
+
+
+.logoimg{
   width: 100%;
   object-fit: cover;
 }
@@ -739,11 +740,11 @@ max-width:  calc(25% - 1rem) !important;
 }
 
 .anim-fade-in{
-  animation: fade-in 500ms forwards;
+  animation: fade-in 200ms forwards;
 }
 
 .anim-fade-out{
-  animation: fade-out 500ms forwards;
+  animation: fade-out 200ms forwards;
 }
 
 .dark-mode .input-field-container{
@@ -758,7 +759,7 @@ height: fit-content;
 
 transform-origin: right;
 
-transition: max-width .3s ease-in-out !important;
+transition: all .1s ease-in-out !important;
 }
 
 .dark-mode .graphic-container{
@@ -801,6 +802,31 @@ width: 100% !important;
   }
 
 }
+.sidebar-mini.sidebar-collapse .patient-form-container {
+  left: calc(45% - 300px);
+}
+
+.patient-form-container{
+  background-color: #fff;
+  border-radius: .6rem;
+
+  box-shadow: 0 0 10px #0000002b;
+
+  padding: .5rem 1.2rem 1.2rem !important;
+  margin: auto;
+  width: 300px !important;
+ 
+
+  position: absolute;
+  z-index: 102;
+  top: 20%;
+}
+
+
+.patient-form-container::backdrop{
+  background-color: #fff !important;
+}
+
 
 .flex-container-resp-col{
   display: flex;
@@ -815,6 +841,7 @@ width: 100% !important;
   display: flex;
   width: 100%;
   gap: 1rem;
+  justify-content: center;
   flex-direction: row;
   flex-wrap: wrap;
   margin: auto;
@@ -1132,6 +1159,11 @@ color: #8b0000;
     color: #C6F1E0;
     }
 
+
+    .form-control{
+      height: 40px !important;
+    }
+
 .dark-mode .form-control:disabled, .form-control[readonly]{
     color: #212529;
   }
@@ -1274,6 +1306,28 @@ color: #8b0000;
   box-shadow: 0 0 3px #005440;
 }
 
+.mix-diff.header-tab .nav-item:first-child .nav-link.active{
+  color: #fff;
+  background-color: #005440 !important;
+  box-shadow: 0 0 3px #005440;
+}
+
+.mix-diff.header-tab .nav-item:first-child .nav-link.active:hover{
+  background-color: #005440 !important;
+  box-shadow: 0 0 3px #005440;
+}
+
+.mix-diff.header-tab .nav-item:last-child .nav-link.active{
+  color: #fff;
+  background-color: #dfb639 !important;
+  box-shadow: 0 0 3px #ffc107;
+}
+
+.mix-diff.header-tab .nav-item:last-child .nav-link.active:hover{
+  background-color: #dfb639 !important;
+  box-shadow: 0 0 3px #ffc107;
+}
+
 /*header normal*/
 
 .header-tab .nav.nav-tabs{
@@ -1316,6 +1370,10 @@ color: #8b0000;
 
 .wg.input-container{
   background-color: #fff3b8 !important;
+}
+
+.pt.pagetitlecustom::after {
+  background-color: #671735 !important;
 }
 
 
@@ -1672,6 +1730,7 @@ table.dataTable{
 
 .tabbable{
   width: 100%;
+  margin-top: 20.8px;
 }
 /*
 .dark-mode .dataTables_wrapper .dataTables_paginate .paginate_button{

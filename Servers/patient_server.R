@@ -2,7 +2,17 @@ patient_server <- function(input, output, session){
     observeEvent(input$addPatient, {
         shinyjs::show("patientForm")
     })
+
+    runjs("
+        $('#addPatient').on('click', function (){
+            $('#patientForm').addClass('anim-fade-in');
+            $('#patientForm').removeClass('anim-fade-out');}
+        );
+    ")
+
+    
     shinyjs::onevent("click", "guardarAddPatient", {
+        
         con <- establishDBConnection()
 
         nombre <- input$nombre
@@ -27,6 +37,19 @@ patient_server <- function(input, output, session){
         }
         # falta el else con el mensaje de error
     })
+
+    runjs("
+    $('#new-patient-cancel').on('click', function (){
+            $('#patientForm').removeClass('anim-fade-in');
+            $('#patientForm').addClass('anim-fade-out'); }
+        );
+        ")
+
+    shinyjs::onevent("click", "new-patient-cancel", {
+        
+        delay(100, shinyjs::hide("patientForm"))
+        
+    }, add = TRUE)
 
     output$user_table <- renderTable({
         con <- establishDBConnection()

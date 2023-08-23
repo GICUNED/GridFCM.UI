@@ -9,17 +9,24 @@ repgrid_home_server <- function(input, output, session) {
 
   #hide and show tooltips
   shinyjs::hide("context-rg-home")
+
   onevent("click", "tooltip-rg-home", shinyjs::show("context-rg-home"))
   onevent("click", "exit-rg-tooltip", shinyjs::hide("context-rg-home"))
-  
-  shinyjs::hide("open-controls-container-rg")
-  onevent("click", "exit-controls-rg", shinyjs::show("open-controls-container-rg"), add = TRUE)
-  onevent("click", "exit-controls-rg", shinyjs::hide("controls-panel-rg"), add = TRUE)
-  
-  
-  onevent("click", "open-controls-rg", shinyjs::hide("open-controls-container-rg"), add = TRUE)
-  onevent("click", "open-controls-rg", shinyjs::show("controls-panel-rg"), add = TRUE)
 
+  shinyjs::hide("open-controls-container-rg")
+  onevent("click", "exit-controls-rg", {
+  
+    shinyjs::show("open-controls-container-rg")
+    shinyjs::hide("controls-panel-rg")
+    
+  }, add = TRUE)
+  
+  onevent("click", "open-controls-rg", {
+  
+    shinyjs::hide("open-controls-container-rg")
+    shinyjs::show("controls-panel-rg")
+    
+  }, add = TRUE)
 
 runjs("
 

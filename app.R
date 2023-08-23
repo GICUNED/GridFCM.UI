@@ -24,11 +24,6 @@ knitr::knit_hooks$set(webgl = hook_webgl)
 
 
 
-
-
-
-
-
 source("global.R")
 
 #GRID
@@ -56,6 +51,7 @@ source("UI/form_repgrid_ui.R")
 source("UI/form_wimpgrid_ui.R")
 source("UI/patient_ui.R")
 
+
 # SERVERS
 source("Servers/home_page_server_observers.R")
 source("Servers/another_page_server_observers.R")
@@ -73,6 +69,8 @@ source("Servers/patient_server.R")
 
 #DB
 source("DB/establish_con.R")
+
+
 
 
 menu <- tags$ul(tags$li(a(
@@ -102,10 +100,10 @@ theme <- create_theme(
     primary = "#095540",
     danger = "#BF616A",
     light = "#272c30",
-    success = "#13906d"
+    success = "#13906d",
+    info = "#90214a"
   )
 )
-
 
 
 ui <- dashboardPage(
@@ -114,7 +112,7 @@ ui <- dashboardPage(
 
     tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "customization.css"), tags$link(rel = "icon", type = "image/x-icon", href = "www/favicon.png"), tags$title("UNED | GridFCM")),
     title = tags$a(href='https://www.uned.es/', target ="_blank", class = "logocontainer",
-    tags$img(src='LogoUNED.svg',height='56',width='', class = "logoimg")),
+    tags$img(height='56',width='', class = "logoimg")),
     div(id="user-page", class = "nav-item user-page user-page-btn" , menuItem("User", href = route_link("user_home"), icon = icon("house-user"), newTab = FALSE))
   ),
 
@@ -128,8 +126,8 @@ ui <- dashboardPage(
         div(id="import-page", class = "nav-item import-page", menuItem(i18n$t("Importar"), href = route_link("import"), icon = icon("file-arrow-up"), newTab = FALSE)),
         div(id="excel-page", class = "nav-item excel-page submenu-item", menuItem(i18n$t("Ficheros"), href = route_link("excel"), icon = icon("file-excel"), newTab = FALSE)),
         div(id="form-page", class = "nav-item form-page submenu-item", menuItem(i18n$t("Formularios"), href = route_link("form"), icon = icon("rectangle-list"), newTab = FALSE)),
-        div(id="repgrid-page", class = "nav-item repg-page", menuItem("Repgrid", href = route_link("repgrid"), icon = icon("magnifying-glass-chart"), newTab = FALSE)),
-        div(id = "wimpgrid-page", class = "nav-item wimpg-page", menuItem("Wimpgrid", href = route_link("wimpgrid"), icon = icon("chart-column"), newTab = FALSE)),
+        div(id="repgrid-page", class = "nav-item repg-page", menuItem("RepGrid", href = route_link("repgrid"), icon = icon("magnifying-glass-chart"), newTab = FALSE)),
+        div(id = "wimpgrid-page", class = "nav-item wimpg-page", menuItem("WimpGrid", href = route_link("wimpgrid"), icon = icon("border-none"), newTab = FALSE)),
         #div(class = 'language-selector',selectInput('selected_language',i18n$t("Idioma"), choices = i18n$get_languages(),selected = i18n$get_translation_language())),
         div(class = 'language-selector',radioGroupButtons('selected_language',i18n$t("Idioma"), choices = i18n$get_languages(),selected = i18n$get_translation_language(),width='100%', checkIcon = list()))
       )
