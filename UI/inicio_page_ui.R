@@ -29,6 +29,7 @@ inicio_ui <- fluidPage(
             solidHeader = TRUE,
             width = 12,
             p(i18n$t("Aquí se agregará más información sobre la aplicación y el método que se utiliza."))
-          ))    
+          )
+          )    
     )
   ))

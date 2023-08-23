@@ -173,6 +173,34 @@ output$bert <- renderPlot({
   #tabla_manipulable$data[row, col] <- value  
   #})
 
+
+ #observeEvent(input$guardarBD, { si lo dejamos así se ejecuta 3 veces y no es correcto
+ # de esta manera con un onevent solo se hace una vez y es lo correcto
+  shinyjs::onevent("click", "guardarBD", {
+    if (!is.null(session$userData$datos_repgrid)) {
+      connex <- establishDBConnection()
+
+      # cuidado con la gestión de los nombres de los ficheros con concurrencia de sesiones
+      rutaArchivo <- paste("/srv/shiny-server/Text/pruebaTxtRepgrid", Sys.time(), ".txt")
+      saveAsTxt(session$userData$datos_repgrid, rutaArchivo)
+
+      con <- file(rutaArchivo, "r")
+      lineas <- readLines(con)
+      close(con)
+
+      contenido_completo <- paste(lineas, collapse = "\n")
+      queryTxt <- sprintf("INSERT INTO repgrid (repgridTxt) VALUES ('%s')", contenido_completo)
+      DBI::dbExecute(connex, queryTxt)
+
+      #resultado <- (DBI::dbGetQuery(connex, "select repgrid.repgridTxt from repgrid"))
+      
+      #resultado es el fichero recuperado
+
+      DBI::dbDisconnect(connex)
+    }
+
+  })
+
   observeEvent(input$editar, {
     if (!is.null(session$userData$datos_repgrid)) {
       # Ocultar el botón "Editar" y mostrar el botón "Guardar"

@@ -19,8 +19,18 @@ import_server <- function(input, output, session) {
   })
 
   observeEvent(input$importar_formulario, {
-    # Navegar a la página de importación de datos desde formulario
-    # route_link("nombre_de_la_pagina_de_importacion_formulario")
-  })
+    # Navigates to the "Form" page when the specified input is clicked
+    runjs("window.location.href = '/#!/form';")
+    # revisar este runjs ???
+    runjs("
+      $('.nav-pills')
+        .find('.nav-link')
+        .removeClass('active');
 
+      $('#form-page')
+        .find('.nav-link')
+        .addClass('active')
+        .addClass('sub');
+    ")
+  })
 }

@@ -25,8 +25,8 @@ shinyjs::hidden(fluidRow(id="repgrid_home_warn",class="mb-4 mt-4 gap-2 justify-c
       actionButton("volver", i18n$t("Volver"), style = "display: none;"),
       actionButton("guardar", i18n$t("Guardar"), style = "display: none;", status = 'success', icon = icon("save")),
       actionButton("reiniciar", i18n$t("Reiniciar"), style = "display: none;", status = 'danger', icon = icon("arrow-rotate-left")),
-      actionButton("editar", i18n$t("Editar"), icon = icon("edit"))
-      #actionButton("guardarBD", i18n$t("Guardar BD"), icon = icon("database"))
+      actionButton("editar", i18n$t("Editar"), icon = icon("edit")),
+      actionButton("guardarBD", i18n$t("Guardar BD"), icon = icon("database"))
     ),
 
     shinyjs::hidden(

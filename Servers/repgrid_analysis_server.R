@@ -34,7 +34,6 @@ repgrid_analisis_server <- function(input, output, session) {
  
   if (is.null(session$userData$datos_repgrid))
   {
-    message("datos repgrid null, entonces repgrid_data <- boeker")
     repgrid_data <-boeker
   }
 
