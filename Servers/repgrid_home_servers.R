@@ -172,48 +172,25 @@ output$bert <- renderPlot({
  # de esta manera con un onevent solo se hace una vez y es lo correcto
   shinyjs::onevent("click", "guardarBD", {
     if (!is.null(session$userData$datos_repgrid)) {
-      con <- establishDBConnection()
-      id <- 1
-      edad <- 10
-      peso <- 10
-      altura <- 10
-      sexo <- "H"
-      datos <- data.frame(id, edad, peso, altura, sexo) 
-      if(!DBI::dbExistsTable(con, "tabla_de_personal")){
-        DBI::dbWriteTable(con, "tabla_de_personal", 
-             value = datos, append = TRUE, row.names = FALSE)
-      }
-      else{
-        nueva_edad <- 15
-        nuevo_peso <- 12
-        nueva_altura <- 150
-        nuevo_sexo <- "M"
-        id_a_actualizar <- 1  # Supongamos que quieres actualizar el registro con id 1
+      connex <- establishDBConnection()
 
-        # Consulta SQL para la actualización
-        consulta <- glue::glue("
-          UPDATE tabla_de_personal
-          SET edad = {nueva_edad},
-              peso = {nuevo_peso},
-              altura = {nueva_altura},
-              sexo = '{nuevo_sexo}'
-          WHERE id = {id_a_actualizar}
-        ")
+      # cuidado con la gestión de los nombres de los ficheros con concurrencia de sesiones
+      rutaArchivo <- paste("/srv/shiny-server/Text/pruebaTxtRepgrid", Sys.time(), ".txt")
+      saveAsTxt(session$userData$datos_repgrid, rutaArchivo)
 
-        # Ejecutar la consulta de actualización
-        DBI::dbExecute(con, consulta)
-      }
-        
-      #DBI::dbExecute(con, "INSERT INTO repgrid(col1) VALUES(2)")
-      #}, error = function(e) {
-       # message(paste("Ocurrió un error:", e$message))
-      #})
-      datos_postgres <- DBI::dbGetQuery(con, "SELECT * from tabla_de_personal")
-      # Print or process the list of tables
-      #query <- DBI::dbGetQuery(con, "SELECT * FROM repgrid")
-      message(paste("query result: ", datos_postgres, " "))
-      # Close the connection when done
-      DBI::dbDisconnect(con)
+      con <- file(rutaArchivo, "r")
+      lineas <- readLines(con)
+      close(con)
+
+      contenido_completo <- paste(lineas, collapse = "\n")
+      queryTxt <- sprintf("INSERT INTO repgrid (repgridTxt) VALUES ('%s')", contenido_completo)
+      DBI::dbExecute(connex, queryTxt)
+
+      #resultado <- (DBI::dbGetQuery(connex, "select repgrid.repgridTxt from repgrid"))
+      
+      #resultado es el fichero recuperado
+
+      DBI::dbDisconnect(connex)
     }
 
   })

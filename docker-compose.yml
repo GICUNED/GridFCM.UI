@@ -26,6 +26,7 @@ services:
       - "./global.R:/srv/shiny-server/global.R:ro"
       - "./DB/:/srv/shiny-server/DB/:ro"
       - "r-data:/data/"
+      - "./TxtGrid:/srv/shiny-server/Text"
     environment:
       SHINY_DEPLOY_SAMPLE_APPS: "${SHINY_DEPLOY_SAMPLE_APPS:-true}"
 

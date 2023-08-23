@@ -34,24 +34,6 @@ inicio_server <- function(input, output, session) {
   ")
     
   })
-
-  shinyjs::onevent("click", "guardarAddPatient", {
-    con <- establishDBConnection()
-
-    nombre <- input$nombre
-    edad <- input$edad
-    genero <- input$genero
-    anotaciones <- input$anotaciones
-    fecha_registro <- as.POSIXct(Sys.time(), tz = "Europe/Madrid")
-    fk_psicologo <- 1 # de momento 
-
-
-    # Insertar los datos en la base de datos
-    query <- sprintf("INSERT INTO paciente (nombre, edad, genero, anotaciones, fecha_registro, fk_psicologo) VALUES ('%s', %d, '%s', '%s', '%s', '%d')",
-                     nombre, edad, genero, anotaciones, fecha_registro, fk_psicologo)
-    DBI::dbExecute(con, query)
-    DBI::dbDisconnect(con)
-  })
 }
 
 

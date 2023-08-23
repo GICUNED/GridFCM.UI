@@ -25,7 +25,6 @@ knitr::knit_hooks$set(webgl = hook_webgl)
 
 
 
-
 source("global.R")
 
 #GRID
@@ -51,9 +50,9 @@ source("UI/repgrid_ui.R")
 source("UI/wimpgrid_analysis_ui.R")
 source("UI/form_repgrid_ui.R")
 source("UI/form_wimpgrid_ui.R")
+source("UI/patient_ui.R")
 
 # SERVERS
-
 source("Servers/home_page_server_observers.R")
 source("Servers/another_page_server_observers.R")
 source("Servers/userHome_page_server.R")
@@ -66,10 +65,10 @@ source("Servers/repgrid_server.R")
 source("Servers/wimpgrid_analysis_server.R")
 source("Servers/form_repgrid_server.R")
 source("Servers/form_wimpgrid_server.R")
+source("Servers/patient_server.R")
 
 #DB
 source("DB/establish_con.R")
-
 
 
 menu <- tags$ul(tags$li(a(
@@ -121,6 +120,7 @@ ui <- dashboardPage(
     sidebarMenu(
         id = "sidebar-principal",
         div(id="incio-page", class = "nav-item incio-page", menuItem(i18n$t("Inicio"), href = route_link("/"), icon = icon("home"), newTab = FALSE)),
+         div(id="patient-page", class = "nav-item incio-page", menuItem(i18n$t("Pacientes"), href = route_link("patient"), icon = icon("users"), newTab = FALSE)),
         div(id="import-page", class = "nav-item import-page", menuItem(i18n$t("Importar"), href = route_link("import"), icon = icon("file-arrow-up"), newTab = FALSE)),
         div(id="excel-page", class = "nav-item excel-page submenu-item", menuItem(i18n$t("Ficheros"), href = route_link("excel"), icon = icon("file-excel"), newTab = FALSE)),
         div(id="form-page", class = "nav-item form-page submenu-item", menuItem(i18n$t("Formularios"), href = route_link("form"), icon = icon("rectangle-list"), newTab = FALSE)),
@@ -146,10 +146,12 @@ ui <- dashboardPage(
             ui = user_home_ui),
       route(path = "import",
             ui = import_ui),
+      route(path = "patient",
+            ui = patient_ui),
       route(path = "excel",
             ui = import_excel_ui),
       route(path = "form",
-            ui = form_repgrid_ui), # de momento rep, luego poder seleccionar que form hacer
+            ui = form_repgrid_ui), # de momento repgrid, luego poder seleccionar que form hacer
       route(path = "repgrid",
             ui = repgrid_ui),
       route(path = "wimpgrid",
@@ -254,6 +256,7 @@ server <- function(input, output, session) {
   import_server(input, output, session)
   import_excel_server(input, output, session)
   form_repgrid_server(input, output, session)
+  patient_server(input, output, session)
   #form wimp
   repgrid_server(input, output, session)
   repgrid_home_server(input, output, session)

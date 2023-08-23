@@ -573,6 +573,10 @@
     {
       "es": "Introduzca elementos a valorar",
       "en": "Enter items to evaluate"
+    },
+    {
+      "es": "Paciente",
+      "en": "Patient"
     }
     
 ]}
