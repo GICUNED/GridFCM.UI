@@ -195,12 +195,15 @@ output$bert <- renderPlot({
       lineas <- readLines(con)
       close(con)
 
+      # gestionar borrado archivo 
+
       contenido_completo <- paste(lineas, collapse = "\n")
       queryTxt <- sprintf("INSERT INTO repgrid (repgridTxt) VALUES ('%s')", contenido_completo)
       DBI::dbExecute(connex, queryTxt)
 
-      #resultado <- (DBI::dbGetQuery(connex, "select repgrid.repgridTxt from repgrid"))
-      
+      #resultado <- (DBI::dbGetQuery(connex, "select repgrid.repgridTxt from repgrid where id = 13"))
+      # no lo pilla porque aunque es formato txt no es fichero txt, sera ez de cambiar
+      #session$userData$datos_repgrid = importTxt(resultado)
       #resultado es el fichero recuperado
 
       DBI::dbDisconnect(connex)

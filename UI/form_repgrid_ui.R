@@ -18,7 +18,7 @@ tabsetPanel(
         ),
         
         mainPanel(
-            h3(i18n$t("Nombres Guardados:")),
+            h3(i18n$t("Elementos guardados:")),
             uiOutput("lista_nombres"),
             br(),
             hidden(actionButton("continuar", i18n$t("Continuar"), style = "display: none;" , status="success", icon = icon("arrow-right")))
