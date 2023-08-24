@@ -59,6 +59,9 @@ patient_server <- function(input, output, session){
         
         users$genero <- as.factor(users$genero)
         
+        users$prueba <- "prueba"
+
+        #printear
         users
     })
 }
