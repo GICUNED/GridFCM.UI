@@ -121,6 +121,10 @@
 
 .content-wrapper{
   min-height: 100vh !important;
+  padding-block: 22px;
+
+  position: relative;
+
 }
 
 * {font-family: 'Titillium Web', sans-serif;}
@@ -271,9 +275,6 @@ margin: 0 !important;
 .dark-mode .desccustom-hint{
 }
 
-.content-wrapper{
-    padding-block: 22px;
-}
 
 #graph_output_visualizacion img, #graph_output_laboratorio img{
 }
@@ -612,12 +613,21 @@ body:not(.sidebar-mini-md) .main-header {
 
 .logoimg{
   background: no-repeat center url('../LogoUNED-light.svg');
-  background-size: contain;
+  background-size: cover;
+  border-style: solid;
+  border: 1px solid #dee2e6 !important;;
+  border-top: 1px solid white !important;
+  border-left: 1px solid white !important;;
 }
+
 .dark-mode .logoimg{
   background: no-repeat center url('../LogoUNED-dark.svg');
-  background-size: contain;
+  background-size: cover;
+
+  border-top: 1px solid #343a40 !important;;
+  border-left: 1px solid #343a40 !important;;
 }
+
 
 
 .logoimg{
@@ -687,6 +697,11 @@ body:not(.sidebar-mini-md) .main-header {
 .border-divider{
   border-bottom: 1px solid #abafb4;
   margin-bottom: 1.2rem !important;
+}
+
+.border-divider-sm{
+  border-bottom: 1px solid #abafb4;
+  padding-bottom: 0.6rem !important;
 }
 
 .border-divider-l{
@@ -808,7 +823,6 @@ width: 100% !important;
 
 }
 .sidebar-mini.sidebar-collapse .patient-form-container {
-  left: calc(45% - 300px);
 }
 
 .patient-form-container{
@@ -819,19 +833,29 @@ width: 100% !important;
 
   padding: .5rem 1.2rem 1.2rem !important;
   margin: auto;
-  width: 300px !important;
+  width: 350px !important;
  
 
   position: absolute;
+  z-index: 103;
+  top: 15%;
+  left: calc(50% - 175px);
+}
+
+.dark-mode .patient-form-container{
+  background-color: #343a40;
+}
+
+.patient-backdrop{
   z-index: 102;
-  top: 20%;
+  background-color: #0000006c !important;
+  position: absolute;
+  display: block;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
 }
-
-
-.patient-form-container::backdrop{
-  background-color: #fff !important;
-}
-
 
 .flex-container-resp-col{
   display: flex;

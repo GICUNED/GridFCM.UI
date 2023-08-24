@@ -21,22 +21,24 @@ patient_ui <- fluidPage(
 
   #Formulario para añadir paciente
   shinyjs::hidden(
-        div(id = "patientForm", class="patient-form-container anim-fade-in",
+    fluidRow(id = "patientForm",
+        div(class="patient-backdrop"),
+        div(class="patient-form-container anim-fade-in",
             div(class="flex-container-resp-col",
-              div(class="card-title",
+              div(class="card-title border-divider-sm",
               icon("circle-xmark", id = "new-patient-cancel", class="fa-solid exit-patients"),
               span(i18n$t("Nuevo Paciente")),
               ),
 
               textInput("nombre", i18n$t("Nombre:")),
               div(class="d-flex w-100",
-                column(6, class = "p-0 pr-2", numericInput("edad", i18n$t("Edad:"), value = 0)),
-                column(6, class = "p-0", selectInput("genero", i18n$t("Género:"), c("hombre", "mujer", "no definido"))),
+                column(6, class = "w-50 p-0 pr-2", numericInput("edad", i18n$t("Edad:"), value = 0)),
+                column(6, class = "w-50 p-0", selectInput("genero", i18n$t("Género:"), c("hombre", "mujer", "no definido"))),
               ),
               textAreaInput("anotaciones", i18n$t("Anotaciones:")),
               actionButton("guardarAddPatient", i18n$t("Guardar"), status = 'success', icon = icon("save"))
             )
         )
       )
-
+  )
 )
