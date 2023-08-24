@@ -40,6 +40,8 @@ services:
       - "./DB/db.sql:/docker-entrypoint-initdb.d/db.sql:ro"
       - "postgres-data:/var/lib/postgresql/data/"
     environment:
+      POSTGRES_DB: "${DB_NAME:-gridfcm}"
+      POSTGRES_USER: "${DB_USER:-gridfcm}"
       POSTGRES_PASSWORD: "${DB_PASSWORD:-password}"
 
 volumes:
