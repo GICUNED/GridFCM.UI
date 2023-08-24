@@ -35,8 +35,9 @@ services:
     networks:
       - "shiny-server"
     ports:
-      - "${POSTGRES_HOST-127.0.0.1}:${POSTGRES_PORT-5433}:5432/tcp" # puerto original: 5432
+      - "${POSTGRES_HOST-127.0.0.1}:${POSTGRES_PORT-5433}:5432/tcp"
     volumes:
+      - "./DB/db.sql:/docker-entrypoint-initdb.d/db.sql:ro"
       - "postgres-data:/var/lib/postgresql/data/"
     environment:
       POSTGRES_PASSWORD: "${DB_PASSWORD:-password}"
