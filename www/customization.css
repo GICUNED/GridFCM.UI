@@ -781,6 +781,11 @@ width: 100% !important;
 }
 
 
+#rg-analysis-content, #wg-vis-content, #wg-lab-content{
+  margin-top: 2rem;
+
+}
+
 @media (max-width: 992px){
   
 }
