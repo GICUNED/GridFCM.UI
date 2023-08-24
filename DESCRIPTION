@@ -30,7 +30,6 @@ Imports:
     rgl (>= 1.2.1),
     rhandsontable (>= 0.3.8),
     rmarkdown (>= 2.23),
-    RPostgreSQL (>= 0.7-5),
     RPostgres (>= 1.4.5),
     shiny.i18n (>= 0.3.0),
     shiny.router (>= 0.3.1),
@@ -38,5 +37,4 @@ Imports:
     shinyjs (>= 2.1.0),
     shinyWidgets (>= 0.7.6),
     toastui (>= 0.3.0),
-    visNetwork (>= 2.1.2),
-    glue (>= 1.6.2)
+    visNetwork (>= 2.1.2)
