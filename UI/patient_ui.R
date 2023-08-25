@@ -16,8 +16,9 @@ patient_ui <- fluidPage(
 
   fluidRow(
     column(12, class = "p-3",
-      tableOutput("user_table")
-  )),
+      DTOutput("user_table")
+    )
+  ),
   actionButton("editarPaciente", "Editar"),
   actionButton("borrarPaciente", "Borrar"),
 

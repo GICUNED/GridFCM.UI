@@ -12,6 +12,24 @@ patient_server <- function(input, output, session){
         users$fecha_registro <- format(fecha_hora, format = "%Y-%m-%d %H:%M:%S")
         users
     }
+    renderizarTabla_opcion2 <- function(){
+        con <- establishDBConnection()
+        query <- "SELECT * FROM paciente"
+        users <- DBI::dbGetQuery(con, query)
+        DBI::dbDisconnect(con)
+        users$genero <- as.factor(users$genero)
+        
+        fecha_hora <- as.POSIXct(users$fecha_registro, origin = "1970-01-01", tz = "Europe/Madrid")
+        users$fecha_registro <- format(fecha_hora, format = "%Y-%m-%d %H:%M:%S")
+        
+        datatable(users, escape = FALSE, options = list(
+            columnDefs = list(list(targets = ncol(users), render = JS(
+                "function(data, type, row, meta) {",
+                "return '<button class=\"btn btn-primary\">Editar/Borrar/Repgrid/Wimpgrid(WIP)</button>';",
+                "}"
+            )))
+        ))
+    }
 
     observeEvent(input$addPatient, {
         shinyjs::show("patientForm")
@@ -54,7 +72,7 @@ patient_server <- function(input, output, session){
 
             DBI::dbExecute(con, query)
 
-            output$user_table <- renderTable({
+            output$user_table <- renderDT({
                 renderizarTabla()
             })
 
@@ -66,6 +84,7 @@ patient_server <- function(input, output, session){
     })
 
     shinyjs::onevent("click", "borrarPaciente", {
+        # habría que sacar un mensajito diciendo seguro que quiere eliminar...
         con <- establishDBConnection()
         #cambiar luego los ids
         query1 <- "DELETE FROM psicologo_paciente WHERE fk_paciente = 2"
@@ -73,9 +92,11 @@ patient_server <- function(input, output, session){
         query2 <- "DELETE FROM paciente WHERE id = 2"
         DBI::dbExecute(con, query2)
         
+        # Borrar simulaciones 
+
         DBI::dbDisconnect(con)
 
-        output$user_table <- renderTable({
+        output$user_table <- renderDT({
             renderizarTabla()
         })
     })
@@ -115,7 +136,7 @@ patient_server <- function(input, output, session){
             updateSelectInput(session, "genero", selected = "")
             updateTextInput(session, "anotaciones", value = "")
 
-            output$user_table <- renderTable({
+            output$user_table <- renderDT({
                 renderizarTabla()
             })
         }
@@ -141,7 +162,7 @@ patient_server <- function(input, output, session){
     }, add = TRUE)
     
 
-    output$user_table <- renderTable({
+    output$user_table <- renderDT({
         renderizarTabla()
     })
 }
