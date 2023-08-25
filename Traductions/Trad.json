@@ -577,6 +577,35 @@
     {
       "es": "Paciente",
       "en": "Patient"
+    },
+    {
+      "es": "Añadir paciente",
+      "en": "Add patient"
+    },
+    {
+      "es": "Edad:",
+      "en": "Age:"
+    },
+    {
+      "es": "Género:",
+      "en": "Gender:"
+    },
+    {
+      "es": "Anotaciones:",
+      "en": "Annotations:"
+    },
+    {
+      "es": "Nuevo Paciente",
+      "en": "New Patient"
+    },
+    {
+      "es": "Editar Paciente",
+      "en": "Edit Patient"
+    },
+    {
+      "es": "Pacientes",
+      "en": "Patients"
     }
+    
     
 ]}

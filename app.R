@@ -25,6 +25,8 @@ knitr::knit_hooks$set(webgl = hook_webgl)
 
 
 
+
+
 source("global.R")
 
 #GRID
@@ -70,6 +72,7 @@ source("Servers/patient_server.R")
 
 #DB
 source("DB/establish_con.R")
+
 
 
 
