@@ -1,18 +1,20 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json
-name: "shiny-server"
+name: "gridfcm"
 
 # https://repo.stratebi.com
 x-shiny-server-image: &shiny-server-image "repo.stratebi.com/stratebi/shiny-server:v1.5.20.1002-11"
+# https://hub.docker.com/_/postgres
+x-postgres-image: &postgres-image "docker.io/postgres:15-bookworm"
 
 services:
 
   shiny-server:
     image: *shiny-server-image
-    restart: "always"
-    container_name: "shiny-server"
+    restart: "on-failure:3"
+    container_name: "gridfcm-shiny-server"
     hostname: "shiny-server"
     networks:
-      - "shiny-server"
+      - "gridfcm"
     ports:
       - "${SHINY_SERVER_HOST:-127.0.0.1}:${SHINY_SERVER_PORT:-3838}:3838/tcp"
     volumes:
@@ -28,12 +30,17 @@ services:
       - "r-data:/data/"
     environment:
       SHINY_DEPLOY_SAMPLE_APPS: "${SHINY_DEPLOY_SAMPLE_APPS:-true}"
+    depends_on:
+      postgres:
+        condition: "service_healthy"
 
   postgres:
-    image: "${POSTGRES_IMAGE-docker.io/postgres:15-bookworm}"
+    image: *postgres-image
     restart: "on-failure:3"
+    container_name: "gridfcm-postgres"
+    hostname: "postgres"
     networks:
-      - "shiny-server"
+      - "gridfcm"
     ports:
       - "${POSTGRES_HOST-127.0.0.1}:${POSTGRES_PORT-5433}:5432/tcp"
     volumes:
@@ -43,17 +50,24 @@ services:
       POSTGRES_DB: "${DB_NAME:-gridfcm}"
       POSTGRES_USER: "${DB_USER:-gridfcm}"
       POSTGRES_PASSWORD: "${DB_PASSWORD:-password}"
+    healthcheck:
+      test: ["CMD-SHELL", 'pg_isready -q -d "$${POSTGRES_DB:?}" -U "$${POSTGRES_USER:?}"']
+      start_period: "5m"
+      interval: "10s"
+      timeout: "5s"
+      retries: 2
 
 volumes:
 
   r-data:
-    name: "shiny-server-r-data"
+    name: "gridfcm-r-data"
+
   postgres-data:
-    name: "shiny-postgres-data"
+    name: "gridfcm-postgres-data"
 
 networks:
 
-  shiny-server:
-    name: "shiny-server"
+  gridfcm:
+    name: "gridfcm"
     driver: "bridge"
     internal: false
