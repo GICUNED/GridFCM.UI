@@ -13,7 +13,7 @@ inicio_ui <- fluidPage(
             status = "primary",
             solidHeader = TRUE,
             width = 12,
-            div(class="mb-2", textInput("usuario", i18n$t("Nombre de usuario"), placeholder = 'Introduce usuario')),
+            div(class="mb-2", textInput("usuario", i18n$t("Nombre de usuario"), placeholder = "Introduce usuario")),
             div(class="mb-2", passwordInput("contrasena", i18n$t("Contraseña"), placeholder = '■ ■ ■ ■ ■ ■ ■ ■')),
 
             column(12, class="d-flex justify-content-center mb-2 mt-2", actionButton("ingresar", i18n$t("Acceder"), status = 'primary', icon = icon("arrow-up"),)),

@@ -3,15 +3,15 @@
   "translation": [
     {
       "es": "Inicia sesion para continuar",
-      "en": "Log in to continue"
+      "en": "Log in to continue" 
     },
     {
       "es": "Inicio de sesion",
-      "en": "Log inn"
+      "en": "Log in"
     },
     {
-      "es": "Nombre de usuario",
-      "en": "Username"
+      "es": "Introduce usuario",
+      "en": "Enter your username"
     },
     {
       "es": "Contraseña",
@@ -462,18 +462,7 @@
       "es": "Descripción del análisis Fullgrid.",
       "en": "Description of the FullGrid analysis."
     },
-    {
-      "es": "Inicia sesión para continuar",
-      "en": "Log in to continue"
-    },
-    {
-      "es": "Inicio de sesión",
-      "en": "Login"
-    },
-    {
-      "es": "Introduce tu usuario",
-      "en": "Enter your username"
-    },
+  
     {
       "es": "Importar archivos RepGrid",
       "en": "Import RepGrid files"
@@ -555,8 +544,12 @@
       "en": "RepGrid form home"
     },
     {
-      "es": "Nombres Guardados:",
-      "en": "Saved Names:"
+      "es": "Inicio formulario WimpGrid",
+      "en": "WimpGrid form home"
+    },
+    {
+      "es": "Nombres Guardados",
+      "en": "Saved Names"
     },
     {
       "es": "Añadir",
@@ -571,12 +564,36 @@
       "en": "Next"
     },
     {
-      "es": "Introduzca elementos a valorar",
-      "en": "Enter items to evaluate"
+      "es": "Elementos a valorar",
+      "en": "Items to evaluate"
     },
     {
-      "es": "Paciente",
-      "en": "Patient"
+      "es": "Pacientes",
+      "en": "Patients"
+    },
+    {
+      "es": "Añadir paciente",
+      "en": "Add Patient"
+    },
+    {
+      "es": "Nuevo Paciente",
+      "en": "New Patient"
+    },
+    {
+      "es": "Edad:",
+      "en": "Age:"
+    },
+    {
+      "es": "Género:",
+      "en": "Gender:"
+    },
+    {
+      "es": "Anotaciones:",
+      "en": "Notes:"
+    },
+    {
+      "es": "Comentarios relativos al paciente",
+      "en": "Relative comments to patients"
     }
     
 ]}

@@ -94,6 +94,7 @@
 .tooltip-icon{
   cursor: pointer;
   transition: all .3s ease-in-out;
+  position: relative;
 }
 
 .tooltip-icon:hover{
@@ -235,6 +236,7 @@ li.nav-item::marker{
 
 #graphics-vis, #graphics-rg {
   padding: 0;
+  box-shadow: 0 0 1px rgba(0,0,0,0.125),0 1px 3px rgba(0,0,0,0.2);
 }
 
 .dark-mode .pagesubtitlecustom{
@@ -751,7 +753,7 @@ margin: auto;
 margin-top: 0;
 min-width: 250px !important;
 max-width:  calc(25% - 1rem) !important;
-
+box-shadow: 0 0 1px rgba(0,0,0,0.2);
 }
 
 .anim-fade-in{
@@ -775,6 +777,7 @@ height: fit-content;
 transform-origin: right;
 
 transition: all .1s ease-in-out !important;
+box-shadow: 0 0 1px rgba(0,0,0,0.2);
 }
 
 .dark-mode .graphic-container{
@@ -787,7 +790,9 @@ transition: all .1s ease-in-out !important;
   flex-direction:row-reverse;
   justify-content: end;
   gap: 1rem;
-  margin: 0 auto 1rem auto !important;
+  
+
+  box-shadow: 0 0 1px rgba(0,0,0,0.125),
 }
 
 .graphic-subcontainer{
@@ -1162,7 +1167,7 @@ color: #8b0000;
 .selectize-input{
   display: flex;
   align-items: center;
-  height: 40px;
+  height: calc(2.25rem + 2px);
   margin-bottom: 0;
 }
 
@@ -1188,9 +1193,8 @@ color: #8b0000;
     color: #C6F1E0;
     }
 
-
-    .form-control{
-      height: 40px !important;
+.form-control{
+    height: 40px;
     }
 
 .dark-mode .form-control:disabled, .form-control[readonly]{
@@ -1355,6 +1359,14 @@ color: #8b0000;
 .mix-diff.header-tab .nav-item:last-child .nav-link.active:hover{
   background-color: #dfb639 !important;
   box-shadow: 0 0 3px #ffc107;
+}
+
+.mix-diff.header-tab .nav-item:last-child .nav-link{
+  color: #6d5715;
+}
+
+.dark-mode .mix-diff.header-tab .nav-item:last-child .nav-link{
+  color: #fff;
 }
 
 /*header normal*/

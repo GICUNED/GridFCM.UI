@@ -5,7 +5,7 @@ patient_ui <- fluidPage(
   ),
 
   fluidRow(class = ("flex-container-subtitle"),
-    p(i18n$t("En esta página..."), class = "desccustom"),
+    p(i18n$t("Esta página te permite..."), class = "desccustom"),
     actionButton("addPatient", i18n$t("Añadir paciente"), status = 'info', icon = icon("person-circle-plus")),
   ),
 
@@ -35,7 +35,7 @@ patient_ui <- fluidPage(
                 column(6, class = "w-50 p-0 pr-2", numericInput("edad", i18n$t("Edad:"), value = 0)),
                 column(6, class = "w-50 p-0", selectInput("genero", i18n$t("Género:"), c("hombre", "mujer", "no definido"))),
               ),
-              textAreaInput("anotaciones", i18n$t("Anotaciones:")),
+              textAreaInput("anotaciones", i18n$t("Anotaciones:"), placeholder = "Comentarios relativos al paciente"),
               actionButton("guardarAddPatient", i18n$t("Guardar"), status = 'success', icon = icon("save"))
             )
         )

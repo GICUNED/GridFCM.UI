@@ -10,19 +10,26 @@ tabsetPanel(
         h2(i18n$t("Inicio formulario RepGrid"), class = "rg pagetitlecustom mt-4"),
     ),
     
-    sidebarLayout(
-        sidebarPanel(
-            h4(i18n$t("Introduzca elementos a valorar")),
-            textInput("nombrePaciente", i18n$t("Nombre:"), ""),
-            actionButton("guardarNombre", i18n$t("Añadir"))
-        ),
-        
-        mainPanel(
-            h3(i18n$t("Nombres Guardados:")),
-            uiOutput("lista_nombres"),
-            br(),
-            hidden(actionButton("continuar", i18n$t("Continuar"), style = "display: none;" , status="success", icon = icon("arrow-right")))
-        )
+    fluidRow(class = "mt-4 custom-margins justify-content-center align-items-start",
+            column(5,
+                box(
+                    width = 12,
+                    title = i18n$t("Elementos a valorar"),
+                    icon = icon("magnifying-glass-chart"),
+                    status = "success",
+                    collapsible = FALSE,
+                    
+                    textInput("nombrePaciente", i18n$t("Nombre:"), ""),
+                    column(12, class="d-flex justify-content-center mt-3", actionButton("guardarNombre", i18n$t("Añadir"), status = "primary", icon = icon("people-arrows")))
+                )
+            ),
+            
+            column(7, id = "namesForm",
+                h3(i18n$t("Nombres Guardados")),
+                column(12, uiOutput("lista_nombres")),
+                column(12, class="d-flex justify-content-center mt-3", actionButton("continuar", i18n$t("Continuar"), status="success", icon = icon("arrow-right") ))
+            )
+    
     )
 ),
 
