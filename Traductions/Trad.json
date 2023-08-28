@@ -564,36 +564,13 @@
       "en": "Next"
     },
     {
-      "es": "Elementos a valorar",
-      "en": "Items to evaluate"
-    },
-    {
-      "es": "Pacientes",
-      "en": "Patients"
-    },
-    {
-      "es": "Añadir paciente",
-      "en": "Add Patient"
-    },
-    {
-      "es": "Nuevo Paciente",
-      "en": "New Patient"
-    },
-    {
-      "es": "Edad:",
-      "en": "Age:"
-    },
-    {
-      "es": "Género:",
-      "en": "Gender:"
-    },
-    {
-      "es": "Anotaciones:",
-      "en": "Notes:"
+      "es": "Introduzca elementos a valorar",
+      "en": "Enter items to evaluate"
     },
     {
       "es": "Comentarios relativos al paciente",
       "en": "Relative comments to patients"
     }
+    
     
 ]}

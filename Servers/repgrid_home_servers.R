@@ -184,29 +184,40 @@ output$bert <- renderPlot({
  #observeEvent(input$guardarBD, { si lo dejamos así se ejecuta 3 veces y no es correcto
  # de esta manera con un onevent solo se hace una vez y es lo correcto
   shinyjs::onevent("click", "guardarBD", {
-    if (!is.null(session$userData$datos_repgrid)) {
-      connex <- establishDBConnection()
+      if (!is.null(session$userData$datos_repgrid)) {
+          connex <- establishDBConnection()
 
-      # cuidado con la gestión de los nombres de los ficheros con concurrencia de sesiones
-      rutaArchivo <- paste("/srv/shiny-server/Text/pruebaTxtRepgrid", Sys.time(), ".txt")
-      saveAsTxt(session$userData$datos_repgrid, rutaArchivo)
+          # Crear un archivo temporal
+          rutaArchivo <- tempfile(fileext = ".txt")
 
-      con <- file(rutaArchivo, "r")
-      lineas <- readLines(con)
-      close(con)
+          # Guardar los datos en el archivo temporal
+          saveAsTxt(session$userData$datos_repgrid, rutaArchivo)
 
-      contenido_completo <- paste(lineas, collapse = "\n")
-      queryTxt <- sprintf("INSERT INTO repgrid (repgridTxt) VALUES ('%s')", contenido_completo)
-      DBI::dbExecute(connex, queryTxt)
+          con <- file(rutaArchivo, "r")
+          lineas <- readLines(con)
+          close(con)
+          
+          # Buscar el id del paciente...
+          # igual guardarlo en una variable session cuando se esta modificando su repgrid
+          # igual hacer una select ...
+          #
+          #
+          # fk_paciente
+          fk_paciente <- 2
 
-      #resultado <- (DBI::dbGetQuery(connex, "select repgrid.repgridTxt from repgrid"))
-      
-      #resultado es el fichero recuperado
 
-      DBI::dbDisconnect(connex)
-    }
+          contenido_completo <- paste(lineas, collapse = "\n")
+          # llevar cuidado en no insertar un repgrid con fk_paciente deleteado o invalido
+          queryTxt <- sprintf("INSERT INTO repgrid (repgridTxt, fk_paciente) VALUES ('%s', %d)", contenido_completo, fk_paciente)
+          DBI::dbExecute(connex, queryTxt)
 
+          # Eliminar el archivo temporal después de usarlo si es necesario
+          file.remove(rutaArchivo)
+
+          DBI::dbDisconnect(connex)
+      }
   })
+
 
   observeEvent(input$editar, {
     if (!is.null(session$userData$datos_repgrid)) {
