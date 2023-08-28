@@ -19,8 +19,26 @@ patient_ui <- fluidPage(
       DTOutput("user_table")
     )
   ),
-  actionButton("editarPaciente", i18n$t("Editar")),
-  actionButton("borrarPaciente", i18n$t("Borrar")),
+  
+  div(
+    actionButton("editarPaciente", i18n$t("Editar")),
+    actionButton("borrarPaciente", i18n$t("Borrar")),
+    actionButton("simulacionesRepgrid", i18n$t("Simulaciones Repgrid")),
+    actionButton("simulacionesWimpgrid", i18n$t("Simulaciones Wimpgrid")),
+    actionButton("importarGridPaciente", i18n$t("Importar"))
+  ),
+
+  # Listado de simulaciones repgrid
+
+    
+  DTOutput("simulaciones_rep"),
+    
+
+  shinyjs::hidden(
+    fluidRow(
+      DTOutput("simulaciones_wimp")
+    )
+  ),
 
   #Formulario para añadir paciente
   shinyjs::hidden(

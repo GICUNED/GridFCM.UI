@@ -198,17 +198,16 @@ output$bert <- renderPlot({
           close(con)
           
           # Buscar el id del paciente...
-          # igual guardarlo en una variable session cuando se esta modificando su repgrid
-          # igual hacer una select ...
+          # luego deberia ser un update solo pq accede desde la pagina de pacientes con el id
           #
           #
           # fk_paciente
-          fk_paciente <- 2
-
+          fk_paciente <- 1
+          fecha <- as.POSIXct(Sys.time(), tz = "Europe/Madrid")
 
           contenido_completo <- paste(lineas, collapse = "\n")
           # llevar cuidado en no insertar un repgrid con fk_paciente deleteado o invalido
-          queryTxt <- sprintf("INSERT INTO repgrid (repgridTxt, fk_paciente) VALUES ('%s', %d)", contenido_completo, fk_paciente)
+          queryTxt <- sprintf("INSERT INTO repgrid (repgridTxt, fecha_registro, fk_paciente) VALUES ('%s', '%s', %d)", contenido_completo, fecha, fk_paciente)
           DBI::dbExecute(connex, queryTxt)
 
           # Eliminar el archivo temporal después de usarlo si es necesario

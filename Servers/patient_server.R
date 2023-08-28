@@ -1,5 +1,8 @@
 patient_server <- function(input, output, session){
 
+    user_data <- reactiveValues(users = NULL, selected_user_id = NULL)
+    repgrid_data_DB <- reactiveValues(fechas = NULL, repgridTxt = NULL)
+
     renderizarTabla <- function(){
         con <- establishDBConnection()
         query <- "SELECT * FROM paciente"
@@ -10,29 +13,8 @@ patient_server <- function(input, output, session){
         fecha_hora <- as.POSIXct(users$fecha_registro, origin = "1970-01-01", tz = "Europe/Madrid")
         # Formatear la fecha y hora en un formato legible
         users$fecha_registro <- format(fecha_hora, format = "%Y-%m-%d %H:%M:%S")
-        users
-    }
-    renderizarTabla_opcion2 <- function(){
-        con <- establishDBConnection()
-        query <- "SELECT * FROM paciente"
-        users <- DBI::dbGetQuery(con, query)
-        DBI::dbDisconnect(con)
-        users$genero <- as.factor(users$genero)
-        
-        fecha_hora <- as.POSIXct(users$fecha_registro, origin = "1970-01-01", tz = "Europe/Madrid")
-        users$fecha_registro <- format(fecha_hora, format = "%Y-%m-%d %H:%M:%S")
-        
-        datatable(users, escape = FALSE, options = list(
-            columnDefs = list(list(targets = ncol(users), render = JS(
-                "function(data, type, row, meta) {",
-                "return '<button class=\"btn btn-primary\">Editar/Borrar/Repgrid/Wimpgrid(WIP)</button>';",
-                "}"
-            )))
-        ))
-
-        # ademas deberia haber boton de acceso a simulaciones de repgrid y wimpgrid del paciente, 
-        # otro boton que permita importar y le lleve a la pagina de "importar"
-        # ToDo Simon -> una vez esten los botones, gestionar dentro de session$patientID el id del paciente con el que se trabaja 
+        user_data$users <- users # variable reactiva
+        DT::datatable(users, selection = 'single')
     }
 
     output$user_table <- renderDT({
@@ -50,11 +32,57 @@ patient_server <- function(input, output, session){
         );
     ")
 
+    # gestion de las filas seleccionadas en la tabla pacientes
+    observeEvent(input$user_table_rows_selected, {
+        selected_row <- input$user_table_rows_selected
+        if (!is.null(selected_row)) {
+            # Obtén el ID del usuario de la fila seleccionada
+            users <- user_data$users
+            selected_user_id <- users[selected_row, "id"]
+            user_data$selected_user_id <- selected_user_id # reactiva
+            
+            # Ahora puedes utilizar selected_user_id para realizar acciones específicas
+            # relacionadas con el usuario seleccionado, como mostrar detalles adicionales,
+            # eliminar el usuario de la base de datos, etc.
+            
+            # Por ejemplo, imprimir el ID del usuario en la consola
+            message(selected_user_id)
+        }
+    })
+    # gestion de las filas seleccionadas en la tabla de simulaciones repgrid
+    observeEvent(input$simulaciones_rep_rows_selected, {
+        selected_row <- input$simulaciones_rep_rows_selected
+        if (!is.null(selected_row)) {
+            # hacer consulta para obtener el txt de repgrid aqui con la fecha seleccionada
+            # y despues esto repgrid_data_DB$repgridTxt <- repgridDB$repgridtxt
+            message(repgrid_data_DB$repgridTxt)
+            
+        }
+    })
+    
+    
+    observeEvent(input$simulacionesRepgrid, {
+        con <- establishDBConnection()
+        query <- sprintf("SELECT * FROM repgrid WHERE fk_paciente=%d", user_data$selected_user_id)
+        repgridDB <- DBI::dbGetQuery(con, query)
+        DBI::dbDisconnect(con)
+        
+        fecha_hora <- as.POSIXct(repgridDB$fecha_registro, origin = "1970-01-01", tz = "Europe/Madrid")
+        fechasRep <- format(fecha_hora, format = "%Y-%m-%d %H:%M:%S")
+        repgrid_data_DB$fechas <- fechasRep
+        
+
+        output$simulaciones_rep <- renderDT({
+            datatable(data.frame(Fecha = repgrid_data_DB$fechas), selection = 'single')
+        })
+    })
+
+
     shinyjs::onevent("click", "editarPaciente", {
         con <- establishDBConnection()
 
         # de momento 1, luego deberia coger el paciente de la fila correspondiente
-        query <- "SELECT * FROM paciente where id = 2" 
+        query <- sprintf("SELECT * FROM paciente where id = %d", user_data$selected_user_id ) 
         users <- DBI::dbGetQuery(con, query)
 
         shinyjs::show("editForm")
@@ -76,7 +104,7 @@ patient_server <- function(input, output, session){
         if (is.numeric(edad) && edad >= 0 && edad <= 120) {
             # Insertar los datos en la base de datos
             query <- sprintf("UPDATE paciente SET nombre = '%s', edad = %d, genero = '%s', anotaciones = '%s' WHERE id = %d",
-                 nombre, edad, genero, anotaciones, 2)
+                 nombre, edad, genero, anotaciones, user_data$selected_user_id )
 
             DBI::dbExecute(con, query)
 
@@ -96,17 +124,17 @@ patient_server <- function(input, output, session){
         con <- establishDBConnection()
         #borrar simulaciones asociadas
 
-        queryRep <- "DELETE FROM repgrid where fk_paciente = 2"
-        queryWimp <- "DELETE FROM wimpgrid where fk_paciente = 2"
+        queryRep <- sprintf("DELETE FROM repgrid where fk_paciente = %d", user_data$selected_user_id)
+        queryWimp <- sprintf("DELETE FROM wimpgrid where fk_paciente = %d", user_data$selected_user_id)
         DBI::dbExecute(con, queryRep)
         DBI::dbExecute(con, queryWimp)
 
         # borrar tabla intermedia
         # cambiar luego los ids
-        query1 <- "DELETE FROM psicologo_paciente WHERE fk_paciente = 2"
+        query1 <- sprintf("DELETE FROM psicologo_paciente WHERE fk_paciente = %d", user_data$selected_user_id)
         DBI::dbExecute(con, query1)
         # borrar el paciente
-        query2 <- "DELETE FROM paciente WHERE id = 2"
+        query2 <- sprintf("DELETE FROM paciente WHERE id = %d", user_data$selected_user_id)
         DBI::dbExecute(con, query2)
         
         # Borrar simulaciones 
