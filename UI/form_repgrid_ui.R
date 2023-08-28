@@ -7,7 +7,7 @@ tabsetPanel(
   tabPanel(i18n$t("RepGrid"), id = "tab_data_w", icon = icon("magnifying-glass-chart"),
 
     fluidRow(class = ("flex-container-titles"),
-        h2(i18n$t("Inicio formulario RepGrid"), class = "rg pagetitlecustom mt-4"),
+        h2(i18n$t("Inicio formulario RepGrid"), class = "rg pagetitlecustom mt-2"),
     ),
     
     fluidRow(class = "mt-4 custom-margins justify-content-center align-items-start",
@@ -19,20 +19,21 @@ tabsetPanel(
                     collapsible = TRUE,
                     
                     textInput("nombrePaciente", i18n$t("Nombre:"), ""),
-                    column(12, class="d-flex justify-content-center mt-3", actionButton("guardarNombre", i18n$t("Añadir"), status = "primary", icon = icon("angle-right")))
+                    column(12, class="d-flex justify-content-center mt-3", actionButton("guardarNombre", i18n$t("Añadir"), status = "primary", icon = icon("plus")))
                 )
             ),
+
             
-            column(7,
+            column(7, id = "namesForm",
             box(
                     width = 12,
                     title = i18n$t("Nombres Guardados"),
-                    icon = icon("people-arrows"),
+                    icon = icon("person"),
                     status = "success",
                     collapsible = FALSE,
                     
 
-                    column(12, id = "namesForm", uiOutput("lista_nombres")),
+                    column(12, uiOutput("lista_nombres")),
                     column(12, class="d-flex justify-content-center mt-3", actionButton("continuar", i18n$t("Continuar"), status="success", icon = icon("arrow-right") ))
             )
         ),

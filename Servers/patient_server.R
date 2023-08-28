@@ -48,6 +48,11 @@ patient_server <- function(input, output, session){
             $('#patientForm').addClass('anim-fade-in');
             $('#patientForm').removeClass('anim-fade-out');}
         );
+
+        $('#editarPaciente').on('click', function (){
+            $('#editForm').addClass('anim-fade-in');
+            $('#editForm').removeClass('anim-fade-out');}
+        );
     ")
 
     shinyjs::onevent("click", "editarPaciente", {
@@ -65,7 +70,9 @@ patient_server <- function(input, output, session){
 
         DBI::dbDisconnect(con)
     })
+
     shinyjs::onevent("click", "saveEdit", {
+
         con <- establishDBConnection()
 
         nombre <- input$nombreEdit
@@ -164,6 +171,10 @@ patient_server <- function(input, output, session){
     $('#new-patient-cancel').on('click', function (){
         $('#patientForm').removeClass('anim-fade-in');
         $('#patientForm').addClass('anim-fade-out'); }
+    );
+    $('#edit-patient-cancel').on('click', function (){
+        $('#editForm').removeClass('anim-fade-in');
+        $('#editForm').addClass('anim-fade-out'); }
     );
     ")
 

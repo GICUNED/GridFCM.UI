@@ -570,7 +570,40 @@
     {
       "es": "Comentarios relativos al paciente",
       "en": "Relative comments to patients"
+    },
+    {
+      "es": "Pacientes",
+      "en": "Patients"
+    },
+    {
+      "es": "Borrar",
+      "en": "Delete"
+    },
+    {
+      "es": "Añadir paciente",
+      "en": "Add patient"
+    },
+    {
+      "es": "Edad:",
+      "en": "Age:"
+    },
+    {
+      "es": "Género:",
+      "en": "Gender:"
+    },
+    {
+      "es": "Anotaciones:",
+      "en": "Notes:"
+    },
+    {
+      "es": "Nuevo paciente",
+      "en": "New patient"
+    },
+    {
+      "es": "Editar paciente",
+      "en": "Edit patient"
     }
+
     
     
 ]}

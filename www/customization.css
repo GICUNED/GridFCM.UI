@@ -77,6 +77,10 @@
   animation: fade-in 200ms forwards;
 }
 
+.patients-table{
+  box-shadow: 0 0 1px #11111135;
+}
+
 @media ( max-width: 1356px ){
   .tooltip-container{
     width: auto !important;
@@ -177,6 +181,7 @@ li.nav-item::marker{
   background-color: #005440;
   border-color: #00795d;
 }
+
 
 .btn-info.focus, .btn-info:focus {
   color: #fff;
@@ -298,7 +303,7 @@ margin: 0 !important;
 }
 
 .content{
-  margin-top: 36px;
+  margin-top: 34.8px;
 }
 
 .navbar::after {
@@ -313,6 +318,7 @@ margin: 0 !important;
 
 .main-header{
   transition: all .3s ease-in-out !important;
+  z-index: 199 !important;
 }
 
 /*sidebar*/
@@ -365,7 +371,6 @@ margin: 0 !important;
 
   height: 40px;
 
-  top: 170px;
   position: absolute;
   z-index: 1000;
 
@@ -379,6 +384,7 @@ margin: 0 !important;
   background-color: #e3e8ec;
   border-radius: .3rem;
   padding: .5rem;
+  margin: -3rem 0;
 }
 
 .open-controls-btn p{
@@ -600,6 +606,31 @@ body:not(.sidebar-mini-md) .main-header {
   .sidebar-mini.sidebar-collapse .main-sidebar:hover, .sidebar-mini.sidebar-collapse .main-sidebar.sidebar-focused {
     width: 250px;
   }
+
+
+
+  body:not(.sidebar-mini-md) .header-tab .nav.nav-tabs  {
+
+    left: 50%;
+
+  }
+
+  body:not(.sidebar-mini-md) .wg-diff.header-tab .nav.nav-tabs  {
+
+    left: calc(50% - 95px);
+
+  }
+
+  .sidebar-mini.sidebar-collapse .header-tab .nav.nav-tabs {
+    left: calc(50% - 90px);
+
+  }
+
+  .sidebar-mini.sidebar-collapse .wg-diff.header-tab .nav.nav-tabs {
+    left: calc(50% - 185px);
+
+  }
+  
 }
 
 .logoimg:hover{
@@ -838,13 +869,13 @@ width: 100% !important;
 
   padding: .5rem 1.2rem 1.2rem !important;
   margin: auto;
-  width: 350px !important;
+  width: 300px !important;
  
 
   position: absolute;
   z-index: 103;
   top: 15%;
-  left: calc(50% - 175px);
+  left: calc(50% - 150px);
 }
 
 .dark-mode .patient-form-container{
@@ -1311,7 +1342,16 @@ color: #8b0000;
 
 /*Estilo de botones de navegación y Tabs*/
 
-.rg-diff{}
+@media ( max-width: 784px )
+{
+  .header-tab .nav.nav-tabs{
+  position: inherit !important;
+}
+  .tabbable{
+    margin-top: -14px;
+  }
+}
+
 
 .wg-diff.header-tab .nav-link.active{
   color: #fff;
@@ -1369,13 +1409,52 @@ color: #8b0000;
   color: #fff;
 }
 
+
+#lista_nombres .nav-item .nav-link.active{
+  background-color: #747b81 !important;
+  box-shadow: 0 0 3px #747b81 !important;
+}
+
+#lista_nombres .nav-item .nav-link:not(.active):hover{
+  color: #111;  
+}
+
+.dark-mode #lista_nombres .nav-item .nav-link:not(.active):hover{
+  color: #fff;  
+}
+
+
+
 /*header normal*/
+
+.header-tab{
+  position: relative;
+}
 
 .header-tab .nav.nav-tabs{
   display: flex;
   justify-content: center;
-  margin-top: -36px;
+
+  position: fixed;
+  z-index: 200;
+  top: 9px;
+  left: calc(50% - 130px);
+
+  transition: left .3s ease-in-out;
 }
+
+.wg-diff.header-tab .nav.nav-tabs{
+  left: calc(50% - 220px);
+}
+
+.rg-diff.header-tab .nav.nav-tabs{
+  left: calc(50% - 130px);
+}
+
+.mix-diff.header-tab .nav.nav-tabs{
+  left: calc(50% - 130px);
+}
+
 
 .header-tab .nav-tabs .nav-item .nav-link{
   text-align: center;
@@ -1481,6 +1560,10 @@ color: #8b0000;
 .nav-pills .show>.nav-link {
  color:#fff;
  background-color:inherit;
+}
+
+.nav-sidebar .nav-item>.nav-link {
+  margin-top: .2rem
 }
 
 .nav .nav-link.active {
@@ -1739,7 +1822,7 @@ background-color: #fff !important;
 .dataTables_length select{
   background-color: #fff !important;
 }
-
+/*
 .dark-mode  .dataTables_length label{
   color: #fff !important;
 }
@@ -1747,12 +1830,21 @@ background-color: #fff !important;
 .dark-mode .dataTables_length select{
   color: #313131 !important;
 }
-
+*/
 table.dataTable.no-footer{
-  border-bottom: inherit !important;
+  border-bottom: 2px solid #dee2e6 !important;
 }
+
 table.dataTable{
   border-spacing: 1 !important;
+}
+
+.patients-table table.dataTable.display > tbody > tr.selected:hover > *, .patients-table table.dataTable.display > tbody > tr.selected > *, .patients-table table.dataTable.hover > tbody > tr.selected:hover > *, .patients-table table.dataTable.display > tbody > tr.selected:hover > *{
+  box-shadow: inset 0 0 0 9999px #c9809b !important;
+}
+
+.patients-table tr{
+  cursor: pointer;
 }
 
 .dataTables_wrapper .dataTables_filter, .dataTables_wrapper .dataTables_info{
@@ -1761,8 +1853,9 @@ table.dataTable{
 
 .dataTable{
 
-  border-radius: .8rem;
+  border-radius: .5rem;
   border: 2px solid #dee2e6;
+  overflow: hidden;
 }
 
 #inconsistences{
@@ -1771,7 +1864,6 @@ table.dataTable{
 
 .tabbable{
   width: 100%;
-  margin-top: 20.8px;
 }
 /*
 .dark-mode .dataTables_wrapper .dataTables_paginate .paginate_button{
@@ -1792,6 +1884,11 @@ table.dataTable.display > tbody > tr.selected:hover > *, table.dataTable.display
 color: #fff !important;
 
 }
+
+.paginate_button{
+  padding: 0rem .4rem !important;
+}
+
 /*
 .dark-mode  .dataTables_wrapper .dataTables_paginate .paginate_button.current{
 

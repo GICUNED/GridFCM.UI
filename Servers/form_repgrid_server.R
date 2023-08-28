@@ -4,17 +4,19 @@ form_repgrid_server <- function(input, output, session){
     lista_nombres <- list()
     observeEvent(input$guardarNombre, {
         if (nchar(input$nombrePaciente) > 0) {
+            shinyjs::show("namesForm")
             nombres(c(nombres(), input$nombrePaciente))
             #reactiveVal entre parentesis sin parametros devuelve el valor del objeto
             lista_nombres <- list(nombres())
             session$userData$repgrid_form$elementos = lista_nombres
             updateTextInput(session, "nombrePaciente", value = "")
+        }else {
+            NULL
         }
     })
     
     output$lista_nombres <- renderUI({
         if (length(nombres()) > 0) {
-            shinyjs::show("namesForm")
             menu_items <- lapply(nombres(), function(nombre) {
                 menuItem(nombre, icon = icon("user"))
             })

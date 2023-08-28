@@ -23,7 +23,6 @@ library(dplyr)
 knitr::knit_hooks$set(webgl = hook_webgl)
 
 
-
 source("global.R")
 
 #GRID
@@ -52,8 +51,6 @@ source("UI/form_repgrid_ui.R")
 source("UI/form_wimpgrid_ui.R")
 source("UI/patient_ui.R")
 
-
-
 # SERVERS
 source("Servers/home_page_server_observers.R")
 source("Servers/another_page_server_observers.R")
@@ -69,10 +66,9 @@ source("Servers/form_repgrid_server.R")
 source("Servers/form_wimpgrid_server.R")
 source("Servers/patient_server.R")
 
+
 #DB
 source("DB/establish_con.R")
-
-
 
 menu <- tags$ul(tags$li(a(
   class = "item", href = route_link(""), "Inicio"
@@ -95,13 +91,13 @@ tags$li(a(
   "Wimpgrid analysis"
 )))
 
-
 theme <- create_theme(
   bs4dash_status(
     primary = "#095540",
     danger = "#BF616A",
     light = "#272c30",
     success = "#13906d",
+    warning = "#dfb639",
     info = "#90214a"
   )
 )

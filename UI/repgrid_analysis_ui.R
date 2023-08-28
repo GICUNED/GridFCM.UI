@@ -3,7 +3,7 @@ repgrid_analysis_ui <- fluidPage( class="header-tab rg-diff",
 
   fluidRow( class = ("flex-container-xl"),
 
-    h2(i18n$t("Análisis RepGrid"), class = "pagetitlecustom mt-4"),
+    h2(i18n$t("Análisis RepGrid"), class = "pagetitlecustom mt-2"),
   ),
 
   # Mostrar el gráfico seleccionado usando conditionalPanel

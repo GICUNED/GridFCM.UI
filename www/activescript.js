@@ -1,10 +1,145 @@
 $('#sidebarId').addClass('sidebar-light-primary');
 $('#sidebarId').removeClass('sidebar-dark-primary');
-
-$('#incio-page').find('.nav-link').addClass('active');
-
 /*
+$('#incio-page').find('.nav-link').addClass('active');
+*/
+
+window.onload = (event) => {
+    //botón de Inicio
+  
+    if (window.location.href.indexOf("/") > -1) {
+      
+      $('.nav-pills')
+          .find('.nav-link')
+          .removeClass('active');
+  
+          $('.user-page')
+          .find('.nav-link')
+          .removeClass('active');
+  
+        $('#incio-page')
+          .find('.nav-link')
+          .addClass('active');
+    };
+  
+    //botón de User
+  
+    if (window.location.href.indexOf("/user_home") > -1) {
+     
+      $('.nav-pills')
+        .find('.nav-link')
+        .removeClass('active');
+  
+      $('#user-page')
+        .find('.nav-link')
+        .addClass('active');
+    };
+  
+    //botón de Patient
+  
+    if (window.location.href.indexOf("/patient") > -1) {
+      
+      $('.nav-pills')
+        .find('.nav-link')
+        .removeClass('active');
+  
+        $('.user-page')
+        .find('.nav-link')
+        .removeClass('active');
+  
+      $('#patient-page')
+        .find('.nav-link')
+        .addClass('active');
+    };
+  
+    //botón de Import
+    if (window.location.href.indexOf("/import") > -1) {
+      
+      $('.nav-pills')
+        .find('.nav-link')
+        .removeClass('active');
+  
+        $('.user-page')
+        .find('.nav-link')
+        .removeClass('active');
+  
+      $('#import-page')
+        .find('.nav-link')
+        .addClass('active');
+    };
+  
+     //botón de Files
+     if (window.location.href.indexOf("/excel") > -1) {
+      
+      $('.nav-pills')
+        .find('.nav-link')
+        .removeClass('active');
+  
+        $('.user-page')
+        .find('.nav-link')
+        .removeClass('active');
+  
+      $('#excel-page')
+        .find('.nav-link')
+        .addClass('active')
+        .addClass('sub');
+    };
+  
+     //botón de Form
+     if (window.location.href.indexOf("/form") > -1) {
+      
+      $('.nav-pills')
+        .find('.nav-link')
+        .removeClass('active');
+  
+        $('.user-page')
+        .find('.nav-link')
+        .removeClass('active');
+  
+      $('#form-page')
+        .find('.nav-link')
+        .addClass('active')
+        .addClass('sub');
+    };
+  
+     //botón de RepGrid
+     if (window.location.href.indexOf("/repgrid") > -1) {
+      
+      $('.nav-pills')
+        .find('.nav-link')
+        .removeClass('active');
+  
+        $('.user-page')
+        .find('.nav-link')
+        .removeClass('active');
+  
+      $('#repgrid-page')
+        .find('.nav-link')
+        .addClass('active');
+    };
+  
+     //botón de WimpGrid
+     if (window.location.href.indexOf("/wimpgrid") > -1) {
+      
+      $('.nav-pills')
+        .find('.nav-link')
+        .removeClass('active');
+  
+        $('.user-page')
+        .find('.nav-link')
+        .removeClass('active');
+  
+      $('#wimpgrid-page')
+        .find('.nav-link')
+        .addClass('active');
+    };
+      
+  
+};
+
 window.addEventListener('popstate', function () {
+
+  //botón de Inicio
 
   if (window.location.href.indexOf("/") > -1) {
     
@@ -19,9 +154,24 @@ window.addEventListener('popstate', function () {
       $('#incio-page')
         .find('.nav-link')
         .addClass('active');
-  }
-  
-  else if (window.location.href.indexOf("/patient") > -1) {
+  };
+
+  //botón de User
+
+  if (window.location.href.indexOf("/user_home") > -1) {
+   
+    $('.nav-pills')
+      .find('.nav-link')
+      .removeClass('active');
+
+    $('#user-page')
+      .find('.nav-link')
+      .addClass('active');
+  };
+
+  //botón de Patient
+
+  if (window.location.href.indexOf("/patient") > -1) {
     
     $('.nav-pills')
       .find('.nav-link')
@@ -34,22 +184,93 @@ window.addEventListener('popstate', function () {
     $('#patient-page')
       .find('.nav-link')
       .addClass('active');
-  }
+  };
 
-  else if (window.location.href.indexOf("/user_home") > -1) {
-   
+  //botón de Import
+  if (window.location.href.indexOf("/import") > -1) {
+    
     $('.nav-pills')
       .find('.nav-link')
       .removeClass('active');
 
-    $('#user-page')
+      $('.user-page')
+      .find('.nav-link')
+      .removeClass('active');
+
+    $('#import-page')
       .find('.nav-link')
       .addClass('active');
-  }
+  };
+
+   //botón de Files
+   if (window.location.href.indexOf("/excel") > -1) {
+    
+    $('.nav-pills')
+      .find('.nav-link')
+      .removeClass('active');
+
+      $('.user-page')
+      .find('.nav-link')
+      .removeClass('active');
+
+    $('#excel-page')
+      .find('.nav-link')
+      .addClass('active')
+      .addClass('sub');
+  };
+
+   //botón de Form
+   if (window.location.href.indexOf("/form") > -1) {
+    
+    $('.nav-pills')
+      .find('.nav-link')
+      .removeClass('active');
+
+      $('.user-page')
+      .find('.nav-link')
+      .removeClass('active');
+
+    $('#form-page')
+      .find('.nav-link')
+      .addClass('active')
+      .addClass('sub');
+  };
+
+   //botón de RepGrid
+   if (window.location.href.indexOf("/repgrid") > -1) {
+    
+    $('.nav-pills')
+      .find('.nav-link')
+      .removeClass('active');
+
+      $('.user-page')
+      .find('.nav-link')
+      .removeClass('active');
+
+    $('#repgrid-page')
+      .find('.nav-link')
+      .addClass('active');
+  };
+
+   //botón de WimpGrid
+   if (window.location.href.indexOf("/wimpgrid") > -1) {
+    
+    $('.nav-pills')
+      .find('.nav-link')
+      .removeClass('active');
+
+      $('.user-page')
+      .find('.nav-link')
+      .removeClass('active');
+
+    $('#wimpgrid-page')
+      .find('.nav-link')
+      .addClass('active');
+  };
     
 });
-*/
 
+/*
 
 //botón de Inicio
 
@@ -130,7 +351,6 @@ $('#excel-page').on('click', function () {
         .find('.nav-link')
         .removeClass('active');
 
-
     $(this)
         .find('.nav-link')
        .addClass('active')
@@ -192,4 +412,4 @@ $('#wimpgrid-page').on('click', function () {
      .addClass('active');
 })
   
-  
+  */

@@ -3,34 +3,35 @@ patient_ui <- fluidPage(
   shiny.i18n::usei18n(i18n),
 
 
-  fluidRow(class = ("flex-container-titles"),
+  fluidRow(class = ("flex-container-xl"),
     h2(i18n$t("Pacientes"), class = "pt pagetitlecustom"),
+    p(i18n$t("Esta página te permite..."), class = "desccustom"),
   ),
 
-  fluidRow(class = ("flex-container-subtitle"),
-    p(i18n$t("Esta página te permite..."), class = "desccustom"),
-    actionButton("addPatient", i18n$t("Añadir paciente"), status = 'info', icon = icon("person-circle-plus")),
+  fluidRow( class="custom-margins mt-2",
+    column(12, class = ("button-container mb-2"),
+      actionButton(class="mr-auto", "addPatient", i18n$t("Añadir paciente"), status = 'info', icon = icon("person-circle-plus")),
+      actionButton("editarPaciente", i18n$t("Editar"), disabled="TRUE", icon = icon("pen-to-square")),
+      actionButton("borrarPaciente", i18n$t("Borrar"), disabled="TRUE", status ="danger", icon = icon("trash-can")),
+    ),
+    column(12, class = "patients-table p-3 bg-white rounded-lg",
+        DTOutput("user_table")
+    ),
   ),
   
   #Tabla que muestra los usuarios
 
-  fluidRow(
-    column(12, class = "p-3",
-      DTOutput("user_table")
-    )
-  ),
-  actionButton("editarPaciente", i18n$t("Editar")),
-  actionButton("borrarPaciente", i18n$t("Borrar")),
+  
 
   #Formulario para añadir paciente
   shinyjs::hidden(
     fluidRow(id = "patientForm",
         div(class="patient-backdrop"),
-        div(class="patient-form-container anim-fade-in",
+        div(class="patient-form-container",
             div(class="flex-container-resp-col",
               div(class="card-title border-divider-sm",
               icon("circle-xmark", id = "new-patient-cancel", class="fa-solid exit-patients"),
-              span(i18n$t("Nuevo Paciente")),
+              span(i18n$t("Nuevo paciente")),
               ),
 
           textInput("nombre", i18n$t("Nombre:")),
@@ -45,11 +46,13 @@ patient_ui <- fluidPage(
   ),
 
   shinyjs::hidden(
-    div(id = "editForm", class="patient-form-container anim-fade-in",
+    fluidRow(id = "editForm",
+    div(class="patient-backdrop"),
+    div(class="patient-form-container",
         div(class="flex-container-resp-col",
           div(class="card-title",
           icon("circle-xmark", id = "edit-patient-cancel", class="fa-solid exit-patients"),
-          span(i18n$t("Editar Paciente")),
+          span(i18n$t("Editar paciente")),
           ),
 
           textInput("nombreEdit", i18n$t("Nombre:")),
@@ -61,6 +64,7 @@ patient_ui <- fluidPage(
           #En amarillo el boton???
           actionButton("saveEdit", i18n$t("Editar"), status = 'success', icon = icon("save"))
         )
+    )
     )
   )
   )
