@@ -1,4 +1,5 @@
 form_repgrid_server <- function(input, output, session){
+    
     nombres <- reactiveVal(character(0))
     lista_nombres <- list()
     observeEvent(input$guardarNombre, {
@@ -13,7 +14,7 @@ form_repgrid_server <- function(input, output, session){
     
     output$lista_nombres <- renderUI({
         if (length(nombres()) > 0) {
-            shinyjs::show("continuar")
+            shinyjs::show("namesForm")
             menu_items <- lapply(nombres(), function(nombre) {
                 menuItem(nombre, icon = icon("user"))
             })

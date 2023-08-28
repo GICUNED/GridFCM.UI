@@ -38,6 +38,7 @@ source("R/SimulationFunctions.R")
 source("R/WimpIndicesFunctions.R")
 source("R/visnetworks.R")
 
+
 # UI
 source("UI/home_page_ui.R")
 source("UI/another_page_ui.R")
@@ -52,6 +53,7 @@ source("UI/wimpgrid_analysis_ui.R")
 source("UI/form_repgrid_ui.R")
 source("UI/form_wimpgrid_ui.R")
 source("UI/patient_ui.R")
+
 
 
 # SERVERS
@@ -113,7 +115,7 @@ ui <- dashboardPage(
 
     tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "customization.css"), tags$link(rel = "icon", type = "image/x-icon", href = "www/favicon.png"), tags$title("UNED | GridFCM")),
     title = tags$a(href='https://www.uned.es/', target ="_blank", class = "logocontainer",
-    tags$img(height='56',width='', class = "logoimg")),
+    tags$img(height='56.9',width='', class = "logoimg")),
     div(id="user-page", class = "nav-item user-page user-page-btn" , menuItem("User", href = route_link("user_home"), icon = icon("house-user"), newTab = FALSE))
   ),
 

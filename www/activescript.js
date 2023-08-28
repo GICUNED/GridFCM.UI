@@ -1,13 +1,14 @@
-//botón de Inicio
-
 $('#sidebarId').addClass('sidebar-light-primary');
 $('#sidebarId').removeClass('sidebar-dark-primary');
 
 $('#incio-page').find('.nav-link').addClass('active');
 
-$('#incio-page').on('click', function () {
-  
-      $('.nav-pills')
+/*
+window.addEventListener('popstate', function () {
+
+  if (window.location.href.indexOf("/") > -1) {
+    
+    $('.nav-pills')
         .find('.nav-link')
         .removeClass('active');
 
@@ -15,38 +16,13 @@ $('#incio-page').on('click', function () {
         .find('.nav-link')
         .removeClass('active');
 
-      $(this)
+      $('#incio-page')
         .find('.nav-link')
         .addClass('active');
-
-  });
-
+  }
   
-
-//botón de User
-
-  $('#user-page').on('click', function () {
-
-      $('.nav-pills')
-        .find('.nav-link')
-        .removeClass('active');
-
-        $('.user-page')
-        .find('.nav-link')
-        .removeClass('active');
-
-
-      $(this)
-        .find('.nav-link')
-        .addClass('active');
-  });
-
-  //botón de Patient
-
-  
-
-  $('#patient-page').on('click', function () {
-
+  else if (window.location.href.indexOf("/patient") > -1) {
+    
     $('.nav-pills')
       .find('.nav-link')
       .removeClass('active');
@@ -55,33 +31,96 @@ $('#incio-page').on('click', function () {
       .find('.nav-link')
       .removeClass('active');
 
-    $(this)
+    $('#patient-page')
       .find('.nav-link')
       .addClass('active');
+  }
+
+  else if (window.location.href.indexOf("/user_home") > -1) {
+   
+    $('.nav-pills')
+      .find('.nav-link')
+      .removeClass('active');
+
+    $('#user-page')
+      .find('.nav-link')
+      .addClass('active');
+  }
+    
 });
-  
-  //botón de Import
-  
-  $('#import-page').on('click', function () {
-
-      $('.nav-pills')
-        .find('.nav-link')
-        .removeClass('active');
-
-        $('.user-page')
-        .find('.nav-link')
-        .removeClass('active');
+*/
 
 
-      $(this)
-          .find('.nav-link')
-         .addClass('active');
+//botón de Inicio
+
+$('#incio-page').on('click', function () {
+  $('.nav-pills')
+  .find('.nav-link')
+  .removeClass('active');
+
+  $('.user-page')
+  .find('.nav-link')
+  .removeClass('active');
+
+$(this)
+  .find('.nav-link')
+  .addClass('active');
 
   });
 
-    //botón de Files
+//botón de User
 
-  $('#excel-page').on('click', function () {
+$('#user-page').on('click', function () {
+
+$('.nav-pills')
+  .find('.nav-link')
+  .removeClass('active');
+
+$('#user-page')
+  .find('.nav-link')
+  .addClass('active');
+
+  });
+
+//botón de Patient
+
+$('#patient-page').on('click', function () {
+  
+  $('.nav-pills')
+  .find('.nav-link')
+  .removeClass('active');
+
+  $('.user-page')
+  .find('.nav-link')
+  .removeClass('active');
+
+  $(this)
+  .find('.nav-link')
+  .addClass('active');
+    
+});
+  
+//botón de Import
+  
+$('#import-page').on('click', function () {
+
+  $('.nav-pills')
+    .find('.nav-link')
+    .removeClass('active');
+
+  $('.user-page')
+    .find('.nav-link')
+    .removeClass('active');
+
+  $(this)
+    .find('.nav-link')
+    .addClass('active');
+
+  });
+
+//botón de Files
+
+$('#excel-page').on('click', function () {
 
     $('.nav-pills')
         .find('.nav-link')
@@ -116,12 +155,10 @@ $('#form-page').on('click', function () {
      .addClass('active')
      .addClass('sub');
 })
-
-
   
 //botón de Repgrid
 
-  $('#repgrid-page').on('click', function () {
+$('#repgrid-page').on('click', function () {
 
     $('.nav-pills')
         .find('.nav-link')

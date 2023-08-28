@@ -9,7 +9,7 @@ div(class = "custom-margins flex-container-xl",
     
     fluidRow(
        # Widgets para importar archivos xlsx y seleccionar el tipo de datos
-      column(6,
+      div(class="col-sm-6 p-0",
       box(
        width = 12,
        title = i18n$t("Importar archivos RepGrid"),
@@ -20,7 +20,7 @@ div(class = "custom-margins flex-container-xl",
        column(12, class="d-flex justify-content-center mb-2 mt-2", actionButton("importar_datos", i18n$t("Importar Datos"), status = 'success', icon = icon("file-import")))
       )),
 
-      column(6,
+      div(class="col-sm-6 p-0",
       box(
        width = 12,
        title = i18n$t("Importar archivos WimpGrid"),
@@ -37,7 +37,7 @@ div(class = "custom-margins flex-container-xl",
        title = i18n$t("Plantillas y documentos de ayuda"),
        icon = icon("folder-open"),
        collapsible = FALSE,
-       class="flex-container-docs",
+       class="flex-container-docs mt-2",
 
        div(class="flex-container-resp-col download-container gap-2 justify-content-center",
          a(icon("file-pdf"), i18n$t("Documento de ayuda para RepGrid"), href = "ruta/al/archivo/ayuda_repgrid.pdf", target = "_blank", class = "link"),
