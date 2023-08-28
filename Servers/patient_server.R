@@ -29,8 +29,16 @@ patient_server <- function(input, output, session){
                 "}"
             )))
         ))
+
+        # ademas deberia haber boton de acceso a simulaciones de repgrid y wimpgrid del paciente, 
+        # otro boton que permita importar y le lleve a la pagina de "importar"
+        # ToDo Simon -> una vez esten los botones, gestionar dentro de session$patientID el id del paciente con el que se trabaja 
     }
 
+    output$user_table <- renderDT({
+        renderizarTabla()
+    })
+    
     observeEvent(input$addPatient, {
         shinyjs::show("patientForm")
     })
@@ -86,9 +94,18 @@ patient_server <- function(input, output, session){
     shinyjs::onevent("click", "borrarPaciente", {
         # habría que sacar un mensajito diciendo seguro que quiere eliminar...
         con <- establishDBConnection()
-        #cambiar luego los ids
+        #borrar simulaciones asociadas
+
+        queryRep <- "DELETE FROM repgrid where fk_paciente = 2"
+        queryWimp <- "DELETE FROM wimpgrid where fk_paciente = 2"
+        DBI::dbExecute(con, queryRep)
+        DBI::dbExecute(con, queryWimp)
+
+        # borrar tabla intermedia
+        # cambiar luego los ids
         query1 <- "DELETE FROM psicologo_paciente WHERE fk_paciente = 2"
         DBI::dbExecute(con, query1)
+        # borrar el paciente
         query2 <- "DELETE FROM paciente WHERE id = 2"
         DBI::dbExecute(con, query2)
         
@@ -160,9 +177,5 @@ patient_server <- function(input, output, session){
         delay(100, shinyjs::hide("editForm"))
         
     }, add = TRUE)
-    
 
-    output$user_table <- renderDT({
-        renderizarTabla()
-    })
 }

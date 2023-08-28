@@ -408,7 +408,40 @@ output$bert_w <- renderPlot({
 
   })
 
- 
+shinyjs::onevent("click", "guardarBD_w", {
+    if (!is.null(session$userData$datos_wimpgrid)) {
+        connex <- establishDBConnection()
+
+        # Crear un archivo temporal
+        rutaArchivo <- tempfile(fileext = ".txt")
+
+        # Guardar los datos en el archivo temporal
+        saveAsTxt(session$userData$datos_wimpgrid, rutaArchivo)
+
+        con <- file(rutaArchivo, "r")
+        lineas <- readLines(con)
+        close(con)
+        
+        # Buscar el id del paciente...
+        # igual guardarlo en una variable session cuando se esta modificando su wimpgrid
+        # igual hacer una select ...
+        #
+        #
+        # fk_paciente
+        fk_paciente <- 2
+
+
+        contenido_completo <- paste(lineas, collapse = "\n")
+        # llevar cuidado en no insertar un wimpgrid con fk_paciente deleteado o invalido
+        queryTxt <- sprintf("INSERT INTO wimpgrid (wimpgridxt, fk_paciente) VALUES ('%s', %d)", contenido_completo, fk_paciente)
+        DBI::dbExecute(connex, queryTxt)
+
+        # Eliminar el archivo temporal después de usarlo si es necesario
+        file.remove(rutaArchivo)
+
+        DBI::dbDisconnect(connex)
+    }
+})
 
 observeEvent(input$editar_w, {
 

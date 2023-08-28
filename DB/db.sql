@@ -24,14 +24,14 @@ CREATE TABLE IF NOT EXISTS psicologo_paciente (
 
 -- Crear tabla repgrid si no existe
 CREATE TABLE IF NOT EXISTS repgrid (
-    id INTEGER PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     repgridtxt TEXT,
     fk_paciente INT REFERENCES paciente(id)
 );
 
 -- Crear tabla wimpgrid si no existe
 CREATE TABLE IF NOT EXISTS wimpgrid (
-    id INTEGER PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     wimpgridtxt TEXT,
     fk_paciente INT REFERENCES paciente(id)
     -- faltaria añadir los controles para poder guardar la simulación....

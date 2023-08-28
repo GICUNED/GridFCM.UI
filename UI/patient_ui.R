@@ -19,8 +19,8 @@ patient_ui <- fluidPage(
       DTOutput("user_table")
     )
   ),
-  actionButton("editarPaciente", "Editar"),
-  actionButton("borrarPaciente", "Borrar"),
+  actionButton("editarPaciente", i18n$t("Editar")),
+  actionButton("borrarPaciente", i18n$t("Borrar")),
 
   #Formulario para añadir paciente
   shinyjs::hidden(

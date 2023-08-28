@@ -33,6 +33,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
       actionButton("guardar_w", i18n$t("Guardar"), style = "display: none;", status = 'success', icon = icon("save")),
       actionButton("reiniciar_w", i18n$t("Reiniciar"), style = "display: none;", status = 'danger', icon = icon("arrow-rotate-left")),
       actionButton("editar_w", i18n$t("Editar"), icon = icon("edit")),
+      actionButton("guardarBD_w", i18n$t("Guardar BD"), icon = icon("database"))
       ),
       shinyjs::hidden(
       div(id = "tabla_datos_wimpgrid_container",
