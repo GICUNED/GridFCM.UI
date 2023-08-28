@@ -15,20 +15,27 @@ tabsetPanel(
                 box(
                     width = 12,
                     title = i18n$t("Elementos a valorar"),
-                    icon = icon("magnifying-glass-chart"),
-                    status = "success",
-                    collapsible = FALSE,
+                    icon = icon("people-arrows"),
+                    collapsible = TRUE,
                     
                     textInput("nombrePaciente", i18n$t("Nombre:"), ""),
-                    column(12, class="d-flex justify-content-center mt-3", actionButton("guardarNombre", i18n$t("Añadir"), status = "primary", icon = icon("people-arrows")))
+                    column(12, class="d-flex justify-content-center mt-3", actionButton("guardarNombre", i18n$t("Añadir"), status = "primary", icon = icon("angle-right")))
                 )
             ),
             
-            column(7, id = "namesForm",
-                h3(i18n$t("Nombres Guardados")),
-                column(12, uiOutput("lista_nombres")),
-                column(12, class="d-flex justify-content-center mt-3", actionButton("continuar", i18n$t("Continuar"), status="success", icon = icon("arrow-right") ))
+            column(7,
+            box(
+                    width = 12,
+                    title = i18n$t("Nombres Guardados"),
+                    icon = icon("people-arrows"),
+                    status = "success",
+                    collapsible = FALSE,
+                    
+
+                    column(12, id = "namesForm", uiOutput("lista_nombres")),
+                    column(12, class="d-flex justify-content-center mt-3", actionButton("continuar", i18n$t("Continuar"), status="success", icon = icon("arrow-right") ))
             )
+        ),
     
     )
 ),

@@ -1,5 +1,5 @@
 form_repgrid_server <- function(input, output, session){
-    
+    shinyjs::hide("namesForm")
     nombres <- reactiveVal(character(0))
     lista_nombres <- list()
     observeEvent(input$guardarNombre, {
