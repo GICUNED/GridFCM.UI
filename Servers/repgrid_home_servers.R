@@ -153,6 +153,8 @@ observeEvent(input$tabla_datos_repgrid, {
           hot_col(col = seq(1, session$userData$num_col_repgrid - 1), format = "1")
       })
 
+      session$userData$changes <- changes
+
     } else if (!is.null(session$userData$datos_repgrid)) {
       tabla_manipulable(hot_to_r(input$tabla_datos_repgrid))
     }
@@ -185,33 +187,9 @@ output$bert <- renderPlot({
  # de esta manera con un onevent solo se hace una vez y es lo correcto
   shinyjs::onevent("click", "guardarBD", {
       if (!is.null(session$userData$datos_repgrid)) {
-          connex <- establishDBConnection()
-
-          # Crear un archivo temporal
-          rutaArchivo <- tempfile(fileext = ".txt")
-
-          # Guardar los datos en el archivo temporal
-          saveAsTxt(session$userData$datos_repgrid, rutaArchivo)
-
-          con <- file(rutaArchivo, "r")
-          lineas <- readLines(con)
-          close(con)
-          
-          # Buscar el id del paciente...
-          # luego deberia ser un update solo pq accede desde la pagina de pacientes con el id
-          #
-          #
-          # fk_paciente
-          fk_paciente <- 1
-          fecha <- as.POSIXct(Sys.time(), tz = "Europe/Madrid")
-
-          contenido_completo <- paste(lineas, collapse = "\n")
-          # llevar cuidado en no insertar un repgrid con fk_paciente deleteado o invalido
-          queryTxt <- sprintf("INSERT INTO repgrid (repgridTxt, fecha_registro, fk_paciente) VALUES ('%s', '%s', %d)", contenido_completo, fecha, fk_paciente)
-          DBI::dbExecute(connex, queryTxt)
-
-          # Eliminar el archivo temporal después de usarlo si es necesario
-          file.remove(rutaArchivo)
+          con <- establishDBConnection()
+          message(changes)
+          #gestionar los cambios y guardarlos directamente en la bd
 
           DBI::dbDisconnect(connex)
       }

@@ -54,9 +54,18 @@ patient_server <- function(input, output, session){
         selected_row <- input$simulaciones_rep_rows_selected
         if (!is.null(selected_row)) {
             # hacer consulta para obtener el txt de repgrid aqui con la fecha seleccionada
-            # y despues esto repgrid_data_DB$repgridTxt <- repgridDB$repgridtxt
-            message(repgrid_data_DB$repgridTxt)
+            fechas <- repgrid_data_DB$fechas
+            fecha <- fechas[selected_row]
+            con <- establishDBConnection()
+            query <- sprintf("SELECT repgridtxt from repgrid where fecha_registro = '%s'", fecha)
+            repgrid_query <- DBI::dbGetQuery(con, query)
+            if (!is.null(repgrid_query) && nrow(repgrid_query) > 0) {
+                repgrid_text <- repgrid_query$repgridtxt[1]
+            }
+            DBI::dbDisconnect(con)
             
+            
+            repgrid_data_DB$repgridTxt <- repgrid_text
         }
     })
     
@@ -67,7 +76,7 @@ patient_server <- function(input, output, session){
         repgridDB <- DBI::dbGetQuery(con, query)
         DBI::dbDisconnect(con)
         
-        fecha_hora <- as.POSIXct(repgridDB$fecha_registro, origin = "1970-01-01", tz = "Europe/Madrid")
+        fecha_hora <- repgridDB$fecha_registro#as.POSIXct(repgridDB$fecha_registro, origin = "1970-01-01", tz = "Europe/Madrid")
         fechasRep <- format(fecha_hora, format = "%Y-%m-%d %H:%M:%S")
         repgrid_data_DB$fechas <- fechasRep
         
@@ -75,6 +84,48 @@ patient_server <- function(input, output, session){
         output$simulaciones_rep <- renderDT({
             datatable(data.frame(Fecha = repgrid_data_DB$fechas), selection = 'single')
         })
+    })
+    
+    # Editar simulaciones repgrid. Guardar los datos
+    observeEvent(input$editarSimulacionRepgrid, {
+
+        # en el futuro solo quiero llamar a importar excel con la funcion de decodificar
+        message("entro en editar simulacion")
+        
+        # Crear un archivo temporal txt
+        archivo_temporal <- tempfile(fileext = ".txt")
+        writeLines(repgrid_data_DB$repgridTxt, archivo_temporal)
+        repgrid_importado <- OpenRepGrid::importTxt(archivo_temporal)
+
+        # Crear e importar xlsx
+        archivo_temporal2 <- "/srv/shiny-server/ficheros/excel.xlsx"
+        #OpenRepGrid::saveAsExcel(repgrid_importado, archivo_temporal2, sheet=1)
+
+
+        session$userData$datos_repgrid <- repgrid_importado
+        session$userData$datos_to_table <- repgrid_importado
+
+        session$userData$datos_to_table<- if (!is.null(session$userData$datos_repgrid)) {read.xlsx(archivo_temporal2, sheet=1)}
+        num_columnas <- if (!is.null(session$userData$datos_repgrid)) {
+            ncol(session$userData$datos_to_table)
+        } else { 0 }
+        session$userData$num_col_repgrid <- num_columnas
+
+        num_rows <- if (!is.null(session$userData$datos_repgrid)) {
+            nrow(session$userData$datos_to_table)
+        } else { 0 }
+        session$userData$num_row_repgrid <- num_rows
+        message(paste("num col", num_columnas))
+        message(paste("num row", num_rows))
+
+        if (!is.null(session$userData$datos_repgrid)) {
+            # Solo archivo RepGrid cargado, navegar a RepGrid Home
+            repgrid_home_server(input,output,session)
+            runjs("window.location.href = '/#!/repgrid';")
+        } 
+
+        # Eliminar el archivo temporal (opcional, si es necesario)
+        file.remove(archivo_temporal)
     })
 
 
@@ -186,6 +237,13 @@ patient_server <- function(input, output, session){
             })
         }
         # falta el else con el mensaje de error
+    })
+
+    observeEvent(input$importarGridPaciente, {
+        # hacer que no se muestren lo de ficheros y formularios??? no se
+        session$userData$id_paciente <- user_data$selected_user_id
+        import_excel_server(input, output, session)
+        runjs("window.location.href = '/#!/import';")
     })
 
     runjs("

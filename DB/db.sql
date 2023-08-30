@@ -39,6 +39,26 @@ CREATE TABLE IF NOT EXISTS wimpgrid (
     -- faltaria añadir los controles para poder guardar la simulación....
 );
 
+CREATE TABLE repgrid_xlsx (
+    id SERIAL,
+    fila INTEGER,
+    columna INTEGER,
+    valor varchar(40),
+    fecha_registro TIMESTAMP,
+    fk_paciente INT REFERENCES paciente(id),
+    PRIMARY KEY (id, fila, columna)
+);
+
+CREATE TABLE wimpgrid_xlsx (
+    id SERIAL,
+    fila INTEGER,
+    columna INTEGER,
+    valor varchar(40),
+    fecha_registro TIMESTAMP,
+    fk_paciente INT REFERENCES paciente(id),
+    PRIMARY KEY (id, fila, columna)
+);
+
 -- Seeder de prueba
 INSERT INTO psicologo (nombre, email)
 VALUES ('Luis Ángel', 'la@uned.com');

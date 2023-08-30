@@ -24,8 +24,6 @@ knitr::knit_hooks$set(webgl = hook_webgl)
 
 
 
-
-
 source("global.R")
 
 #GRID
@@ -73,6 +71,7 @@ source("Servers/patient_server.R")
 
 #DB
 source("DB/establish_con.R")
+source("DB/gestion_excel.R")
 
 
 
@@ -257,7 +256,7 @@ server <- function(input, output, session) {
   another_server(input, output, session)
   userHome_server(input, output, session)
   import_server(input, output, session)
-  import_excel_server(input, output, session)
+  #import_excel_server(input, output, session)
   form_repgrid_server(input, output, session)
   patient_server(input, output, session)
   #form wimp
