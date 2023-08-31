@@ -1,7 +1,9 @@
 codificar_excel_BD <- function(excel, tabla_destino, id_paciente){
     con <- establishDBConnection()
     t_inicio <- Sys.time()
-    fecha <- Sys.time()
+    fecha <- as.POSIXct(Sys.time(), origin = "1970-01-01")
+    fecha <- format(fecha, format = "%Y-%m-%d %H:%M:%S", tz = "Europe/Madrid")
+    message(fecha)
     # consultar max id y meter manual
     # Consultar el máximo valor actual de 'id'
     max_id <- as.integer(DBI::dbGetQuery(con, sprintf("SELECT MAX(id) FROM %s", tabla_destino)))
@@ -27,11 +29,16 @@ codificar_excel_BD <- function(excel, tabla_destino, id_paciente){
     DBI::dbDisconnect(con)
 } 
 
-decodificar_BD_excel <- function(tabla_origen, ruta_destino, id_paciente) {
+decodificar_BD_excel <- function(tabla_origen, ruta_destino, id_paciente, fecha_registro='') {
     con <- establishDBConnection()
     
     # Consultar los datos de la tabla
-    query <- sprintf("SELECT fila, columna, valor FROM %s WHERE fk_paciente = %d", tabla_origen, id_paciente)
+    if(fecha_registro==''){
+        query <- sprintf("SELECT fila, columna, valor FROM %s WHERE fk_paciente = %d", tabla_origen, id_paciente)
+    }
+    else{
+        query <- sprintf("SELECT fila, columna, valor FROM %s WHERE fk_paciente = %d and fecha_registro = '%s'", tabla_origen, id_paciente, fecha_registro)
+    }
     datos <- DBI::dbGetQuery(con, query)
     
     # Identificar el número máximo de filas y columnas

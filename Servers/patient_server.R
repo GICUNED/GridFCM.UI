@@ -10,7 +10,7 @@ patient_server <- function(input, output, session){
         DBI::dbDisconnect(con)
         users$genero <- as.factor(users$genero)
         # Convertir a un objeto POSIXct (Fecha y Hora) en R con la zona horaria de Madrid
-        fecha_hora <- as.POSIXct(users$fecha_registro, origin = "1970-01-01", tz = "Europe/Madrid")
+        fecha_hora <- as.POSIXct(users$fecha_registro, origin = "1970-01-01")
         # Formatear la fecha y hora en un formato legible
         users$fecha_registro <- format(fecha_hora, format = "%Y-%m-%d %H:%M:%S")
         user_data$users <- users # variable reactiva
@@ -49,41 +49,69 @@ patient_server <- function(input, output, session){
             message(selected_user_id)
         }
     })
+
     # gestion de las filas seleccionadas en la tabla de simulaciones repgrid
     observeEvent(input$simulaciones_rep_rows_selected, {
         selected_row <- input$simulaciones_rep_rows_selected
+
         if (!is.null(selected_row)) {
             # hacer consulta para obtener el txt de repgrid aqui con la fecha seleccionada
             fechas <- repgrid_data_DB$fechas
             fecha <- fechas[selected_row]
-            con <- establishDBConnection()
-            query <- sprintf("SELECT repgridtxt from repgrid where fecha_registro = '%s'", fecha)
-            repgrid_query <- DBI::dbGetQuery(con, query)
-            if (!is.null(repgrid_query) && nrow(repgrid_query) > 0) {
-                repgrid_text <- repgrid_query$repgridtxt[1]
-            }
-            DBI::dbDisconnect(con)
-            
-            
-            repgrid_data_DB$repgridTxt <- repgrid_text
         }
+
+        # codigo duplicado de importar excel server....
+        ruta_destino <- "/srv/shiny-server/ficheros/excel_rep.xlsx"
+        decodificar_BD_excel('repgrid_xlsx', ruta_destino, user_data$selected_user_id, fecha)
+
+        datos_repgrid <- if (!is.null(input$archivo_repgrid)) {
+            OpenRepGrid::importExcel(ruta_destino)
+        }
+        excel_repgrid <- if (!is.null(input$archivo_repgrid)) {read.xlsx(ruta_destino)}
+
+        session$userData$datos_to_table <- excel_repgrid
+        num_columnas <- if (!is.null(input$archivo_repgrid)) {
+            ncol(session$userData$datos_to_table)
+        } else {
+            0
+        }
+        print(paste("num col", num_columnas))
+        session$userData$num_col_repgrid <- num_columnas
+
+        num_rows <- if (!is.null(input$archivo_repgrid)) {
+            nrow(session$userData$datos_to_table)
+        } else {
+            0
+        }
+        print(paste("num row", num_rows))
+        session$userData$num_row_repgrid <- num_rows
+
+        session$userData$datos_repgrid <- datos_repgrid
+
+        if (!is.null(datos_repgrid)) {
+            # Solo archivo RepGrid cargado, navegar a RepGrid Home
+            repgrid_home_server(input,output,session)
+            runjs("window.location.href = '/#!/repgrid';")
+        } 
     })
     
     
     observeEvent(input$simulacionesRepgrid, {
         con <- establishDBConnection()
-        query <- sprintf("SELECT * FROM repgrid WHERE fk_paciente=%d", user_data$selected_user_id)
+        query <- sprintf("SELECT distinct(fecha_registro) FROM repgrid_xlsx WHERE fk_paciente=%d", user_data$selected_user_id)
         repgridDB <- DBI::dbGetQuery(con, query)
         DBI::dbDisconnect(con)
         
-        fecha_hora <- repgridDB$fecha_registro#as.POSIXct(repgridDB$fecha_registro, origin = "1970-01-01", tz = "Europe/Madrid")
-        fechasRep <- format(fecha_hora, format = "%Y-%m-%d %H:%M:%S")
-        repgrid_data_DB$fechas <- fechasRep
-        
+        if(!is.null(repgridDB)){
+            fecha_hora <- repgridDB$fecha_registro#as.POSIXct(repgridDB$fecha_registro, origin = "1970-01-01", tz = "Europe/Madrid")
+            fechasRep <- format(fecha_hora, format = "%Y-%m-%d %H:%M:%S")
+            repgrid_data_DB$fechas <- fechasRep
 
-        output$simulaciones_rep <- renderDT({
-            datatable(data.frame(Fecha = repgrid_data_DB$fechas), selection = 'single')
-        })
+            output$simulaciones_rep <- renderDT({
+                datatable(data.frame(Fecha = repgrid_data_DB$fechas), selection = 'single')
+            })
+        }
+        
     })
     
     # Editar simulaciones repgrid. Guardar los datos
@@ -175,8 +203,8 @@ patient_server <- function(input, output, session){
         con <- establishDBConnection()
         #borrar simulaciones asociadas
 
-        queryRep <- sprintf("DELETE FROM repgrid where fk_paciente = %d", user_data$selected_user_id)
-        queryWimp <- sprintf("DELETE FROM wimpgrid where fk_paciente = %d", user_data$selected_user_id)
+        queryRep <- sprintf("DELETE FROM repgrid_xlsx where fk_paciente = %d", user_data$selected_user_id)
+        queryWimp <- sprintf("DELETE FROM wimpgrid_xlsx where fk_paciente = %d", user_data$selected_user_id)
         DBI::dbExecute(con, queryRep)
         DBI::dbExecute(con, queryWimp)
 
@@ -192,9 +220,9 @@ patient_server <- function(input, output, session){
 
         DBI::dbDisconnect(con)
 
-        output$user_table <- renderDT({
-            renderizarTabla()
-        })
+        #output$user_table <- renderDT({
+        #    renderizarTabla()
+        #})
     })
     
     shinyjs::onevent("click", "guardarAddPatient", {
@@ -205,7 +233,7 @@ patient_server <- function(input, output, session){
         edad <- input$edad
         genero <- input$genero
         anotaciones <- input$anotaciones
-        fecha_registro <- as.POSIXct(Sys.time(), tz = "Europe/Madrid")
+        fecha_registro <- format(Sys.time(), format = "%Y-%m-%d %H:%M:%S", tz = "Europe/Madrid")
         fk_psicologo <- 1 # de momento 
 
         if (is.numeric(edad) && edad >= 0 && edad <= 120) {
@@ -232,9 +260,9 @@ patient_server <- function(input, output, session){
             updateSelectInput(session, "genero", selected = "")
             updateTextInput(session, "anotaciones", value = "")
 
-            output$user_table <- renderDT({
-                renderizarTabla()
-            })
+            #output$user_table <- renderDT({
+            #    renderizarTabla()
+            #})
         }
         # falta el else con el mensaje de error
     })
