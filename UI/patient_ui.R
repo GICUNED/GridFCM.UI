@@ -11,25 +11,15 @@ patient_ui <- fluidPage(
   fluidRow( class="custom-margins mt-2",
     column(12, class = ("button-container mb-2"),
       actionButton(class="mr-auto", "addPatient", i18n$t("Añadir paciente"), status = 'info', icon = icon("person-circle-plus")),
-      actionButton("editarPaciente", i18n$t("Editar"), disabled="TRUE", icon = icon("pen-to-square")),
-      actionButton("borrarPaciente", i18n$t("Borrar"), disabled="TRUE", status ="danger", icon = icon("trash-can")),
+      actionButton("editarPaciente", i18n$t("Editar"), icon = icon("pen-to-square")),
+      actionButton("borrarPaciente", i18n$t("Borrar"), status ="danger", icon = icon("trash-can")),
     ),
     column(12, class = "patients-table p-3 bg-white rounded-lg",
         DTOutput("user_table")
     ),
   ),
   
-  #Tabla que muestra los usuarios
-
-  fluidRow(
-    column(12, class = "p-3",
-      DTOutput("user_table")
-    )
-  ),
-  
   div(
-    actionButton("editarPaciente", i18n$t("Editar")),
-    actionButton("borrarPaciente", i18n$t("Borrar")),
     actionButton("simulacionesRepgrid", i18n$t("Simulaciones Repgrid")),
     actionButton("simulacionesWimpgrid", i18n$t("Simulaciones Wimpgrid")),
     actionButton("importarGridPaciente", i18n$t("Nueva rejilla"))
