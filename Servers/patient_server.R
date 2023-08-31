@@ -1,5 +1,8 @@
 patient_server <- function(input, output, session){
 
+    user_data <- reactiveValues(users = NULL, selected_user_id = NULL)
+    repgrid_data_DB <- reactiveValues(fechas = NULL, repgridTxt = NULL)
+
     renderizarTabla <- function(){
         con <- establishDBConnection()
         query <- "SELECT * FROM paciente"
@@ -7,32 +10,11 @@ patient_server <- function(input, output, session){
         DBI::dbDisconnect(con)
         users$genero <- as.factor(users$genero)
         # Convertir a un objeto POSIXct (Fecha y Hora) en R con la zona horaria de Madrid
-        fecha_hora <- as.POSIXct(users$fecha_registro, origin = "1970-01-01", tz = "Europe/Madrid")
+        fecha_hora <- as.POSIXct(users$fecha_registro, origin = "1970-01-01")
         # Formatear la fecha y hora en un formato legible
         users$fecha_registro <- format(fecha_hora, format = "%Y-%m-%d %H:%M:%S")
-        users
-    }
-    renderizarTabla_opcion2 <- function(){
-        con <- establishDBConnection()
-        query <- "SELECT * FROM paciente"
-        users <- DBI::dbGetQuery(con, query)
-        DBI::dbDisconnect(con)
-        users$genero <- as.factor(users$genero)
-        
-        fecha_hora <- as.POSIXct(users$fecha_registro, origin = "1970-01-01", tz = "Europe/Madrid")
-        users$fecha_registro <- format(fecha_hora, format = "%Y-%m-%d %H:%M:%S")
-        
-        datatable(users, escape = FALSE, options = list(
-            columnDefs = list(list(targets = ncol(users), render = JS(
-                "function(data, type, row, meta) {",
-                "return '<button class=\"btn btn-primary\">Editar/Borrar/Repgrid/Wimpgrid(WIP)</button>';",
-                "}"
-            )))
-        ))
-
-        # ademas deberia haber boton de acceso a simulaciones de repgrid y wimpgrid del paciente, 
-        # otro boton que permita importar y le lleve a la pagina de "importar"
-        # ToDo Simon -> una vez esten los botones, gestionar dentro de session$patientID el id del paciente con el que se trabaja 
+        user_data$users <- users # variable reactiva
+        DT::datatable(users, selection = 'single')
     }
 
     output$user_table <- renderDT({
@@ -55,11 +37,136 @@ patient_server <- function(input, output, session){
         );
     ")
 
+    # gestion de las filas seleccionadas en la tabla pacientes
+    observeEvent(input$user_table_rows_selected, {
+        selected_row <- input$user_table_rows_selected
+        if (!is.null(selected_row)) {
+            # Obtén el ID del usuario de la fila seleccionada
+            users <- user_data$users
+            selected_user_id <- users[selected_row, "id"]
+            user_data$selected_user_id <- selected_user_id # reactiva
+            
+            # Ahora puedes utilizar selected_user_id para realizar acciones específicas
+            # relacionadas con el usuario seleccionado, como mostrar detalles adicionales,
+            # eliminar el usuario de la base de datos, etc.
+            
+            # Por ejemplo, imprimir el ID del usuario en la consola
+            message(selected_user_id)
+        }
+    })
+
+    # gestion de las filas seleccionadas en la tabla de simulaciones repgrid
+    observeEvent(input$simulaciones_rep_rows_selected, {
+        selected_row <- input$simulaciones_rep_rows_selected
+
+        if (!is.null(selected_row)) {
+            # hacer consulta para obtener el txt de repgrid aqui con la fecha seleccionada
+            fechas <- repgrid_data_DB$fechas
+            fecha <- fechas[selected_row]
+        }
+
+        # codigo duplicado de importar excel server....
+        ruta_destino <- "/srv/shiny-server/ficheros/excel_rep.xlsx"
+        decodificar_BD_excel('repgrid_xlsx', ruta_destino, user_data$selected_user_id, fecha)
+
+        datos_repgrid <- if (!is.null(input$archivo_repgrid)) {
+            OpenRepGrid::importExcel(ruta_destino)
+        }
+        excel_repgrid <- if (!is.null(input$archivo_repgrid)) {read.xlsx(ruta_destino)}
+
+        session$userData$datos_to_table <- excel_repgrid
+        num_columnas <- if (!is.null(input$archivo_repgrid)) {
+            ncol(session$userData$datos_to_table)
+        } else {
+            0
+        }
+        print(paste("num col", num_columnas))
+        session$userData$num_col_repgrid <- num_columnas
+
+        num_rows <- if (!is.null(input$archivo_repgrid)) {
+            nrow(session$userData$datos_to_table)
+        } else {
+            0
+        }
+        print(paste("num row", num_rows))
+        session$userData$num_row_repgrid <- num_rows
+
+        session$userData$datos_repgrid <- datos_repgrid
+
+        if (!is.null(datos_repgrid)) {
+            # Solo archivo RepGrid cargado, navegar a RepGrid Home
+            repgrid_home_server(input,output,session)
+            runjs("window.location.href = '/#!/repgrid';")
+        } 
+    })
+    
+    
+    observeEvent(input$simulacionesRepgrid, {
+        con <- establishDBConnection()
+        query <- sprintf("SELECT distinct(fecha_registro) FROM repgrid_xlsx WHERE fk_paciente=%d", user_data$selected_user_id)
+        repgridDB <- DBI::dbGetQuery(con, query)
+        DBI::dbDisconnect(con)
+        
+        if(!is.null(repgridDB)){
+            fecha_hora <- repgridDB$fecha_registro#as.POSIXct(repgridDB$fecha_registro, origin = "1970-01-01", tz = "Europe/Madrid")
+            fechasRep <- format(fecha_hora, format = "%Y-%m-%d %H:%M:%S")
+            repgrid_data_DB$fechas <- fechasRep
+
+            output$simulaciones_rep <- renderDT({
+                datatable(data.frame(Fecha = repgrid_data_DB$fechas), selection = 'single')
+            })
+        }
+        
+    })
+    
+    # Editar simulaciones repgrid. Guardar los datos
+    observeEvent(input$editarSimulacionRepgrid, {
+
+        # en el futuro solo quiero llamar a importar excel con la funcion de decodificar
+        message("entro en editar simulacion")
+        
+        # Crear un archivo temporal txt
+        archivo_temporal <- tempfile(fileext = ".txt")
+        writeLines(repgrid_data_DB$repgridTxt, archivo_temporal)
+        repgrid_importado <- OpenRepGrid::importTxt(archivo_temporal)
+
+        # Crear e importar xlsx
+        archivo_temporal2 <- "/srv/shiny-server/ficheros/excel.xlsx"
+        #OpenRepGrid::saveAsExcel(repgrid_importado, archivo_temporal2, sheet=1)
+
+
+        session$userData$datos_repgrid <- repgrid_importado
+        session$userData$datos_to_table <- repgrid_importado
+
+        session$userData$datos_to_table<- if (!is.null(session$userData$datos_repgrid)) {read.xlsx(archivo_temporal2, sheet=1)}
+        num_columnas <- if (!is.null(session$userData$datos_repgrid)) {
+            ncol(session$userData$datos_to_table)
+        } else { 0 }
+        session$userData$num_col_repgrid <- num_columnas
+
+        num_rows <- if (!is.null(session$userData$datos_repgrid)) {
+            nrow(session$userData$datos_to_table)
+        } else { 0 }
+        session$userData$num_row_repgrid <- num_rows
+        message(paste("num col", num_columnas))
+        message(paste("num row", num_rows))
+
+        if (!is.null(session$userData$datos_repgrid)) {
+            # Solo archivo RepGrid cargado, navegar a RepGrid Home
+            repgrid_home_server(input,output,session)
+            runjs("window.location.href = '/#!/repgrid';")
+        } 
+
+        # Eliminar el archivo temporal (opcional, si es necesario)
+        file.remove(archivo_temporal)
+    })
+
+
     shinyjs::onevent("click", "editarPaciente", {
         con <- establishDBConnection()
 
         # de momento 1, luego deberia coger el paciente de la fila correspondiente
-        query <- "SELECT * FROM paciente where id = 2" 
+        query <- sprintf("SELECT * FROM paciente where id = %d", user_data$selected_user_id ) 
         users <- DBI::dbGetQuery(con, query)
 
         shinyjs::show("editForm")
@@ -83,7 +190,7 @@ patient_server <- function(input, output, session){
         if (is.numeric(edad) && edad >= 0 && edad <= 120) {
             # Insertar los datos en la base de datos
             query <- sprintf("UPDATE paciente SET nombre = '%s', edad = %d, genero = '%s', anotaciones = '%s' WHERE id = %d",
-                 nombre, edad, genero, anotaciones, 2)
+                 nombre, edad, genero, anotaciones, user_data$selected_user_id )
 
             DBI::dbExecute(con, query)
 
@@ -103,26 +210,26 @@ patient_server <- function(input, output, session){
         con <- establishDBConnection()
         #borrar simulaciones asociadas
 
-        queryRep <- "DELETE FROM repgrid where fk_paciente = 2"
-        queryWimp <- "DELETE FROM wimpgrid where fk_paciente = 2"
+        queryRep <- sprintf("DELETE FROM repgrid_xlsx where fk_paciente = %d", user_data$selected_user_id)
+        queryWimp <- sprintf("DELETE FROM wimpgrid_xlsx where fk_paciente = %d", user_data$selected_user_id)
         DBI::dbExecute(con, queryRep)
         DBI::dbExecute(con, queryWimp)
 
         # borrar tabla intermedia
         # cambiar luego los ids
-        query1 <- "DELETE FROM psicologo_paciente WHERE fk_paciente = 2"
+        query1 <- sprintf("DELETE FROM psicologo_paciente WHERE fk_paciente = %d", user_data$selected_user_id)
         DBI::dbExecute(con, query1)
         # borrar el paciente
-        query2 <- "DELETE FROM paciente WHERE id = 2"
+        query2 <- sprintf("DELETE FROM paciente WHERE id = %d", user_data$selected_user_id)
         DBI::dbExecute(con, query2)
         
         # Borrar simulaciones 
 
         DBI::dbDisconnect(con)
 
-        output$user_table <- renderDT({
-            renderizarTabla()
-        })
+        #output$user_table <- renderDT({
+        #    renderizarTabla()
+        #})
     })
     
     shinyjs::onevent("click", "guardarAddPatient", {
@@ -133,7 +240,7 @@ patient_server <- function(input, output, session){
         edad <- input$edad
         genero <- input$genero
         anotaciones <- input$anotaciones
-        fecha_registro <- as.POSIXct(Sys.time(), tz = "Europe/Madrid")
+        fecha_registro <- format(Sys.time(), format = "%Y-%m-%d %H:%M:%S", tz = "Europe/Madrid")
         fk_psicologo <- 1 # de momento 
 
         if (is.numeric(edad) && edad >= 0 && edad <= 120) {
@@ -160,11 +267,18 @@ patient_server <- function(input, output, session){
             updateSelectInput(session, "genero", selected = "")
             updateTextInput(session, "anotaciones", value = "")
 
-            output$user_table <- renderDT({
-                renderizarTabla()
-            })
+            #output$user_table <- renderDT({
+            #    renderizarTabla()
+            #})
         }
         # falta el else con el mensaje de error
+    })
+
+    observeEvent(input$importarGridPaciente, {
+        # hacer que no se muestren lo de ficheros y formularios??? no se
+        session$userData$id_paciente <- user_data$selected_user_id
+        import_excel_server(input, output, session)
+        runjs("window.location.href = '/#!/import';")
     })
 
     runjs("

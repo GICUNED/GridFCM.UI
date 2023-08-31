@@ -28,6 +28,8 @@ form_repgrid_server <- function(input, output, session){
     })
     
     onevent("click", "continuar",{
+        # cambiar luego esto para que se vaya construyendo el dataframe para luego meterlo en la bd y 
+        # posteriormente pasarle el codificar y decodificar....
         
         message(session$userData$repgrid_form$elementos)
     })

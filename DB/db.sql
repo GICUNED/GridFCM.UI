@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS psicologo_paciente (
 CREATE TABLE IF NOT EXISTS repgrid (
     id SERIAL PRIMARY KEY,
     repgridtxt TEXT,
+    fecha_registro TIMESTAMP,
     fk_paciente INT REFERENCES paciente(id)
 );
 
@@ -33,8 +34,29 @@ CREATE TABLE IF NOT EXISTS repgrid (
 CREATE TABLE IF NOT EXISTS wimpgrid (
     id SERIAL PRIMARY KEY,
     wimpgridtxt TEXT,
+    fecha_registro TIMESTAMP,
     fk_paciente INT REFERENCES paciente(id)
     -- faltaria añadir los controles para poder guardar la simulación....
+);
+
+CREATE TABLE repgrid_xlsx (
+    id SERIAL,
+    fila INTEGER,
+    columna INTEGER,
+    valor varchar(40),
+    fecha_registro TIMESTAMP,
+    fk_paciente INT REFERENCES paciente(id),
+    PRIMARY KEY (id, fila, columna)
+);
+
+CREATE TABLE wimpgrid_xlsx (
+    id SERIAL,
+    fila INTEGER,
+    columna INTEGER,
+    valor varchar(40),
+    fecha_registro TIMESTAMP,
+    fk_paciente INT REFERENCES paciente(id),
+    PRIMARY KEY (id, fila, columna)
 );
 
 -- Seeder de prueba
