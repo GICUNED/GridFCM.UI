@@ -37,4 +37,5 @@ Imports:
     shinyjs (>= 2.1.0),
     shinyWidgets (>= 0.7.6),
     toastui (>= 0.3.0),
-    visNetwork (>= 2.1.2)
+    visNetwork (>= 2.1.2),
+    writexl (>= 1.4.2)

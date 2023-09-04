@@ -1,7 +1,7 @@
 patient_server <- function(input, output, session){
 
     user_data <- reactiveValues(users = NULL, selected_user_id = NULL)
-    repgrid_data_DB <- reactiveValues(fechas = NULL, repgridTxt = NULL)
+    repgrid_data_DB <- reactiveValues(fechas = NULL)
 
     renderizarTabla <- function(){
         con <- establishDBConnection()
@@ -63,41 +63,10 @@ patient_server <- function(input, output, session){
             # hacer consulta para obtener el txt de repgrid aqui con la fecha seleccionada
             fechas <- repgrid_data_DB$fechas
             fecha <- fechas[selected_row]
+            session$userData$fecha_repgrid <- fecha
         }
 
-        # codigo duplicado de importar excel server....
-        ruta_destino <- "/srv/shiny-server/ficheros/excel_rep.xlsx"
-        decodificar_BD_excel('repgrid_xlsx', ruta_destino, user_data$selected_user_id, fecha)
-
-        datos_repgrid <- if (!is.null(input$archivo_repgrid)) {
-            OpenRepGrid::importExcel(ruta_destino)
-        }
-        excel_repgrid <- if (!is.null(input$archivo_repgrid)) {read.xlsx(ruta_destino)}
-
-        session$userData$datos_to_table <- excel_repgrid
-        num_columnas <- if (!is.null(input$archivo_repgrid)) {
-            ncol(session$userData$datos_to_table)
-        } else {
-            0
-        }
-        print(paste("num col", num_columnas))
-        session$userData$num_col_repgrid <- num_columnas
-
-        num_rows <- if (!is.null(input$archivo_repgrid)) {
-            nrow(session$userData$datos_to_table)
-        } else {
-            0
-        }
-        print(paste("num row", num_rows))
-        session$userData$num_row_repgrid <- num_rows
-
-        session$userData$datos_repgrid <- datos_repgrid
-
-        if (!is.null(datos_repgrid)) {
-            # Solo archivo RepGrid cargado, navegar a RepGrid Home
-            repgrid_home_server(input,output,session)
-            runjs("window.location.href = '/#!/repgrid';")
-        } 
+        
     })
     
     
@@ -120,45 +89,34 @@ patient_server <- function(input, output, session){
     })
     
     # Editar simulaciones repgrid. Guardar los datos
+    # boton de cargar simulacion seleccionada
     observeEvent(input$editarSimulacionRepgrid, {
+        # codigo duplicado de importar excel server....
+        ruta_destino <- "/srv/shiny-server/ficheros/excel_rep.xlsx"
+        decodificar_BD_excel('repgrid_xlsx', ruta_destino, user_data$selected_user_id, session$userData$fecha_repgrid )
 
-        # en el futuro solo quiero llamar a importar excel con la funcion de decodificar
-        message("entro en editar simulacion")
+        datos_repgrid <- OpenRepGrid::importExcel(ruta_destino)
         
-        # Crear un archivo temporal txt
-        archivo_temporal <- tempfile(fileext = ".txt")
-        writeLines(repgrid_data_DB$repgridTxt, archivo_temporal)
-        repgrid_importado <- OpenRepGrid::importTxt(archivo_temporal)
+        excel_repgrid <- read.xlsx(ruta_destino)
 
-        # Crear e importar xlsx
-        archivo_temporal2 <- "/srv/shiny-server/ficheros/excel.xlsx"
-        #OpenRepGrid::saveAsExcel(repgrid_importado, archivo_temporal2, sheet=1)
+        #convertir nums a formato numerico y no texto como estaba importado
+        columnas_a_convertir <- 2:(ncol(excel_repgrid) - 1)
+        # Utiliza lapply para aplicar la conversión a las columnas seleccionadas
+        excel_repgrid[, columnas_a_convertir] <- lapply(excel_repgrid[, columnas_a_convertir], as.numeric)
 
-
-        session$userData$datos_repgrid <- repgrid_importado
-        session$userData$datos_to_table <- repgrid_importado
-
-        session$userData$datos_to_table<- if (!is.null(session$userData$datos_repgrid)) {read.xlsx(archivo_temporal2, sheet=1)}
-        num_columnas <- if (!is.null(session$userData$datos_repgrid)) {
-            ncol(session$userData$datos_to_table)
-        } else { 0 }
+        session$userData$datos_to_table <- excel_repgrid
+        num_columnas <- ncol(session$userData$datos_to_table)
         session$userData$num_col_repgrid <- num_columnas
-
-        num_rows <- if (!is.null(session$userData$datos_repgrid)) {
-            nrow(session$userData$datos_to_table)
-        } else { 0 }
+        num_rows <- nrow(session$userData$datos_to_table)
         session$userData$num_row_repgrid <- num_rows
-        message(paste("num col", num_columnas))
-        message(paste("num row", num_rows))
+        session$userData$datos_repgrid <- datos_repgrid
 
-        if (!is.null(session$userData$datos_repgrid)) {
+        if (!is.null(datos_repgrid)) {
             # Solo archivo RepGrid cargado, navegar a RepGrid Home
+            session$userData$id_paciente <- user_data$selected_user_id
             repgrid_home_server(input,output,session)
             runjs("window.location.href = '/#!/repgrid';")
         } 
-
-        # Eliminar el archivo temporal (opcional, si es necesario)
-        file.remove(archivo_temporal)
     })
 
 
@@ -200,7 +158,14 @@ patient_server <- function(input, output, session){
 
             #cerrar el formulario al darle a editar si todo esta ok, en vez de vaciar todos los campos como en insertar, aqui no tiene sentido
         }
-        # else mensaje de error
+        else{
+            mensaje <- paste("El valor debe estar entre el rango 0 y 120.")
+            showModal(modalDialog(
+                title = "Error",
+                mensaje,
+                easyClose = TRUE
+            ))
+        }
 
         DBI::dbDisconnect(con)
     })
@@ -271,7 +236,14 @@ patient_server <- function(input, output, session){
             #    renderizarTabla()
             #})
         }
-        # falta el else con el mensaje de error
+        else{
+            mensaje <- paste("El valor debe estar entre el rango 0 y 120.")
+            showModal(modalDialog(
+                title = "Error",
+                mensaje,
+                easyClose = TRUE
+            ))
+        }
     })
 
     observeEvent(input$importarGridPaciente, {
