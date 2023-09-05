@@ -24,22 +24,12 @@ codificar_excel_BD <- function(excel, tabla_destino, id_paciente){
     }
     t_fin <- Sys.time()
     t_total <- t_fin - t_inicio
-    message(t_total)
-
+    message(paste(t_total, "segundos"))
     DBI::dbDisconnect(con)
+
+    return(fecha)
 } 
 
-es_numero <- function(texto) {
-    # Intenta convertir el texto en número
-    numero <- tryCatch(as.numeric(texto), error = function(e) NA)
-    
-    # Verifica si la conversión fue exitosa y no es NA
-    if (!is.na(numero)) {
-        return(TRUE)  # Es un número válido
-    } else {
-        return(FALSE) # No es un número válido
-    }
-}
 
 decodificar_BD_excel <- function(tabla_origen, ruta_destino, id_paciente, fecha_registro='') {
     con <- establishDBConnection()

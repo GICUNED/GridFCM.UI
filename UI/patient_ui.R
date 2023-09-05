@@ -27,13 +27,11 @@ patient_ui <- fluidPage(
 
   # Listado de simulaciones repgrid
   DTOutput("simulaciones_rep"),
+  DTOutput("simulaciones_wimp"),
   
   # Boton para editar la simulacion repgrid
   actionButton("editarSimulacionRepgrid", i18n$t("Cargar simulación seleccionada")),
-
- 
-  DTOutput("simulaciones_wimp"),
- 
+  actionButton("borrarSimulacion", i18n$t("Borrar simulación")),
 
 
   #Formulario para añadir paciente
