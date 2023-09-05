@@ -277,7 +277,14 @@ repgrid_inicial <- reactiveVal(repgrid_aux)
 
 wimpgrid_a_mostrar <- reactiveVal(repgrid_aux)
 
- 
+output$titulo_wimpgrid <- renderText({
+  con <- establishDBConnection()
+  nombre <- DBI::dbGetQuery(con, sprintf("SELECT nombre from paciente WHERE id = %d", session$userData$id_paciente))
+  DBI::dbDisconnect(con)
+  fecha <- session$userData$fecha_wimpgrid
+
+  paste("Nuevo título página: Simulación repgrid de ", nombre, " en la fecha y hora: ", fecha)
+})
 
 output$tabla_datos_wimpgrid <- renderRHandsontable({
 

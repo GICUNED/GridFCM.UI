@@ -23,6 +23,7 @@ importwimp <- function(path, sheet = 1, opr = TRUE){
 
   xlsx <- readxl::read_excel(path, sheet = sheet)
 
+
   n.constructs <- dim(xlsx)[1]
 
   # Scale -------------------------------------------------------------------
