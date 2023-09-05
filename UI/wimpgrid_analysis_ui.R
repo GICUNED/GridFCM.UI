@@ -138,10 +138,12 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                             
                             rHandsontableOutput("distance"),
 
-                            fluidRow(class = "subheader-tab flex-container-sm mt-4  mb-4",
+                            fluidRow(class = "flex-container-sm mt-4 mb-4",
                               icon("arrows-to-circle"),
-                              h4(i18n$t("Centralidad"), class = "pagetitle2custom"),
-                                
+                              h4(i18n$t("Centralidad"), class = "pagetitle2custom")
+                            ),
+
+                            fluidRow(class = "subheader-tab",
                             tabsetPanel(
                                 tabPanel("Degree", DT::dataTableOutput("table_degree"), icon = icon("gauge-simple-high")),
                                 tabPanel("Closeness", DT::dataTableOutput("table_closeness"), icon = icon("person-walking-dashed-line-arrow-right")),
