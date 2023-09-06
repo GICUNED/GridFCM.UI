@@ -3,10 +3,11 @@ import_excel_server <- function(input, output, session) {
   message(id_paciente)
 
   observeEvent(input$importar_datos, {
-      
+      message(req(input$archivo_repgrid))
       # Importar datos de RepGrid y WimpGrid utilizando las funciones importwimp() y OpenRepGrid::importExcel() si los archivos están presentes
-      #llamada al metodo de codificar para luego meter en la bd y demás
+      # llamada al metodo de codificar para luego meter en la bd y demás
       excel_repgrid_codificar <- read.xlsx(input$archivo_repgrid$datapath, colNames=FALSE)
+      # quitar el archivo del fileinput
       ruta_destino <- "/srv/shiny-server/ficheros/excel_rep.xlsx"
       # transformo el excel a tabla de bd y encima devuelvo la fecha para sacar en el título de la rejilla
       fecha <- codificar_excel_BD(excel_repgrid_codificar, 'repgrid_xlsx', id_paciente)
@@ -64,6 +65,7 @@ import_excel_server <- function(input, output, session) {
   
 
   observeEvent(input$importar_datos_w, {
+    message("Entro en importar datossss????'")
 
     #llamada al metodo de codificar para luego meter en la bd y demas
     excel_wimp_codificar <- read.xlsx(input$archivo_wimpgrid$datapath, colNames=FALSE)
@@ -80,10 +82,10 @@ import_excel_server <- function(input, output, session) {
     #session$userData$datos_to_table<- if (!is.null(input$archivo_repgrid)) {read.xlsx(ruta_destino)}
 
     datos_wimpgrid <- if (!is.null(input$archivo_wimpgrid)) {
-      importwimp(input$archivo_wimpgrid$datapath)
+      importwimp(ruta_destino)
     }
     excel_wimp<-if (!is.null(input$archivo_wimpgrid)) { 
-      read.xlsx(input$archivo_wimpgrid$datapath)
+      read.xlsx(ruta_destino)
     }
     # convertir los numeros tipo string a tipo numerico
     columnas_a_convertir <- 2:(ncol(excel_wimp) - 1)
