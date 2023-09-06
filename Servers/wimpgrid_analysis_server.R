@@ -277,7 +277,14 @@ repgrid_inicial <- reactiveVal(repgrid_aux)
 
 wimpgrid_a_mostrar <- reactiveVal(repgrid_aux)
 
- 
+output$titulo_wimpgrid <- renderText({
+  con <- establishDBConnection()
+  nombre <- DBI::dbGetQuery(con, sprintf("SELECT nombre from paciente WHERE id = %d", session$userData$id_paciente))
+  DBI::dbDisconnect(con)
+  fecha <- session$userData$fecha_wimpgrid
+
+  paste("Nuevo título página: Simulación repgrid de ", nombre, " en la fecha y hora: ", fecha)
+})
 
 output$tabla_datos_wimpgrid <- renderRHandsontable({
 
@@ -312,7 +319,7 @@ output$tabla_datos_wimpgrid <- renderRHandsontable({
  
 
 ## NEW ######################################################
-
+cambios_reactive <- reactiveVal(numeric(0))
  
 
 validateValue <- function(changes, tabla) {
@@ -359,6 +366,9 @@ validateValue <- function(changes, tabla) {
 
 observeEvent(input$tabla_datos_wimpgrid, {
   changes <- input$tabla_datos_wimpgrid$changes$changes
+  cambios <- cambios_reactive()
+  cambios_actualizados <- c(cambios, changes)
+  cambios_reactive(cambios_actualizados)
   if(!is.null(changes)) {
     shinyjs::hide("volver_w")
     shinyjs::show("guardar_w")
@@ -366,11 +376,11 @@ observeEvent(input$tabla_datos_wimpgrid, {
 
     if(!val) {
 
-      xi = changes[[1]][[1]]
+      xi <- changes[[1]][[1]]
 
-      yi = changes[[1]][[2]]
+      yi <- changes[[1]][[2]]
 
-      old_v = changes[[1]][[3]]
+      old_v <- changes[[1]][[3]]
       tabla_original <- hot_to_r(input$tabla_datos_wimpgrid)
 
       tabla_original[xi+1, yi+1] <- old_v
@@ -410,44 +420,28 @@ output$bert_w <- renderPlot({
 
 shinyjs::onevent("click", "guardarBD_w", {
     if (!is.null(session$userData$datos_wimpgrid)) {
-        connex <- establishDBConnection()
+        con <- establishDBConnection()
+        #gestionar los cambios y guardarlos directamente en la bd
+        cambios <- cambios_reactive()
+        for(changes in cambios){
+          x <- as.numeric(changes[1]) + 2 # ajustamos las coordenadas para la bd
+          y <- as.numeric(changes[2]) + 1 # ajustamos ...
+          old_v <- as.character(changes[3]) #ajustamos los numeros a texto como esta en la bd
+          new_v <- as.character(changes[4])
 
-        # Crear un archivo temporal
-        rutaArchivo <- tempfile(fileext = ".txt")
-
-        # Guardar los datos en el archivo temporal
-        saveAsTxt(session$userData$datos_wimpgrid, rutaArchivo)
-
-        con <- file(rutaArchivo, "r")
-        lineas <- readLines(con)
-        close(con)
-        
-        # Buscar el id del paciente...
-        # igual guardarlo en una variable session cuando se esta modificando su wimpgrid
-        # igual hacer una select ...
-        #
-        #
-        # fk_paciente
-        fk_paciente <- 2
-
-
-        contenido_completo <- paste(lineas, collapse = "\n")
-        # llevar cuidado en no insertar un wimpgrid con fk_paciente deleteado o invalido
-        queryTxt <- sprintf("INSERT INTO wimpgrid (wimpgridxt, fk_paciente) VALUES ('%s', %d)", contenido_completo, fk_paciente)
-        DBI::dbExecute(connex, queryTxt)
-
-        # Eliminar el archivo temporal después de usarlo si es necesario
-        file.remove(rutaArchivo)
-
-        DBI::dbDisconnect(connex)
+          query <- sprintf("UPDATE wimpgrid_xlsx SET valor='%s' WHERE fila = %d and columna = %d and valor = '%s' and fk_paciente = %d and fecha_registro = '%s'", 
+                      new_v, x, y, old_v, session$userData$id_paciente, session$userData$fecha_wimpgrid)
+          DBI::dbExecute(con, query)
+        }
+        DBI::dbDisconnect(con)
     }
 })
 
 observeEvent(input$editar_w, {
-
     if (!is.null(session$userData$datos_wimpgrid)) {
     # Ocultar el botón "Editar" y mostrar el botón "Guardar"
     shinyjs::hide("editar_w")
+    shinyjs::hide("guardarBD_w")
     shinyjs::show("volver_w")
     shinyjs::show("reiniciar_w")
     # Cambiar a modo de edición
@@ -460,7 +454,7 @@ observeEvent(input$editar_w, {
       shinyjs::hide("volver_w")
       shinyjs::show("editar_w")
       shinyjs::hide("guardar_w")
-      #shinyjs::show("guardarBD")
+      shinyjs::show("guardarBD_w")
       shinyjs::hide("reiniciar_w")
       # Cambiar a modo de tabla
       message("muestro container")
@@ -515,9 +509,7 @@ observeEvent(input$guardar_w, {
       print("tabla_final: ")
 
       my_dataframe <-tabla_final
-
       # Create a temporary file
-
       temp_file <- tempfile(fileext = ".xlsx")
       # Write the dataframe to the temporary file
 
@@ -525,38 +517,19 @@ observeEvent(input$guardar_w, {
 
       print(paste("Temporary file saved at: ", temp_file))
 
- 
-
-      # Read the data from the temporary file
-
       df_read <- importwimp(temp_file)
-
-      # Print the data
-
-      print(df_read)
-
-      # Create a repgrid object
-
-      #my_repgrid <- makeRepgrid(args)
-
-      #my_repgrid <- setScale(my_repgrid, minValue,maxValue)
-
       my_repgrid <- df_read
-
       print(my_repgrid)
-
- 
-
       wimpgrid_a_mostrar(my_repgrid)
-
       session$userData$datos_wimpgrid <- wimpgrid_a_mostrar()
-
       session$userData$datos_to_table_w<- tabla_final
 
       # Ocultar el botón "Guardar" y mostrar el botón "Editar"
       shinyjs::hide("reiniciar_w")
       shinyjs::show("editar_w")
       shinyjs::hide("guardar_w")
+      shinyjs::hide("volver_w")
+      shinyjs::show("guardarBD_w")
       # Cambiar a modo de visualización
 
       shinyjs::hide("tabla_datos_wimpgrid_container")
@@ -990,33 +963,32 @@ output$inconsistences <- DT::renderDataTable({
  
 
 # Variables reactivas para almacenar los cambios de los inputs de simdigraph
-
+# meter todos los valores de la simulación desde la bd o no
  
-
+# Nº de la iteración
 simdigraph_niter <- reactiveVal(0)
-
+# Diseño
 simdigraph_layout <- reactiveVal("circle")
-
+updateSelectInput(session, "simdigraph_layout", selected="circulo")
+#Sobra
 simdigraph_vertex_size <- reactiveVal(1)
-
+#Sobra
 simdigraph_edge_width <- reactiveVal(1)
-
+# Paleta de colores
 simdigraph_color <- reactiveVal("red/green")
-
- 
 
 simdigraph_wimp <- reactiveVal()
 
-#simdigraph_act_vector <- reactiveVal(0)
-
+# Función de propagación
 simdigraph_infer <- reactiveVal("linear transform")
-
+# Función umbral
 simdigraph_thr <- reactiveVal("linear")
-
+# Nº de iteraciones máximas
 simdigraph_max_iter <- reactiveVal(30)
-
+updateSliderInput(session, "simdigraph_max_iter", value = 10)
+# Valor diferencial
 simdigraph_e <- reactiveVal(0.0001)
-
+# Nº de la iteración sin cambios
 simdigraph_stop_iter <- reactiveVal(3)
 
  
@@ -1048,14 +1020,21 @@ pscd_act_vector <- reactiveVal(0)
 pscd_infer <- reactiveVal("linear transform")
 
 pscd_thr <- reactiveVal("linear")
-
+# Nº de iteraciones máximas
 pscd_max_iter <- reactiveVal(30)
-
+# Valor diferencial
 pscd_e <- reactiveVal(0.0001)
-
+# Nº de iteraciones sin cambios
 pscd_stop_iter <- reactiveVal(3)
 
- 
+
+actualizar_controles <- function(){
+  con <- establishDBConnection()
+  # obtener id wimpgrid
+
+  DBI::dbDisconnect(con)
+}
+
 
 # Lógica para la pestaña "Laboratorio"
 
@@ -1064,8 +1043,6 @@ observeEvent(input$tab_laboratorio, {
  
 
 })
-
- 
 
 # Observer event para el input niter de simdigraph
 
@@ -1200,7 +1177,7 @@ print(paste("max_v: ",max_v))
 v <- rep(0, max_v)
 
  
-
+# df_V me lo tendría que guardar en la bd
 df_V <- reactiveVal(as.data.frame(t(v)))
 
  
@@ -1216,12 +1193,13 @@ output$simdigraph_act_vector <- renderRHandsontable({
  
 
 observeEvent(input$simdigraph_act_vector, {
-
- 
-
+  
     vv <- (hot_to_r(input$simdigraph_act_vector))
-
+    prueba <- as.integer(vv)
+    prueba <- data.frame(prueba)
+    message(prueba)
     df_V(vv)
+    # Aquí cambia df_V -> meter en la bd
 
 })
 

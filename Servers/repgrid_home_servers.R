@@ -1,10 +1,5 @@
 repgrid_home_server <- function(input, output, session) {
   
-  # Mostrar los datos importados en una tabla
-  #session$userData$datos_repgrid <- if (!is.null("Servers/Repgrid_data.xlsx")) {
-      #OpenRepGrid::importExcel("Servers/Repgrid_data.xlsx")
-    #}
-  #session$userData$datos_to_table<- read.xlsx("Servers/Repgrid_data.xlsx")
   
 
   #hide and show tooltips
@@ -79,12 +74,11 @@ $('#open-controls-rg').on('click', function (){
   
   repgrid_inicial <- reactiveVal(repgrid_aux)
   repgrid_a_mostrar <- reactiveVal(repgrid_aux)
-
   tabla_manipulable <- reactiveVal(tabla_aux)
-  
+  cambios_reactive <- reactiveVal(numeric(0))
+
   #tabla_manipulable <- session$userData$datos_to_table
   tabla_final <- tabla_aux
-  
   #output$tabla_datos_repgrid <- DT::renderDataTable({
   #  DT::datatable(tabla_manipulable, 
   #                class = 'my-custom-table', 
@@ -93,6 +87,15 @@ $('#open-controls-rg').on('click', function (){
 
   #print("Muestro repgrid_inicial: ")
   #print(repgrid_inicial)
+
+output$titulo_repgrid <- renderText({
+  con <- establishDBConnection()
+  nombre <- DBI::dbGetQuery(con, sprintf("SELECT nombre from paciente WHERE id = %d", session$userData$id_paciente))
+  DBI::dbDisconnect(con)
+  fecha <- session$userData$fecha_repgrid
+
+  paste("Nuevo título página: Simulación repgrid de ", nombre, " en la fecha y hora: ", fecha)
+})
 
 output$tabla_datos_repgrid <- renderRHandsontable({
   if (!is.null(session$userData$datos_repgrid)) {
@@ -114,7 +117,7 @@ output$tabla_datos_repgrid <- renderRHandsontable({
 # To validate that the values of the cells of the table are between 1 and 7
 validateValue <- function(changes, tabla) {
 
-  new_v = changes[[1]][[4]]
+  new_v <- changes[[1]][[4]]
   tabla_r <- hot_to_r(tabla)
   nombres_columnas <- colnames(tabla_r)
 
@@ -134,14 +137,17 @@ validateValue <- function(changes, tabla) {
 
 observeEvent(input$tabla_datos_repgrid, {
   changes <- input$tabla_datos_repgrid$changes$changes
+  cambios <- cambios_reactive()
+  cambios_actualizados <- c(cambios, changes)
+  cambios_reactive(cambios_actualizados)
   if (!is.null(changes)) {
     shinyjs::hide("volver")
     shinyjs::show("guardar")
     val <- validateValue(changes, input$tabla_datos_repgrid)
     if (!val) {
-      xi = changes[[1]][[1]]
-      yi = changes[[1]][[2]]
-      old_v = changes[[1]][[3]]
+      xi <- changes[[1]][[1]]
+      yi <- changes[[1]][[2]]
+      old_v <- changes[[1]][[3]]
 
       tabla_original <- hot_to_r(input$tabla_datos_repgrid) 
       tabla_original[xi+1, yi+1] <- old_v
@@ -152,8 +158,6 @@ observeEvent(input$tabla_datos_repgrid, {
           hot_table(highlightCol = TRUE, highlightRow = TRUE) %>%
           hot_col(col = seq(1, session$userData$num_col_repgrid - 1), format = "1")
       })
-
-      session$userData$changes <- changes
 
     } else if (!is.null(session$userData$datos_repgrid)) {
       tabla_manipulable(hot_to_r(input$tabla_datos_repgrid))
@@ -188,10 +192,20 @@ output$bert <- renderPlot({
   shinyjs::onevent("click", "guardarBD", {
       if (!is.null(session$userData$datos_repgrid)) {
           con <- establishDBConnection()
-          message(changes)
           #gestionar los cambios y guardarlos directamente en la bd
+          cambios <- cambios_reactive()
+          for(changes in cambios){
+            x <- as.numeric(changes[1]) + 2 # ajustamos las coordenadas para la bd
+            y <- as.numeric(changes[2]) + 1 # ajustamos ...
+            old_v <- as.character(changes[3]) #ajustamos los numeros a texto como esta en la bd
+            new_v <- as.character(changes[4])
 
-          DBI::dbDisconnect(connex)
+
+            query <- sprintf("UPDATE repgrid_xlsx SET valor='%s' WHERE fila = %d and columna = %d and valor = '%s' and fk_paciente = %d and fecha_registro = '%s'", 
+                        new_v, x, y, old_v, session$userData$id_paciente, session$userData$fecha_repgrid)
+            DBI::dbExecute(con, query)
+          }
+          DBI::dbDisconnect(con)
       }
   })
 
@@ -201,7 +215,7 @@ output$bert <- renderPlot({
       # Ocultar el botón "Editar" y mostrar el botón "Guardar"
       shinyjs::hide("editar")
       shinyjs::show("volver")
-      #shinyjs::hide("guardarBD")
+      shinyjs::hide("guardarBD")
       shinyjs::show("reiniciar")
       # Cambiar a modo de edición
       shinyjs::hide("prueba_container")
@@ -213,7 +227,7 @@ output$bert <- renderPlot({
       shinyjs::hide("volver")
       shinyjs::show("editar")
       shinyjs::hide("guardar")
-      #shinyjs::show("guardarBD")
+      shinyjs::show("guardarBD")
       shinyjs::hide("reiniciar")
       # Cambiar a modo de tabla
       shinyjs::show("prueba_container")
@@ -299,7 +313,8 @@ output$bert <- renderPlot({
             shinyjs::hide("reiniciar")
             shinyjs::show("editar")
             shinyjs::hide("guardar")
-            #shinyjs::show("guardarBD")
+            shinyjs::hide("volver")
+            shinyjs::show("guardarBD")
             # Switch to viewing mode
             shinyjs::hide("tabla_datos_repgrid_container")
             shinyjs::show("prueba_container")

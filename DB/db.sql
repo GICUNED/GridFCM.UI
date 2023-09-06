@@ -22,24 +22,7 @@ CREATE TABLE IF NOT EXISTS psicologo_paciente (
     fk_paciente INT REFERENCES paciente(id)
 );
 
--- Crear tabla repgrid si no existe
-CREATE TABLE IF NOT EXISTS repgrid (
-    id SERIAL PRIMARY KEY,
-    repgridtxt TEXT,
-    fecha_registro TIMESTAMP,
-    fk_paciente INT REFERENCES paciente(id)
-);
-
--- Crear tabla wimpgrid si no existe
-CREATE TABLE IF NOT EXISTS wimpgrid (
-    id SERIAL PRIMARY KEY,
-    wimpgridtxt TEXT,
-    fecha_registro TIMESTAMP,
-    fk_paciente INT REFERENCES paciente(id)
-    -- faltaria añadir los controles para poder guardar la simulación....
-);
-
-CREATE TABLE repgrid_xlsx (
+CREATE TABLE IF NOT EXISTS repgrid_xlsx (
     id SERIAL,
     fila INTEGER,
     columna INTEGER,
@@ -49,7 +32,7 @@ CREATE TABLE repgrid_xlsx (
     PRIMARY KEY (id, fila, columna)
 );
 
-CREATE TABLE wimpgrid_xlsx (
+CREATE TABLE IF NOT EXISTS wimpgrid_xlsx (
     id SERIAL,
     fila INTEGER,
     columna INTEGER,
@@ -58,6 +41,37 @@ CREATE TABLE wimpgrid_xlsx (
     fk_paciente INT REFERENCES paciente(id),
     PRIMARY KEY (id, fila, columna)
 );
+
+/*
+CREATE TABLE IF NOT EXISTS wimpgrid_params (
+    id SERIAL PRIMARY KEY,
+    -- simdigraph
+    sim_design varchar(25),
+    sim_umbral varchar(25),
+    sim_n_iter INTEGER,
+    sim_n_max_iter INTEGER,
+    sim_n_stop_iter INTEGER,
+    sim_valor_diferencial INTEGER,
+    -- falta el vector que no se como aun
+
+    -- pcsd
+    pcsd_n_iter INTEGER,
+    pcsd_n_max_iter INTEGER,
+    pcsd_n_stop_iter INTEGER,
+    pcsd_valor_diferencial INTEGER,
+    -- vector
+
+    -- pcsd índices
+    pcind_propagacion VARCHAR(50),
+    pcind_umbral VARCHAR(25),
+    pcind_n_max_iter INTEGER,
+    pcind_n_stop_iter INTEGER,
+    pcind_valor_diferencial INTEGER,
+    -- vector
+
+    fk_wimpgrid INT REFERENCES wimpgrid_xlsx(id)
+)
+*/
 
 -- Seeder de prueba
 INSERT INTO psicologo (nombre, email)

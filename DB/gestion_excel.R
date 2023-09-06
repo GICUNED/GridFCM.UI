@@ -24,10 +24,12 @@ codificar_excel_BD <- function(excel, tabla_destino, id_paciente){
     }
     t_fin <- Sys.time()
     t_total <- t_fin - t_inicio
-    message(t_total)
-
+    message(paste(t_total, "segundos"))
     DBI::dbDisconnect(con)
+
+    return(fecha)
 } 
+
 
 decodificar_BD_excel <- function(tabla_origen, ruta_destino, id_paciente, fecha_registro='') {
     con <- establishDBConnection()
@@ -40,27 +42,47 @@ decodificar_BD_excel <- function(tabla_origen, ruta_destino, id_paciente, fecha_
         query <- sprintf("SELECT fila, columna, valor FROM %s WHERE fk_paciente = %d and fecha_registro = '%s'", tabla_origen, id_paciente, fecha_registro)
     }
     datos <- DBI::dbGetQuery(con, query)
-    
     # Identificar el número máximo de filas y columnas
     filas_max <- max(datos$fila)
     columnas_max <- max(datos$columna)
     
     # Crear una matriz vacía para almacenar los datos
-    matriz_datos <- matrix("", nrow = filas_max, ncol = columnas_max)
+    #matriz_strings <- matrix("", nrow = filas_max, ncol = columnas_max)
+    #matriz_integers <- matrix(integer(), nrow = filas_max, ncol = columnas_max)
+    matriz <- matrix("", nrow = filas_max, ncol = columnas_max)
     
     # Llenar la matriz con los valores recuperados
     for (i in 1:nrow(datos)) {
         fila <- datos$fila[i]
         columna <- datos$columna[i]
         valor <- datos$valor[i]
-        matriz_datos[fila, columna] <- valor
+        matriz[fila, columna] <- valor
     }
     
     # Convertir la matriz en un data frame
-    df_datos <- as.data.frame(matriz_datos)
-    
-    # Escribir el data frame en un archivo Excel
-    write.xlsx(df_datos, ruta_destino, rowNames = FALSE, colNames = FALSE)
+    #df_datos <- as.data.frame(matriz_integers)
+    #df_datos_int <- as.data.frame(matriz_integers)
+
+    wb <- createWorkbook()
+    addWorksheet(wb, "Sheet 1")
+    #addWorksheet(wb, "Sheet 2")
+
+    writeData(wb, sheet="Sheet 1", matriz, rowNames=FALSE, colNames=FALSE)
+    #writeData(wb, sheet="Sheet 2", matriz_integers, rowNames=FALSE)
+    saveWorkbook(wb, ruta_destino, overwrite=TRUE)
+
+    #sheet1 <- readxl::read_excel(ruta_destino, sheet="Sheet 1")
+    #sheet2 <- readxl::read_excel(ruta_destino, sheet="Sheet 2")
+
+    #combined_data <- data.frame(
+     #   V1 = coalesce(sheet1$V1, sheet2$V1),
+      #  V2 = coalesce(sheet1$V2, sheet2$V2),
+       # V3 = coalesce(sheet1$V3, sheet2$V3)
+    #)
+    #message(sheet2[5,5])
+    #message(class(sheet2[5,5]))
+
+    #write.xlsx(combined_data, ruta_destino, rowNames = FALSE, overwrite=TRUE)
     
     DBI::dbDisconnect(con)
 }

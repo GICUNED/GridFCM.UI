@@ -3,22 +3,32 @@ import_excel_server <- function(input, output, session) {
   message(id_paciente)
 
   observeEvent(input$importar_datos, {
-      
+      message(req(input$archivo_repgrid))
       # Importar datos de RepGrid y WimpGrid utilizando las funciones importwimp() y OpenRepGrid::importExcel() si los archivos están presentes
-      #llamada al metodo de codificar para luego meter en la bd y demas
+      # llamada al metodo de codificar para luego meter en la bd y demás
       excel_repgrid_codificar <- read.xlsx(input$archivo_repgrid$datapath, colNames=FALSE)
+      # quitar el archivo del fileinput
       ruta_destino <- "/srv/shiny-server/ficheros/excel_rep.xlsx"
-      codificar_excel_BD(excel_repgrid_codificar, 'repgrid_xlsx', id_paciente)
+      # transformo el excel a tabla de bd y encima devuelvo la fecha para sacar en el título de la rejilla
+      fecha <- codificar_excel_BD(excel_repgrid_codificar, 'repgrid_xlsx', id_paciente)
+      # transformo la tabla de la bd a excel para usarla en la aplicación
       decodificar_BD_excel('repgrid_xlsx', ruta_destino, id_paciente)
       
+      # meto la fecha en la session para sacarla en el título
+      session$userData$fecha_repgrid <- fecha
 
       datos_repgrid <- if (!is.null(input$archivo_repgrid)) {
         OpenRepGrid::importExcel(ruta_destino)
       }
       
-      excel_repgrid <- if (!is.null(input$archivo_repgrid)) {read.xlsx(ruta_destino)}
+      excel_repgrid <- if (!is.null(input$archivo_repgrid)) {
+        read.xlsx(ruta_destino)
+      }
+      # convertir los numeros tipo string a tipo numerico
+      columnas_a_convertir <- 2:(ncol(excel_repgrid) - 1)
+      # Utiliza lapply para aplicar la conversión a las columnas seleccionadas
+      excel_repgrid[, columnas_a_convertir] <- lapply(excel_repgrid[, columnas_a_convertir], as.numeric)
       
-
       session$userData$datos_to_table <- excel_repgrid
       num_columnas <- if (!is.null(input$archivo_repgrid)) {
         ncol(session$userData$datos_to_table)
@@ -36,13 +46,13 @@ import_excel_server <- function(input, output, session) {
       print(paste("num row", num_rows))
       session$userData$num_row_repgrid <- num_rows
 
-      datos_wimpgrid <- if (!is.null(input$archivo_wimpgrid)) {
-        importwimp(input$archivo_wimpgrid$datapath)
-      }
-      session$userData$datos_to_table_w<-if (!is.null(input$archivo_wimpgrid)) { read.xlsx(input$archivo_wimpgrid$datapath)}  
+      #datos_wimpgrid <- if (!is.null(input$archivo_wimpgrid)) {
+      #  importwimp(input$archivo_wimpgrid$datapath)
+      #}
+      #session$userData$datos_to_table_w<-if (!is.null(input$archivo_wimpgrid)) { read.xlsx(input$archivo_wimpgrid$datapath)}  
 
       session$userData$datos_repgrid <- datos_repgrid
-      session$userData$datos_wimpgrid <- datos_wimpgrid
+      #session$userData$datos_wimpgrid <- datos_wimpgrid
 
 
       if (!is.null(datos_repgrid)) {
@@ -55,32 +65,41 @@ import_excel_server <- function(input, output, session) {
   
 
   observeEvent(input$importar_datos_w, {
+    message("Entro en importar datossss????'")
 
-      #llamada al metodo de codificar para luego meter en la bd y demas
-      excel_wimp_codificar <- read.xlsx(input$archivo_wimpgrid$datapath, colNames=FALSE)
-      ruta_destino <- "/srv/shiny-server/ficheros/excel_wimp.xlsx"
-      codificar_excel_BD(excel_wimp_codificar, 'wimpgrid_xlsx', id_paciente)
-      decodificar_BD_excel('wimpgrid_xlsx', ruta_destino, id_paciente)
+    #llamada al metodo de codificar para luego meter en la bd y demas
+    excel_wimp_codificar <- read.xlsx(input$archivo_wimpgrid$datapath, colNames=FALSE)
+    ruta_destino <- "/srv/shiny-server/ficheros/excel_wimp.xlsx"
+    fecha <- codificar_excel_BD(excel_wimp_codificar, 'wimpgrid_xlsx', id_paciente)
+    decodificar_BD_excel('wimpgrid_xlsx', ruta_destino, id_paciente)
 
-      # Importar datos de RepGrid y WimpGrid utilizando las funciones importwimp() y OpenRepGrid::importExcel() si los archivos están presentes
-      datos_repgrid <- if (!is.null(input$archivo_repgrid)) {
-        OpenRepGrid::importExcel(ruta_destino)
-      }
-      session$userData$datos_to_table<- if (!is.null(input$archivo_repgrid)) {read.xlsx(ruta_destino)}
+    session$userData$fecha_wimpgrid <- fecha
 
-      datos_wimpgrid <- if (!is.null(input$archivo_wimpgrid)) {
-        importwimp(input$archivo_wimpgrid$datapath)
-      }
-      session$userData$datos_to_table_w<-if (!is.null(input$archivo_wimpgrid)) { read.xlsx(input$archivo_wimpgrid$datapath)}
-      num_columnas <- if (!is.null(input$archivo_wimpgrid)) {
+    # Importar datos de RepGrid y WimpGrid utilizando las funciones importwimp() y OpenRepGrid::importExcel() si los archivos están presentes
+    #datos_repgrid <- if (!is.null(input$archivo_repgrid)) {
+    #  OpenRepGrid::importExcel(ruta_destino)
+    #}
+    #session$userData$datos_to_table<- if (!is.null(input$archivo_repgrid)) {read.xlsx(ruta_destino)}
+
+    datos_wimpgrid <- if (!is.null(input$archivo_wimpgrid)) {
+      importwimp(ruta_destino)
+    }
+    excel_wimp<-if (!is.null(input$archivo_wimpgrid)) { 
+      read.xlsx(ruta_destino)
+    }
+    # convertir los numeros tipo string a tipo numerico
+    columnas_a_convertir <- 2:(ncol(excel_wimp) - 1)
+    # Utiliza lapply para aplicar la conversión a las columnas seleccionadas
+    excel_wimp[, columnas_a_convertir] <- lapply(excel_wimp[, columnas_a_convertir], as.numeric)
+
+    session$userData$datos_to_table_w <- excel_wimp
+    num_columnas <- if (!is.null(input$archivo_wimpgrid)) {
       ncol(session$userData$datos_to_table_w)
     } else {
       0
     }
     print(paste("num col", num_columnas))
     session$userData$num_col_wimpgrid <- num_columnas
-
-
 
     num_rows <- if (!is.null(input$archivo_wimpgrid)) {
       nrow(session$userData$datos_to_table_w)
@@ -89,21 +108,16 @@ import_excel_server <- function(input, output, session) {
     }
     print(paste("num row", num_rows))
     session$userData$num_row_wimpgrid <- num_rows
-      # Almacenar los objetos importados en el entorno de la sesión para su uso posterior
+    # Almacenar los objetos importados en el entorno de la sesión para su uso posterior
+    #session$userData$datos_repgrid <- datos_repgrid
+    session$userData$datos_wimpgrid <- datos_wimpgrid
+
+    if (!is.null(datos_wimpgrid)) {
+      # Solo archivo WimpGrid cargado, navegar a WimpGrid Home
+      wimpgrid_analysis_server(input,output,session)
+      runjs("window.location.href = '/#!/wimpgrid';")
       
-      session$userData$datos_repgrid <- datos_repgrid
-      #session$userData$datos_repgrid_df <- read.csv(input$archivo_repgrid$datapath)
-
-
-
-      session$userData$datos_wimpgrid <- datos_wimpgrid
-
-      if (!is.null(datos_wimpgrid)) {
-        # Solo archivo WimpGrid cargado, navegar a WimpGrid Home
-        wimpgrid_analysis_server(input,output,session)
-        runjs("window.location.href = '/#!/wimpgrid';")
-        
-      }   
+    }   
   })
 
   

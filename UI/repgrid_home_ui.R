@@ -21,7 +21,9 @@ shinyjs::hidden(fluidRow(id="repgrid_home_warn",class="mb-4 mt-4 gap-2 justify-c
   #tableOutput("tabla_datos_repgrid"),
   shinyjs::hidden(div(class ="custom-margins-lg", id = "rg-data-content",
     fluidRow( class="mb-2 button-container",
-      h3(i18n$t("Tabla de Datos"), class = "mr-auto mb-0"),
+      #h3(id="i18n$t("Tabla de Datos"), class = "mr-auto mb-0"),
+      #text output
+      textOutput("titulo_repgrid"),
 
       actionButton("volver", i18n$t("Cancelar"), style = "display: none;", status = 'danger', icon = icon("circle-xmark")),
       actionButton("guardar", i18n$t("Guardar"), style = "display: none;", status = 'success', icon = icon("save")),
