@@ -118,7 +118,6 @@ ui <- dashboardPage(
     div(id="user-page", class = "nav-item user-page user-page-btn" , menuItem("User", href = route_link("user_home"), icon = icon("house-user"), newTab = FALSE))
   ),
 
-
   dashboardSidebar(
 
     sidebarMenu(
@@ -131,9 +130,10 @@ ui <- dashboardPage(
         div(id="repgrid-page", class = "nav-item repg-page", menuItem("RepGrid", href = route_link("repgrid"), icon = icon("magnifying-glass-chart"), newTab = FALSE)),
         div(id = "wimpgrid-page", class = "nav-item wimpg-page", menuItem("WimpGrid", href = route_link("wimpgrid"), icon = icon("border-none"), newTab = FALSE)),
         #div(class = 'language-selector',selectInput('selected_language',i18n$t("Idioma"), choices = i18n$get_languages(),selected = i18n$get_translation_language())),
-        div(class = 'language-selector',radioGroupButtons('selected_language',i18n$t("Idioma"), choices = i18n$get_languages(),selected = i18n$get_translation_language(),width='100%', checkIcon = list()))
+        div(class = 'language-selector',radioGroupButtons('selected_language',i18n$t("Idioma"), choices = i18n$get_languages(), selected = i18n$get_translation_language(), width='100%', checkIcon = list()))
       )
     ),
+
 
   dashboardBody(
     usei18n(translator = i18n),
@@ -183,14 +183,11 @@ ui <- dashboardPage(
     )
   ),
 )
-
 server <- function(input, output, session) {
-
 
   i18n_r <- reactive({
     i18n
   })
-
 
   observeEvent(input$volver_a_inicio, {
     runjs("window.location.href = '/#!/';")
@@ -246,8 +243,8 @@ server <- function(input, output, session) {
     updateSelectInput(session, "graph_selector",
                       choices = i18n_r()$t(c("Análisis Bidimensional",
                               "Análisis Tridimensional","Análisis por Conglomerados","Índices Cognitivos","Dilemas")))
-
   })
+
 
   router_server()
 

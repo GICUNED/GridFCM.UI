@@ -34,15 +34,20 @@
       "en": "More information about the application and the method used will be added here"
     },
     {
-      "es": "Bienvenido a la pagina de inicio del usuario",
+      "es": "Bienvenido a la página de inicio del usuario",
       "en": "Welcome to the user home page"
     },
     {
-      "es": "Aqui puedes agregar mas contenido para mostrar al usuario denues de iniciar sesion",
+      "es": "Aquí puedes agregar más contenido para mostrar al usuario después de iniciar sesión",
       "en": "Here you can add more content to display to the user after logging in"
     },
     {
-      "es": "Nuevo analisis de rejilla",
+      "es": "Nuevo análisis de rejilla",
+      "en": "New grid analysis"
+    },
+
+    {
+      "es": "Nueva rejilla",
       "en": "New grid analysis"
     },
     {
@@ -223,7 +228,7 @@
       "en": "WimpGrid Home"
     },
     {
-      "es": "Esta pagina te permite visualizar y manipular los datos importados de Wimpgrid y acceder a diferentes tipos de analisis",
+      "es": "Esta pagina te permite visualizar y manipular los datos importados de WimpGrid y acceder a diferentes tipos de analisis",
       "en": "This page allows you to visualize and manipulate the data imported from WimpGrid and access different types of analysis"
     },
     {
@@ -484,7 +489,7 @@
       "en": "To perform the analysis, it is necessary to import a file or form"
     },
     {
-      "es": "Esta página te permite visualizar y manipular los datos importados de Wimpgrid y acceder a diferentes tipos de análisis.",
+      "es": "Esta página te permite visualizar y manipular los datos importados de WimpGrid y acceder a diferentes tipos de análisis.",
       "en": "This page allows you to visualize and manipulate the data imported from WimpGrid and access different types of analysis."
     },
     {
@@ -564,8 +569,8 @@
       "en": "Next"
     },
     {
-      "es": "Introduzca elementos a valorar",
-      "en": "Enter items to evaluate"
+      "es": "Elementos a valorar",
+      "en": "Items to evaluate"
     },
     {
       "es": "Comentarios relativos al paciente",
@@ -602,8 +607,23 @@
     {
       "es": "Editar paciente",
       "en": "Edit patient"
+    },
+    {
+      "es": "Abrir simulación",
+      "en": "Open simulation"
+    },
+    {
+      "es": "Borrar simulación",
+      "en": "Delete simulation"
+    },
+    {
+      "es": "Simulaciones RepGrid",
+      "en": "RepGrid simulations"
+    },
+    {
+      "es": "Simulaciones WimpGrid",
+      "en": "WimpGrid simulations"
     }
-
     
     
 ]}

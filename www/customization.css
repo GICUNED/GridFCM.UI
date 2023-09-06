@@ -182,11 +182,14 @@ li.nav-item::marker{
   border-color: #00795d;
 }
 
-
 .btn-info.focus, .btn-info:focus {
   color: #fff;
   background-color: #90214a;
   border-color: #5d102c;
+}
+
+.btn-warning{
+  color: #fff !important;
 }
 
 .link{
@@ -1010,16 +1013,19 @@ width: 100% !important;
 .error-help div:nth-child(2) button{
   background-color: #ffffff !important;
   border-color: #acacac !important;
+  color: #3b1a1a !important;
 }
 
 .error-help div:nth-child(2) button:hover{
   background-color: #e2e2e2 !important;
   border-color: #acacac !important;
+  color: #3b1a1a !important;
 }
 
 .error-help div:nth-child(2) button:active{
   background-color: #ffffff !important;
   border-color: #acacac !important;
+  color: #3b1a1a !important;
 }
 
 
@@ -1841,7 +1847,23 @@ table.dataTable{
 }
 
 .patients-table table.dataTable.display > tbody > tr.selected:hover > *, .patients-table table.dataTable.display > tbody > tr.selected > *, .patients-table table.dataTable.hover > tbody > tr.selected:hover > *, .patients-table table.dataTable.display > tbody > tr.selected:hover > *{
-  box-shadow: inset 0 0 0 9999px #c9809b !important;
+  box-shadow: inset 0 0 0 9999px #711a3a !important;
+  font-weight: bold !important;
+}
+
+.patient-diff .odd td:nth-child(3), .even td:nth-child(3){
+  font-weight: bold !important;
+}
+
+.patient-diff .odd td:last-child::before, .even td:last-child::before{
+  display: inline-block;
+  visibility: visible !important;
+  width: 2rem;
+  opacity: 100 !important;
+  text-align: center;
+  font-family: "Font Awesome 6 Free";
+  content: "\f073";
+  font-weight: 900;
 }
 
 .patients-table tr{
