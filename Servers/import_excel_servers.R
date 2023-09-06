@@ -2,6 +2,7 @@ import_excel_server <- function(input, output, session) {
   id_paciente <- session$userData$id_paciente
   message(id_paciente)
 
+
   observeEvent(input$importar_datos, {
       message(req(input$archivo_repgrid))
       # Importar datos de RepGrid y WimpGrid utilizando las funciones importwimp() y OpenRepGrid::importExcel() si los archivos están presentes
@@ -120,7 +121,36 @@ import_excel_server <- function(input, output, session) {
     }   
   })
 
+
+  rv <- reactiveValues(data = NULL)
   
+    observe({
+      req(input$archivo_repgrid)
+      
+      rv$data <- read.xlsx(input$archivo_repgrid$datapath)
+    })
+    
+    observeEvent(input$reset, {
+      rv$data <- NULL
+      reset('archivo_repgrid')
+    })
+
+
+  wv <- reactiveValues(data = NULL)
+  
+    observe({
+      req(input$archivo_wimpgrid)
+      
+      wv$data <- read.xlsx(input$archivo_wimpgrid$datapath)
+    })
+    
+    observeEvent(input$reset, {
+      wv$data <- NULL
+      reset('archivo_wimpgrid')
+    })
+  
+
+ 
 
   ### NEW ######################################################################################
   # Download handler function

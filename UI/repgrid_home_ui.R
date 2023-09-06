@@ -23,7 +23,7 @@ shinyjs::hidden(fluidRow(id="repgrid_home_warn",class="mb-4 mt-4 gap-2 justify-c
     fluidRow( class="mb-2 button-container",
       #h3(id="i18n$t("Tabla de Datos"), class = "mr-auto mb-0"),
       #text output
-      textOutput("titulo_repgrid"),
+      h4(class = "mr-auto mb-0", htmlOutput("titulo_repgrid")),
 
       actionButton("volver", i18n$t("Cancelar"), style = "display: none;", status = 'danger', icon = icon("circle-xmark")),
       actionButton("guardar", i18n$t("Guardar"), style = "display: none;", status = 'success', icon = icon("save")),
@@ -36,12 +36,14 @@ shinyjs::hidden(fluidRow(id="repgrid_home_warn",class="mb-4 mt-4 gap-2 justify-c
     div(id = "tabla_datos_repgrid_container",
         # Mostrar los datos de tabla_datos_repgrid
         tags$style(".my-table .htCore .htNoWrap { white-space: normal; }"),
-        rHandsontableOutput("tabla_datos_repgrid")
+      #shinycssloaders::withSpinner(rHandsontableOutput("tabla_datos_repgrid"), type = 2, color = "#022a0c", size = 0.7)
+      rHandsontableOutput("tabla_datos_repgrid")
     )
     ),
 
     div(class=("row"), id = "prueba_container",
       # Mostrar los datos de prueba
+      #shinycssloaders::withSpinner(plotOutput("bert"), type = 2, color = "#022a0c", size = 0.7)
       plotOutput("bert")
     ),
   ))

@@ -283,7 +283,7 @@ output$titulo_wimpgrid <- renderText({
   DBI::dbDisconnect(con)
   fecha <- session$userData$fecha_wimpgrid
 
-  paste("Nuevo título página: Simulación repgrid de ", nombre, " en la fecha y hora: ", fecha)
+  paste("<b>", i18n$t("Simulación de "), nombre, "</b><br><p class='desccustom-date'>📅", fecha, "</p>")
 })
 
 output$tabla_datos_wimpgrid <- renderRHandsontable({

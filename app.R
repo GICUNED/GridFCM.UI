@@ -22,7 +22,6 @@ library(visNetwork)
 library(dplyr)
 knitr::knit_hooks$set(webgl = hook_webgl)
 
-
 source("global.R")
 
 #GRID
@@ -66,11 +65,9 @@ source("Servers/form_repgrid_server.R")
 source("Servers/form_wimpgrid_server.R")
 source("Servers/patient_server.R")
 
-
 #DB
 source("DB/establish_con.R")
 source("DB/gestion_excel.R")
-
 
 
 menu <- tags$ul(tags$li(a(
@@ -94,17 +91,17 @@ tags$li(a(
   "Wimpgrid analysis"
 )))
 
+
 theme <- create_theme(
   bs4dash_status(
     primary = "#095540",
     danger = "#BF616A",
     light = "#272c30",
     success = "#13906d",
-    warning = "#dfb639",
+    warning = "#cb9b0b",
     info = "#90214a"
   )
 )
-
 
 ui <- dashboardPage(
   freshTheme = theme,
@@ -113,7 +110,8 @@ ui <- dashboardPage(
     tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "customization.css"), tags$link(rel = "icon", type = "image/x-icon", href = "www/favicon.png"), tags$title("UNED | GridFCM")),
     title = tags$a(href='https://www.uned.es/', target ="_blank", class = "logocontainer",
     tags$img(height='56.9',width='', class = "logoimg")),
-    div(id="user-page", class = "nav-item user-page user-page-btn" , menuItem("User", href = route_link("user_home"), icon = icon("house-user"), newTab = FALSE))
+    div(id="user-page", class = "nav-item user-page user-page-btn" , menuItem("User", href = route_link("user_home"), icon = icon("house-user"), newTab = FALSE)),
+    div(id="patientIndicator", class = "ml-auto patient-active-label", span(class = "icon-paciente"), htmlOutput("paciente_activo"))
   ),
 
   dashboardSidebar(
@@ -131,6 +129,7 @@ ui <- dashboardPage(
         div(class = 'language-selector',radioGroupButtons('selected_language',i18n$t("Idioma"), choices = i18n$get_languages(), selected = i18n$get_translation_language(), width='100%', checkIcon = list()))
       )
     ),
+
 
 
   dashboardBody(

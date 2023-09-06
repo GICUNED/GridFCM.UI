@@ -88,13 +88,14 @@ $('#open-controls-rg').on('click', function (){
   #print("Muestro repgrid_inicial: ")
   #print(repgrid_inicial)
 
+
 output$titulo_repgrid <- renderText({
   con <- establishDBConnection()
   nombre <- DBI::dbGetQuery(con, sprintf("SELECT nombre from paciente WHERE id = %d", session$userData$id_paciente))
   DBI::dbDisconnect(con)
   fecha <- session$userData$fecha_repgrid
 
-  paste("Nuevo título página: Simulación repgrid de ", nombre, " en la fecha y hora: ", fecha)
+  paste("<b>", i18n$t("Simulación de "), nombre, "</b><br><p class='desccustom-date'>📅", fecha, "</p>")
 })
 
 output$tabla_datos_repgrid <- renderRHandsontable({

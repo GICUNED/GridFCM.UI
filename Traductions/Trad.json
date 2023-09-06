@@ -623,7 +623,14 @@
     {
       "es": "Simulaciones WimpGrid",
       "en": "WimpGrid simulations"
+    },
+    {
+      "es": "Simulación de ",
+      "en": "Simulation from "
+    },
+    {
+      "es": "Simulaciones disponibles de ",
+      "en": "Available simulations from "
     }
-    
     
 ]}

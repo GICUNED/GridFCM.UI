@@ -27,9 +27,9 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
 
   # Mostrar los datos importados en una tabla
   shinyjs::hidden(div(class = "custom-margins-lg", id="wg-data-content",
-    fluidRow( class="mb-2 button-container",
+    fluidRow(class="mb-2 button-container",
       #h3(i18n$t("Tabla de Datos"), class = "mr-auto mb-0"),
-      textOutput("titulo_wimpgrid"),
+      h4(class = "mr-auto mb-0", htmlOutput("titulo_wimpgrid")),
       actionButton("volver_w", i18n$t("Cancelar"), style = "display: none;", status = 'danger', icon = icon("circle-xmark")),
       actionButton("guardar_w", i18n$t("Guardar"), style = "display: none;", status = 'success', icon = icon("save")),
       actionButton("reiniciar_w", i18n$t("Reiniciar"), style = "display: none;", status = 'warning', icon = icon("arrow-rotate-left")),

@@ -6,6 +6,9 @@ patient_server <- function(input, output, session){
     repgrid_fecha_seleccionada <- reactiveVal(NULL)
     wimpgrid_fecha_seleccionada <- reactiveVal(NULL)
 
+    shinyjs::hide("patientSimulations")
+    shinyjs::hide("patientIndicator")
+
     renderizarTabla <- function(){
         output$user_table <- renderDT({
             con <- establishDBConnection()
@@ -44,10 +47,17 @@ patient_server <- function(input, output, session){
     # gestion de las filas seleccionadas en la tabla pacientes
     observeEvent(input$user_table_rows_selected, {
         selected_row <- input$user_table_rows_selected
+        
+        if (!is.null(selected_row)) {
+                
+            } 
+
         if (!is.null(selected_row)) {
             #ocultar simulaciones por si se habían desplegado
+            delay(200, shinyjs::show("patientIndicator"))
             shinyjs::hide("simulaciones_rep")
             shinyjs::hide("simulaciones_wimp")
+            shinyjs::hide("patientSimulations")
             # Obtén el ID del usuario de la fila seleccionada
             users <- user_data$users
             selected_user_id <- users[selected_row, "id"]
@@ -59,6 +69,10 @@ patient_server <- function(input, output, session){
             
             # Por ejemplo, imprimir el ID del usuario en la consola
             message(selected_user_id)
+            
+            
+        } else {
+                shinyjs::hide("patientIndicator")
         }
     })
 
@@ -66,6 +80,7 @@ patient_server <- function(input, output, session){
     # gestion de las filas seleccionadas en la tabla de simulaciones repgrid
     observeEvent(input$simulaciones_rep_rows_selected, {
         selected_row <- input$simulaciones_rep_rows_selected
+
         if (!is.null(selected_row)) {
             # hacer consulta para obtener el txt de repgrid aqui con la fecha seleccionada
             fechas <- repgrid_data_DB$fechas
@@ -122,13 +137,17 @@ patient_server <- function(input, output, session){
 
     observeEvent(input$simulacionesRepgrid, {
         shinyjs::hide("simulaciones_wimp")
+        shinyjs::show("patientSimulations")
         shinyjs::show("simulaciones_rep")
+        
         cargar_fechas()
     })
 
     observeEvent(input$simulacionesWimpgrid, {
         shinyjs::hide("simulaciones_rep")
+        shinyjs::show("patientSimulations")
         shinyjs::show("simulaciones_wimp")
+        
         cargar_fechas_wimpgrid()
     })
 
@@ -349,6 +368,19 @@ patient_server <- function(input, output, session){
         }
     })
 
+    output$paciente_simulacion_header <- renderText({
+        con <- establishDBConnection()
+        pacientename <- DBI::dbGetQuery(con, sprintf("SELECT nombre from paciente WHERE id = %d", user_data$selected_user_id))
+        DBI::dbDisconnect(con)
+        paste(i18n$t("Simulaciones disponibles de "), pacientename)
+    })
+
+     output$paciente_activo <- renderText({
+        con <- establishDBConnection()
+        pacientename <- DBI::dbGetQuery(con, sprintf("SELECT nombre from paciente WHERE id = %d", user_data$selected_user_id))
+        DBI::dbDisconnect(con)
+        paste("<b class='patient-active-name'>", pacientename, "</b>")
+    })
     
 
     runjs("

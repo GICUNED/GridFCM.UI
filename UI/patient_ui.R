@@ -20,10 +20,16 @@ patient_ui <- fluidPage(class="patient-diff",
       div(class = "button-container mt-2",
         actionButton("simulacionesRepgrid", i18n$t("Simulaciones RepGrid"), icon = icon("magnifying-glass-chart"), status="primary" ),
         actionButton(class="mr-auto", "simulacionesWimpgrid", i18n$t("Simulaciones WimpGrid"), icon = icon("border-none"), status="warning"),
-        actionButton("importarGridPaciente", i18n$t("Nueva rejilla"), icon = icon("plus"), status="success")
+        actionButton("importarGridPaciente", i18n$t("Nueva rejilla"), icon = icon("plus"), status="success"),
         ),
     ),
-    column(12, id = "patientSimulations", class = "patients-table p-3 mt-4 bg-white rounded-lg",
+    column(12, id = "patientSimulations", class = "p-3 mt-4 bg-white rounded-lg",
+
+          # Boton para editar la simulacion repgrid
+          div(class = "button-container mb-4 border-divider-sm",
+            h4(class = "mr-auto mb-0 font-weight-bold", htmlOutput("paciente_simulacion_header")),
+            actionButton("borrarSimulacion", i18n$t("Borrar simulación"), status ="danger", icon = icon("trash-can"))
+          ),
 
         # Listado de simulaciones repgrid
           div( id = "patient-rep",
@@ -35,14 +41,13 @@ patient_ui <- fluidPage(class="patient-diff",
             DTOutput("simulaciones_wimp")
           ),
 
-          # Boton para editar la simulacion repgrid
-          div(class = "button-container mt-2",
+          div(class = "button-container mt-4",
             actionButton("editarSimulacionRepgrid", i18n$t("Abrir simulación"), icon = icon("download")),
-            actionButton("borrarSimulacion", i18n$t("Borrar simulación"), status ="danger", icon = icon("trash-can"))
-          )
+          ),
       ),
 
   ), #fluidRow
+
 
   #Formulario para añadir paciente
   shinyjs::hidden(
@@ -54,16 +59,14 @@ patient_ui <- fluidPage(class="patient-diff",
               icon("circle-xmark", id = "new-patient-cancel", class = "fa-solid exit-patients"), 
               span(i18n$t("Nuevo paciente")),
               ),
-          ),
-
-          textInput("nombre", i18n$t("Nombre:")),
-          div(class="d-flex w-100",
-            column(6, class = "w-50 p-0 pr-2", numericInput("edad", i18n$t("Edad:"), value = 0)),
-            column(6, class = "w-50 p-0", selectInput("genero", i18n$t("Género:"), c("Hombre", "Mujer", "Sin definir"))),
-          ),
-          textAreaInput("anotaciones", i18n$t("Anotaciones:"), placeholder = "Comentarios relativos al paciente"),
-          actionButton("guardarAddPatient", i18n$t("Guardar"), status = 'success', icon = icon("save"))
-        )
+              textInput("nombre", i18n$t("Nombre:")),
+              div(class="d-flex w-100",
+                column(6, class = "w-50 p-0 pr-2", numericInput("edad", i18n$t("Edad:"), value = 0)),
+                column(6, class = "w-50 p-0", selectInput("genero", i18n$t("Género:"), c("Hombre", "Mujer", "Sin definir"))),
+              ),
+              textAreaInput("anotaciones", i18n$t("Anotaciones:"), placeholder = "Comentarios relativos al paciente"),
+              actionButton("guardarAddPatient", i18n$t("Guardar"), status = 'success', icon = icon("save"))
+            )),
     )
   ),
 
@@ -72,7 +75,7 @@ patient_ui <- fluidPage(class="patient-diff",
     div(class="patient-backdrop"),
     div(class="patient-form-container",
         div(class="flex-container-resp-col",
-          div(class="card-title",
+          div(class="card-title border-divider-sm",
           icon("circle-xmark", id = "edit-patient-cancel", class="fa-solid exit-patients"),
           span(i18n$t("Editar paciente")),
           ),

@@ -16,6 +16,7 @@ div(class = "custom-margins flex-container-xl",
        icon = icon("magnifying-glass-chart"),
        status = "success",
        collapsible = FALSE,
+       actionButton("reset", "Reset Input"),
        fileInput("archivo_repgrid", i18n$t("Seleccionar archivo RepGrid (.xlsx)")),
        column(12, class="d-flex justify-content-center mb-2 mt-2", actionButton("importar_datos", i18n$t("Importar Datos"), status = 'success', icon = icon("file-import")))
       )),
