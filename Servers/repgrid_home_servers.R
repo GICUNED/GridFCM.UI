@@ -215,7 +215,7 @@ output$bert <- renderPlot({
       # Ocultar el botón "Editar" y mostrar el botón "Guardar"
       shinyjs::hide("editar")
       shinyjs::show("volver")
-      #shinyjs::hide("guardarBD")
+      shinyjs::hide("guardarBD")
       shinyjs::show("reiniciar")
       # Cambiar a modo de edición
       shinyjs::hide("prueba_container")
@@ -227,7 +227,7 @@ output$bert <- renderPlot({
       shinyjs::hide("volver")
       shinyjs::show("editar")
       shinyjs::hide("guardar")
-      #shinyjs::show("guardarBD")
+      shinyjs::show("guardarBD")
       shinyjs::hide("reiniciar")
       # Cambiar a modo de tabla
       shinyjs::show("prueba_container")
@@ -313,7 +313,8 @@ output$bert <- renderPlot({
             shinyjs::hide("reiniciar")
             shinyjs::show("editar")
             shinyjs::hide("guardar")
-            #shinyjs::show("guardarBD")
+            shinyjs::hide("volver")
+            shinyjs::show("guardarBD")
             # Switch to viewing mode
             shinyjs::hide("tabla_datos_repgrid_container")
             shinyjs::show("prueba_container")

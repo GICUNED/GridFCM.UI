@@ -136,7 +136,7 @@ patient_server <- function(input, output, session){
         id_paciente <- user_data$selected_user_id
         fecha_rep <- session$userData$fecha_repgrid
         fecha_wimp <- session$userData$fecha_wimpgrid
-        if(!is.null(fecha_rep) || !is.null(fecha_rep)){
+        if(!is.null(fecha_rep) || !is.null(fecha_wimp)){
             con <- establishDBConnection()
             if(!is.null(fecha_rep)){
                 query <- sprintf("DELETE FROM repgrid_xlsx where fecha_registro = '%s' and fk_paciente = %d", fecha_rep, id_paciente)
@@ -217,7 +217,8 @@ patient_server <- function(input, output, session){
 
 
     observeEvent(input$importarGridPaciente, {
-        # hacer que no se muestren lo de ficheros y formularios??? no se
+        shinyjs::hide("simulaciones_rep")
+        shinyjs::hide("simulaciones_wimp")
         session$userData$id_paciente <- user_data$selected_user_id
         import_excel_server(input, output, session)
         runjs("window.location.href = '/#!/import';")
@@ -272,6 +273,18 @@ patient_server <- function(input, output, session){
     })
 
     observeEvent(input$borrarPaciente, {
+
+        showModal(modalDialog(
+            title = i18n$t("Confirmar borrado"),
+            i18n$t("¿Está seguro de que quiere eliminar al paciente? Se borrarán todas sus simulaciones"),
+            footer = tagList(
+                modalButton(i18n$t("Cancelar")),
+                actionButton("confirmarBorrado", i18n$t("Confirmar"), class = "btn-danger")
+            )
+        ))
+    })
+    observeEvent(input$confirmarBorrado, {
+        removeModal()  # Cierra la ventana modal de confirmación
         # habría que sacar un mensajito diciendo seguro que quiere eliminar...
         con <- establishDBConnection()
         #borrar simulaciones asociadas
@@ -288,8 +301,6 @@ patient_server <- function(input, output, session){
         # borrar el paciente
         query2 <- sprintf("DELETE FROM paciente WHERE id = %d", user_data$selected_user_id)
         DBI::dbExecute(con, query2)
-        
-        # Borrar simulaciones 
 
         DBI::dbDisconnect(con)
 

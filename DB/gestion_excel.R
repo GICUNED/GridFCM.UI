@@ -42,7 +42,6 @@ decodificar_BD_excel <- function(tabla_origen, ruta_destino, id_paciente, fecha_
         query <- sprintf("SELECT fila, columna, valor FROM %s WHERE fk_paciente = %d and fecha_registro = '%s'", tabla_origen, id_paciente, fecha_registro)
     }
     datos <- DBI::dbGetQuery(con, query)
-    
     # Identificar el número máximo de filas y columnas
     filas_max <- max(datos$fila)
     columnas_max <- max(datos$columna)
