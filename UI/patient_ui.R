@@ -16,37 +16,43 @@ patient_ui <- fluidPage(class="patient-diff",
     ),
 
     column(12, class = "patients-table p-3 bg-white rounded-lg",
-        DTOutput("user_table"),
-      div(class = "button-container mt-2",
-        actionButton("simulacionesRepgrid", i18n$t("Simulaciones RepGrid"), icon = icon("magnifying-glass-chart"), status="primary" ),
-        actionButton(class="mr-auto", "simulacionesWimpgrid", i18n$t("Simulaciones WimpGrid"), icon = icon("border-none"), status="warning"),
+      shinycssloaders::withSpinner(DTOutput("user_table"), type = 4, color = "#022a0c", size = 0.6),
+      div(class = "button-container mt-2 justify-content-center",
+        actionButton("simulacionesDisponibles", i18n$t("Ver simulaciones"), icon = icon("head-side-virus")),
+    
         actionButton("importarGridPaciente", i18n$t("Nueva rejilla"), icon = icon("plus"), status="success"),
         ),
     ),
-    column(12, id = "patientSimulations", class = "p-3 mt-4 bg-white rounded-lg",
+    column(12, id = "patientSimulations", class = "p-3 mt-4 bg-white rounded-lg mix-diff simulation-tab",
 
           # Boton para editar la simulacion repgrid
-          div(class = "button-container mb-4 border-divider-sm",
+          div(class = "button-container mb-4",
             h4(class = "mr-auto mb-0 font-weight-bold", htmlOutput("paciente_simulacion_header")),
-            actionButton("borrarSimulacion", i18n$t("Borrar simulación"), status ="danger", icon = icon("trash-can"))
+            actionButton("borrarSimulacion", i18n$t("Borrar simulación"), status ="danger", icon = icon("trash-can")),
+            actionButton("editarSimulacionRepgrid", i18n$t("Abrir simulación"), icon = icon("download"))
           ),
 
-        # Listado de simulaciones repgrid
-          div( id = "patient-rep",
-            DTOutput("simulaciones_rep")
+          tabsetPanel(
+            tabPanel(i18n$t("RepGrid"), id = "patient-rep", icon = icon("magnifying-glass-chart"),
+              # Listado de simulaciones repgrid
+              shinycssloaders::withSpinner(DTOutput("simulaciones_rep"), type = 4, color = "#022a0c", size = 0.6)
+              # div(id="simulationIndicatorRG", class = "mr-auto patient-active-label",htmlOutput("simulation_active_rg"),
+            ),
+            tabPanel(i18n$t("WimpGrid"), id = "patient-wimp", icon = icon("border-none"),
+              # Listado de simulaciones repgrid
+              shinycssloaders::withSpinner(DTOutput("simulaciones_wimp"), type = 4, color = "#022a0c", size = 0.6)
+              # div(id="simulationIndicatorRG", class = "mr-auto patient-active-label",htmlOutput("simulation_active_rg"),
+            )
           ),
 
-          # Listado de simulaciones wimpgrid
-          div( id = "patient-wimp",
-            DTOutput("simulaciones_wimp")
-          ),
 
-          div(class = "button-container mt-4",
-            actionButton("editarSimulacionRepgrid", i18n$t("Abrir simulación"), icon = icon("download")),
-          ),
-      ),
+          
 
-  ), #fluidRow
+  ),
+          
+),
+
+ #fluidRow
 
 
   #Formulario para añadir paciente

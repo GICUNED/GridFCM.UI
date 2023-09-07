@@ -8,7 +8,10 @@ patient_server <- function(input, output, session){
 
     shinyjs::hide("patientSimulations")
     shinyjs::hide("patientIndicator")
-
+    shinyjs::hide("simulationIndicatorRG")
+    shinyjs::hide("simulationIndicatorWG")
+    
+   
     renderizarTabla <- function(){
         output$user_table <- renderDT({
             con <- establishDBConnection()
@@ -21,9 +24,9 @@ patient_server <- function(input, output, session){
             # Formatear la fecha y hora en un formato legible
             users$fecha_registro <- format(fecha_hora, format = "%Y-%m-%d %H:%M:%S")
             user_data$users <- users # variable reactiva
-            DT::datatable(users, selection = 'single')
+            DT::datatable(users, selection = 'single', rownames = FALSE)
         })
-    }
+        }
 
     renderizarTabla()
     
@@ -72,6 +75,8 @@ patient_server <- function(input, output, session){
             
             
         } else {
+                shinyjs::hide("simulationIndicatorRG")
+                shinyjs::hide("simulationIndicatorWG")
                 shinyjs::hide("patientIndicator")
         }
     })
@@ -112,6 +117,8 @@ patient_server <- function(input, output, session){
             fechasRep <- format(fecha_hora, format = "%Y-%m-%d %H:%M:%S")
             repgrid_data_DB$fechas <- fechasRep
 
+            delay(200, shinyjs::show("simulationIndicatorRG"))
+
             output$simulaciones_rep <- renderDT({
                 datatable(data.frame(Fecha = repgrid_data_DB$fechas), selection = 'single')
             })
@@ -129,26 +136,21 @@ patient_server <- function(input, output, session){
             fechasWimp <- format(fecha_hora, format = "%Y-%m-%d %H:%M:%S")
             wimpgrid_data_DB$fechas <- fechasWimp
 
+            delay(200, shinyjs::show("simulationIndicatorWG"))
+            
             output$simulaciones_wimp <- renderDT({
                 datatable(data.frame(Fecha = wimpgrid_data_DB$fechas), selection = 'single')
             })
         }
     }
 
-    observeEvent(input$simulacionesRepgrid, {
-        shinyjs::hide("simulaciones_wimp")
+    observeEvent(input$simulacionesDisponibles, {
+        shinyjs::show("simulaciones_wimp")
         shinyjs::show("patientSimulations")
         shinyjs::show("simulaciones_rep")
-        
-        cargar_fechas()
-    })
 
-    observeEvent(input$simulacionesWimpgrid, {
-        shinyjs::hide("simulaciones_rep")
-        shinyjs::show("patientSimulations")
-        shinyjs::show("simulaciones_wimp")
-        
         cargar_fechas_wimpgrid()
+        cargar_fechas()
     })
 
     observeEvent(input$borrarSimulacion, {
@@ -243,6 +245,9 @@ patient_server <- function(input, output, session){
         runjs("window.location.href = '/#!/import';")
     })
 
+    shinyjs::onevent("click", "patientIndicator", {
+        runjs("window.location.href = '/#!/patient';")
+    })
 
     shinyjs::onevent("click", "editarPaciente", {
         con <- establishDBConnection()
@@ -372,7 +377,7 @@ patient_server <- function(input, output, session){
         con <- establishDBConnection()
         pacientename <- DBI::dbGetQuery(con, sprintf("SELECT nombre from paciente WHERE id = %d", user_data$selected_user_id))
         DBI::dbDisconnect(con)
-        paste(i18n$t("Simulaciones disponibles de "), pacientename)
+        paste(icon = icon("universal-access"), pacientename)
     })
 
      output$paciente_activo <- renderText({
@@ -380,6 +385,23 @@ patient_server <- function(input, output, session){
         pacientename <- DBI::dbGetQuery(con, sprintf("SELECT nombre from paciente WHERE id = %d", user_data$selected_user_id))
         DBI::dbDisconnect(con)
         paste("<b class='patient-active-name'>", pacientename, "</b>")
+    })
+
+    output$simulation_active_rg <- renderText({
+        con <- establishDBConnection()
+        DBI::dbDisconnect(con)
+         fecha_rep <- session$userData$fecha_repgrid
+        
+
+        paste("<p class='desccustom-date'>📅", fecha_rep, "</p>")
+    })
+
+    output$simulation_active_wg <- renderText({
+        con <- establishDBConnection()
+        DBI::dbDisconnect(con)
+        fecha_wimp <- session$userData$fecha_wimpgrid
+
+        paste("<p class='desccustom-date'>📅", fecha_wimp, "</p>")
     })
     
 

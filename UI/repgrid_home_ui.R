@@ -11,7 +11,7 @@ repgrid_home_ui <- fluidPage(
 shinyjs::hidden(fluidRow(id="repgrid_home_warn",class="mb-4 mt-4 gap-2 justify-content-center error-help hidden",
   column(12, class = "row flex-column justify-content-center",
       icon("triangle-exclamation", "fa-2x"),
-      p(i18n$t("Para hacer el análisis es necesario importar un archivo o formulario"), class = "mt-2 mb-2"),
+      p(i18n$t("Para hacer el análisis es necesario importar o seleccionar un archivo o formulario"), class = "mt-2 mb-2"),
     ),
 
   column(12, class="d-flex justify-content-center", actionButton("importar_page", i18n$t("Importar archivos"), status = 'warning', icon = icon("file-lines"))),
@@ -27,7 +27,7 @@ shinyjs::hidden(fluidRow(id="repgrid_home_warn",class="mb-4 mt-4 gap-2 justify-c
 
       actionButton("volver", i18n$t("Cancelar"), style = "display: none;", status = 'danger', icon = icon("circle-xmark")),
       actionButton("guardar", i18n$t("Guardar"), style = "display: none;", status = 'success', icon = icon("save")),
-      actionButton("reiniciar", i18n$t("Reiniciar"), style = "display: none;", icon = icon("arrow-rotate-left")),
+      actionButton("reiniciar", i18n$t("Reiniciar"), style = "display: none;", status = 'warning', icon = icon("arrow-rotate-left")),
       actionButton("editar", i18n$t("Editar"), icon = icon("edit")),
       actionButton("guardarBD", i18n$t("Guardar BD"), status = 'primary', icon = icon("database"))
     ),
@@ -36,15 +36,15 @@ shinyjs::hidden(fluidRow(id="repgrid_home_warn",class="mb-4 mt-4 gap-2 justify-c
     div(id = "tabla_datos_repgrid_container",
         # Mostrar los datos de tabla_datos_repgrid
         tags$style(".my-table .htCore .htNoWrap { white-space: normal; }"),
-      #shinycssloaders::withSpinner(rHandsontableOutput("tabla_datos_repgrid"), type = 2, color = "#022a0c", size = 0.7)
-      rHandsontableOutput("tabla_datos_repgrid")
+      shinycssloaders::withSpinner(rHandsontableOutput("tabla_datos_repgrid"), type = 4, color = "#022a0c", size = 0.6)
+      # rHandsontableOutput("tabla_datos_repgrid")
     )
     ),
 
     div(class=("row"), id = "prueba_container",
       # Mostrar los datos de prueba
-      #shinycssloaders::withSpinner(plotOutput("bert"), type = 2, color = "#022a0c", size = 0.7)
-      plotOutput("bert")
+      shinycssloaders::withSpinner(plotOutput("bert"), type = 4, color = "#022a0c", size = 0.6)
+      # plotOutput("bert")
     ),
   ))
 

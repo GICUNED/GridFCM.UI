@@ -5,7 +5,7 @@ div(class = "custom-margins",
     p(i18n$t("Aquí puedes agregar más contenido para mostrar al usuario después de iniciar sesión"), class = "desccustom mb-4"),
     column(12, class="d-flex mb-4 justify-content-center", actionButton("crear_nuevo", i18n$t("Nuevo análisis de rejilla"), status = 'success', icon = icon("plus"))),
     fluidRow(class = "table-container",
-      tableOutput("rejillas_anteriores")),
+      shinycssloaders::withSpinner(tableOutput("rejillas_anteriores"), type = 4, color = "#022a0c", size = 0.6)),
   )
 
 

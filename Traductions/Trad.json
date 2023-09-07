@@ -485,8 +485,8 @@
       "en": "Select WimpGrid file (.xlsx)"
     },
     {
-      "es": "Para hacer el análisis es necesario importar un archivo o formulario",
-      "en": "To perform the analysis, it is necessary to import a file or form"
+      "es": "Para hacer el análisis es necesario importar o seleccionar un archivo o formulario",
+      "en": "To perform the analysis, it is necessary to import or select a file or form"
     },
     {
       "es": "Esta página te permite visualizar y manipular los datos importados de WimpGrid y acceder a diferentes tipos de análisis.",
@@ -617,20 +617,16 @@
       "en": "Delete simulation"
     },
     {
-      "es": "Simulaciones RepGrid",
-      "en": "RepGrid simulations"
-    },
-    {
-      "es": "Simulaciones WimpGrid",
-      "en": "WimpGrid simulations"
+      "es": "Ver simulaciones",
+      "en": "View simulations"
     },
     {
       "es": "Simulación de ",
       "en": "Simulation from "
     },
     {
-      "es": "Simulaciones disponibles de ",
-      "en": "Available simulations from "
+      "es": "Simulaciones disponibles ",
+      "en": "Available simulations "
     }
     
 ]}

@@ -31,7 +31,7 @@ div(id="open-controls-container-rg", div(id="open-controls-rg", class="open-cont
               ),
               downloadButton("btn_download_2d", i18n$t("Descargar Gráfico")),
             ),
-        plotOutput("biplot2d_plot")
+          shinycssloaders::withSpinner(plotOutput("biplot2d_plot"), type = 4, color = "#022a0c", size = 0.6),
         ),
         
         conditionalPanel(condition = "input.graph_selector == 'Three-Dimensional Analysis' || input.graph_selector == 'Análisis Tridimensional'",
@@ -46,7 +46,7 @@ div(id="open-controls-container-rg", div(id="open-controls-rg", class="open-cont
               p(i18n$t("Haz click y arrastra para Interactuar."),  class = "desccustom-hint"),
             ),
           ),
-          rglwidgetOutput("biplot3d_plot")
+          shinycssloaders::withSpinner(rglwidgetOutput("biplot3d_plot"), type = 4, color = "#022a0c", size = 0.6),
           
         ),
     ),
@@ -89,7 +89,7 @@ div(id="open-controls-container-rg", div(id="open-controls-rg", class="open-cont
             downloadButton("btn_download_cluster1", i18n$t("Descargar Gráfico")),
           ),
 
-          plotOutput("cluster_plot_1")
+          shinycssloaders::withSpinner(plotOutput("cluster_plot_1"), type = 4, color = "#022a0c", size = 0.6)
         ),
         # Segundo gráfico de cluster
         column(
@@ -98,7 +98,7 @@ div(id="open-controls-container-rg", div(id="open-controls-rg", class="open-cont
             h4(i18n$t("Elementos"), class = "pagesubtitlecustom"),
             downloadButton("btn_download_cluster2", i18n$t("Descargar Gráfico")),
           ),
-          plotOutput("cluster_plot_2")
+          shinycssloaders::withSpinner(plotOutput("cluster_plot_2"), type = 4, color = "#022a0c", size = 0.6)
           ),
       ),
   ),
@@ -111,23 +111,23 @@ div(id="open-controls-container-rg", div(id="open-controls-rg", class="open-cont
       ),
       fluidRow(class = "table-container mt-4",
         h4(i18n$t("Índices y Valores Matemáticos"), class = "pagesubtitlecustom mb-4"),
-        htmlOutput("gridindices_table")
+        shinycssloaders::withSpinner(htmlOutput("gridindices_table"), type = 4, color = "#022a0c", size = 0.6)
       ),
       fluidRow(
         column(6, h4(i18n$t("Intensidad de Constructos"), class = "pagesubtitlecustom mt-4 mb-4"),
-              fluidRow(class = "table-container", DTOutput("construct"))
+              fluidRow(class = "table-container", shinycssloaders::withSpinner(DTOutput("construct"), type = 4, color = "#022a0c", size = 0.6))
         ),
         column(6, h4(i18n$t("Intensidad de Elementos"), class = "pagesubtitlecustom mt-4 mb-4"),
-              fluidRow(class = "table-container", DTOutput("elementss"))
+              fluidRow(class = "table-container", shinycssloaders::withSpinner(DTOutput("elementss"), type = 4, color = "#022a0c", size = 0.6))
         )
       ),
       fluidRow(class = "flex-container",
         h4(i18n$t("Matriz de distancias de Constructos"), class = "pagesubtitlecustom mt-4 mb-4"),
-        rHandsontableOutput("matrix_constructs")
+        shinycssloaders::withSpinner(rHandsontableOutput("matrix_constructs"), type = 4, color = "#022a0c", size = 0.6)
       ),
       fluidRow(class = "flex-container",
         h4(i18n$t("Matriz de distancias de Elementos"), class = "pagesubtitlecustom mt-4 mb-4"),
-        rHandsontableOutput("matrix_elements"))
+        shinycssloaders::withSpinner(rHandsontableOutput("matrix_elements"), type = 4, color = "#022a0c", size = 0.6))
   ),
 
 
@@ -137,8 +137,8 @@ div(id="open-controls-container-rg", div(id="open-controls-rg", class="open-cont
       h4(i18n$t("Índices y Valores Matemáticos"), class = "pagetitle2custom mt-2 mb-2")
     ),
     fluidRow(
-      column(6, h4(i18n$t("Constructos Congruentes/Discordantes"), class = "pagesubtitlecustom mt-4 mb-4"), htmlOutput("constructs")),
-      column(6, h4(i18n$t("Dilemas"), class = "pagesubtitlecustom mb-4"), htmlOutput("dilemmasss"))
+      column(6, h4(i18n$t("Constructos Congruentes/Discordantes"), class = "pagesubtitlecustom mt-4 mb-4"), shinycssloaders::withSpinner(htmlOutput("constructs"), type = 4, color = "#022a0c", size = 0.6)),
+      column(6, h4(i18n$t("Dilemas"), class = "pagesubtitlecustom mb-4"), shinycssloaders::withSpinner(htmlOutput("dilemmasss"), type = 4, color = "#022a0c", size = 0.6))
     )
   )
   ))

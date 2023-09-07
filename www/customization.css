@@ -19,6 +19,10 @@
 
 /*General*/
 
+body{
+  transition:opacity .3s ease,
+}
+
  .hidden{
   /*display: none;*/
   display: none;
@@ -37,6 +41,21 @@
 
 .flex-bs-100{
  flex: 0 0 100% !important;
+}
+
+.shinybusy{
+  left: inherit !important;
+  margin-left: 125px;
+
+}
+/*
+.shinybusy-overlay{
+  background-color: #ffffff8a;
+  backdrop-filter: blur(10px);
+}*/
+
+.card-body.flex-container-docs::after{
+  display: none !important;
 }
 
 /*transition animations*/
@@ -80,12 +99,17 @@
 .patients-table{
   box-shadow: 0 0 1px #11111135;
 }
-#patientSimulations{
+#patientSimulations, #patientIndicator, #simulationIndicator{
   animation: fade-in 200ms forwards;
 }
 
-#patientIndicator{
-  animation: fade-in 200ms forwards;
+#patientIndicator:hover{
+  cursor: pointer;
+  background-color: #c8cfda;
+}
+
+.dark-mode #patientIndicator:hover{
+  background-color: #292d32;
 }
 
 .patient-active-label{
@@ -96,8 +120,9 @@
   position: absolute;
   right: 180px;
   overflow: hidden;
+  text-align: right;
   max-width: 200px;
-  max-height: 79.6px;
+  max-height: 34px;
 }
 .dark-mode .patient-active-label{
 background-color: #454D55;
@@ -109,13 +134,17 @@ background-color: #454D55;
   color: #6e7983;
   text-align: right;
   font-size: .8rem;
+  overflow: hidden;
   text-overflow: ellipsis !important; 
 }
 
 .patient-active-name{
+  max-width: 150px;
+  display: inline-block;
+  white-space: nowrap;
   font-size: 1rem;
-  height: 10px;
-  ext-align: right;
+  text-align: right;
+  overflow: hidden;
   text-overflow: ellipsis !important; 
 }
 
@@ -535,7 +564,7 @@ margin: 0 !important;
   background-color: #F4F6F9;
   align-items: center;
   width: 100%;
-  transition:opacity .3s ease,visibility .3s ease, height .3s ease;;
+  transition:opacity .3s ease, visibility .3s ease, height .3s ease;;
 }
 
 .dark-mode .language-selector{
@@ -1040,7 +1069,7 @@ width: 100% !important;
   background-color: #eebfbf;
   padding: 1rem;
   border-radius: 1rem;
-  max-width: 500px;
+  max-width: 550px;
 }
 
 .dark-mode .error-help {
@@ -1378,13 +1407,25 @@ color: #8b0000;
 
 /*Estilo de botones de navegación y Tabs*/
 
-@media ( max-width: 784px )
+@media ( max-width: 1250px )
 {
-  .header-tab .nav.nav-tabs{
+  .header-tab.rg-diff  .nav.nav-tabs, .header-tab.mix-diff  .nav.nav-tabs{
   position: inherit !important;
+  margin-bottom: 1rem;
 }
   .tabbable{
-    margin-top: -14px;
+    margin-top: -1rem;
+  }
+}
+
+@media ( max-width: 1440px )
+{
+  .header-tab.wg-diff .nav.nav-tabs{
+  position: inherit !important;
+  margin-bottom: 1rem;
+}
+  .tabbable{
+    margin-top: -1rem;
   }
 }
 
@@ -1415,35 +1456,47 @@ color: #8b0000;
   box-shadow: 0 0 3px #005440;
 }
 
-.mix-diff.header-tab .nav-item:first-child .nav-link.active{
+.mix-diff.header-tab .nav-item:first-child .nav-link.active, 
+.mix-diff .nav-item:first-child .nav-link.active{
   color: #fff;
   background-color: #005440 !important;
   box-shadow: 0 0 3px #005440;
 }
 
-.mix-diff.header-tab .nav-item:first-child .nav-link.active:hover{
+.mix-diff.header-tab .nav-item:first-child .nav-link.active:hover, 
+.mix-diff .nav-item:first-child .nav-link.active:hover{
   background-color: #005440 !important;
   box-shadow: 0 0 3px #005440;
 }
 
-.mix-diff.header-tab .nav-item:last-child .nav-link.active{
+.dark-mode .mix-diff .nav-item:first-child .nav-link:not(.active){
+  color: #095540;
+}
+
+.mix-diff.header-tab .nav-item:last-child .nav-link.active,
+.mix-diff .nav-item:last-child .nav-link.active{
   color: #fff;
   background-color: #dfb639 !important;
   box-shadow: 0 0 3px #ffc107;
 }
 
-.mix-diff.header-tab .nav-item:last-child .nav-link.active:hover{
+.mix-diff.header-tab .nav-item:last-child .nav-link.active:hover,
+.mix-diff .nav-item:last-child .nav-link.active:hover{
+
   background-color: #dfb639 !important;
   box-shadow: 0 0 3px #ffc107;
 }
 
-.mix-diff.header-tab .nav-item:last-child .nav-link{
+.mix-diff.header-tab .nav-item:last-child .nav-link,
+.mix-diff .nav-item:last-child .nav-link{
+
   color: #6d5715;
 }
 
 .dark-mode .mix-diff.header-tab .nav-item:last-child .nav-link{
   color: #fff;
 }
+
 
 
 #lista_nombres .nav-item .nav-link.active{
@@ -1472,6 +1525,13 @@ color: #8b0000;
   position: fixed;
   z-index: 200;
   top: 9px;
+
+  transition: left .3s ease-in-out;
+}
+
+.simulation-tab .nav.nav-tabs{
+  display: flex;
+  margin-bottom: 1rem;
 
   transition: left .3s ease-in-out;
 }
@@ -1910,37 +1970,37 @@ table.dataTable{
   font-weight: bold;
 }
 
-#patient-rep table.dataTable.display > tbody > tr.selected:hover > *, #patient-rep table.dataTable.display > tbody > tr.selected > * {
-  box-shadow: inset 0 0 0 9999px #053226 !important;
+#simulaciones_rep table.dataTable.display > tbody > tr.selected:hover > *, #simulaciones_rep table.dataTable.display > tbody > tr.selected > * {
+  box-shadow: inset 0 0 0 9999px #005440 !important;
 }
 
-#patient-wimp table.dataTable.display > tbody > tr.selected:hover > *, #patient-wimp table.dataTable.display > tbody > tr.selected > * {
+#simulaciones_wimp table.dataTable.display > tbody > tr.selected:hover > *, #simulaciones_wimp table.dataTable.display > tbody > tr.selected > * {
   box-shadow: inset 0 0 0 9999px #a77f09 !important;
 }
 
 
-#patient-wimp .dataTables_length::before{
+#simulaciones_wimp .dataTables_length::before{
   display: block;
   margin: 0 1rem .5rem 0;
   padding: .5rem 1rem;
-  content: "WimpGrid";
+  content: "Simulaciones disponibles";
   font-size: 1.2rem;
   font-weight: 600;
-  background-color: #dfba4a;
+  background-color: #edd58b;
   color: #3c2f08;
   border-radius: .5rem;
 }
 
-#patient-wimp .dataTables_length, #patient-rep .dataTables_length{
+#simulaciones_wimp .dataTables_length, #simulaciones_rep .dataTables_length{
   display: flex;
   align-items: center;
 }
 
-#patient-rep .dataTables_length::before{
+#simulaciones_rep .dataTables_length::before{
   display: block;
   margin: 0 1rem .5rem 0;
   padding: .5rem 1rem;
-  content: "RepGrid";
+  content: "Simulaciones disponibles";
   font-size: 1.2rem;
   font-weight: 600;
   background-color: #b8e9dc;
@@ -1963,7 +2023,7 @@ table.dataTable{
   display: none !important; 
 }
 
-.patients-table tr, #patient-wimp tr, #patient-rep tr{
+.patients-table tr, #simulaciones_wimp tr, #simulaciones_rep tr{
   cursor: pointer;
 }
 
