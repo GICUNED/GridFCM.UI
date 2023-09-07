@@ -1348,12 +1348,6 @@ color: #8b0000;
 
 }
 
-.dark-mode .visNetwork .dropdown{
-
-  background-color:#343a40;
-
-}
-
 /*revisar*/
 .dropdown select {
   background-color: #005440;
@@ -1912,7 +1906,7 @@ table.dataTable{
   font-weight: bold;
 }
 
-.patient-diff .odd td:nth-child(3), .even td:nth-child(3){
+.patient-diff .odd td:nth-child(3),.patient-diff .even td:nth-child(3){
   font-weight: bold;
 }
 

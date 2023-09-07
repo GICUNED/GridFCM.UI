@@ -129,7 +129,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
           ),
         ),
 
-        conditionalPanel(class="graphic-container bg-white rounded-lg",condition = "input.graph_selector_visualizacion == 'wimpindices' || input.graph_selector_visualizacion == 'índices de Wimp' ",
+        conditionalPanel(class="graphic-container bg-white rounded-lg mt-3",condition = "input.graph_selector_visualizacion == 'wimpindices' || input.graph_selector_visualizacion == 'índices de Wimp' ",
             
 
                           fluidRow(class = "table-container pb-0 flex-row kpi",
