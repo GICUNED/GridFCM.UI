@@ -163,6 +163,12 @@ patient_server <- function(input, output, session){
                 cargar_fechas()
             }
             if(!is.null(fecha_wimp)){
+                id_wx <- as.integer(DBI::dbGetQuery(con, sprintf("SELECT distinct(wp.fk_wimpgrid) from wimpgrid_params as wp, wimpgrid_xlsx as wx where wp.fk_wimpgrid = wx.id and wx.fk_paciente = %d and wx.fecha_registro = '%s'", 
+                                        user_data$selected_user_id, fecha_wimp)))
+                if(!is.null(id_wx)){
+                    query_wp <- sprintf("DELETE FROM wimpgrid_params where fk_wimpgrid = %d", id_wx)
+                    DBI::dbExecute(con, query_wp)
+                }
                 query <- sprintf("DELETE FROM wimpgrid_xlsx where fecha_registro = '%s' and fk_paciente = %d", fecha_wimp, id_paciente)
                 DBI::dbExecute(con, query)
                 cargar_fechas_wimpgrid()
@@ -309,8 +315,13 @@ patient_server <- function(input, output, session){
         #borrar simulaciones asociadas
 
         queryRep <- sprintf("DELETE FROM repgrid_xlsx where fk_paciente = %d", user_data$selected_user_id)
-        queryWimp <- sprintf("DELETE FROM wimpgrid_xlsx where fk_paciente = %d", user_data$selected_user_id)
         DBI::dbExecute(con, queryRep)
+        id_wx <- as.integer(DBI::dbGetQuery(con, sprintf("SELECT distinct(wp.fk_wimpgrid) from wimpgrid_params as wp, wimpgrid_xlsx as wx where wp.fk_wimpgrid = wx.id and wx.fk_paciente = %d", user_data$selected_user_id)))
+        if(!is.null(id_wx)){
+            query_wp <- sprintf("DELETE FROM wimpgrid_params where fk_wimpgrid = %d", id_wx)
+            DBI::dbExecute(con, query_wp)
+        }
+        queryWimp <- sprintf("DELETE FROM wimpgrid_xlsx where fk_paciente = %d", user_data$selected_user_id)
         DBI::dbExecute(con, queryWimp)
 
         # borrar tabla intermedia

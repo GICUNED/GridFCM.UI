@@ -42,23 +42,26 @@ CREATE TABLE IF NOT EXISTS wimpgrid_xlsx (
     PRIMARY KEY (id, fila, columna)
 );
 
-/*
 CREATE TABLE IF NOT EXISTS wimpgrid_params (
     id SERIAL PRIMARY KEY,
+    fk_wimpgrid INTEGER,
+    fk_fila INTEGER,
+    fk_columna INTEGER,
     -- simdigraph
     sim_design varchar(25),
     sim_umbral varchar(25),
     sim_n_iter INTEGER,
     sim_n_max_iter INTEGER,
     sim_n_stop_iter INTEGER,
-    sim_valor_diferencial INTEGER,
+    sim_color varchar(25),
+    sim_valor_diferencial DECIMAL(1, 4),
     -- falta el vector que no se como aun
 
     -- pcsd
     pcsd_n_iter INTEGER,
     pcsd_n_max_iter INTEGER,
     pcsd_n_stop_iter INTEGER,
-    pcsd_valor_diferencial INTEGER,
+    pcsd_valor_diferencial DECIMAL(1, 4),
     -- vector
 
     -- pcsd índices
@@ -66,12 +69,12 @@ CREATE TABLE IF NOT EXISTS wimpgrid_params (
     pcind_umbral VARCHAR(25),
     pcind_n_max_iter INTEGER,
     pcind_n_stop_iter INTEGER,
-    pcind_valor_diferencial INTEGER,
+    pcind_valor_diferencial DECIMAL(1, 4),
     -- vector
 
-    fk_wimpgrid INT REFERENCES wimpgrid_xlsx(id)
-)
-*/
+    FOREIGN KEY(fk_wimpgrid, fk_fila, fk_columna) REFERENCES wimpgrid_xlsx(id, fila, columna)
+);
+
 
 -- Seeder de prueba
 INSERT INTO psicologo (nombre, email)

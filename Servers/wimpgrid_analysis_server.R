@@ -418,24 +418,6 @@ output$bert_w <- renderPlot({
 
   })
 
-shinyjs::onevent("click", "guardarBD_w", {
-    if (!is.null(session$userData$datos_wimpgrid)) {
-        con <- establishDBConnection()
-        #gestionar los cambios y guardarlos directamente en la bd
-        cambios <- cambios_reactive()
-        for(changes in cambios){
-          x <- as.numeric(changes[1]) + 2 # ajustamos las coordenadas para la bd
-          y <- as.numeric(changes[2]) + 1 # ajustamos ...
-          old_v <- as.character(changes[3]) #ajustamos los numeros a texto como esta en la bd
-          new_v <- as.character(changes[4])
-
-          query <- sprintf("UPDATE wimpgrid_xlsx SET valor='%s' WHERE fila = %d and columna = %d and valor = '%s' and fk_paciente = %d and fecha_registro = '%s'", 
-                      new_v, x, y, old_v, session$userData$id_paciente, session$userData$fecha_wimpgrid)
-          DBI::dbExecute(con, query)
-        }
-        DBI::dbDisconnect(con)
-    }
-})
 
 observeEvent(input$editar_w, {
     if (!is.null(session$userData$datos_wimpgrid)) {
@@ -457,9 +439,7 @@ observeEvent(input$editar_w, {
       shinyjs::show("guardarBD_w")
       shinyjs::hide("reiniciar_w")
       # Cambiar a modo de tabla
-      message("muestro container")
       shinyjs::show("prueba_container_w")
-      message("muestro tabla de datos wimpgrid")
       shinyjs::hide("tabla_datos_wimpgrid_container")
   })
 
@@ -969,7 +949,7 @@ output$inconsistences <- DT::renderDataTable({
 simdigraph_niter <- reactiveVal(0)
 # Diseño
 simdigraph_layout <- reactiveVal("circle")
-updateSelectInput(session, "simdigraph_layout", selected="circulo")
+
 #Sobra
 simdigraph_vertex_size <- reactiveVal(1)
 #Sobra
@@ -985,7 +965,7 @@ simdigraph_infer <- reactiveVal("linear transform")
 simdigraph_thr <- reactiveVal("linear")
 # Nº de iteraciones máximas
 simdigraph_max_iter <- reactiveVal(30)
-updateSliderInput(session, "simdigraph_max_iter", value = 10)
+
 # Valor diferencial
 simdigraph_e <- reactiveVal(0.0001)
 # Nº de la iteración sin cambios
@@ -1028,19 +1008,92 @@ pscd_e <- reactiveVal(0.0001)
 pscd_stop_iter <- reactiveVal(3)
 
 
-actualizar_controles <- function(){
-  con <- establishDBConnection()
-  # obtener id wimpgrid
-
-  DBI::dbDisconnect(con)
+# ver de donde saco el id_wx
+actualizar_controles_local <- function(id_wx){
+  # compruebo si existe wimpgrid params para un wimpgrid xlsx
+  query <- sprintf("select * from wimpgrid_params where fk_wimpgrid = %d", id_wx)
+  controles <- DBI::dbGetQuery(con, query)
+  
+  if(nrow(controles)>0){
+    updateSelectInput(session, "simdigraph_color", controles$sim_color)
+    updateSliderInput(session, "simdigraph_max_iter", value = controles$sim_n_max_iter)
+    updateSelectInput(session, "simdigraph_layout", selected= controles$sim_design)
+  }
 }
+
+actualizar_controles_bd <- function(id_wx){
+  
+  #con <- establishDBConnection()
+  # compruebo si existe wimpgrid params para un wimpgrid xlsx
+  query <- sprintf("select id from wimpgrid_params where fk_wimpgrid = %d", id_wx)
+  controles <- DBI::dbGetQuery(con, query)
+  
+  if(nrow(controles)==0){
+    # insertar
+    query_wp <- sprintf(
+      "INSERT INTO wimpgrid_params (
+          id, fk_wimpgrid, sim_design, sim_umbral, sim_n_iter, sim_n_max_iter, sim_n_stop_iter, sim_color, sim_valor_diferencial,
+          pcsd_n_iter, pcsd_n_max_iter, pcsd_n_stop_iter, pcsd_valor_diferencial,
+          pcind_propagacion, pcind_umbral, pcind_n_max_iter, pcind_n_stop_iter, pcind_valor_diferencial
+      ) VALUES (
+          %d, %d, '%s', '%s', %d, %d, %d, '%s', %f,
+          %d, %d, %d, %f,
+          '%s', '%s', %d, %d, %f
+      )",  
+      id_wx, id_wx, simdigraph_layout(), simdigraph_thr(), simdigraph_niter(), simdigraph_max_iter(), simdigraph_stop_iter(), simdigraph_color(), simdigraph_e(),
+      pscd_iter(), pscd_max_iter(), pscd_stop_iter(), pscd_e(),
+      infer(), thr(), max_iter(), pscd_stop_iter(), e()
+    )
+  }
+  else{
+    # actualizar
+    query_wp <- sprintf("
+    UPDATE wimpgrid_params SET
+          sim_design = '%s', sim_umbral = '%s', sim_n_iter = %d, sim_n_max_iter = %d, sim_n_stop_iter = %d, sim_color = '%s', sim_valor_diferencial = %f,
+          pcsd_n_iter = %d, pcsd_n_max_iter = %d, pcsd_n_stop_iter = %d, pcsd_valor_diferencial = %f,
+          pcind_propagacion = '%s', pcind_umbral = '%s', pcind_n_max_iter = %d, pcind_n_stop_iter = %d, pcind_valor_diferencial = %f
+      WHERE fk_wimpgrid = %d;",
+      simdigraph_layout(), simdigraph_thr(), simdigraph_niter(), simdigraph_max_iter(), simdigraph_stop_iter(), simdigraph_color(), simdigraph_e(),
+      pscd_iter(), pscd_max_iter(), pscd_stop_iter(), pscd_e(),
+      infer(), thr(), max_iter(), pscd_stop_iter(), e(),
+      id_wx)
+
+  }
+  DBI::dbExecute(con, query_wp)
+  #DBI::dbDisconnect(con)
+}
+
+shinyjs::onevent("click", "guardarBD_w", {
+    if (!is.null(session$userData$datos_wimpgrid)) {
+        fecha <- session$userData$fecha_wimpgrid
+        id_paciente <- session$userData$id_paciente
+        con <- establishDBConnection()
+        #gestionar los cambios y guardarlos directamente en la bd
+        cambios <- cambios_reactive()
+        for(changes in cambios){
+          x <- as.numeric(changes[1]) + 2 # ajustamos las coordenadas para la bd
+          y <- as.numeric(changes[2]) + 1 # ajustamos ...
+          old_v <- as.character(changes[3]) #ajustamos los numeros a texto como esta en la bd
+          new_v <- as.character(changes[4])
+
+          query <- sprintf("UPDATE wimpgrid_xlsx SET valor='%s' WHERE fila=%d and columna=%d and valor='%s' and fk_paciente=%d and fecha_registro='%s'", 
+                      new_v, x, y, old_v, id_paciente, fecha)
+          
+          DBI::dbExecute(con, query)
+        }
+        query2 <- sprintf("SELECT distinct(id) from wimpgrid_xlsx where fecha_registro = '%s'", fecha)
+        id_wx <- as.integer(DBI::dbGetQuery(con, query2))
+        actualizar_controles_bd(id_wx)
+        DBI::dbDisconnect(con)
+    }
+})
 
 
 # Lógica para la pestaña "Laboratorio"
 
 observeEvent(input$tab_laboratorio, {
 
- 
+  
 
 })
 
@@ -1504,48 +1557,6 @@ output$graph_output_laboratorio <- renderUI({
 
     }
 })
-
- 
-
-  #output$btn_download <- downloadHandler(
-
-  #  filename = function() {
-
-  #    graph <- input$graph_selector_laboratorio
-
-  #    if(graph == i18n$t("simdigrafo")) {
-
-  #      "simdigrafo.png"
-
-  #    } else if(graph == "pcsd") {
-
-  #      "pcsd.png"
-
-  #    } else if(graph == "pcsdindices") {
-
-  #      "pcsdindices.png"
-
-  #    }
-
-  #  },
-
-  #  content = function(file) {
-
-  #    # Tomar una captura de pantalla del gráfico y guardarla en un archivo PNG
-
-  #    grDevices::png(file, width = 1200, height = 800, units = "px", res = 100)
-
-  #    grDevices::dev.capture("lab_showw")
-
-  #    grDevices::dev.off()
-
-  #    file.copy("Rplot001.png", file)  # Copiar el archivo temporal a la ubicación deseada
-
-  #    file.remove("Rplot001.png")  # Eliminar el archivo temporal
-
-  #  }
-
-  #)
 
  
 

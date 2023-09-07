@@ -66,8 +66,6 @@ import_excel_server <- function(input, output, session) {
   
 
   observeEvent(input$importar_datos_w, {
-    message("Entro en importar datossss????'")
-
     #llamada al metodo de codificar para luego meter en la bd y demas
     excel_wimp_codificar <- read.xlsx(input$archivo_wimpgrid$datapath, colNames=FALSE)
     ruta_destino <- "/srv/shiny-server/ficheros/excel_wimp.xlsx"
