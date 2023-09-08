@@ -133,8 +133,8 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
             
 
                           fluidRow(class = "table-container pb-0 flex-row kpi",
-                          h3(i18n$t("Desglose Índices"), class = "mr-auto mb-0"),
-                          shinycssloaders::withSpinner(htmlOutput("dens"), type = 4, color = "#022a0c", size = 0.6)
+                            h3(i18n$t("Desglose Índices"), class = "mr-auto mb-0"),
+                            htmlOutput("dens")
                           ),
                             
                             shinycssloaders::withSpinner(rHandsontableOutput("distance"), type = 4, color = "#022a0c", size = 0.6),

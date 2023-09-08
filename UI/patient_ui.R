@@ -11,16 +11,16 @@ patient_ui <- fluidPage(class="patient-diff",
   fluidRow(class="custom-margins mt-2",
     column(12, class = ("button-container mb-2"),
       actionButton(class="mr-auto", "addPatient", i18n$t("Añadir paciente"), status = 'info', icon = icon("person-circle-plus")),
-      actionButton("editarPaciente", i18n$t("Editar"), icon = icon("pen-to-square")),
-      actionButton("borrarPaciente", i18n$t("Borrar"), status ="danger", icon = icon("trash-can"))
+      actionButton("editarPaciente", i18n$t("Editar"), disabled=TRUE, icon = icon("pen-to-square")),
+      actionButton("borrarPaciente", i18n$t("Borrar"), status ="danger", disabled=TRUE, icon = icon("trash-can"))
     ),
 
     column(12, class = "patients-table p-3 bg-white rounded-lg",
       shinycssloaders::withSpinner(DTOutput("user_table"), type = 4, color = "#022a0c", size = 0.6),
       div(class = "button-container mt-2 justify-content-center",
-        actionButton("simulacionesDisponibles", i18n$t("Ver simulaciones"), icon = icon("head-side-virus")),
+        actionButton("simulacionesDisponibles", i18n$t("Ver simulaciones"), disabled=TRUE, icon = icon("head-side-virus")),
     
-        actionButton("importarGridPaciente", i18n$t("Nueva rejilla"), icon = icon("plus"), status="success"),
+        actionButton("importarGridPaciente", i18n$t("Nueva rejilla"), disabled=TRUE, icon = icon("plus"), status="success"),
         ),
     ),
     column(12, id = "patientSimulations", class = "p-3 mt-4 bg-white rounded-lg mix-diff simulation-tab",
@@ -28,8 +28,8 @@ patient_ui <- fluidPage(class="patient-diff",
           # Boton para editar la simulacion repgrid
           div(class = "button-container mb-4",
             h4(class = "mr-auto mb-0 font-weight-bold", htmlOutput("paciente_simulacion_header")),
-            actionButton("borrarSimulacion", i18n$t("Borrar simulación"), status ="danger", icon = icon("trash-can")),
-            actionButton("editarSimulacionRepgrid", i18n$t("Abrir simulación"), icon = icon("download"))
+            actionButton("borrarSimulacion", i18n$t("Borrar simulación"), disabled=TRUE, status ="danger", icon = icon("trash-can")),
+            actionButton("editarSimulacionRepgrid", i18n$t("Abrir simulación"), disabled=TRUE, icon = icon("download"))
           ),
 
           tabsetPanel(
@@ -71,7 +71,7 @@ patient_ui <- fluidPage(class="patient-diff",
                 column(6, class = "w-50 p-0", selectInput("genero", i18n$t("Género:"), c("Hombre", "Mujer", "Sin definir"))),
               ),
               textAreaInput("anotaciones", i18n$t("Anotaciones:"), placeholder = "Comentarios relativos al paciente"),
-              actionButton("guardarAddPatient", i18n$t("Guardar"), status = 'success', icon = icon("save"))
+              actionButton("guardarAddPatient", i18n$t("Guardar"), status = 'success', disabled=TRUE, icon = icon("save"))
             )),
     )
   ),
