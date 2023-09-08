@@ -47,11 +47,7 @@ patient_server <- function(input, output, session){
     # gestion de las filas seleccionadas en la tabla pacientes
     observeEvent(input$user_table_rows_selected, {
         selected_row <- input$user_table_rows_selected
-        
-        if (!is.null(selected_row)) {
-                
-            } 
-
+    
         if (!is.null(selected_row)) {
             #ocultar simulaciones por si se habían desplegado
             delay(200, shinyjs::show("patientIndicator"))
@@ -69,6 +65,19 @@ patient_server <- function(input, output, session){
             
             # Por ejemplo, imprimir el ID del usuario en la consola
             message(selected_user_id)
+            output$paciente_simulacion_header <- renderText({
+                con <- establishDBConnection()
+                pacientename <- DBI::dbGetQuery(con, sprintf("SELECT nombre from paciente WHERE id = %d", user_data$selected_user_id))
+                DBI::dbDisconnect(con)
+                paste(i18n$t("Simulaciones disponibles de "), pacientename)
+            })
+
+            output$paciente_activo <- renderText({
+                con <- establishDBConnection()
+                pacientename <- DBI::dbGetQuery(con, sprintf("SELECT nombre from paciente WHERE id = %d", user_data$selected_user_id))
+                DBI::dbDisconnect(con)
+                paste("<b class='patient-active-name'>", pacientename, "</b>")
+            })
             
             
         } else {
@@ -93,7 +102,6 @@ patient_server <- function(input, output, session){
     observeEvent(input$simulaciones_wimp_rows_selected, {
         selected_row <- input$simulaciones_wimp_rows_selected
         if (!is.null(selected_row)) {
-            # hacer consulta para obtener el txt de repgrid aqui con la fecha seleccionada
             fechas <- wimpgrid_data_DB$fechas
             fecha <- fechas[selected_row]
             session$userData$fecha_wimpgrid <- fecha
@@ -165,7 +173,7 @@ patient_server <- function(input, output, session){
             if(!is.null(fecha_wimp)){
                 id_wx <- as.integer(DBI::dbGetQuery(con, sprintf("SELECT distinct(wp.fk_wimpgrid) from wimpgrid_params as wp, wimpgrid_xlsx as wx where wp.fk_wimpgrid = wx.id and wx.fk_paciente = %d and wx.fecha_registro = '%s'", 
                                         user_data$selected_user_id, fecha_wimp)))
-                if(!is.null(id_wx)){
+                if(!is.na(id_wx)){
                     query_wp <- sprintf("DELETE FROM wimpgrid_params where fk_wimpgrid = %d", id_wx)
                     DBI::dbExecute(con, query_wp)
                 }
@@ -186,7 +194,7 @@ patient_server <- function(input, output, session){
         if(!is.null(repgrid_fecha_seleccionada()) || !is.null(wimpgrid_fecha_seleccionada())){
             if(!is.null(repgrid_fecha_seleccionada())){
                 ruta_destino <- "/srv/shiny-server/ficheros/excel_rep.xlsx"
-                decodificar_BD_excel('repgrid_xlsx', ruta_destino, id_paciente, fecha_rep)
+                id <- decodificar_BD_excel('repgrid_xlsx', ruta_destino, id_paciente, fecha_rep)
                 datos_repgrid <- OpenRepGrid::importExcel(ruta_destino)
                 excel_repgrid <- read.xlsx(ruta_destino)
 
@@ -212,7 +220,8 @@ patient_server <- function(input, output, session){
             }
             if(!is.null(wimpgrid_fecha_seleccionada())){
                 ruta_destino <- "/srv/shiny-server/ficheros/excel_wimp.xlsx"
-                decodificar_BD_excel('wimpgrid_xlsx', ruta_destino, id_paciente, fecha_wimp)
+                id <- decodificar_BD_excel('wimpgrid_xlsx', ruta_destino, id_paciente, fecha_wimp)
+                session$userData$id_wimpgrid <- id
 
                 datos_wimpgrid <- importwimp(ruta_destino)
                 excel_wimp <- read.xlsx(ruta_destino)
@@ -317,7 +326,7 @@ patient_server <- function(input, output, session){
         queryRep <- sprintf("DELETE FROM repgrid_xlsx where fk_paciente = %d", user_data$selected_user_id)
         DBI::dbExecute(con, queryRep)
         id_wx <- as.integer(DBI::dbGetQuery(con, sprintf("SELECT distinct(wp.fk_wimpgrid) from wimpgrid_params as wp, wimpgrid_xlsx as wx where wp.fk_wimpgrid = wx.id and wx.fk_paciente = %d", user_data$selected_user_id)))
-        if(!is.null(id_wx)){
+        if(!is.na(id_wx)){
             query_wp <- sprintf("DELETE FROM wimpgrid_params where fk_wimpgrid = %d", id_wx)
             DBI::dbExecute(con, query_wp)
         }
@@ -379,19 +388,7 @@ patient_server <- function(input, output, session){
         }
     })
 
-    output$paciente_simulacion_header <- renderText({
-        con <- establishDBConnection()
-        pacientename <- DBI::dbGetQuery(con, sprintf("SELECT nombre from paciente WHERE id = %d", user_data$selected_user_id))
-        DBI::dbDisconnect(con)
-        paste(i18n$t("Simulaciones disponibles de "), pacientename)
-    })
-
-     output$paciente_activo <- renderText({
-        con <- establishDBConnection()
-        pacientename <- DBI::dbGetQuery(con, sprintf("SELECT nombre from paciente WHERE id = %d", user_data$selected_user_id))
-        DBI::dbDisconnect(con)
-        paste("<b class='patient-active-name'>", pacientename, "</b>")
-    })
+    
     
 
     runjs("

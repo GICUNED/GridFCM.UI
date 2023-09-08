@@ -36,15 +36,16 @@ decodificar_BD_excel <- function(tabla_origen, ruta_destino, id_paciente, fecha_
     
     # Consultar los datos de la tabla
     if(fecha_registro==''){
-        query <- sprintf("SELECT fila, columna, valor FROM %s WHERE fk_paciente = %d", tabla_origen, id_paciente)
+        query <- sprintf("SELECT id, fila, columna, valor FROM %s WHERE fk_paciente = %d", tabla_origen, id_paciente)
     }
     else{
-        query <- sprintf("SELECT fila, columna, valor FROM %s WHERE fk_paciente = %d and fecha_registro = '%s'", tabla_origen, id_paciente, fecha_registro)
+        query <- sprintf("SELECT id, fila, columna, valor FROM %s WHERE fk_paciente = %d and fecha_registro = '%s'", tabla_origen, id_paciente, fecha_registro)
     }
     datos <- DBI::dbGetQuery(con, query)
     # Identificar el número máximo de filas y columnas
     filas_max <- max(datos$fila)
     columnas_max <- max(datos$columna)
+    id <- unique(datos$id)
     
     # Crear una matriz vacía para almacenar los datos
     #matriz_strings <- matrix("", nrow = filas_max, ncol = columnas_max)
@@ -85,4 +86,5 @@ decodificar_BD_excel <- function(tabla_origen, ruta_destino, id_paciente, fecha_
     #write.xlsx(combined_data, ruta_destino, rowNames = FALSE, overwrite=TRUE)
     
     DBI::dbDisconnect(con)
+    return(id)
 }

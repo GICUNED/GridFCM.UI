@@ -433,6 +433,9 @@ observeEvent(input$editar_w, {
   })
 
   observeEvent(input$volver_w,{
+    # Llamada a actualizar controles locales por si hubiese anteriormente
+    actualizar_controles_local(session$userData$id_wimpgrid)
+
       shinyjs::hide("volver_w")
       shinyjs::show("editar_w")
       shinyjs::hide("guardar_w")
@@ -1011,15 +1014,36 @@ pscd_stop_iter <- reactiveVal(3)
 # ver de donde saco el id_wx
 actualizar_controles_local <- function(id_wx){
   # compruebo si existe wimpgrid params para un wimpgrid xlsx
+  con <- establishDBConnection()
   query <- sprintf("select * from wimpgrid_params where fk_wimpgrid = %d", id_wx)
   controles <- DBI::dbGetQuery(con, query)
+  DBI::dbDisconnect(con)
   
   if(nrow(controles)>0){
-    updateSelectInput(session, "simdigraph_color", controles$sim_color)
-    updateSliderInput(session, "simdigraph_max_iter", value = controles$sim_n_max_iter)
-    updateSelectInput(session, "simdigraph_layout", selected= controles$sim_design)
+    # simdigraph
+    updateSelectInput(session, "simdigraph_thr", selected=controles$sim_umbral)
+    updateSelectInput(session, "simdigraph_layout", selected=controles$sim_design)
+    updateSelectInput(session, "simdigraph_color", selected=controles$sim_color)
+    updateSliderInput(session, "simdigraph_niter", value=controles$sim_n_iter)
+    updateSliderInput(session, "simdigraph_max_iter", value=controles$sim_n_max_iter)
+    updateSliderInput(session, "simdigraph_stop_iter", value=controles$sim_n_stop_iter)
+    updateNumericInput(session, "simdigraph_e", value=controles$sim_valor_diferencial)
+
+    # pcsd
+    updateSliderInput(session, "pcsd_iter", value=controles$pcsd_n_iter)
+    updateSliderInput(session, "pcsd_max_iter", value=controles$pcsd_n_max_iter)
+    updateSliderInput(session, "pcsd_stop_iter", value=controles$pcsd_n_stop_iter)
+    updateSelectInput(session, "pcsd_infer", selected=controles$pcsd_valor_diferencial)
+
+    # pcsd índices
+    updateSelectInput(session, "pcsdindices_infer", selected=controles$pcind_propagacion)
+    updateSelectInput(session, "pcsdindices_thr", selected=controles$pcind_umbral)
+    updateSliderInput(session, "pcsdindices_max_iter", value=controles$pcind_n_max_iter)
+    updateNumericInput(session, "pcsdindices_e", value=controles$pcind_valor_diferencial)
+    updateSliderInput(session, "pcsdindices_stop_iter", value=controles$pcind_n_stop_iter)
   }
 }
+
 
 actualizar_controles_bd <- function(id_wx){
   
@@ -1040,9 +1064,9 @@ actualizar_controles_bd <- function(id_wx){
           %d, %d, %d, %f,
           '%s', '%s', %d, %d, %f
       )",  
-      id_wx, id_wx, simdigraph_layout(), simdigraph_thr(), simdigraph_niter(), simdigraph_max_iter(), simdigraph_stop_iter(), simdigraph_color(), simdigraph_e(),
-      pscd_iter(), pscd_max_iter(), pscd_stop_iter(), pscd_e(),
-      infer(), thr(), max_iter(), pscd_stop_iter(), e()
+      id_wx, id_wx, simdigraph_layout(), simdigraph_thr(), simdigraph_niter(), simdigraph_max_iter(), simdigraph_stop_iter(), simdigraph_color(), round(simdigraph_e(), 4),
+      pscd_iter(), pscd_max_iter(), pscd_stop_iter(), round(pscd_e(), 4),
+      infer(), thr(), max_iter(), pscd_stop_iter(), round(e(), 4)
     )
   }
   else{
@@ -1053,9 +1077,9 @@ actualizar_controles_bd <- function(id_wx){
           pcsd_n_iter = %d, pcsd_n_max_iter = %d, pcsd_n_stop_iter = %d, pcsd_valor_diferencial = %f,
           pcind_propagacion = '%s', pcind_umbral = '%s', pcind_n_max_iter = %d, pcind_n_stop_iter = %d, pcind_valor_diferencial = %f
       WHERE fk_wimpgrid = %d;",
-      simdigraph_layout(), simdigraph_thr(), simdigraph_niter(), simdigraph_max_iter(), simdigraph_stop_iter(), simdigraph_color(), simdigraph_e(),
-      pscd_iter(), pscd_max_iter(), pscd_stop_iter(), pscd_e(),
-      infer(), thr(), max_iter(), pscd_stop_iter(), e(),
+      simdigraph_layout(), simdigraph_thr(), simdigraph_niter(), simdigraph_max_iter(), simdigraph_stop_iter(), simdigraph_color(), round(simdigraph_e(), 4),
+      pscd_iter(), pscd_max_iter(), pscd_stop_iter(), round(pscd_e(), 4),
+      infer(), thr(), max_iter(), pscd_stop_iter(), round(e(), 4),
       id_wx)
 
   }
@@ -1081,9 +1105,9 @@ shinyjs::onevent("click", "guardarBD_w", {
           
           DBI::dbExecute(con, query)
         }
-        query2 <- sprintf("SELECT distinct(id) from wimpgrid_xlsx where fecha_registro = '%s'", fecha)
-        id_wx <- as.integer(DBI::dbGetQuery(con, query2))
-        actualizar_controles_bd(id_wx)
+        #query2 <- sprintf("SELECT distinct(id) from wimpgrid_xlsx where fecha_registro = '%s'", fecha)
+        #id_wx <- as.integer(DBI::dbGetQuery(con, query2))
+        actualizar_controles_bd(session$userData$id_wimpgrid)
         DBI::dbDisconnect(con)
     }
 })
@@ -1349,6 +1373,7 @@ observeEvent(input$pcsdindices_stop_iter, {
 observeEvent(input$pscd_iter, {
 
   pscd_iter(input$pscd_iter)
+  message(paste("pscd inter", pscd_iter()))
 
 })
 
