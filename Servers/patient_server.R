@@ -1,4 +1,6 @@
 patient_server <- function(input, output, session){
+    message("imprimo")
+    message(Sys.getenv("DB_HOST"))
 
     user_data <- reactiveValues(users = NULL, selected_user_id = NULL)
     repgrid_data_DB <- reactiveValues(fechas = NULL)
@@ -325,11 +327,16 @@ patient_server <- function(input, output, session){
 
         queryRep <- sprintf("DELETE FROM repgrid_xlsx where fk_paciente = %d", user_data$selected_user_id)
         DBI::dbExecute(con, queryRep)
-        id_wx <- as.integer(DBI::dbGetQuery(con, sprintf("SELECT distinct(wp.fk_wimpgrid) from wimpgrid_params as wp, wimpgrid_xlsx as wx where wp.fk_wimpgrid = wx.id and wx.fk_paciente = %d", user_data$selected_user_id)))
-        if(!is.na(id_wx)){
-            query_wp <- sprintf("DELETE FROM wimpgrid_params where fk_wimpgrid = %d", id_wx)
-            DBI::dbExecute(con, query_wp)
+        id_wx <- DBI::dbGetQuery(con, sprintf("SELECT distinct(wp.fk_wimpgrid) from wimpgrid_params as wp, wimpgrid_xlsx as wx where wp.fk_wimpgrid = wx.id and wx.fk_paciente = %d", user_data$selected_user_id))
+        if (nrow(id_wx) > 0) {
+            for (i in 1:nrow(id_wx)) {
+                id <- id_wx[i, 1]
+                query_wp <- sprintf("DELETE FROM wimpgrid_params where fk_wimpgrid = %d", id)
+                message(query_wp)
+                DBI::dbExecute(con, query_wp)
+            }
         }
+        
         queryWimp <- sprintf("DELETE FROM wimpgrid_xlsx where fk_paciente = %d", user_data$selected_user_id)
         DBI::dbExecute(con, queryWimp)
 

@@ -1,5 +1,5 @@
 wimpgrid_analysis_server <- function(input, output, session) {
-
+message(paste("id wimpgrid: ", session$userData$id_wimpgrid))
 
 shinyjs::hide("context-wg-home")
   onevent("click", "tooltip-wg-home", shinyjs::show("context-wg-home"))
@@ -289,6 +289,7 @@ output$titulo_wimpgrid <- renderText({
 output$tabla_datos_wimpgrid <- renderRHandsontable({
 
   if (!is.null(session$userData$datos_wimpgrid)) {
+    
 
     print("tabla_manipulable_w:")
 
@@ -402,21 +403,16 @@ observeEvent(input$tabla_datos_wimpgrid, {
   }
 
 })
-
- 
-
  
 
 output$bert_w <- renderPlot({
-
-    if (!is.null(session$userData$datos_wimpgrid)) {
-
+  if (!is.null(session$userData$datos_wimpgrid)) {
     bertin(wimpgrid_a_mostrar()$openrepgrid , color=c("white", "#dfb639"), cex.elements = 1,
-  cex.constructs = 1, cex.text = 1, lheight = 1.25)
+      cex.constructs = 1, cex.text = 1, lheight = 1.25)
+      # actualizar controladores
 
-    }
-
-  })
+  }
+})
 
 
 observeEvent(input$editar_w, {
@@ -434,7 +430,7 @@ observeEvent(input$editar_w, {
 
   observeEvent(input$volver_w,{
     # Llamada a actualizar controles locales por si hubiese anteriormente
-    actualizar_controles_local(session$userData$id_wimpgrid)
+      actualizar_controles_local(session$userData$id_wimpgrid)
 
       shinyjs::hide("volver_w")
       shinyjs::show("editar_w")
@@ -1014,6 +1010,7 @@ pscd_stop_iter <- reactiveVal(3)
 # ver de donde saco el id_wx
 actualizar_controles_local <- function(id_wx){
   # compruebo si existe wimpgrid params para un wimpgrid xlsx
+  message(id_wx)
   con <- establishDBConnection()
   query <- sprintf("select * from wimpgrid_params where fk_wimpgrid = %d", id_wx)
   controles <- DBI::dbGetQuery(con, query)
@@ -1033,7 +1030,7 @@ actualizar_controles_local <- function(id_wx){
     updateSliderInput(session, "pcsd_iter", value=controles$pcsd_n_iter)
     updateSliderInput(session, "pcsd_max_iter", value=controles$pcsd_n_max_iter)
     updateSliderInput(session, "pcsd_stop_iter", value=controles$pcsd_n_stop_iter)
-    updateSelectInput(session, "pcsd_infer", selected=controles$pcsd_valor_diferencial)
+    updateSelectInput(session, "pcsd_e", selected=controles$pcsd_valor_diferencial)
 
     # pcsd índices
     updateSelectInput(session, "pcsdindices_infer", selected=controles$pcind_propagacion)
@@ -1043,6 +1040,7 @@ actualizar_controles_local <- function(id_wx){
     updateSliderInput(session, "pcsdindices_stop_iter", value=controles$pcind_n_stop_iter)
   }
 }
+
 
 
 actualizar_controles_bd <- function(id_wx){
@@ -1066,7 +1064,7 @@ actualizar_controles_bd <- function(id_wx){
       )",  
       id_wx, id_wx, simdigraph_layout(), simdigraph_thr(), simdigraph_niter(), simdigraph_max_iter(), simdigraph_stop_iter(), simdigraph_color(), round(simdigraph_e(), 4),
       pscd_iter(), pscd_max_iter(), pscd_stop_iter(), round(pscd_e(), 4),
-      infer(), thr(), max_iter(), pscd_stop_iter(), round(e(), 4)
+      infer(), thr(), max_iter(), stop_iter(), round(e(), 4)
     )
   }
   else{
@@ -1079,7 +1077,7 @@ actualizar_controles_bd <- function(id_wx){
       WHERE fk_wimpgrid = %d;",
       simdigraph_layout(), simdigraph_thr(), simdigraph_niter(), simdigraph_max_iter(), simdigraph_stop_iter(), simdigraph_color(), round(simdigraph_e(), 4),
       pscd_iter(), pscd_max_iter(), pscd_stop_iter(), round(pscd_e(), 4),
-      infer(), thr(), max_iter(), pscd_stop_iter(), round(e(), 4),
+      infer(), thr(), max_iter(), stop_iter(), round(e(), 4),
       id_wx)
 
   }
@@ -1370,10 +1368,9 @@ observeEvent(input$pcsdindices_stop_iter, {
 
 # Observer event para el input iter de pscd
 
-observeEvent(input$pscd_iter, {
+observeEvent(input$pcsd_iter, {
 
-  pscd_iter(input$pscd_iter)
-  message(paste("pscd inter", pscd_iter()))
+  pscd_iter(input$pcsd_iter)
 
 })
 
@@ -1439,9 +1436,9 @@ observeEvent(input$pscd_thr, {
 
 # Observer event para el input max.iter de pscd
 
-observeEvent(input$pscd_max_iter, {
+observeEvent(input$pcsd_max_iter, {
 
-  pscd_max_iter(input$pscd_max_iter)
+  pscd_max_iter(input$pcsd_max_iter)
 
 })
 
@@ -1449,9 +1446,9 @@ observeEvent(input$pscd_max_iter, {
 
 # Observer event para el input e de pscd
 
-observeEvent(input$pscd_e, {
+observeEvent(input$pcsd_e, {
 
-  pscd_e(input$pscd_e)
+  pscd_e(input$pcsd_e)
 
 })
 
@@ -1459,9 +1456,9 @@ observeEvent(input$pscd_e, {
 
 # Observer event para el input stop.iter de pscd
 
-observeEvent(input$pscd_stop_iter, {
+observeEvent(input$pcsd_stop_iter, {
 
-  pscd_stop_iter(input$pscd_stop_iter)
+  pscd_stop_iter(input$pcsd_stop_iter)
 
 })
 
