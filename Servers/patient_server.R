@@ -1,12 +1,10 @@
 patient_server <- function(input, output, session){
-    message("imprimo")
-    message(Sys.getenv("DB_HOST"))
-
     user_data <- reactiveValues(users = NULL, selected_user_id = NULL)
     repgrid_data_DB <- reactiveValues(fechas = NULL)
     wimpgrid_data_DB <- reactiveValues(fechas = NULL)
     repgrid_fecha_seleccionada <- reactiveVal(NULL)
     wimpgrid_fecha_seleccionada <- reactiveVal(NULL)
+    nombrePaciente <- reactiveVal()
 
     shinyjs::hide("patientSimulations")
     shinyjs::hide("patientIndicator")
@@ -70,13 +68,14 @@ patient_server <- function(input, output, session){
             output$paciente_simulacion_header <- renderText({
                 con <- establishDBConnection()
                 pacientename <- DBI::dbGetQuery(con, sprintf("SELECT nombre from paciente WHERE id = %d", user_data$selected_user_id))
+                nombrePaciente(pacientename)
                 DBI::dbDisconnect(con)
                 paste(i18n$t("Simulaciones disponibles de "), pacientename)
             })
 
             output$paciente_activo <- renderText({
                 con <- establishDBConnection()
-                pacientename <- DBI::dbGetQuery(con, sprintf("SELECT nombre from paciente WHERE id = %d", user_data$selected_user_id))
+                pacientename <- nombrePaciente()
                 DBI::dbDisconnect(con)
                 paste("<b class='patient-active-name'>", pacientename, "</b>")
             })
@@ -162,20 +161,36 @@ patient_server <- function(input, output, session){
     })
 
     observeEvent(input$borrarSimulacion, {
+        nombrepaciente <- nombrePaciente()
+        showModal(modalDialog(
+            title = "Confirmar borrado",
+            sprintf("¿Está seguro de que quiere eliminar esta simulación de %s? Esto no se puede deshacer.", nombrepaciente),
+            footer = tagList(
+            modalButton("Cancelar"),
+            actionButton("confirmarBorradoSimulacion", "Confirmar", class = "btn-danger")
+            )
+        ))
+    })
+
+    observeEvent(input$confirmarBorradoSimulacion, {
+        removeModal()  # Cierra la ventana modal de confirmación
+        
+        # Proceso de borrado de la simulación
         id_paciente <- user_data$selected_user_id
         fecha_rep <- session$userData$fecha_repgrid
         fecha_wimp <- session$userData$fecha_wimpgrid
-        if(!is.null(fecha_rep) || !is.null(fecha_wimp)){
+        
+        if (!is.null(fecha_rep) || !is.null(fecha_wimp)) {
             con <- establishDBConnection()
-            if(!is.null(fecha_rep)){
+            if (!is.null(fecha_rep)) {
                 query <- sprintf("DELETE FROM repgrid_xlsx where fecha_registro = '%s' and fk_paciente = %d", fecha_rep, id_paciente)
                 DBI::dbExecute(con, query)
                 cargar_fechas()
             }
-            if(!is.null(fecha_wimp)){
+            if (!is.null(fecha_wimp)) {
                 id_wx <- as.integer(DBI::dbGetQuery(con, sprintf("SELECT distinct(wp.fk_wimpgrid) from wimpgrid_params as wp, wimpgrid_xlsx as wx where wp.fk_wimpgrid = wx.id and wx.fk_paciente = %d and wx.fecha_registro = '%s'", 
-                                        user_data$selected_user_id, fecha_wimp)))
-                if(!is.na(id_wx)){
+                                                    user_data$selected_user_id, fecha_wimp)))
+                if (!is.na(id_wx)) {
                     query_wp <- sprintf("DELETE FROM wimpgrid_params where fk_wimpgrid = %d", id_wx)
                     DBI::dbExecute(con, query_wp)
                 }

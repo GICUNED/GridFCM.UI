@@ -1054,30 +1054,30 @@ actualizar_controles_bd <- function(id_wx){
     # insertar
     query_wp <- sprintf(
       "INSERT INTO wimpgrid_params (
-          id, fk_wimpgrid, sim_design, sim_umbral, sim_n_iter, sim_n_max_iter, sim_n_stop_iter, sim_color, sim_valor_diferencial,
-          pcsd_n_iter, pcsd_n_max_iter, pcsd_n_stop_iter, pcsd_valor_diferencial,
-          pcind_propagacion, pcind_umbral, pcind_n_max_iter, pcind_n_stop_iter, pcind_valor_diferencial
+          id, fk_wimpgrid, sim_design, sim_umbral, sim_n_iter, sim_n_max_iter, sim_n_stop_iter, sim_color, sim_valor_diferencial, sim_vector,
+          pcsd_n_iter, pcsd_n_max_iter, pcsd_n_stop_iter, pcsd_valor_diferencial, pcsd_vector,
+          pcind_propagacion, pcind_umbral, pcind_n_max_iter, pcind_n_stop_iter, pcind_valor_diferencial, pcind_vector
       ) VALUES (
-          %d, %d, '%s', '%s', %d, %d, %d, '%s', %f,
-          %d, %d, %d, %f,
-          '%s', '%s', %d, %d, %f
+          %d, %d, '%s', '%s', %d, %d, %d, '%s', %f, '%s',
+          %d, %d, %d, %f, '%s',
+          '%s', '%s', %d, %d, %f, '%s'
       )",  
-      id_wx, id_wx, simdigraph_layout(), simdigraph_thr(), simdigraph_niter(), simdigraph_max_iter(), simdigraph_stop_iter(), simdigraph_color(), round(simdigraph_e(), 4),
-      pscd_iter(), pscd_max_iter(), pscd_stop_iter(), round(pscd_e(), 4),
-      infer(), thr(), max_iter(), stop_iter(), round(e(), 4)
+      id_wx, id_wx, simdigraph_layout(), simdigraph_thr(), simdigraph_niter(), simdigraph_max_iter(), simdigraph_stop_iter(), simdigraph_color(), round(simdigraph_e(), 4), list_to_string(df_V()),
+      pscd_iter(), pscd_max_iter(), pscd_stop_iter(), round(pscd_e(), 4), list_to_string(df_Vpcsd()),
+      infer(), thr(), max_iter(), stop_iter(), round(e(), 4), list_to_string(df_Vind())
     )
   }
   else{
     # actualizar
     query_wp <- sprintf("
     UPDATE wimpgrid_params SET
-          sim_design = '%s', sim_umbral = '%s', sim_n_iter = %d, sim_n_max_iter = %d, sim_n_stop_iter = %d, sim_color = '%s', sim_valor_diferencial = %f,
-          pcsd_n_iter = %d, pcsd_n_max_iter = %d, pcsd_n_stop_iter = %d, pcsd_valor_diferencial = %f,
-          pcind_propagacion = '%s', pcind_umbral = '%s', pcind_n_max_iter = %d, pcind_n_stop_iter = %d, pcind_valor_diferencial = %f
+          sim_design = '%s', sim_umbral = '%s', sim_n_iter = %d, sim_n_max_iter = %d, sim_n_stop_iter = %d, sim_color = '%s', sim_valor_diferencial = %f, sim_vector = '%s',
+          pcsd_n_iter = %d, pcsd_n_max_iter = %d, pcsd_n_stop_iter = %d, pcsd_valor_diferencial = %f, pcsd_vector = '%s',
+          pcind_propagacion = '%s', pcind_umbral = '%s', pcind_n_max_iter = %d, pcind_n_stop_iter = %d, pcind_valor_diferencial = %f, pcind_vector = '%s'
       WHERE fk_wimpgrid = %d;",
-      simdigraph_layout(), simdigraph_thr(), simdigraph_niter(), simdigraph_max_iter(), simdigraph_stop_iter(), simdigraph_color(), round(simdigraph_e(), 4),
-      pscd_iter(), pscd_max_iter(), pscd_stop_iter(), round(pscd_e(), 4),
-      infer(), thr(), max_iter(), stop_iter(), round(e(), 4),
+      simdigraph_layout(), simdigraph_thr(), simdigraph_niter(), simdigraph_max_iter(), simdigraph_stop_iter(), simdigraph_color(), round(simdigraph_e(), 4), list_to_string(df_V()),
+      pscd_iter(), pscd_max_iter(), pscd_stop_iter(), round(pscd_e(), 4), list_to_string(df_Vpcsd()),
+      infer(), thr(), max_iter(), stop_iter(), round(e(), 4), list_to_string(df_Vind()),
       id_wx)
 
   }
@@ -1265,17 +1265,31 @@ output$simdigraph_act_vector <- renderRHandsontable({
 
 })
 
- 
+list_to_string <- function(lista){
+  # Aquí cambia df_V -> meter en la bd
+    cadena_numeros <- as.character(lista)
+    string <- ""
+    for(i in cadena_numeros){
+      string <- paste(string, i, sep="")
+    }
+
+    return(string)
+} 
+
+string_to_list<- function(numero_string){
+
+  lista <- strsplit(numero_string, "")[[1]]
+  lista_numeros <- lapply(lista, as.numeric)
+
+  return(lista_numeros)
+}
 
 observeEvent(input$simdigraph_act_vector, {
   
     vv <- (hot_to_r(input$simdigraph_act_vector))
-    prueba <- as.integer(vv)
-    prueba <- data.frame(prueba)
-    message(prueba)
-    df_V(vv)
-    # Aquí cambia df_V -> meter en la bd
 
+    df_V(vv)
+    
 })
 
  

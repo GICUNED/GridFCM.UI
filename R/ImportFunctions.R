@@ -23,9 +23,8 @@ importwimp <- function(path, sheet = 1, opr = TRUE){
 
   xlsx <- readxl::read_excel(path, sheet = sheet)
 
-
   n.constructs <- dim(xlsx)[1]
-
+  
   # Scale -------------------------------------------------------------------
 
 
@@ -74,13 +73,12 @@ importwimp <- function(path, sheet = 1, opr = TRUE){
   wimp$ideal[[2]] <- standarized.ideal
   names(wimp$ideal) <- c("direct","standarized")
 
-
   # Hypothetical vector -----------------------------------------------------
 
   standarized.hypothetical <- rep(0,n.constructs)
-
   n <- 1
   for (i in standarized.self) {
+    message("peta????????????????????????")
 
     if(i != 0){
       standarized.hypothetical[n] <- standarized.self[n] / (-1 * abs(standarized.self[n]))
@@ -93,13 +91,10 @@ importwimp <- function(path, sheet = 1, opr = TRUE){
     }
     n <- n + 1
   }
-
   direct.hypothetical <- (scale.center * rep(1,n.constructs)) + (standarized.hypothetical * (0.5 * (scale.max - scale.min)))
-
   wimp$hypothetical[[1]] <- direct.hypothetical
   wimp$hypothetical[[2]] <- standarized.hypothetical
   names(wimp$hypothetical) <- c("direct","standarized")
-
 
   # Scores ------------------------------------------------------------------
 

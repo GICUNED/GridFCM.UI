@@ -4,8 +4,7 @@ establishDBConnection <- function() {
     db_name <- 'gridfcm'#Sys.getenv("DB_NAME")
     db_user <- 'gridfcm'#Sys.getenv("DB_USER")
     db_password <- 'password'#Sys.getenv("DB_PASSWORD")
-    #message(paste("variables >>>> ", db_host, db_port, db_name))
-    
+        
     # Create a connection
     
     con <- DBI::dbConnect(
