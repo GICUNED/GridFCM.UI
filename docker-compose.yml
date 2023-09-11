@@ -2,7 +2,7 @@
 name: "gridfcm"
 
 # https://repo.stratebi.com
-x-shiny-server-image: &shiny-server-image "repo.stratebi.com/stratebi/shiny-server:v1.5.20.1002-11"
+x-shiny-server-image: &shiny-server-image "repo.stratebi.com/stratebi/shiny-server:v1.5.20.1002-14"
 # https://hub.docker.com/_/postgres
 x-postgres-image: &postgres-image "docker.io/postgres:15-bookworm"
 
@@ -23,12 +23,12 @@ services:
       - "./Servers/:/srv/shiny-server/Servers/:ro"
       - "./Traductions/:/srv/shiny-server/Traductions/:ro"
       - "./UI/:/srv/shiny-server/UI/:ro"
+      - "./ficheros/:/srv/shiny-server/ficheros/:ro"
       - "./www/:/srv/shiny-server/www/:ro"
       - "./DESCRIPTION:/srv/shiny-server/DESCRIPTION:ro"
       - "./app.R:/srv/shiny-server/app.R:ro"
       - "./global.R:/srv/shiny-server/global.R:ro"
       - "r-data:/data/"
-      - "./ficheros:/srv/shiny-server/ficheros"
     environment:
       SHINY_DEPLOY_SAMPLE_APPS: "${SHINY_DEPLOY_SAMPLE_APPS:-true}"
     depends_on:
