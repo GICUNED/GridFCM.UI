@@ -2019,6 +2019,14 @@ table.dataTable{
   font-weight: 900;
   margin-right: .2rem;
 }
+
+.patient-diff .odd td:nth-child(5), .patient-diff .even td:nth-child(5), .patient-diff .odd td:nth-child(2), .patient-diff .even td:nth-child(2){
+  line-break: auto;
+  text-overflow: ellipsis;
+  max-width: 200px;
+  overflow: hidden;
+}
+
 .patient-diff .odd .dataTables_empty::before{
   display: none !important; 
 }
