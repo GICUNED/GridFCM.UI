@@ -1041,14 +1041,18 @@ width: 100% !important;
   margin-bottom: 1rem;
 }
 
-.table-container div{
+.table-container div div{
   overflow: auto;
   border-radius: .5rem;
   border: 2px solid #dee2e6;
 }
 
-#rejillas_anteriores{
+.table-container div{
   width: 80%;
+}
+
+#rejillas_anteriores{
+  width: 100%;
 }
 
 #rejillas_anteriores table{
@@ -1773,17 +1777,18 @@ overflow: hidden;
 
 }
 
-.user-page-btn li a.active{
+.user-page-btn li a.active, .user-page-btn li a.active:hover{
   color: #fff;
   background-color: #0b382c !important;
   box-shadow: 0 0 3px #0d513e !important;
 }
 
-.user-page-btn li a.active:hover{
-  color: #fff;
-  background-color: #0b382c !important;
-  box-shadow: 0 0 3px #0d513e !important;
+.dark-mode .user-page-btn li a.active, .dark-mode .user-page-btn li a.active:hover{
+  color: #0b382c;
+  background-color: #fff !important;
+  box-shadow: 0 0 3px #fff !important;
 }
+
 
 .user-page-btn li a:hover{
   background-color: rgba(35, 35, 35, 0.2) !important;
