@@ -42,7 +42,7 @@ patient_ui <- fluidPage(class="patient-diff",
           ),
 
           div(class = "button-container mt-4",
-            actionButton("editarSimulacionRepgrid", i18n$t("Abrir simulación"), icon = icon("download")),
+            actionButton("cargarSimulacion", i18n$t("Abrir simulación"), icon = icon("download")),
           ),
       ),
 

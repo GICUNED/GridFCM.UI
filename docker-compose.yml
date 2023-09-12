@@ -23,7 +23,7 @@ services:
       - "./Servers/:/srv/shiny-server/Servers/:ro"
       - "./Traductions/:/srv/shiny-server/Traductions/:ro"
       - "./UI/:/srv/shiny-server/UI/:ro"
-      - "./ficheros/:/srv/shiny-server/ficheros/:ro"
+      - "./ficheros/:/srv/shiny-server/ficheros/"
       - "./www/:/srv/shiny-server/www/:ro"
       - "./DESCRIPTION:/srv/shiny-server/DESCRIPTION:ro"
       - "./app.R:/srv/shiny-server/app.R:ro"

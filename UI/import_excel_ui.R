@@ -16,8 +16,7 @@ div(class = "custom-margins flex-container-xl",
        icon = icon("magnifying-glass-chart"),
        status = "success",
        collapsible = FALSE,
-       actionButton("reset", "Reset Input"),
-       fileInput("archivo_repgrid", i18n$t("Seleccionar archivo RepGrid (.xlsx)")),
+       fileInput("archivo_repgrid", i18n$t("Seleccionar archivo RepGrid (.xlsx)"), accept=".xlsx"),
        column(12, class="d-flex justify-content-center mb-2 mt-2", actionButton("importar_datos", i18n$t("Importar Datos"), status = 'success', icon = icon("file-import")))
       )),
 
@@ -28,7 +27,7 @@ div(class = "custom-margins flex-container-xl",
        icon = icon("border-none"),
        status = "warning",
        collapsible = FALSE,
-       fileInput("archivo_wimpgrid", i18n$t("Seleccionar archivo WimpGrid (.xlsx)")),
+       fileInput("archivo_wimpgrid", i18n$t("Seleccionar archivo WimpGrid (.xlsx)"), accept=".xlsx"),
        column(12, class="d-flex justify-content-center mb-2 mt-2", actionButton("importar_datos_w", i18n$t("Importar Datos"), status = 'warning', icon = icon("file-import")))
       )),
 

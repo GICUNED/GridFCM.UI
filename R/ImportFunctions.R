@@ -78,8 +78,6 @@ importwimp <- function(path, sheet = 1, opr = TRUE){
   standarized.hypothetical <- rep(0,n.constructs)
   n <- 1
   for (i in standarized.self) {
-    message("peta????????????????????????")
-
     if(i != 0){
       standarized.hypothetical[n] <- standarized.self[n] / (-1 * abs(standarized.self[n]))
     }

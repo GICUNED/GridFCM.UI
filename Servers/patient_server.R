@@ -64,7 +64,7 @@ patient_server <- function(input, output, session){
             # eliminar el usuario de la base de datos, etc.
             
             # Por ejemplo, imprimir el ID del usuario en la consola
-            message(selected_user_id)
+            message(paste("id del paciente: ", selected_user_id))
             output$paciente_simulacion_header <- renderText({
                 con <- establishDBConnection()
                 pacientename <- DBI::dbGetQuery(con, sprintf("SELECT nombre from paciente WHERE id = %d", user_data$selected_user_id))
@@ -204,7 +204,7 @@ patient_server <- function(input, output, session){
     
     # Editar simulaciones repgrid. Guardar los datos
     # boton de cargar simulacion seleccionada
-    observeEvent(input$editarSimulacionRepgrid, {
+    observeEvent(input$cargarSimulacion, {
         id_paciente <- user_data$selected_user_id
         fecha_rep <- session$userData$fecha_repgrid
         fecha_wimp <- session$userData$fecha_wimpgrid
@@ -347,7 +347,6 @@ patient_server <- function(input, output, session){
             for (i in 1:nrow(id_wx)) {
                 id <- id_wx[i, 1]
                 query_wp <- sprintf("DELETE FROM wimpgrid_params where fk_wimpgrid = %d", id)
-                message(query_wp)
                 DBI::dbExecute(con, query_wp)
             }
         }

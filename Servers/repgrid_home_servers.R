@@ -205,7 +205,13 @@ output$bert <- renderPlot({
             query <- sprintf("UPDATE repgrid_xlsx SET valor='%s' WHERE fila = %d and columna = %d and valor = '%s' and fk_paciente = %d and fecha_registro = '%s'", 
                         new_v, x, y, old_v, session$userData$id_paciente, session$userData$fecha_repgrid)
             DBI::dbExecute(con, query)
+            
           }
+          showNotification(
+              ui = "Los datos se han guardado correctamente en la base de datos.",
+              type = "message",
+              duration = 3
+            ) 
           DBI::dbDisconnect(con)
       }
   })
@@ -249,6 +255,7 @@ output$bert <- renderPlot({
 
         # Create a temporary file
         temp_file_rep <- tempfile(fileext = ".xlsx")
+        on.exit(unlink(temp_file_rep))
 
         # Write the dataframe to the temporary file
         OpenRepGrid::saveAsExcel(session$userData$datos_repgrid, temp_file_rep)
@@ -277,6 +284,7 @@ output$bert <- renderPlot({
         } else {
             print("Error: The temporary file does not exist or is empty.")
         }
+        file.remove(temp_file_rep)
     }
 })
 
@@ -287,7 +295,7 @@ output$bert <- renderPlot({
 
         # Create a temporary file
         temp_file_rep <- tempfile(fileext = ".xlsx")
-
+        on.exit(unlink(temp_file_rep))
         # Write the dataframe to the temporary file
         write.xlsx(my_dataframe, temp_file_rep)
         print(paste("Temporary file saved at: ", temp_file_rep))
@@ -325,6 +333,7 @@ output$bert <- renderPlot({
         } else {
             message("Error: The temporary file does not exist or is empty.")
         }
+        file.remove(temp_file_rep)
     }
     repgrid_analisis_server(input,output,session)
   })

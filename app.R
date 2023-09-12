@@ -263,8 +263,6 @@ server <- function(input, output, session) {
   wimpgrid_analysis_server(input, output, session)
 }
 
-
-
-
-
 shinyApp(ui, server)
+
+

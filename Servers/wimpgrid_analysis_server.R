@@ -430,8 +430,6 @@ observeEvent(input$editar_w, {
 
   observeEvent(input$volver_w,{
     # Llamada a actualizar controles locales por si hubiese anteriormente
-      actualizar_controles_local(session$userData$id_wimpgrid)
-
       shinyjs::hide("volver_w")
       shinyjs::show("editar_w")
       shinyjs::hide("guardar_w")
@@ -459,6 +457,7 @@ observeEvent(input$reiniciar_w, {
       my_dataframe <-tabla_final
       # Create a temporary file
       temp_file <- tempfile(fileext = ".xlsx")
+      on.exit(unlink(temp_file))
       # Write the dataframe to the temporary file
       OpenRepGrid::saveAsExcel(session$userData$datos_wimpgrid$openrepgrid, temp_file)
 
@@ -476,6 +475,7 @@ observeEvent(input$reiniciar_w, {
           session$userData$datos_to_table_w<- my_repgrid
         }
       }
+      file.remove(temp_file)
 }})
 
  
@@ -490,6 +490,7 @@ observeEvent(input$guardar_w, {
       my_dataframe <-tabla_final
       # Create a temporary file
       temp_file <- tempfile(fileext = ".xlsx")
+      on.exit(unlink(temp_file))
       # Write the dataframe to the temporary file
 
       write.xlsx(my_dataframe, temp_file)
@@ -514,7 +515,7 @@ observeEvent(input$guardar_w, {
       shinyjs::hide("tabla_datos_wimpgrid_container")
 
       shinyjs::show("prueba_container_w")
-
+      file.remove(temp_file)
       dataaa_w(df_read)
 
     }
@@ -1041,7 +1042,9 @@ actualizar_controles_local <- function(id_wx){
   }
 }
 
-
+if(!is.null(session$userData$id_wimpgrid)){
+  actualizar_controles_local(session$userData$id_wimpgrid)
+}
 
 actualizar_controles_bd <- function(id_wx){
   
@@ -1106,6 +1109,11 @@ shinyjs::onevent("click", "guardarBD_w", {
         #query2 <- sprintf("SELECT distinct(id) from wimpgrid_xlsx where fecha_registro = '%s'", fecha)
         #id_wx <- as.integer(DBI::dbGetQuery(con, query2))
         actualizar_controles_bd(session$userData$id_wimpgrid)
+        showNotification(
+            ui = "Los datos se han guardado correctamente en la base de datos.",
+            type = "message",
+            duration = 3
+        )
         DBI::dbDisconnect(con)
     }
 })

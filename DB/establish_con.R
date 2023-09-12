@@ -1,11 +1,10 @@
 establishDBConnection <- function() {
-    db_host <- 'postgres'#Sys.getenv("DB_HOST")
-    db_port <- '5432'#Sys.getenv("DB_PORT")
-    db_name <- 'gridfcm'#Sys.getenv("DB_NAME")
-    db_user <- 'gridfcm'#Sys.getenv("DB_USER")
-    db_password <- 'password'#Sys.getenv("DB_PASSWORD")
+    db_host <- Sys.getenv("DB_HOST")
+    db_port <- Sys.getenv("DB_PORT")
+    db_name <- Sys.getenv("DB_NAME")
+    db_user <- Sys.getenv("DB_USER")
+    db_password <- Sys.getenv("DB_PASSWORD")
         
-    # Create a connection
     
     con <- DBI::dbConnect(
               RPostgres::Postgres(),
