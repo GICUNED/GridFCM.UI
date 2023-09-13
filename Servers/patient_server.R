@@ -52,6 +52,11 @@ patient_server <- function(input, output, session){
         selected_row <- input$user_table_rows_selected
     
         if (!is.null(selected_row)) {
+            shinyjs::enable("editarPaciente")
+            shinyjs::enable("borrarPaciente")
+            shinyjs::enable("simulacionesDisponibles")
+            shinyjs::enable("importarGridPaciente")
+
             #ocultar simulaciones por si se habían desplegado
             delay(200, shinyjs::show("patientIndicator"))
             shinyjs::hide("simulaciones_rep")
@@ -97,6 +102,8 @@ patient_server <- function(input, output, session){
         selected_row <- input$simulaciones_rep_rows_selected
 
         if (!is.null(selected_row)) {
+            shinyjs::enable("borrarSimulacion")
+            shinyjs::enable("editarSimulacionRepgrid")
             # hacer consulta para obtener el txt de repgrid aqui con la fecha seleccionada
             fechas <- repgrid_data_DB$fechas
             fecha <- fechas[selected_row]
