@@ -36,7 +36,6 @@ inicio_server <- function(input, output, session) {
   })
 }
 
-
 verificar_login <- function(usuario, contrasena) {
   nombre_usuario_valido <- "admin"
   contrasena_valida <- "password"

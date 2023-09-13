@@ -19,7 +19,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
   shinyjs::hidden(fluidRow(id="id_warn",class="mb-4 mt-4 gap-2 justify-content-center error-help hidden",
         column(12, class = "row flex-column justify-content-center",
           icon("triangle-exclamation", "fa-2x"),
-          p(i18n$t("Para hacer el análisis es necesario importar un archivo o formulario"),  class = "mt-2 mb-2"),
+          p(i18n$t("Para hacer el análisis es necesario importar o seleccionar un archivo o formulario"),  class = "mt-2 mb-2"),
         ),
 
         column(12, class="d-flex justify-content-center", actionButton("importar_page_d", i18n$t("Importar archivos"), status = 'warning', icon = icon("file-lines"))),
@@ -39,12 +39,12 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
       shinyjs::hidden(
       div(id = "tabla_datos_wimpgrid_container",
         # Mostrar los datos de tabla_datos
-        rHandsontableOutput("tabla_datos_wimpgrid")
+        shinycssloaders::withSpinner(rHandsontableOutput("tabla_datos_wimpgrid"), type = 4, color = "#022a0c", size = 0.6)
         )
       ),
       div(class=("row"), id = "prueba_container_w",
       # Mostrar los datos de prueba
-      plotOutput("bert_w")
+      shinycssloaders::withSpinner(plotOutput("bert_w"), type = 4, color = "#022a0c", size = 0.6)
       )
     )),
   ),
@@ -60,10 +60,10 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
       shinyjs::hidden(fluidRow(id="vis_warn",class="mb-4 mt-4 gap-2 justify-content-center error-help hidden",
         column(12, class = "row flex-column justify-content-center",
           icon("triangle-exclamation", "fa-2x"),
-          p(i18n$t("Para hacer el análisis es necesario importar un archivo o formulario"),  class = "mt-2 mb-2"),
+          p(i18n$t("Para hacer el análisis es necesario importar o seleccionar un archivo o formulario"),  class = "mt-2 mb-2"),
         ),
 
-        column(12, class="d-flex justify-content-center", actionButton("importar_page_v", "Importar archivos", status = 'warning', icon = icon("file-lines"))),
+        column(12, class="d-flex justify-content-center", actionButton("importar_page_v", i18n$t("Importar archivos"), status = 'warning', icon = icon("file-lines"))),
       )),
 
       shinyjs::hidden(div(id="wg-vis-content",
@@ -77,7 +77,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                 ),
                 downloadButton(class = "btn-download", "btn_download_visualizacion", i18n$t("Descargar Gráfico"))
               ),
-              uiOutput("graph_output_visualizacion")
+              shinycssloaders::withSpinner(uiOutput("graph_output_visualizacion"), type = 4, color = "#022a0c", size = 0.6)
             ),
             column(3, id="controls-panel-vis", class = "input-field-container rounded-lg",
               div(class = "flex-container-sm p-2 pb-3 border-divider",
@@ -133,11 +133,11 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
             
 
                           fluidRow(class = "table-container pb-0 flex-row kpi",
-                          h3(i18n$t("Desglose Índices"), class = "mr-auto mb-0"),
-                          htmlOutput("dens")
+                            h3(i18n$t("Desglose Índices"), class = "mr-auto mb-0"),
+                            htmlOutput("dens")
                           ),
                             
-                            rHandsontableOutput("distance"),
+                            shinycssloaders::withSpinner(rHandsontableOutput("distance"), type = 4, color = "#022a0c", size = 0.6),
 
                             fluidRow(class = "flex-container-sm mt-4 mb-4",
                               icon("arrows-to-circle"),
@@ -146,15 +146,20 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
 
                             fluidRow(class = "subheader-tab",
                             tabsetPanel(
-                                tabPanel("Degree", DT::dataTableOutput("table_degree"), icon = icon("gauge-simple-high")),
-                                tabPanel("Closeness", DT::dataTableOutput("table_closeness"), icon = icon("person-walking-dashed-line-arrow-right")),
-                                tabPanel("Betweenness", DT::dataTableOutput("table_betweenness"), icon = icon("people-arrows"))
+                                tabPanel("Degree", shinycssloaders::withSpinner(DT::dataTableOutput("table_degree"), type = 4, color = "#022a0c", size = 0.6), icon = icon("gauge-simple-high")),
+                                tabPanel("Closeness", shinycssloaders::withSpinner(DT::dataTableOutput("table_closeness"), type = 4, color = "#022a0c", size = 0.6),  icon = icon("person-walking-dashed-line-arrow-right")),
+                                tabPanel("Betweenness", shinycssloaders::withSpinner(DT::dataTableOutput("table_betweenness"), type = 4, color = "#022a0c", size = 0.6), icon = icon("people-arrows"))
                             )),
 
                             fluidRow(class = "subheader-tab flex-container-sm mt-4 mb-4",
-                              icon("arrows-to-circle"),
+
+                            fluidRow(class = "flex-container-sm mt-4 mb-4",
+                              icon("water"),
                               h4(i18n$t("Inconsistencias"), class = "pagetitle2custom"),
-                              DT::dataTableOutput(("inconsistences")))
+                            ),
+                              
+                              shinycssloaders::withSpinner(DT::dataTableOutput("inconsistences"), type = 4, color = "#022a0c", size = 0.6)
+                            )
         ),
 
       ))
@@ -171,10 +176,10 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
       shinyjs::hidden(fluidRow(id="lab_warn",class="mb-4 mt-4 gap-2 justify-content-center error-help hidden",
         column(12, class = "row flex-column justify-content-center",
           icon("triangle-exclamation", "fa-2x"),
-          p(i18n$t("Para hacer el análisis es necesario importar un archivo o formulario"),  class = "mt-2 mb-2"),
+          p(i18n$t("Para hacer el análisis es necesario importar o seleccionar un archivo o formulario"),  class = "mt-2 mb-2"),
         ),
 
-        column(12, class="d-flex justify-content-center", actionButton("importar_page_l", "Importar archivos", status = 'warning', icon = icon("file-lines"))),
+        column(12, class="d-flex justify-content-center", actionButton("importar_page_l", i18n$t("Importar archivos"), status = 'warning', icon = icon("file-lines"))),
       )),
 
       shinyjs::hidden(div(id="wg-lab-content",
@@ -190,7 +195,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                          ),
                           downloadButton(class = "btn-download", "boton_download_laboratory", i18n$t("Descargar Gráfico"))
                         ),
-                    rHandsontableOutput("simdigraph_act_vector"),
+                    shinycssloaders::withSpinner(rHandsontableOutput("simdigraph_act_vector"), type = 4, color = "#022a0c", size = 0.6)
                     ),
 
                     conditionalPanel(class = "graphic-subcontainer", condition = "input.graph_selector_laboratorio == 'pcsd'",
@@ -198,7 +203,8 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                         icon("line-chart"),
                         h4(i18n$t("Resultado gráfico"), class = "pagetitle2custom"),
                       ),
-                      rHandsontableOutput("pcsd_act_vector"),
+                    shinycssloaders::withSpinner(rHandsontableOutput("pcsd_act_vector"), type = 4, color = "#022a0c", size = 0.6)
+                      
                     ),
 
                     conditionalPanel(class = "graphic-subcontainer",  condition = "input.graph_selector_laboratorio == 'pcsdindices'",
@@ -206,22 +212,21 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                         icon("table"),
                         h4(i18n$t("Resultados"), class = "pagetitle2custom"),
                       ),
-                      rHandsontableOutput("pcsdindices_act_vector"),
-                    
+                    shinycssloaders::withSpinner(rHandsontableOutput("pcsdindices_act_vector"), type = 4, color = "#022a0c", size = 0.6),
       
                     fluidRow(class = "subheader-tab flex-container-sm",
                       tabsetPanel(
-                          tabPanel(i18n$t("Resumen"), DT::dataTableOutput("summary"), icon = icon("book")),
-                          tabPanel(i18n$t("Auc"), DT::dataTableOutput("auc"), icon = icon("cube")),
-                          tabPanel(i18n$t("Estabilidad"), DT::dataTableOutput("stability"), icon = icon("wave-square"))
+                          tabPanel(i18n$t("Resumen"),  shinycssloaders::withSpinner(DT::dataTableOutput("summary"), type = 4, color = "#022a0c", size = 0.6), icon = icon("book")),
+                          tabPanel(i18n$t("Auc"),  shinycssloaders::withSpinner(DT::dataTableOutput("auc"), type = 4, color = "#022a0c", size = 0.6), icon = icon("cube")),
+                          tabPanel(i18n$t("Estabilidad"),  shinycssloaders::withSpinner(DT::dataTableOutput("stability"), type = 4, color = "#022a0c", size = 0.6), icon = icon("wave-square"))
                       )),
 
                       ),
 
                     ),
                     
-              div(id = "pscd_showw",plotlyOutput("pscd_show")),
-              div(id = "laboratory",uiOutput("graph_output_laboratorio"))
+              div(id = "pscd_showw", shinycssloaders::withSpinner(plotlyOutput("pscd_show"), type = 4, color = "#022a0c", size = 0.6)),
+              div(id = "laboratory",shinycssloaders::withSpinner(uiOutput("graph_output_laboratorio"), type = 4, color = "#022a0c", size = 0.6))
             ),
             column(3, id="controls-panel-lab", class = "input-field-container rounded-lg",
               div(class = "flex-container-sm p-2 pb-3 border-divider",
@@ -304,7 +309,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                       #selectInput("pcsdindices_wimp", i18n$t("Input file:"),
                                   #choices = c(i18n$t("WimpGrid_data.xlsx"), i18n$t("data.csv"), i18n$t("datos.txt"))),
                       div(class="kpi",
-                      htmlOutput("convergence"),),
+                      shinycssloaders::withSpinner(htmlOutput("convergence"), type = 4, color = "#022a0c", size = 0.6)),
                       selectInput("pcsdindices_infer", i18n$t("Función de propagación:"),
                                   choices = c("transformacion lineal", "transformación sigmoidea", "transformación binaria"),
                                   selected = i18n$t("transformacion lineal")),

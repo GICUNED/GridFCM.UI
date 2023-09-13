@@ -33,7 +33,7 @@ tabsetPanel(
                     collapsible = FALSE,
                     
 
-                    column(12, uiOutput("lista_nombres")),
+                    column(12, shinycssloaders::withSpinner(uiOutput("lista_nombres"), type = 4, color = "#022a0c", size = 0.6)),
                     column(12, class="d-flex justify-content-center mt-3", actionButton("continuar", i18n$t("Continuar"), status="success", icon = icon("arrow-right") ))
             )
         ),

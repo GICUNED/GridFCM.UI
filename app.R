@@ -3,6 +3,7 @@ library(shiny)
 library(shinyjs)
 library(shinyWidgets)
 library(shinydashboard)
+library(shinybusy)
 library(OpenRepGrid)
 library(toastui)
 library(DT)
@@ -94,7 +95,6 @@ tags$li(a(
   "Wimpgrid analysis"
 )))
 
-
 theme <- create_theme(
   bs4dash_status(
     primary = "#095540",
@@ -110,18 +110,16 @@ ui <- dashboardPage(
   freshTheme = theme,
   dashboardHeader(
 
-    tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "customization.css"), tags$link(rel = "icon", type = "image/x-icon", href = "www/favicon.png"), tags$title("UNED | GridFCM")),
+    tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "customization.css"), tags$link(rel = "icon", type = "image/x-icon", href = "GridFCM.UI/www/favicon.png"), tags$title("UNED | GridFCM")),
     title = tags$a(href='https://www.uned.es/', target ="_blank", class = "logocontainer",
     tags$img(height='56.9',width='', class = "logoimg")),
     div(id="user-page", class = "nav-item user-page user-page-btn" , menuItem("User", href = route_link("user_home"), icon = icon("house-user"), newTab = FALSE)),
     div(id="patientIndicator", class = "ml-auto patient-active-label", span(class = "icon-paciente"), htmlOutput("paciente_activo"))
   ),
-  
-
   dashboardSidebar(
-
+    
     sidebarMenu(
-        id = "sidebar-principal",
+        id = "sidebar_principal",
         div(id="incio-page", class = "nav-item incio-page", menuItem(i18n$t("Inicio"), href = route_link("/"), icon = icon("home"), newTab = FALSE)),
          div(id="patient-page", class = "nav-item patient-page", menuItem(i18n$t("Pacientes"), href = route_link("patient"), icon = icon("users"), newTab = FALSE)),
         div(id="import-page", class = "nav-item import-page", menuItem(i18n$t("Importar"), href = route_link("import"), icon = icon("file-arrow-up"), newTab = FALSE)),
@@ -134,12 +132,11 @@ ui <- dashboardPage(
       )
     ),
 
-
-
   dashboardBody(
     usei18n(translator = i18n),
     tags$script(src = "activescript.js"),
     useShinyjs(),
+
     router_ui(
       default = route(path = "/home",
                       ui = home_page),
@@ -159,6 +156,7 @@ ui <- dashboardPage(
             ui = repgrid_ui),
       route(path = "wimpgrid",
             ui = wimpgrid_analysis_ui),
+
       page_404 = page404(shiny::tags$div(
         h1("Error 404", class = "pagetitlecustom"),
         h3("Página no encontrada.", class = "pagesubtitlecustom", status = 'danger'),
@@ -181,7 +179,30 @@ ui <- dashboardPage(
           )
         )
       ))
+    ),
+
+    add_busy_spinner(
+      spin = "double-bounce",
+      color = "#13906d",
+      timeout = 100,
+      position = "top-left",
+      onstart = TRUE,
+      margins = c(8, 10),
+      height = "40px",
+      width = "40px"
     )
+
+     #add_busy_spinner(
+      #spin = "fading-circle",
+      #color = "#13906d",
+      #timeout = 100,
+      #position = "full-page",
+      #onstart = TRUE,
+      #margins = c(8, 10),
+      #height = "50px",
+      #width = "50px"
+    #)
+
   ),
 )
 server <- function(input, output, session) {
@@ -201,8 +222,6 @@ server <- function(input, output, session) {
     updateSelectInput(session, "graph_selector_visualizacion",
                       choices = i18n_r()$t(c("autodigrafo", "digrafo del ideal", "índices de Wimp")))
 
-
-
     updateSelectInput(session, "selfdigraph_layout",
                       choices = i18n_r()$t(c("circulo", "rtcirculo","arbol", "graphopt", "mds", "cuadricula")))
     updateSelectInput(session, "selfdigraph_color",
@@ -213,8 +232,6 @@ server <- function(input, output, session) {
     updateSelectInput(session, "idealdigraph_color",
                       choices = i18n_r()$t(c("rojo/verde", "escala de grises")))
 
-
-
     updateSelectInput(session, "graph_selector_laboratorio",
                       choices = i18n_r()$t(c("simdigrafo","pcsd", "pcsdindices")))
 
@@ -222,7 +239,6 @@ server <- function(input, output, session) {
                       choices = i18n_r()$t(c("circulo", "rtcirculo","arbol", "graphopt", "mds", "cuadricula")))
     updateSelectInput(session, "simdigraph_color",
                       choices = i18n_r()$t(c("rojo/verde", "escala de grises")))
-
 
     updateSelectInput(session, "simdigraph_infer",
                       choices = i18n_r()$t(c("transformacion lineal", "otra opción")))
