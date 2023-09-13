@@ -36,14 +36,14 @@ shinyjs::hidden(fluidRow(id="repgrid_home_warn",class="mb-4 mt-4 gap-2 justify-c
     div(id = "tabla_datos_repgrid_container",
         # Mostrar los datos de tabla_datos_repgrid
         tags$style(".my-table .htCore .htNoWrap { white-space: normal; }"),
-      shinycssloaders::withSpinner(rHandsontableOutput("tabla_datos_repgrid"), type = 4, color = "#022a0c", size = 0.6)
+      rHandsontableOutput("tabla_datos_repgrid")
       # rHandsontableOutput("tabla_datos_repgrid")
     )
     ),
 
     div(class=("row"), id = "prueba_container",
       # Mostrar los datos de prueba
-      shinycssloaders::withSpinner(plotOutput("bert"), type = 4, color = "#022a0c", size = 0.6)
+      plotOutput("bert")
       # plotOutput("bert")
     ),
   ))

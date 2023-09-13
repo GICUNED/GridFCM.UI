@@ -52,7 +52,7 @@ patient_server <- function(input, output, session){
         selected_row <- input$user_table_rows_selected
     
         if (!is.null(selected_row)) {
-            shinyjs::enable("editarPaciente")
+            shinyjs::enable("cargarSimulacion")
             shinyjs::enable("borrarPaciente")
             shinyjs::enable("simulacionesDisponibles")
             shinyjs::enable("importarGridPaciente")
@@ -78,7 +78,7 @@ patient_server <- function(input, output, session){
                 pacientename <- DBI::dbGetQuery(con, sprintf("SELECT nombre from paciente WHERE id = %d", user_data$selected_user_id))
                 nombrePaciente(pacientename)
                 DBI::dbDisconnect(con)
-                paste(i18n$t("Simulaciones disponibles de "), pacientename)
+                paste(icon = icon("universal-access"), pacientename)
             })
 
             output$paciente_activo <- renderText({
@@ -389,6 +389,9 @@ patient_server <- function(input, output, session){
         anotaciones <- input$anotaciones
         fecha_registro <- format(Sys.time(), format = "%Y-%m-%d %H:%M:%S", tz = "Europe/Madrid")
         fk_psicologo <- 1 # de momento 
+        if(nombre != ""){
+            shinyjs::enable("guardarAddPatient")
+        }
 
         if (is.numeric(edad) && edad >= 0 && edad <= 120) {
             # Insertar los datos en la base de datos
