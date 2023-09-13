@@ -417,34 +417,19 @@ patient_server <- function(input, output, session){
     })
 
     output$paciente_simulacion_header <- renderText({
-        con <- establishDBConnection()
-        pacientename <- DBI::dbGetQuery(con, sprintf("SELECT nombre from paciente WHERE id = %d", user_data$selected_user_id))
-        DBI::dbDisconnect(con)
-        paste(icon = icon("universal-access"), pacientename)
+        paste(icon = icon("universal-access"), nombrePaciente())
     })
 
      output$paciente_activo <- renderText({
-        con <- establishDBConnection()
-        pacientename <- DBI::dbGetQuery(con, sprintf("SELECT nombre from paciente WHERE id = %d", user_data$selected_user_id))
-        DBI::dbDisconnect(con)
-        paste("<b class='patient-active-name'>", pacientename, "</b>")
+        paste("<b class='patient-active-name'>", nombrePaciente(), "</b>")
     })
 
     output$simulation_active_rg <- renderText({
-        con <- establishDBConnection()
-        DBI::dbDisconnect(con)
-         fecha_rep <- session$userData$fecha_repgrid
-        
-
-        paste("<p class='desccustom-date'>📅", fecha_rep, "</p>")
+        paste("<p class='desccustom-date'>📅", repgrid_fecha_seleccionada(), "</p>")
     })
 
     output$simulation_active_wg <- renderText({
-        con <- establishDBConnection()
-        DBI::dbDisconnect(con)
-        fecha_wimp <- session$userData$fecha_wimpgrid
-
-        paste("<p class='desccustom-date'>📅", fecha_wimp, "</p>")
+        paste("<p class='desccustom-date'>📅", wimpgrid_fecha_seleccionada(), "</p>")
     })
     
 
