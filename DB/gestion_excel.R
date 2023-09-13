@@ -37,7 +37,8 @@ decodificar_BD_excel <- function(tabla_origen, ruta_destino, id_paciente, fecha_
     id <- 0
     # Consultar los datos de la tabla
     if(fecha_registro==''){
-        query <- sprintf("SELECT id, fila, columna, valor FROM %s WHERE fk_paciente = %d", tabla_origen, id_paciente)
+        query <- sprintf("SELECT id, fila, columna, valor FROM %s WHERE fk_paciente = %d and id = (SELECT MAX(id) FROM %s WHERE fk_paciente = %d)", 
+                tabla_origen, id_paciente, tabla_origen, id_paciente)
         datos <- DBI::dbGetQuery(con, query)
         id <- max(datos$id) # último id insertado?? puede que falle esto 
     }

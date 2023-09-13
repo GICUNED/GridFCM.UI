@@ -1018,6 +1018,7 @@ actualizar_controles_local <- function(id_wx){
   DBI::dbDisconnect(con)
   
   if(nrow(controles)>0){
+    message("entro para modificar controles locales")
     # simdigraph
     updateSelectInput(session, "simdigraph_thr", selected=controles$sim_umbral)
     updateSelectInput(session, "simdigraph_layout", selected=controles$sim_design)

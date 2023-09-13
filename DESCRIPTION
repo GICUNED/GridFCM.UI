@@ -36,7 +36,6 @@ Imports:
     shinydashboard (>= 0.7.2),
     shinyjs (>= 2.1.0),
     shinyWidgets (>= 0.7.6),
-    tm (>= 0.7-11),
     toastui (>= 0.3.0),
     visNetwork (>= 2.1.2),
     writexl (>= 1.4.2)

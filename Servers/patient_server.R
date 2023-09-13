@@ -122,7 +122,7 @@ patient_server <- function(input, output, session){
             repgrid_data_DB$fechas <- fechasRep
 
             output$simulaciones_rep <- renderDT({
-                datatable(data.frame(Fecha = repgrid_data_DB$fechas), selection = 'single')
+                datatable(data.frame(Fecha = repgrid_data_DB$fechas), selection = 'single', options = list(order = list(1, 'asc')))
             })
         }
     }
@@ -139,7 +139,7 @@ patient_server <- function(input, output, session){
             wimpgrid_data_DB$fechas <- fechasWimp
 
             output$simulaciones_wimp <- renderDT({
-                datatable(data.frame(Fecha = wimpgrid_data_DB$fechas), selection = 'single')
+                datatable(data.frame(Fecha = wimpgrid_data_DB$fechas), selection = 'single', options = list(order = list(1, 'asc')))
             })
         }
     }
@@ -210,10 +210,11 @@ patient_server <- function(input, output, session){
         fecha_wimp <- session$userData$fecha_wimpgrid
         if(!is.null(repgrid_fecha_seleccionada()) || !is.null(wimpgrid_fecha_seleccionada())){
             if(!is.null(repgrid_fecha_seleccionada())){
-                ruta_destino <- "/srv/shiny-server/ficheros/excel_rep.xlsx"
+                ruta_destino <- tempfile(fileext = ".xlsx")
                 id <- decodificar_BD_excel('repgrid_xlsx', ruta_destino, id_paciente, fecha_rep)
                 datos_repgrid <- OpenRepGrid::importExcel(ruta_destino)
                 excel_repgrid <- read.xlsx(ruta_destino)
+                file.remove(ruta_destino)
 
                 #convertir nums a formato numerico y no texto como estaba importado
                 columnas_a_convertir <- 2:(ncol(excel_repgrid) - 1)
@@ -236,12 +237,13 @@ patient_server <- function(input, output, session){
                 } 
             }
             if(!is.null(wimpgrid_fecha_seleccionada())){
-                ruta_destino <- "/srv/shiny-server/ficheros/excel_wimp.xlsx"
+                ruta_destino <- tempfile(fileext = ".xlsx")
                 id <- decodificar_BD_excel('wimpgrid_xlsx', ruta_destino, id_paciente, fecha_wimp)
                 session$userData$id_wimpgrid <- id
 
                 datos_wimpgrid <- importwimp(ruta_destino)
                 excel_wimp <- read.xlsx(ruta_destino)
+                file.remove(ruta_destino)
                 # convertir los numeros tipo string a tipo numerico
                 columnas_a_convertir <- 2:(ncol(excel_wimp) - 1)
                 # Utiliza lapply para aplicar la conversión a las columnas seleccionadas
