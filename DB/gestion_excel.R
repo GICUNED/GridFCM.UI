@@ -33,7 +33,6 @@ codificar_excel_BD <- function(excel, tabla_destino, id_paciente){
 
 decodificar_BD_excel <- function(tabla_origen, ruta_destino, id_paciente, fecha_registro='') {
     con <- establishDBConnection()
-    
     id <- 0
     # Consultar los datos de la tabla
     if(fecha_registro==''){

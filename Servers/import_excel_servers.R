@@ -7,9 +7,8 @@ import_excel_server <- function(input, output, session) {
       # llamada al metodo de codificar para luego meter en la bd y demás
       excel_repgrid_codificar <- read.xlsx(input$archivo_repgrid$datapath, colNames=FALSE)
       # quitar el archivo del fileinput
-      ruta_destino_rep <- "/srv/shiny-server/ficheros/excel_rep.xlsx"
+      ruta_destino_rep <- tempfile(fileext = ".xlsx")
       #ruta_destino_rep <- tempfile(fileext = ".xlsx")
-      message(ruta_destino_rep)
       # transformo el excel a tabla de bd y encima devuelvo la fecha para sacar en el título de la rejilla
       fecha <- codificar_excel_BD(excel_repgrid_codificar, 'repgrid_xlsx', id_paciente)
       # transformo la tabla de la bd a excel para usarla en la aplicación
@@ -29,7 +28,7 @@ import_excel_server <- function(input, output, session) {
       } else {
         0
       }
-      message(paste("num col", num_columnas))
+      #message(paste("num col", num_columnas))
       session$userData$num_col_repgrid <- num_columnas
 
       num_rows <- if (!is.null(input$archivo_repgrid)) {
@@ -37,11 +36,11 @@ import_excel_server <- function(input, output, session) {
       } else {
         0
       }
-      message(paste("num row", num_rows))
+      #message(paste("num row", num_rows))
       session$userData$num_row_repgrid <- num_rows
       session$userData$datos_repgrid <- datos_repgrid
       system(paste0("rm ",input$archivo_repgrid$datapath))
-      #file.remove(ruta_destino_rep)
+      file.remove(ruta_destino_rep)
       if (!is.null(datos_repgrid)) {
         # Solo archivo RepGrid cargado, navegar a RepGrid Home
         repgrid_home_server(input,output,session)
