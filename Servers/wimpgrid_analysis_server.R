@@ -1049,7 +1049,7 @@ if(!is.null(session$userData$id_wimpgrid)){
 
 actualizar_controles_bd <- function(id_wx){
   
-  #con <- establishDBConnection()
+  con <- establishDBConnection()
   # compruebo si existe wimpgrid params para un wimpgrid xlsx
   query <- sprintf("select id from wimpgrid_params where fk_wimpgrid = %d", id_wx)
   controles <- DBI::dbGetQuery(con, query)
@@ -1086,11 +1086,12 @@ actualizar_controles_bd <- function(id_wx){
 
   }
   DBI::dbExecute(con, query_wp)
-  #DBI::dbDisconnect(con)
+  DBI::dbDisconnect(con)
 }
 
 shinyjs::onevent("click", "guardarBD_w", {
     if (!is.null(session$userData$datos_wimpgrid)) {
+      message("entro en gurdar bd")
         fecha <- session$userData$fecha_wimpgrid
         id_paciente <- session$userData$id_paciente
         con <- establishDBConnection()
@@ -1116,6 +1117,7 @@ shinyjs::onevent("click", "guardarBD_w", {
             duration = 3
         )
         DBI::dbDisconnect(con)
+        return()
     }
 })
 

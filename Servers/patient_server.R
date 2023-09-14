@@ -396,6 +396,7 @@ patient_server <- function(input, output, session){
         DBI::dbDisconnect(con)
 
         renderizarTabla()
+        shinyjs::hide("patientSimulations")
     })
     
     observeEvent(input$nombre, {
