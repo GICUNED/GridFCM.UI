@@ -39,12 +39,12 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
       shinyjs::hidden(
       div(id = "tabla_datos_wimpgrid_container",
         # Mostrar los datos de tabla_datos
-        shinycssloaders::withSpinner(rHandsontableOutput("tabla_datos_wimpgrid"), type = 4, color = "#022a0c", size = 0.6)
+        rHandsontableOutput("tabla_datos_wimpgrid")
         )
       ),
       div(class=("row"), id = "prueba_container_w",
       # Mostrar los datos de prueba
-      shinycssloaders::withSpinner(plotOutput("bert_w"), type = 4, color = "#022a0c", size = 0.6)
+      plotOutput("bert_w")
       )
     )),
   ),

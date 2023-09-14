@@ -52,9 +52,9 @@ patient_server <- function(input, output, session){
         selected_row <- input$user_table_rows_selected
     
         if (!is.null(selected_row)) {
-            shinyjs::enable("cargarSimulacion")
             shinyjs::enable("borrarPaciente")
             shinyjs::enable("simulacionesDisponibles")
+            shinyjs::enable("editarPaciente")
             shinyjs::enable("importarGridPaciente")
 
             #ocultar simulaciones por si se habían desplegado
@@ -100,10 +100,13 @@ patient_server <- function(input, output, session){
     # gestion de las filas seleccionadas en la tabla de simulaciones repgrid
     observeEvent(input$simulaciones_rep_rows_selected, {
         selected_row <- input$simulaciones_rep_rows_selected
+        proxy <- dataTableProxy("simulaciones_wimp")
 
         if (!is.null(selected_row)) {
+            proxy %>% selectRows(NULL) # deselecciono la fila wimpgrid
+            wimpgrid_fecha_seleccionada(NULL) # reseteo la fecha wimpgrid
             shinyjs::enable("borrarSimulacion")
-            shinyjs::enable("editarSimulacionRepgrid")
+            shinyjs::enable("cargarSimulacion")
             # hacer consulta para obtener el txt de repgrid aqui con la fecha seleccionada
             fechas <- repgrid_data_DB$fechas
             fecha <- fechas[selected_row]
@@ -111,16 +114,23 @@ patient_server <- function(input, output, session){
             repgrid_fecha_seleccionada(fecha)
         }
     })
-    # gestion de las filas seleccionadas en la tabla de simulaciones repgrid
+    
+    # gestion de las filas seleccionadas en la tabla de simulaciones wimpgrid
     observeEvent(input$simulaciones_wimp_rows_selected, {
         selected_row <- input$simulaciones_wimp_rows_selected
+        proxy <- dataTableProxy("simulaciones_rep")
         if (!is.null(selected_row)) {
+            proxy %>% selectRows(NULL) # deselecciono la fila repgrid
+            repgrid_fecha_seleccionada(NULL) # reseteo la fecha repgrid el boton cargar
+            shinyjs::enable("borrarSimulacion")
+            shinyjs::enable("cargarSimulacion")
             fechas <- wimpgrid_data_DB$fechas
             fecha <- fechas[selected_row]
             session$userData$fecha_wimpgrid <- fecha
             wimpgrid_fecha_seleccionada(fecha)
         }
     })
+    
     
     cargar_fechas <- function(){
         con <- establishDBConnection()
@@ -186,8 +196,8 @@ patient_server <- function(input, output, session){
         
         # Proceso de borrado de la simulación
         id_paciente <- user_data$selected_user_id
-        fecha_rep <- session$userData$fecha_repgrid
-        fecha_wimp <- session$userData$fecha_wimpgrid
+        fecha_rep <- repgrid_fecha_seleccionada()
+        fecha_wimp <- wimpgrid_fecha_seleccionada()
         
         if (!is.null(fecha_rep) || !is.null(fecha_wimp)) {
             con <- establishDBConnection()
@@ -236,7 +246,7 @@ patient_server <- function(input, output, session){
                 num_rows <- nrow(session$userData$datos_to_table)
                 session$userData$num_row_repgrid <- num_rows
                 session$userData$datos_repgrid <- datos_repgrid
-                repgrid_fecha_seleccionada(NULL)
+                #repgrid_fecha_seleccionada(NULL)
 
                 if (!is.null(datos_repgrid)) {
                     # Solo archivo RepGrid cargado, navegar a RepGrid Home
@@ -266,7 +276,7 @@ patient_server <- function(input, output, session){
                 # Almacenar los objetos importados en el entorno de la sesión para su uso posterior
                 #session$userData$datos_repgrid <- datos_repgrid
                 session$userData$datos_wimpgrid <- datos_wimpgrid
-                wimpgrid_fecha_seleccionada(NULL)
+                #wimpgrid_fecha_seleccionada(NULL)
 
                 if (!is.null(datos_wimpgrid)) {
                     session$userData$id_paciente <- user_data$selected_user_id
@@ -279,8 +289,7 @@ patient_server <- function(input, output, session){
 
 
     observeEvent(input$importarGridPaciente, {
-        shinyjs::hide("simulaciones_rep")
-        shinyjs::hide("simulaciones_wimp")
+        shinyjs::hide("patientSimulations")
         session$userData$id_paciente <- user_data$selected_user_id
         import_excel_server(input, output, session)
         runjs("window.location.href = '/#!/import';")
@@ -338,15 +347,23 @@ patient_server <- function(input, output, session){
     })
 
     observeEvent(input$borrarPaciente, {
-
-        showModal(modalDialog(
-            title = i18n$t("Confirmar borrado"),
-            i18n$t("¿Está seguro de que quiere eliminar al paciente? Se borrarán todas sus simulaciones"),
-            footer = tagList(
-                modalButton(i18n$t("Cancelar")),
-                actionButton("confirmarBorrado", i18n$t("Confirmar"), class = "btn-danger")
+        if(!is.null(nombrePaciente)){
+            showModal(modalDialog(
+                title = i18n$t("Confirmar borrado"),
+                i18n$t("¿Está seguro de que quiere eliminar al paciente? Se borrarán todas sus simulaciones"),
+                footer = tagList(
+                    modalButton(i18n$t("Cancelar")),
+                    actionButton("confirmarBorrado", i18n$t("Confirmar"), class = "btn-danger")
+                )
+            ))
+        }
+        else{
+            showModal(modalDialog(
+                title = i18n$t("Debe seleccionar un paciente para poder borrarlo."),
+                    modalButton(i18n$t("OK"))
+                )
             )
-        ))
+        }
     })
     observeEvent(input$confirmarBorrado, {
         removeModal()  # Cierra la ventana modal de confirmación
@@ -381,6 +398,16 @@ patient_server <- function(input, output, session){
         renderizarTabla()
     })
     
+    observeEvent(input$nombre, {
+        if(input$nombre != ""){
+            shinyjs::enable("guardarAddPatient")
+        }
+        else{
+            shinyjs::disable("guardarAddPatient")
+        }
+        
+    })
+
     observeEvent(input$guardarAddPatient,  {
         con <- establishDBConnection()
         nombre <- input$nombre
@@ -389,10 +416,7 @@ patient_server <- function(input, output, session){
         anotaciones <- input$anotaciones
         fecha_registro <- format(Sys.time(), format = "%Y-%m-%d %H:%M:%S", tz = "Europe/Madrid")
         fk_psicologo <- 1 # de momento 
-        if(nombre != ""){
-            shinyjs::enable("guardarAddPatient")
-        }
-
+        
         if (is.numeric(edad) && edad >= 0 && edad <= 120) {
             # Insertar los datos en la base de datos
             query <- sprintf("INSERT INTO paciente (nombre, edad, genero, anotaciones, fecha_registro) VALUES ('%s', %d, '%s', '%s', '%s')",
