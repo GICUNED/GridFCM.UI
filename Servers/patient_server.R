@@ -52,13 +52,14 @@ patient_server <- function(input, output, session){
         selected_row <- input$user_table_rows_selected
     
         if (!is.null(selected_row)) {
-            shinyjs::enable("cargarSimulacion")
             shinyjs::enable("borrarPaciente")
             shinyjs::enable("simulacionesDisponibles")
+            shinyjs::enable("editarPaciente")
             shinyjs::enable("importarGridPaciente")
+           
 
             #ocultar simulaciones por si se habían desplegado
-            delay(200, shinyjs::show("patientIndicator"))
+        
             shinyjs::hide("simulaciones_rep")
             shinyjs::hide("simulaciones_wimp")
             shinyjs::hide("patientSimulations")
@@ -73,20 +74,23 @@ patient_server <- function(input, output, session){
             
             # Por ejemplo, imprimir el ID del usuario en la consola
             message(paste("id del paciente: ", selected_user_id))
+
             output$paciente_simulacion_header <- renderText({
                 con <- establishDBConnection()
                 pacientename <- DBI::dbGetQuery(con, sprintf("SELECT nombre from paciente WHERE id = %d", user_data$selected_user_id))
-                nombrePaciente(pacientename)
                 DBI::dbDisconnect(con)
-                paste(icon = icon("universal-access"), pacientename)
+                paste(icon = icon("universal-access"), "<b class='patient-active-name'>", pacientename, "</b>")
             })
 
             output$paciente_activo <- renderText({
                 con <- establishDBConnection()
                 pacientename <- nombrePaciente()
                 DBI::dbDisconnect(con)
-                paste("<b class='patient-active-name'>", pacientename, "</b>")
-            })
+                paste("<b class='patient-active-nav'>", pacientename, "</b>")
+            })   
+            
+            #  pacientename <- DBI::dbGetQuery(con, sprintf("SELECT nombre from paciente WHERE id = %d", user_data$selected_user_id))
+            #  nombrePaciente(pacientename)
             
             
         } else {
@@ -103,7 +107,7 @@ patient_server <- function(input, output, session){
 
         if (!is.null(selected_row)) {
             shinyjs::enable("borrarSimulacion")
-            shinyjs::enable("editarSimulacionRepgrid")
+            shinyjs::enable("cargarSimulacion")
             # hacer consulta para obtener el txt de repgrid aqui con la fecha seleccionada
             fechas <- repgrid_data_DB$fechas
             fecha <- fechas[selected_row]
@@ -161,12 +165,37 @@ patient_server <- function(input, output, session){
     }
 
     observeEvent(input$simulacionesDisponibles, {
-        shinyjs::show("simulaciones_wimp")
-        shinyjs::show("patientSimulations")
-        shinyjs::show("simulaciones_rep")
 
         cargar_fechas_wimpgrid()
         cargar_fechas()
+
+        runjs(
+            "$( document ).ready(function() {
+                  setTimeout(function() {
+                    window.scrollTo(0,document.body.scrollHeight);
+                }, 200)
+            })"
+        )
+
+        shinyjs::show("simulaciones_wimp")
+        shinyjs::show("patientSimulations")
+        shinyjs::show("simulaciones_rep")
+        delay(200, shinyjs::show("patientIndicator"))
+
+        observeEvent(input$tabSimulaciones, {
+
+            runjs(
+            "$( document ).ready(function() {
+                  setTimeout(function() {
+                    window.scrollTo(0,document.body.scrollHeight);
+                }, 200)
+            })"
+        )
+            
+        })
+
+       
+        
     })
 
     observeEvent(input$borrarSimulacion, {
@@ -426,11 +455,7 @@ patient_server <- function(input, output, session){
         }
     })
 
-    output$paciente_simulacion_header <- renderText({
-        paste(icon = icon("universal-access"), nombrePaciente())
-    })
-
-     output$paciente_activo <- renderText({
+    output$paciente_activo <- renderText({
         paste("<b class='patient-active-name'>", nombrePaciente(), "</b>")
     })
 
