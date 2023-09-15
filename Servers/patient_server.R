@@ -1,3 +1,4 @@
+
 patient_server <- function(input, output, session){
     user_data <- reactiveValues(users = NULL, selected_user_id = NULL)
     repgrid_data_DB <- reactiveValues(fechas = NULL)
@@ -68,6 +69,11 @@ patient_server <- function(input, output, session){
             selected_user_id <- users[selected_row, "id"]
             user_data$selected_user_id <- selected_user_id # reactiva
             
+            con <- establishDBConnection()
+            pacientename <- DBI::dbGetQuery(con, sprintf("SELECT nombre from paciente WHERE id = %d", user_data$selected_user_id))
+            nombrePaciente(pacientename)
+            DBI::dbDisconnect(con)
+
             # Ahora puedes utilizar selected_user_id para realizar acciones específicas
             # relacionadas con el usuario seleccionado, como mostrar detalles adicionales,
             # eliminar el usuario de la base de datos, etc.
@@ -75,19 +81,7 @@ patient_server <- function(input, output, session){
             # Por ejemplo, imprimir el ID del usuario en la consola
             message(paste("id del paciente: ", selected_user_id))
 
-            output$paciente_simulacion_header <- renderText({
-                con <- establishDBConnection()
-                pacientename <- DBI::dbGetQuery(con, sprintf("SELECT nombre from paciente WHERE id = %d", user_data$selected_user_id))
-                DBI::dbDisconnect(con)
-                paste(icon = icon("universal-access"), "<b class='patient-active-name'>", pacientename, "</b>")
-            })
-
-            output$paciente_activo <- renderText({
-                con <- establishDBConnection()
-                pacientename <- nombrePaciente()
-                DBI::dbDisconnect(con)
-                paste("<b class='patient-active-nav'>", pacientename, "</b>")
-            })   
+           
             
             #  pacientename <- DBI::dbGetQuery(con, sprintf("SELECT nombre from paciente WHERE id = %d", user_data$selected_user_id))
             #  nombrePaciente(pacientename)
@@ -479,8 +473,14 @@ patient_server <- function(input, output, session){
         }
     })
 
+     output$paciente_simulacion_header <- renderText({
+        pacientename <- nombrePaciente()
+        paste(icon = icon("universal-access"), "<b class='patient-active-name'>", pacientename, "</b>")
+    })
+
     output$paciente_activo <- renderText({
-        paste("<b class='patient-active-name'>", nombrePaciente(), "</b>")
+        pacientename <- nombrePaciente()
+        paste("<b class='patient-active-nav'>", pacientename, "</b>")
     })
 
     output$simulation_active_rg <- renderText({
