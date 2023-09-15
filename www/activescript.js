@@ -20,6 +20,15 @@ window.onload = (event) => {
         $('#incio-page')
           .find('.nav-link')
           .addClass('active');
+
+         //$('#import-page')
+        //.addClass('hidden');
+
+        //$('#excel-page')
+        //.addClass('hidden');
+        
+        //$('#form-page')
+        //.addClass('hidden');
     };
   
     //botón de User
@@ -33,6 +42,15 @@ window.onload = (event) => {
       $('#user-page')
         .find('.nav-link')
         .addClass('active');
+
+        //$('#import-page')
+        //.addClass('hidden');
+
+        //$('#excel-page')
+        //.addClass('hidden');
+        
+        //$('#form-page')
+        //.addClass('hidden');
     };
   
     //botón de Patient
@@ -43,14 +61,24 @@ window.onload = (event) => {
         .find('.nav-link')
         .removeClass('active');
   
-        $('.user-page')
+      $('.user-page')
         .find('.nav-link')
         .removeClass('active');
   
       $('#patient-page')
         .find('.nav-link')
         .addClass('active');
-    };
+
+        //$('#import-page')
+          //.removeClass('hidden');
+
+        //$('#excel-page')
+          //.removeClass('hidden');
+          
+        //$('#form-page')
+          //.removeClass('hidden');
+
+      }
   
     //botón de Import
     if (window.location.href.indexOf("/import") > -1) {
@@ -66,6 +94,15 @@ window.onload = (event) => {
       $('#import-page')
         .find('.nav-link')
         .addClass('active');
+
+        //$('#import-page')
+        //.addClass('hidden');
+
+        //$('#excel-page')
+        //.addClass('hidden');
+        
+        //$('#form-page')
+        //.addClass('hidden');
     };
   
      //botón de Files
@@ -116,6 +153,15 @@ window.onload = (event) => {
       $('#repgrid-page')
         .find('.nav-link')
         .addClass('active');
+
+        //$('#import-page')
+        //.addClass('hidden');
+
+        //$('#excel-page')
+        //.addClass('hidden');
+        
+        //$('#form-page')
+        //.addClass('hidden');
     };
   
      //botón de WimpGrid
@@ -132,6 +178,15 @@ window.onload = (event) => {
       $('#wimpgrid-page')
         .find('.nav-link')
         .addClass('active');
+
+        //$('#import-page')
+        //.addClass('hidden');
+
+        //$('#excel-page')
+        //.addClass('hidden');
+        
+        //$('#form-page')
+        //.addClass('hidden');
     };
       
   

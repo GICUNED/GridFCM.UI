@@ -22,6 +22,11 @@
 body{
   transition:opacity .3s ease,
 }
+ 
+button{
+  max-height: 60px;
+  line-height: 1.2 !important;
+}
 
  .hidden{
   /*display: none;*/
@@ -96,8 +101,10 @@ body{
   animation: fade-in 200ms forwards;
 }
 
+
 .patients-table{
   box-shadow: 0 0 1px #11111135;
+  overflow: hidden;
 }
 #patientSimulations, #patientIndicator, #simulationIndicator{
   animation: fade-in 200ms forwards;
@@ -110,6 +117,17 @@ body{
 
 .dark-mode #patientIndicator:hover{
   background-color: #292d32;
+}
+
+.paciente-seleccionado{
+  overflow: hidden;
+}
+
+.paciente-seleccionado div{
+  overflow: hidden;
+  display: flex;
+  text-overflow: ellipsis;
+  gap: .5rem;
 }
 
 .patient-active-label{
@@ -138,7 +156,7 @@ background-color: #454D55;
   text-overflow: ellipsis !important; 
 }
 
-.patient-active-name{
+.patient-active-nav{
   max-width: 150px;
   display: inline-block;
   white-space: nowrap;
@@ -146,6 +164,15 @@ background-color: #454D55;
   text-align: right;
   overflow: hidden;
   text-overflow: ellipsis !important; 
+}
+
+.patient-active-name{
+  display: inline-block;
+  white-space: nowrap;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis !important;
+  margin: 0;
 }
 
 @media ( max-width: 1356px ){

@@ -106,6 +106,7 @@ theme <- create_theme(
   )
 )
 
+
 ui <- dashboardPage(
   freshTheme = theme,
   dashboardHeader(
@@ -116,8 +117,8 @@ ui <- dashboardPage(
     div(id="user-page", class = "nav-item user-page user-page-btn" , menuItem("User", href = route_link("user_home"), icon = icon("house-user"), newTab = FALSE)),
     div(id="patientIndicator", class = "ml-auto patient-active-label", span(class = "icon-paciente"), htmlOutput("paciente_activo"))
   ),
+
   dashboardSidebar(
-    
     sidebarMenu(
         id = "sidebar_principal",
         div(id="incio-page", class = "nav-item incio-page", menuItem(i18n$t("Inicio"), href = route_link("/"), icon = icon("home"), newTab = FALSE)),
