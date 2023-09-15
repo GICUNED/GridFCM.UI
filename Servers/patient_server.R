@@ -1,4 +1,3 @@
-
 patient_server <- function(input, output, session){
     user_data <- reactiveValues(users = NULL, selected_user_id = NULL)
     repgrid_data_DB <- reactiveValues(fechas = NULL)
@@ -27,7 +26,7 @@ patient_server <- function(input, output, session){
             user_data$users <- users # variable reactiva
             DT::datatable(users, selection = 'single', rownames = FALSE)
         })
-        }
+    }
 
     renderizarTabla()
     
@@ -57,10 +56,9 @@ patient_server <- function(input, output, session){
             shinyjs::enable("simulacionesDisponibles")
             shinyjs::enable("editarPaciente")
             shinyjs::enable("importarGridPaciente")
-           
 
             #ocultar simulaciones por si se habían desplegado
-        
+            delay(200, shinyjs::show("patientIndicator"))
             shinyjs::hide("simulaciones_rep")
             shinyjs::hide("simulaciones_wimp")
             shinyjs::hide("patientSimulations")
@@ -68,23 +66,26 @@ patient_server <- function(input, output, session){
             users <- user_data$users
             selected_user_id <- users[selected_row, "id"]
             user_data$selected_user_id <- selected_user_id # reactiva
-            
             con <- establishDBConnection()
             pacientename <- DBI::dbGetQuery(con, sprintf("SELECT nombre from paciente WHERE id = %d", user_data$selected_user_id))
             nombrePaciente(pacientename)
             DBI::dbDisconnect(con)
-
+            
             # Ahora puedes utilizar selected_user_id para realizar acciones específicas
             # relacionadas con el usuario seleccionado, como mostrar detalles adicionales,
             # eliminar el usuario de la base de datos, etc.
             
             # Por ejemplo, imprimir el ID del usuario en la consola
             message(paste("id del paciente: ", selected_user_id))
+            output$paciente_simulacion_header <- renderText({
+                pacientename <- nombrePaciente()                
+                paste(icon = icon("universal-access"), pacientename)
+            })
 
-           
-            
-            #  pacientename <- DBI::dbGetQuery(con, sprintf("SELECT nombre from paciente WHERE id = %d", user_data$selected_user_id))
-            #  nombrePaciente(pacientename)
+            output$paciente_activo <- renderText({
+                pacientename <- nombrePaciente()  
+                paste("<b class='patient-active-name'>", pacientename, "</b>")
+            })
             
             
         } else {
@@ -169,37 +170,12 @@ patient_server <- function(input, output, session){
     }
 
     observeEvent(input$simulacionesDisponibles, {
-
-        cargar_fechas_wimpgrid()
-        cargar_fechas()
-
-        runjs(
-            "$( document ).ready(function() {
-                  setTimeout(function() {
-                    window.scrollTo(0,document.body.scrollHeight);
-                }, 200)
-            })"
-        )
-
         shinyjs::show("simulaciones_wimp")
         shinyjs::show("patientSimulations")
         shinyjs::show("simulaciones_rep")
-        delay(200, shinyjs::show("patientIndicator"))
 
-        observeEvent(input$tabSimulaciones, {
-
-            runjs(
-            "$( document ).ready(function() {
-                  setTimeout(function() {
-                    window.scrollTo(0,document.body.scrollHeight);
-                }, 200)
-            })"
-        )
-            
-        })
-
-       
-        
+        cargar_fechas_wimpgrid()
+        cargar_fechas()
     })
 
     observeEvent(input$borrarSimulacion, {
@@ -474,14 +450,12 @@ patient_server <- function(input, output, session){
         }
     })
 
-     output$paciente_simulacion_header <- renderText({
-        pacientename <- nombrePaciente()
-        paste(icon = icon("universal-access"), "<b class='patient-active-name'>", pacientename, "</b>")
+    output$paciente_simulacion_header <- renderText({
+        paste(icon = icon("universal-access"), nombrePaciente())
     })
 
-    output$paciente_activo <- renderText({
-        pacientename <- nombrePaciente()
-        paste("<b class='patient-active-nav'>", pacientename, "</b>")
+     output$paciente_activo <- renderText({
+        paste("<b class='patient-active-name'>", nombrePaciente(), "</b>")
     })
 
     output$simulation_active_rg <- renderText({
