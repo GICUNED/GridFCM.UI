@@ -76,17 +76,7 @@ patient_server <- function(input, output, session){
             # eliminar el usuario de la base de datos, etc.
             
             # Por ejemplo, imprimir el ID del usuario en la consola
-            message(paste("id del paciente: ", selected_user_id))
-            output$paciente_simulacion_header <- renderText({
-                pacientename <- nombrePaciente()                
-                paste(icon = icon("universal-access"), pacientename)
-            })
-
-            output$paciente_activo <- renderText({
-                pacientename <- nombrePaciente()  
-                paste("<b class='patient-active-name'>", pacientename, "</b>")
-            })
-            
+            message(paste("id del paciente: ", selected_user_id))            
             
         } else {
                 shinyjs::hide("simulationIndicatorRG")
@@ -454,7 +444,7 @@ patient_server <- function(input, output, session){
         paste(icon = icon("universal-access"), nombrePaciente())
     })
 
-     output$paciente_activo <- renderText({
+    output$paciente_activo <- renderText({
         paste("<b class='patient-active-name'>", nombrePaciente(), "</b>")
     })
 
