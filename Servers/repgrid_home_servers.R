@@ -1,7 +1,4 @@
 repgrid_home_server <- function(input, output, session) {
-  
-  
-
   #hide and show tooltips
   shinyjs::hide("context-rg-home")
 
@@ -94,7 +91,6 @@ output$titulo_repgrid <- renderText({
   nombre <- DBI::dbGetQuery(con, sprintf("SELECT nombre from paciente WHERE id = %d", session$userData$id_paciente))
   DBI::dbDisconnect(con)
   fecha <- session$userData$fecha_repgrid
-
   paste("<b>", i18n$t("Simulación de "), nombre, "</b><br><p class='desccustom-date'>📅", fecha, "</p>")
 })
 
@@ -224,6 +220,8 @@ output$bert <- renderPlot({
       shinyjs::show("volver")
       shinyjs::hide("guardarBD")
       shinyjs::show("reiniciar")
+      shinyjs::hide("guardarComo")
+      shinyjs::hide("exportar")
       # Cambiar a modo de edición
       shinyjs::hide("prueba_container")
       shinyjs::show("tabla_datos_repgrid_container")
@@ -236,6 +234,8 @@ output$bert <- renderPlot({
       shinyjs::hide("guardar")
       shinyjs::show("guardarBD")
       shinyjs::hide("reiniciar")
+      shinyjs::show("guardarComo")
+      shinyjs::show("exportar")
       # Cambiar a modo de tabla
       shinyjs::show("prueba_container")
       shinyjs::hide("tabla_datos_repgrid_container")
@@ -337,6 +337,60 @@ output$bert <- renderPlot({
     }
     repgrid_analisis_server(input,output,session)
   })
+
+  observeEvent(input$guardarComo, {
+    if (!is.null(session$userData$datos_repgrid)) {
+        tabla_final <- tabla_manipulable()
+        my_dataframe <-tabla_final
+
+        # Create a temporary file
+        temp_file_rep <- tempfile(fileext = ".xlsx")
+        on.exit(unlink(temp_file_rep))
+        # Write the dataframe to the temporary file
+        write.xlsx(my_dataframe, temp_file_rep)
+        excel <- read.xlsx(temp_file_rep, colNames=FALSE)
+        print(paste("Temporary file saved at: ", temp_file_rep))
+
+        # Check if the file exists and is not empty
+        if (file.exists(temp_file_rep) && file.size(temp_file_rep) > 0) {
+          # Read the data from the temporary file
+          df_read <- OpenRepGrid::importExcel(temp_file_rep)
+          file.remove(temp_file_rep)
+          # Check if df_read is not NULL or empty
+          if (!is.null(df_read) && nrow(df_read) > 0) {
+            # Create a repgrid object
+            my_repgrid <- df_read
+            repgrid_a_mostrar(my_repgrid)
+            session$userData$datos_repgrid <- repgrid_a_mostrar()
+            session$userData$datos_to_table<- tabla_final
+            fecha <- codificar_excel_BD(excel, "repgrid_xlsx", session$userData$id_paciente)
+            session$userData$fecha_repgrid <- fecha
+          } else {
+              message("Error: df_read is NULL or empty.")
+          }
+        } else {
+            message("Error: The temporary file does not exist or is empty.")
+        }
+        
+    }
+    #repgrid_analisis_server(input,output,session)
+    
+  })
+
+temporal <- NULL  # Define temporal en un alcance superior
+
+output$exportar <- downloadHandler(
+  filename = function() {
+    temporal <<- tempfile(fileext = ".xlsx")  # Usar <<- para asignar en el alcance superior
+    id <- decodificar_BD_excel("repgrid_xlsx", temporal, session$userData$id_paciente, session$userData$fecha_repgrid)
+    return(temporal)
+  },
+  content = function(file) {
+    file.copy(temporal, file)
+    file.remove(temporal)  # Elimina el archivo temporal después de descargarlo
+  }
+)
+
 
   observeEvent(input$tabs_rep, {
     
