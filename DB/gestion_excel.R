@@ -26,7 +26,6 @@ codificar_excel_BD <- function(excel, tabla_destino, id_paciente){
     t_total <- t_fin - t_inicio
     message(paste(t_total, "segundos"))
     DBI::dbDisconnect(con)
-
     return(fecha)
 } 
 
