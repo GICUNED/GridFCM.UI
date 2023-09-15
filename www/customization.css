@@ -110,6 +110,12 @@ button{
   animation: fade-in 200ms forwards;
 }
 
+
+#patientSimulations{
+  display: flex;
+  flex-direction: column;
+}
+
 #patientIndicator:hover{
   cursor: pointer;
   background-color: #c8cfda;
@@ -1434,6 +1440,10 @@ color: #8b0000;
 
 .dark-mode a:not(.btn):hover{
   color: inherit;
+}
+
+#patientSimulations .tabbable{
+  margin-top: .4rem;
 }
 
 /*Estilo de botones de navegación y Tabs*/

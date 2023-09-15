@@ -144,7 +144,7 @@ patient_server <- function(input, output, session){
             delay(200, shinyjs::show("simulationIndicatorRG"))
 
             output$simulaciones_rep <- renderDT({
-                datatable(data.frame(Fecha = repgrid_data_DB$fechas), selection = 'single', options = list(order = list(1, 'asc')))
+                datatable(data.frame(Fecha = repgrid_data_DB$fechas),  selection = 'single', options = list(order = list(1, 'asc')))
             })
         }
     }
