@@ -73,6 +73,7 @@ $('#open-controls-rg').on('click', function (){
   repgrid_a_mostrar <- reactiveVal(repgrid_aux)
   tabla_manipulable <- reactiveVal(tabla_aux)
   cambios_reactive <- reactiveVal(numeric(0))
+  nombrePaciente <- reactiveVal()
 
   #tabla_manipulable <- session$userData$datos_to_table
   tabla_final <- tabla_aux
@@ -90,6 +91,7 @@ output$titulo_repgrid <- renderText({
   con <- establishDBConnection()
   nombre <- DBI::dbGetQuery(con, sprintf("SELECT nombre from paciente WHERE id = %d", session$userData$id_paciente))
   DBI::dbDisconnect(con)
+  nombrePaciente(nombre)
   fecha <- session$userData$fecha_repgrid
   paste("<b>", i18n$t("Simulación de "), nombre, "</b><br><p class='desccustom-date'>📅", fecha, "</p>")
 })
@@ -324,6 +326,8 @@ output$bert <- renderPlot({
             shinyjs::hide("guardar")
             shinyjs::hide("volver")
             shinyjs::show("guardarBD")
+            shinyjs::show("guardarComo")
+            shinyjs::show("exportar")
             # Switch to viewing mode
             shinyjs::hide("tabla_datos_repgrid_container")
             shinyjs::show("prueba_container")
@@ -373,23 +377,31 @@ output$bert <- renderPlot({
         }
         
     }
-    #repgrid_analisis_server(input,output,session)
-    
+    repgrid_analisis_server(input,output,session)
   })
 
 temporal <- NULL  # Define temporal en un alcance superior
 
 output$exportar <- downloadHandler(
   filename = function() {
-    temporal <<- tempfile(fileext = ".xlsx")  # Usar <<- para asignar en el alcance superior
-    id <- decodificar_BD_excel("repgrid_xlsx", temporal, session$userData$id_paciente, session$userData$fecha_repgrid)
-    return(temporal)
+    fecha <- gsub(" ", "_", session$userData$fecha_repgrid)
+    nombre_temporal <- paste(nombrePaciente(), "_", fecha, ".xlsx", sep="", collapse="")
+    temporal <- file.path(tempdir(), nombre_temporal)
+    tabla_final <- tabla_manipulable()
+    my_dataframe <- tabla_final
+    # Write the dataframe to the temporary file
+    write.xlsx(my_dataframe, temporal)
+    return(nombre_temporal)
   },
   content = function(file) {
+    fecha <- gsub(" ", "_", session$userData$fecha_repgrid)
+    nombre_temporal <- paste(nombrePaciente(), "_", fecha, ".xlsx", sep="", collapse="")
+    temporal <- file.path(tempdir(), nombre_temporal)
     file.copy(temporal, file)
     file.remove(temporal)  # Elimina el archivo temporal después de descargarlo
   }
 )
+
 
 
   observeEvent(input$tabs_rep, {

@@ -422,6 +422,8 @@ observeEvent(input$editar_w, {
     shinyjs::hide("guardarBD_w")
     shinyjs::show("volver_w")
     shinyjs::show("reiniciar_w")
+    shinyjs::hide("guardarComo_w")
+    shinyjs::hide("exportar_w")
     # Cambiar a modo de edición
     shinyjs::hide("prueba_container_w")
     shinyjs::show("tabla_datos_wimpgrid_container")
@@ -435,6 +437,8 @@ observeEvent(input$editar_w, {
       shinyjs::hide("guardar_w")
       shinyjs::show("guardarBD_w")
       shinyjs::hide("reiniciar_w")
+      shinyjs::show("guardarComo_w")
+      shinyjs::show("exportar_w")
       # Cambiar a modo de tabla
       shinyjs::show("prueba_container_w")
       shinyjs::hide("tabla_datos_wimpgrid_container")
@@ -510,6 +514,8 @@ observeEvent(input$guardar_w, {
       shinyjs::hide("guardar_w")
       shinyjs::hide("volver_w")
       shinyjs::show("guardarBD_w")
+      shinyjs::show("guardarComo_w")
+      shinyjs::show("exportar_w")
       # Cambiar a modo de visualización
 
       shinyjs::hide("tabla_datos_wimpgrid_container")
@@ -522,7 +528,15 @@ observeEvent(input$guardar_w, {
 
 })
 
- 
+observeEvent(input$exportar_w, {
+  
+})
+
+observeEvent(input$guardarComo_w, {
+  
+})
+
+
 
 #scn <- scenariomatrix(dataaa_w(),c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0))
 
