@@ -1,12 +1,46 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json
 name: "gridfcm"
 
+# https://hub.docker.com/_/traefik
+x-traefik-image: &traefik-image "docker.io/traefik:2.10"
 # https://repo.stratebi.com
 x-shiny-server-image: &shiny-server-image "repo.stratebi.com/stratebi/shiny-server:v1.5.20.1002-14"
 # https://hub.docker.com/_/postgres
 x-postgres-image: &postgres-image "docker.io/postgres:15-bookworm"
 
 services:
+
+  traefik:
+    image: *traefik-image
+    restart: "on-failure:10"
+    container_name: "gridfcm-traefik"
+    hostname: "traefik"
+    networks:
+      - "gridfcm"
+    ports:
+      - "80:80/tcp" # HTTP.
+      - "443:443/tcp" # HTTPS.
+      - "443:443/udp" # HTTPS (QUIC).
+      - "127.0.0.1:5432:5432/tcp" # PostgreSQL.
+    volumes:
+      - "./config/traefik/traefik.yml:/etc/traefik/traefik.yml:ro"
+      - "./config/traefik/dynamic/:/etc/traefik/dynamic/:ro"
+      - "./config/traefik/certs/server/:/etc/traefik/certs/:ro"
+      - "traefik-acme:/etc/traefik/acme/"
+    environment:
+      TRAEFIK_TLS_RESOLVER: "${TRAEFIK_TLS_RESOLVER:-}"
+      TRAEFIK_TLS_KEY: "${TRAEFIK_TLS_KEY:-}"
+      TRAEFIK_TLS_CERT: "${TRAEFIK_TLS_CERT:-}"
+      TRAEFIK_MTLS_CERTS: "${TRAEFIK_MTLS_CERTS:-}"
+      DOMAIN: "${DOMAIN:?}"
+      CF_DNS_API_TOKEN: "${CF_DNS_API_TOKEN:-}"
+      CF_ZONE_API_TOKEN: "${CF_ZONE_API_TOKEN:-}"
+    healthcheck:
+      test: ["CMD", "traefik", "healthcheck"]
+      start_period: "5m"
+      interval: "10s"
+      timeout: "5s"
+      retries: 2
 
   shiny-server:
     image: *shiny-server-image
@@ -15,8 +49,6 @@ services:
     hostname: "shiny-server"
     networks:
       - "gridfcm"
-    ports:
-      - "${SHINY_SERVER_HOST:-127.0.0.1}:${SHINY_SERVER_PORT:-3838}:3838/tcp"
     volumes:
       - "./DB/:/srv/shiny-server/DB/:ro"
       - "./R/:/srv/shiny-server/R/:ro"
@@ -47,8 +79,6 @@ services:
     hostname: "postgres"
     networks:
       - "gridfcm"
-    ports:
-      - "${POSTGRES_HOST-127.0.0.1}:${POSTGRES_PORT-5433}:5432/tcp"
     volumes:
       - "./DB/db.sql:/docker-entrypoint-initdb.d/db.sql:ro"
       - "postgres-data:/var/lib/postgresql/data/"
@@ -64,6 +94,9 @@ services:
       retries: 2
 
 volumes:
+
+  traefik-acme:
+    name: "gridfcm-traefik-acme"
 
   r-data:
     name: "gridfcm-r-data"
