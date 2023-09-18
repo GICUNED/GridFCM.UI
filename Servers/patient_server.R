@@ -273,6 +273,7 @@ patient_server <- function(input, output, session){
                     runjs("window.location.href = '/#!/wimpgrid';")
                 }   
             }
+            shinyjs::hide("patientSimulations")
         }
     })
 

@@ -276,10 +276,12 @@ tabla_final <- tabla_aux
 repgrid_inicial <- reactiveVal(repgrid_aux)
 
 wimpgrid_a_mostrar <- reactiveVal(repgrid_aux)
+nombrePaciente <- reactiveVal()
 
 output$titulo_wimpgrid <- renderText({
   con <- establishDBConnection()
   nombre <- DBI::dbGetQuery(con, sprintf("SELECT nombre from paciente WHERE id = %d", session$userData$id_paciente))
+  nombrePaciente(nombre)
   DBI::dbDisconnect(con)
   fecha <- session$userData$fecha_wimpgrid
 
@@ -528,13 +530,53 @@ observeEvent(input$guardar_w, {
 
 })
 
-observeEvent(input$exportar_w, {
-  
-})
+temporal <- NULL  # Define temporal en un alcance superior
+output$exportar_w <- downloadHandler(
+  filename = function() {
+    fecha <- gsub(" ", "_", session$userData$fecha_wimpgrid)
+    nombre_temporal <- paste(nombrePaciente(), "_Wimpgrid_", fecha, ".xlsx", sep="", collapse="")
+    temporal <- file.path(tempdir(), nombre_temporal)
+    tabla_final <- tabla_manipulable_w()
+    my_dataframe <- tabla_final
+    # Write the dataframe to the temporary file
+    write.xlsx(my_dataframe, temporal)
+    return(nombre_temporal)
+  },
+  content = function(file) {
+    fecha <- gsub(" ", "_", session$userData$fecha_wimpgrid)
+    nombre_temporal <- paste(nombrePaciente(), "_Wimpgrid_", fecha, ".xlsx", sep="", collapse="")
+    temporal <- file.path(tempdir(), nombre_temporal)
+    file.copy(temporal, file)
+    file.remove(temporal)  # Elimina el archivo temporal después de descargarlo
+  }
+)
 
-observeEvent(input$guardarComo_w, {
-  
-})
+
+shinyjs::onevent("click", "guardarComo_w", {
+    if (!is.null(session$userData$datos_wimpgrid)) {
+        tabla_final <- tabla_manipulable_w()
+        my_dataframe <-tabla_final
+
+        # Create a temporary file
+        temp_file <- tempfile(fileext = ".xlsx")
+        on.exit(unlink(temp_file))
+        # Write the dataframe to the temporary file
+        write.xlsx(my_dataframe, temp_file)
+        excel <- read.xlsx(temp_file, colNames=FALSE)
+        # Check if the file exists and is not empty
+        if (file.exists(temp_file) && file.size(temp_file) > 0) {
+          file.remove(temp_file)
+          # Check if df_read is not NULL or empty
+          fecha <- codificar_excel_BD(excel, "wimpgrid_xlsx", session$userData$id_paciente)
+          #actualizar_controles_bd(id de la wimpgrid nueva)
+          showNotification(
+              ui = "Nueva simulación guardada con éxito. Diríjase a la página de pacientes para visualizarla",
+              type = "message",
+              duration = 5
+          ) 
+        }
+    }
+  })
 
 
 

@@ -22,6 +22,12 @@ import_excel_server <- function(input, output, session) {
       excel_repgrid <- if (!is.null(input$archivo_repgrid)) {
         read.xlsx(ruta_destino_rep)
       }
+
+      # aqui voy a comprobar si estoy importando el excel exportado con los numeros como strings
+      columnas_a_convertir <- 2:(ncol(excel_repgrid) - 1)
+      # Utiliza lapply para aplicar la conversión a las columnas seleccionadas
+      excel_repgrid[, columnas_a_convertir] <- lapply(excel_repgrid[, columnas_a_convertir], as.numeric)
+
       session$userData$datos_to_table <- excel_repgrid
       num_columnas <- if (!is.null(input$archivo_repgrid)) {
         ncol(session$userData$datos_to_table)

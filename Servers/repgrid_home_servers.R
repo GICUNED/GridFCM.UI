@@ -342,7 +342,7 @@ output$bert <- renderPlot({
     repgrid_analisis_server(input,output,session)
   })
 
-  observeEvent(input$guardarComo, {
+  shinyjs::onevent("click", "guardarComo", {
     if (!is.null(session$userData$datos_repgrid)) {
         tabla_final <- tabla_manipulable()
         my_dataframe <-tabla_final
@@ -353,39 +353,26 @@ output$bert <- renderPlot({
         # Write the dataframe to the temporary file
         write.xlsx(my_dataframe, temp_file_rep)
         excel <- read.xlsx(temp_file_rep, colNames=FALSE)
-        print(paste("Temporary file saved at: ", temp_file_rep))
-
         # Check if the file exists and is not empty
         if (file.exists(temp_file_rep) && file.size(temp_file_rep) > 0) {
-          # Read the data from the temporary file
-          df_read <- OpenRepGrid::importExcel(temp_file_rep)
           file.remove(temp_file_rep)
           # Check if df_read is not NULL or empty
-          if (!is.null(df_read) && nrow(df_read) > 0) {
-            # Create a repgrid object
-            my_repgrid <- df_read
-            repgrid_a_mostrar(my_repgrid)
-            session$userData$datos_repgrid <- repgrid_a_mostrar()
-            session$userData$datos_to_table<- tabla_final
-            fecha <- codificar_excel_BD(excel, "repgrid_xlsx", session$userData$id_paciente)
-            session$userData$fecha_repgrid <- fecha
-          } else {
-              message("Error: df_read is NULL or empty.")
-          }
-        } else {
-            message("Error: The temporary file does not exist or is empty.")
+          fecha <- codificar_excel_BD(excel, "repgrid_xlsx", session$userData$id_paciente)
+          showNotification(
+              ui = "Nueva simulación guardada con éxito. Diríjase a la página de pacientes para visualizarla",
+              type = "message",
+              duration = 5
+          ) 
         }
-        
     }
-    repgrid_analisis_server(input,output,session)
   })
 
-temporal <- NULL  # Define temporal en un alcance superior
 
+temporal <- NULL  # Define temporal en un alcance superior
 output$exportar <- downloadHandler(
   filename = function() {
     fecha <- gsub(" ", "_", session$userData$fecha_repgrid)
-    nombre_temporal <- paste(nombrePaciente(), "_", fecha, ".xlsx", sep="", collapse="")
+    nombre_temporal <- paste(nombrePaciente(), "_Repgrid_", fecha, ".xlsx", sep="", collapse="")
     temporal <- file.path(tempdir(), nombre_temporal)
     tabla_final <- tabla_manipulable()
     my_dataframe <- tabla_final
@@ -395,7 +382,7 @@ output$exportar <- downloadHandler(
   },
   content = function(file) {
     fecha <- gsub(" ", "_", session$userData$fecha_repgrid)
-    nombre_temporal <- paste(nombrePaciente(), "_", fecha, ".xlsx", sep="", collapse="")
+    nombre_temporal <- paste(nombrePaciente(), "_Repgrid_", fecha, ".xlsx", sep="", collapse="")
     temporal <- file.path(tempdir(), nombre_temporal)
     file.copy(temporal, file)
     file.remove(temporal)  # Elimina el archivo temporal después de descargarlo
