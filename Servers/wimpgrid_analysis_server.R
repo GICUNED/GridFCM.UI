@@ -552,7 +552,7 @@ output$exportar_w <- downloadHandler(
 )
 
 
-shinyjs::onevent("click", "guardarComo_w", {
+shinyjs::onclick("guardarComo_w", {
     if (!is.null(session$userData$datos_wimpgrid)) {
         tabla_final <- tabla_manipulable_w()
         my_dataframe <-tabla_final
@@ -566,14 +566,22 @@ shinyjs::onevent("click", "guardarComo_w", {
         # Check if the file exists and is not empty
         if (file.exists(temp_file) && file.size(temp_file) > 0) {
           file.remove(temp_file)
-          # Check if df_read is not NULL or empty
+          #creo la wimpgrid nueva
           fecha <- codificar_excel_BD(excel, "wimpgrid_xlsx", session$userData$id_paciente)
-          #actualizar_controles_bd(id de la wimpgrid nueva)
-          showNotification(
-              ui = "Nueva simulación guardada con éxito. Diríjase a la página de pacientes para visualizarla",
-              type = "message",
-              duration = 5
-          ) 
+          con <- establishDBConnection()
+          # consigo el id de la nueva wimpgrid
+          id <- DBI::dbGetQuery(con, sprintf("SELECT distinct(id) from wimpgrid_xlsx where fecha_registro='%s' and fk_paciente=%d", fecha, session$userData$id_paciente))
+          id <- as.integer(id)
+          DBI::dbDisconnect(con)
+          # le actualizo tambien los controles 
+          if(!is.null(id)){
+            actualizar_controles_bd(id)
+            showNotification(
+                ui = sprintf("Nueva simulación de %s guardada con éxito. Diríjase a la página de pacientes para visualizarla.", nombrePaciente()),
+                type = "message",
+                duration = 8
+            ) 
+          }
         }
     }
   })
@@ -1145,7 +1153,7 @@ actualizar_controles_bd <- function(id_wx){
   DBI::dbDisconnect(con)
 }
 
-shinyjs::onevent("click", "guardarBD_w", {
+  shinyjs::onclick("guardarBD_w", {
     if (!is.null(session$userData$datos_wimpgrid)) {
       message("entro en gurdar bd")
         fecha <- session$userData$fecha_wimpgrid

@@ -188,7 +188,7 @@ output$bert <- renderPlot({
 
  #observeEvent(input$guardarBD, { si lo dejamos así se ejecuta 3 veces y no es correcto
  # de esta manera con un onevent solo se hace una vez y es lo correcto
-  shinyjs::onevent("click", "guardarBD", {
+  shinyjs::onclick("guardarBD", {
       if (!is.null(session$userData$datos_repgrid)) {
           con <- establishDBConnection()
           #gestionar los cambios y guardarlos directamente en la bd
@@ -342,7 +342,7 @@ output$bert <- renderPlot({
     repgrid_analisis_server(input,output,session)
   })
 
-  shinyjs::onevent("click", "guardarComo", {
+  shinyjs::onclick("guardarComo", {
     if (!is.null(session$userData$datos_repgrid)) {
         tabla_final <- tabla_manipulable()
         my_dataframe <-tabla_final
@@ -359,9 +359,9 @@ output$bert <- renderPlot({
           # Check if df_read is not NULL or empty
           fecha <- codificar_excel_BD(excel, "repgrid_xlsx", session$userData$id_paciente)
           showNotification(
-              ui = "Nueva simulación guardada con éxito. Diríjase a la página de pacientes para visualizarla",
+              ui = sprintf("Nueva simulación de %s guardada con éxito. Diríjase a la página de pacientes para visualizarla.", nombrePaciente()),
               type = "message",
-              duration = 5
+              duration = 8
           ) 
         }
     }
