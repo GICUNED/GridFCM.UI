@@ -10,7 +10,6 @@ patient_server <- function(input, output, session){
     shinyjs::hide("patientIndicator")
     shinyjs::hide("simulationIndicatorRG")
     shinyjs::hide("simulationIndicatorWG")
-    
    
     renderizarTabla <- function(){
         output$user_table <- renderDT({
@@ -27,6 +26,16 @@ patient_server <- function(input, output, session){
             DT::datatable(users, selection = 'single', rownames = FALSE)
         })
     }
+
+    # si se borran todos los pacientes...
+    observe({
+        if(length(user_data$users) == 0){
+            shinyjs::disable("borrarPaciente")
+            shinyjs::disable("simulacionesDisponibles")
+            shinyjs::disable("editarPaciente")
+            shinyjs::disable("importarGridPaciente")
+        }
+    })
 
     renderizarTabla()
     
@@ -207,6 +216,8 @@ patient_server <- function(input, output, session){
                 cargar_fechas_wimpgrid()
             }
             DBI::dbDisconnect(con)
+            shinyjs::disable("borrarSimulacion")
+            shinyjs::disable("cargarSimulacion")
         }
     })
     
@@ -384,7 +395,13 @@ patient_server <- function(input, output, session){
         DBI::dbExecute(con, query2)
 
         DBI::dbDisconnect(con)
-
+        user_data$selected_user_id <- NULL
+        session$userData$id_paciente <- NULL
+        shinyjs::disable("borrarPaciente")
+        shinyjs::disable("simulacionesDisponibles")
+        shinyjs::disable("editarPaciente")
+        shinyjs::disable("importarGridPaciente")
+        
         renderizarTabla()
         shinyjs::hide("patientSimulations")
     })

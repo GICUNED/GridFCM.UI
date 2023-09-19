@@ -76,6 +76,9 @@ import_excel_server <- function(input, output, session) {
         read.xlsx(ruta_destino_wimp)
       }
       
+      columnas_a_convertir <- 2:(ncol(excel_wimp) - 1)
+      # Utiliza lapply para aplicar la conversión a las columnas seleccionadas
+      excel_wimp[, columnas_a_convertir] <- lapply(excel_wimp[, columnas_a_convertir], as.numeric)
 
       session$userData$datos_to_table_w <- excel_wimp
       num_columnas <- if (!is.null(input$archivo_wimpgrid)) {

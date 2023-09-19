@@ -276,7 +276,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
 
                     #numericInput("simdigraph_act_vector", i18n$t("Change vector:"), value = 0, step = 0.01),
 
-                    numericInput("simdigraph_e", i18n$t("Valor diferencial:"), value = 0.0001, step=0.0001),
+                    numericInput("simdigraph_e", i18n$t("Valor diferencial:"), value = 0.0001, step=0.000025),
                   
                 ),
 
@@ -302,7 +302,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                                   selected = i18n$t("lineal")),
 
 
-                      numericInput("pcsd_e", i18n$t("Valor diferencial:"), value = 0.0001, step=0.0001),
+                      numericInput("pcsd_e", i18n$t("Valor diferencial:"), value = 0.0001, step=0.000025),
                       
                     ),
 
@@ -323,7 +323,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                       #numericInput("pcsdindices_act_vector", i18n$t("Changes to simulate:"),
                       #            value = 0, step = 0.01),
                       sliderInput("pcsdindices_max_iter", i18n$t("Nº de iteraciones máximas:"), 3, 100, 30),
-                      numericInput("pcsdindices_e", i18n$t("Valor diferencial:"), value = 0.0001, step=0.0001),
+                      numericInput("pcsdindices_e", i18n$t("Valor diferencial:"), value = 0.0001, step=0.000025),
                       sliderInput("pcsdindices_stop_iter", i18n$t("Nº de iteraciones sin cambios:"), 2, 10, 2)
                       
                     ),
