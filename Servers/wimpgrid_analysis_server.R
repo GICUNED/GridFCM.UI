@@ -412,8 +412,8 @@ output$bert_w <- renderPlot({
     bertin(wimpgrid_a_mostrar()$openrepgrid , color=c("white", "#dfb639"), cex.elements = 1,
       cex.constructs = 1, cex.text = 1, lheight = 1.25)
       # actualizar controladores
-
   }
+
 })
 
 
@@ -1425,7 +1425,7 @@ observeEvent(input$graph_selector_laboratorio, {
 
 })
 
- 
+
 actualizarVector <- function(string){
   df <- as.data.frame(t(v))
   string <- strsplit(string, "")[[1]]
@@ -1434,7 +1434,8 @@ actualizarVector <- function(string){
     df[1, i] <- as.integer(string[i])
     i <- i+1
   }
-  message(df)
+ 
+  colnames(df) <- session$userData$constructos
 
   return(df)
 } 

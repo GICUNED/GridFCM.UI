@@ -268,6 +268,10 @@ patient_server <- function(input, output, session){
                 # Utiliza lapply para aplicar la conversión a las columnas seleccionadas
                 excel_wimp[, columnas_a_convertir] <- lapply(excel_wimp[, columnas_a_convertir], as.numeric)
 
+                #constructos
+                constructos <- excel_wimp[1:nrow(excel_wimp), 1]
+                session$userData$constructos <- constructos
+
                 session$userData$datos_to_table_w <- excel_wimp
                 num_columnas <- ncol(session$userData$datos_to_table_w)
                 session$userData$num_col_wimpgrid <- num_columnas
