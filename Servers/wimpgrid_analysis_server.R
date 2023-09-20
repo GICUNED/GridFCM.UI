@@ -1188,15 +1188,10 @@ observeEvent(input$simdigraph_stop_iter, {
 
 })
 
- 
-
-v <- rep(0, 22)
-
+#v <- rep(0, 22)
 max_v <- session$userData$num_col_wimpgrid - 3
 
 max_v <- max(1, max_v)
-
- 
 
 print(paste("max_v: ",max_v))
 
@@ -1207,25 +1202,33 @@ v <- rep(0, max_v)
 df_V <- reactiveVal(as.data.frame(t(v)))
 
 
-
 output$simdigraph_act_vector <- renderRHandsontable({
 
   vv <- df_V()
+  if(!is.null(session$userData$constructos_izq) && !is.null(session$userData$constructos_der)){
+    izq <- session$userData$constructos_izq
+    der <- session$userData$constructos_der
+    res <- paste(izq, der, sep=" / ")
+    #colnames(vv) <- res
+  }
 
   rhandsontable(vv)
 
 })
 
-list_to_string <- function(lista){
-  # Aquí cambia df_V -> meter en la bd
-    cadena_numeros <- as.character(lista)
-    string <- ""
-    for(i in cadena_numeros){
-      string <- paste(string, i, sep="")
+list_to_string <- function(lista) {
+  cadena_numeros <- as.character(lista)
+  string <- ""
+  for (i in 1:length(cadena_numeros)) {
+    if (i > 1) {
+      string <- paste(string, ",", sep = "")
     }
+    string <- paste(string, cadena_numeros[i], sep = "")
+  }
+  message(string)
+  return(string)
+}
 
-    return(string)
-} 
 
 observeEvent(input$simdigraph_act_vector, {
   
@@ -1428,21 +1431,18 @@ observeEvent(input$graph_selector_laboratorio, {
 
 actualizarVector <- function(string){
   df <- as.data.frame(t(v))
-  string <- strsplit(string, "")[[1]]
+  lista <- strsplit(string, ",")[[1]]
   i <- 1
-  while(i <= max_v){
-    df[1, i] <- as.integer(string[i])
+  
+  while(i <= length(lista)){
+    df[1, i] <- as.numeric(lista[i])
     i <- i+1
   }
- 
-  colnames(df) <- session$userData$constructos
-
   return(df)
 } 
 # ver de donde saco el id_wx
 actualizar_controles_local <- function(id_wx){
   # compruebo si existe wimpgrid params para un wimpgrid xlsx
-  message(id_wx)
   con <- establishDBConnection()
   query <- sprintf("select * from wimpgrid_params where fk_wimpgrid = %d", id_wx)
   controles <- DBI::dbGetQuery(con, query)
@@ -1458,14 +1458,14 @@ actualizar_controles_local <- function(id_wx){
     updateSliderInput(session, "simdigraph_max_iter", value=controles$sim_n_max_iter)
     updateSliderInput(session, "simdigraph_stop_iter", value=controles$sim_n_stop_iter)
     updateNumericInput(session, "simdigraph_e", value=controles$sim_valor_diferencial)
-    df_V(actualizarVector(controles$sim_vector))
+    #df_V(actualizarVector(controles$sim_vector))
 
     # pcsd
     updateSliderInput(session, "pcsd_iter", value=controles$pcsd_n_iter)
     updateSliderInput(session, "pcsd_max_iter", value=controles$pcsd_n_max_iter)
     updateSliderInput(session, "pcsd_stop_iter", value=controles$pcsd_n_stop_iter)
     updateSelectInput(session, "pcsd_e", selected=controles$pcsd_valor_diferencial)
-    df_Vpcsd(actualizarVector(controles$pcsd_vector))
+    #df_Vpcsd(actualizarVector(controles$pcsd_vector))
 
     # pcsd índices
     updateSelectInput(session, "pcsdindices_infer", selected=controles$pcind_propagacion)
@@ -1473,12 +1473,13 @@ actualizar_controles_local <- function(id_wx){
     updateSliderInput(session, "pcsdindices_max_iter", value=controles$pcind_n_max_iter)
     updateNumericInput(session, "pcsdindices_e", value=controles$pcind_valor_diferencial)
     updateSliderInput(session, "pcsdindices_stop_iter", value=controles$pcind_n_stop_iter)
-    df_Vind(actualizarVector(controles$pcind_vector))
+    #df_Vind(actualizarVector(controles$pcind_vector))
   }
 }
 
 if(!is.null(session$userData$id_wimpgrid)){
   actualizar_controles_local(session$userData$id_wimpgrid)
+  
 }
 
 actualizar_controles_bd <- function(id_wx){

@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS wimpgrid_params (
     sim_n_stop_iter INTEGER,
     sim_color varchar(25),
     sim_valor_diferencial DECIMAL(8, 6),
-    sim_vector varchar(40),
+    sim_vector varchar(150),
     -- falta el vector que no se como aun
 
     -- pcsd
@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS wimpgrid_params (
     pcsd_n_max_iter INTEGER,
     pcsd_n_stop_iter INTEGER,
     pcsd_valor_diferencial DECIMAL(8, 6),
-    pcsd_vector varchar(40),
+    pcsd_vector varchar(150),
     -- vector
 
     -- pcsd índices
@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS wimpgrid_params (
     pcind_n_max_iter INTEGER,
     pcind_n_stop_iter INTEGER,
     pcind_valor_diferencial DECIMAL(8, 6),
-    pcind_vector varchar(40),
+    pcind_vector varchar(150),
     -- vector
 
     FOREIGN KEY(fk_wimpgrid, fk_fila, fk_columna) REFERENCES wimpgrid_xlsx(id, fila, columna)

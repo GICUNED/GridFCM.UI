@@ -67,8 +67,10 @@ import_excel_server <- function(input, output, session) {
       id <- decodificar_BD_excel('wimpgrid_xlsx', ruta_destino_wimp, id_paciente)
 
       #constructos
-      constructos <- excel_wimp_codificar[1:nrow(excel_wimp_codificar), 1]
-      session$userData$constructos <- constructos
+      constructos_izq <- excel_wimp_codificar[2:nrow(excel_wimp_codificar), 1]
+      constructos_der <- excel_wimp_codificar[2:nrow(excel_wimp_codificar), ncol(excel_wimp_codificar)]
+      session$userData$constructos_izq <- constructos_izq
+      session$userData$constructos_der <- constructos_der
 
       session$userData$fecha_wimpgrid <- fecha
       session$userData$id_wimpgrid <- id

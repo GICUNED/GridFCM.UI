@@ -21,7 +21,7 @@ services:
       - "80:80/tcp" # HTTP.
       - "443:443/tcp" # HTTPS.
       - "443:443/udp" # HTTPS (QUIC).
-      - "127.0.0.1:5432:5432/tcp" # PostgreSQL.
+      - "127.0.0.1:5433:5432/tcp" # PostgreSQL.
     volumes:
       - "./config/traefik/traefik.yml:/etc/traefik/traefik.yml:ro"
       - "./config/traefik/dynamic/:/etc/traefik/dynamic/:ro"

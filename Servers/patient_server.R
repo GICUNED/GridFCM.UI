@@ -269,8 +269,10 @@ patient_server <- function(input, output, session){
                 excel_wimp[, columnas_a_convertir] <- lapply(excel_wimp[, columnas_a_convertir], as.numeric)
 
                 #constructos
-                constructos <- excel_wimp[1:nrow(excel_wimp), 1]
-                session$userData$constructos <- constructos
+                constructos_izq <- excel_wimp[1:nrow(excel_wimp), 1]
+                constructos_der <- excel_wimp[1:nrow(excel_wimp), ncol(excel_wimp)]
+                session$userData$constructos_izq <- constructos_izq
+                session$userData$constructos_der <- constructos_der
 
                 session$userData$datos_to_table_w <- excel_wimp
                 num_columnas <- ncol(session$userData$datos_to_table_w)
@@ -435,7 +437,7 @@ patient_server <- function(input, output, session){
                             nombre, edad, genero, anotaciones, fecha_registro)
             DBI::dbExecute(con, query)
 
-            query_id_paciente <- sprintf("SELECT id FROM paciente WHERE nombre = '%s' and anotaciones = '%s' and genero = '%s' and edad = '%s'", nombre, anotaciones, genero, edad)
+            query_id_paciente <- sprintf("SELECT id FROM paciente WHERE nombre = '%s' and anotaciones = '%s' and fecha_registro = '%s'", nombre, anotaciones, fecha_registro)
             id_paciente <- DBI::dbGetQuery(con, query_id_paciente)
             id_paciente <- as.integer(id_paciente)
             id_psicologo <- 1 # de momento
