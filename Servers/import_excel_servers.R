@@ -92,7 +92,7 @@ import_excel_server <- function(input, output, session) {
       } else {
         0
       }
-      print(paste("num col", num_columnas))
+      #message(paste("num col", num_columnas))
       session$userData$num_col_wimpgrid <- num_columnas
 
       num_rows <- if (!is.null(input$archivo_wimpgrid)) {
@@ -100,7 +100,7 @@ import_excel_server <- function(input, output, session) {
       } else {
         0
       }
-      print(paste("num row", num_rows))
+      #message(num_rows)
       session$userData$num_row_wimpgrid <- num_rows
       # Almacenar los objetos importados en el entorno de la sesión para su uso posterior
       #session$userData$datos_repgrid <- datos_repgrid

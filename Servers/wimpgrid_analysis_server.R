@@ -115,34 +115,17 @@ shinyjs::hide("open-controls-container-vis")
     runjs("window.location.href = '/#!/import';")
 
     runjs("
-
       $('.nav-pills')
-
         .find('.nav-link')
-
         .removeClass('active');
-
- 
-
       $('.user-page')
-
         .find('.nav-link')
-
         .removeClass('active');
-
- 
-
       $('#import-page')
-
         .find('.nav-link')
-
         .addClass('active');
-
     ")
-
   })
-
- 
 
   observeEvent(input$importar_page_v, {
 
@@ -180,8 +163,6 @@ shinyjs::hide("open-controls-container-vis")
 
   })
 
- 
-
   observeEvent(input$importar_page_l, {
 
     # Navega a la página de creación de un nuevo análisis de rejilla
@@ -218,8 +199,6 @@ shinyjs::hide("open-controls-container-vis")
 
   })
 
- 
-
   print("Wimpgrid")
 
   print(session$userData$datos_wimpgrid)
@@ -240,7 +219,6 @@ shinyjs::hide("open-controls-container-vis")
     hide("wg-vis-content")
     hide("wg-lab-content")
 
-
   }else{
 
     hide("id_warn")
@@ -256,16 +234,9 @@ shinyjs::hide("open-controls-container-vis")
     show("wg-data-content")
     show("wg-vis-content")
     show("wg-lab-content")
-    
-    
-
   }
 
- 
-
 dataaa_w <-  reactiveVal(session$userData$datos_wimpgrid)
-
- 
 
 tabla_manipulable_w <- reactiveVal(tabla_aux)
 
@@ -473,11 +444,10 @@ observeEvent(input$reiniciar_w, {
         # Print the data
         print(df_read)
         if (!is.null(df_read) && nrow(df_read) > 0) {
-          my_repgrid <- df_read
-          print(my_repgrid)
-          wimpgrid_a_mostrar(my_repgrid)
+          my_wimpgrid <- df_read
+          wimpgrid_a_mostrar(my_wimpgrid)
           session$userData$datos_wimpgrid <- wimpgrid_a_mostrar()
-          session$userData$datos_to_table_w<- my_repgrid
+          session$userData$datos_to_table_w<- my_wimpgrid
         }
       }
       file.remove(temp_file)
@@ -503,9 +473,9 @@ observeEvent(input$guardar_w, {
       print(paste("Temporary file saved at: ", temp_file))
 
       df_read <- importwimp(temp_file)
-      my_repgrid <- df_read
-      print(my_repgrid)
-      wimpgrid_a_mostrar(my_repgrid)
+      my_wimpgrid <- df_read
+      print(my_wimpgrid)
+      wimpgrid_a_mostrar(my_wimpgrid)
       session$userData$datos_wimpgrid <- wimpgrid_a_mostrar()
       session$userData$datos_to_table_w<- tabla_final
 
@@ -533,7 +503,7 @@ temporal <- NULL  # Define temporal en un alcance superior
 output$exportar_w <- downloadHandler(
   filename = function() {
     fecha <- gsub(" ", "_", session$userData$fecha_wimpgrid)
-    nombre_temporal <- paste(nombrePaciente(), "_Wimpgrid_", fecha, ".xlsx", sep="", collapse="")
+    nombre_temporal <- paste("Wimpgrid_", nombrePaciente(), "_", fecha, ".xlsx", sep="", collapse="")
     temporal <- file.path(tempdir(), nombre_temporal)
     tabla_final <- tabla_manipulable_w()
     my_dataframe <- tabla_final
@@ -543,7 +513,7 @@ output$exportar_w <- downloadHandler(
   },
   content = function(file) {
     fecha <- gsub(" ", "_", session$userData$fecha_wimpgrid)
-    nombre_temporal <- paste(nombrePaciente(), "_Wimpgrid_", fecha, ".xlsx", sep="", collapse="")
+    nombre_temporal <- paste("Wimpgrid_", nombrePaciente(), "_", fecha, ".xlsx", sep="", collapse="")
     temporal <- file.path(tempdir(), nombre_temporal)
     file.copy(temporal, file)
     file.remove(temporal)  # Elimina el archivo temporal después de descargarlo
@@ -885,6 +855,16 @@ output$btn_download_visualizacion <- downloadHandler(
 
 )
 
+# max_v sera el num filas pq en wimpgrid siempre es ncol - 3 
+max_v <- session$userData$num_col_wimpgrid - 3
+
+max_v <- max(1, max_v)
+
+v <- rep(0, max_v)
+
+ 
+df_V <- reactiveVal(as.data.frame(t(v)))
+
 output$boton_download_laboratory <- downloadHandler(
   filename = function() {
 
@@ -1188,30 +1168,16 @@ observeEvent(input$simdigraph_stop_iter, {
 
 })
 
-#v <- rep(0, 22)
-max_v <- session$userData$num_col_wimpgrid - 3
-
-max_v <- max(1, max_v)
-
-print(paste("max_v: ",max_v))
-
-v <- rep(0, max_v)
-
- 
-# df_V me lo tendría que guardar en la bd
-df_V <- reactiveVal(as.data.frame(t(v)))
 
 
 output$simdigraph_act_vector <- renderRHandsontable({
-
   vv <- df_V()
   if(!is.null(session$userData$constructos_izq) && !is.null(session$userData$constructos_der)){
     izq <- session$userData$constructos_izq
     der <- session$userData$constructos_der
     res <- paste(izq, der, sep=" / ")
-    #colnames(vv) <- res
+    colnames(vv) <- res
   }
-
   rhandsontable(vv)
 
 })
@@ -1225,17 +1191,15 @@ list_to_string <- function(lista) {
     }
     string <- paste(string, cadena_numeros[i], sep = "")
   }
-  message(string)
   return(string)
 }
 
 
 observeEvent(input$simdigraph_act_vector, {
-  
     vv <- (hot_to_r(input$simdigraph_act_vector))
-
-    df_V(vv)
-    
+    if(ncol(vv) == max_v){
+      df_V(vv)
+    }
 })
 
  
@@ -1251,26 +1215,24 @@ df_Vind <- reactiveVal(as.data.frame(t(v)))
 output$pcsdindices_act_vector <- renderRHandsontable({
 
   vv <- df_Vind()
-
- col_highlight = c(0, 1)
-
+  col_highlight = c(0, 1)
   row_highlight = c(3)
-
- rhandsontable(vv , col_highlight = col_highlight, row_highlight = row_highlight)
-
- 
-
+  if(!is.null(session$userData$constructos_izq) && !is.null(session$userData$constructos_der)){
+    izq <- session$userData$constructos_izq
+    der <- session$userData$constructos_der
+    res <- paste(izq, der, sep=" / ")
+    colnames(vv) <- res
+  }
+  rhandsontable(vv , col_highlight = col_highlight, row_highlight = row_highlight)
 })
 
  
 
 observeEvent(input$pcsdindices_act_vector, {
-
- 
-
     vv <- (hot_to_r(input$pcsdindices_act_vector))
-
-    df_Vind(vv)
+    if(ncol(vv) == max_v){
+      df_Vind(vv)
+    }
 
 })
 
@@ -1357,8 +1319,13 @@ df_Vpcsd <- reactiveVal(as.data.frame(t(v)))
 output$pcsd_act_vector <- renderRHandsontable({
 
   vv <- df_Vpcsd()
-
- rhandsontable(vv )
+  if(!is.null(session$userData$constructos_izq) && !is.null(session$userData$constructos_der)){
+    izq <- session$userData$constructos_izq
+    der <- session$userData$constructos_der
+    res <- paste(izq, der, sep=" / ")
+    colnames(vv) <- res
+  }
+  rhandsontable(vv)
 
 })
 
@@ -1366,8 +1333,9 @@ output$pcsd_act_vector <- renderRHandsontable({
 
 observeEvent(input$pcsd_act_vector, {
     vv <- (hot_to_r(input$pcsd_act_vector))
-
-    df_Vpcsd(vv)
+    if(ncol(vv) == max_v){
+      df_Vpcsd(vv)
+    }
 
 })
 
@@ -1458,14 +1426,14 @@ actualizar_controles_local <- function(id_wx){
     updateSliderInput(session, "simdigraph_max_iter", value=controles$sim_n_max_iter)
     updateSliderInput(session, "simdigraph_stop_iter", value=controles$sim_n_stop_iter)
     updateNumericInput(session, "simdigraph_e", value=controles$sim_valor_diferencial)
-    #df_V(actualizarVector(controles$sim_vector))
+    df_V(actualizarVector(controles$sim_vector))
 
     # pcsd
     updateSliderInput(session, "pcsd_iter", value=controles$pcsd_n_iter)
     updateSliderInput(session, "pcsd_max_iter", value=controles$pcsd_n_max_iter)
     updateSliderInput(session, "pcsd_stop_iter", value=controles$pcsd_n_stop_iter)
     updateSelectInput(session, "pcsd_e", selected=controles$pcsd_valor_diferencial)
-    #df_Vpcsd(actualizarVector(controles$pcsd_vector))
+    df_Vpcsd(actualizarVector(controles$pcsd_vector))
 
     # pcsd índices
     updateSelectInput(session, "pcsdindices_infer", selected=controles$pcind_propagacion)
@@ -1473,7 +1441,7 @@ actualizar_controles_local <- function(id_wx){
     updateSliderInput(session, "pcsdindices_max_iter", value=controles$pcind_n_max_iter)
     updateNumericInput(session, "pcsdindices_e", value=controles$pcind_valor_diferencial)
     updateSliderInput(session, "pcsdindices_stop_iter", value=controles$pcind_n_stop_iter)
-    #df_Vind(actualizarVector(controles$pcind_vector))
+    df_Vind(actualizarVector(controles$pcind_vector))
   }
 }
 
@@ -1558,6 +1526,7 @@ actualizar_controles_bd <- function(id_wx){
 
 output$graph_output_laboratorio <- renderUI({
 
+
     # Verificar que input$graph_selector_visualizacion no es NULL
 
     req(input$graph_selector_laboratorio)
@@ -1587,7 +1556,6 @@ output$graph_output_laboratorio <- renderUI({
         print(paste("simdig:",i18n$get_translation_language()))
 
         print(translate_word("en", simdigraph_infer()))
-
         scn <- scenariomatrix(dataaa_w(),act.vector= df_V(),infer = "linear transform",
 
                               thr = "linear", max.iter = simdigraph_max_iter(), e = simdigraph_e(),
@@ -1595,6 +1563,13 @@ output$graph_output_laboratorio <- renderUI({
                               stop.iter = sim_stop_it)
 
         simdigraph.vis(scn,niter=simdigraph_niter(), layout = translate_word("en",simdigraph_layout()), color = translate_word("en",simdigraph_color()))
+        max_niter <- nrow(scn$values)
+        if(is.numeric(max_niter)){
+          message(max_niter)
+          message(class(max_niter))
+          updateSliderInput(session, "simdigraph_niter", min=0, max=nrow(scn$values), value=0)
+        }
+        
       }
       else{
 
@@ -1609,7 +1584,7 @@ output$graph_output_laboratorio <- renderUI({
                               stop.iter = sim_stop_it)
 
         simdigraph.vis(scn,niter=simdigraph_niter(), layout = simdigraph_layout(), color = simdigraph_color())
-
+        updateSliderInput(session, "simdigraph_niter", max=nrow(scn$values))
       }
       
     } else if (graph == "pcsd") {

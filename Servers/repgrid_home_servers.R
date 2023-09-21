@@ -372,7 +372,7 @@ temporal <- NULL  # Define temporal en un alcance superior
 output$exportar <- downloadHandler(
   filename = function() {
     fecha <- gsub(" ", "_", session$userData$fecha_repgrid)
-    nombre_temporal <- paste(nombrePaciente(), "_Repgrid_", fecha, ".xlsx", sep="", collapse="")
+    nombre_temporal <- paste("Repgrid_", nombrePaciente(), "_", fecha, ".xlsx", sep="", collapse="")
     temporal <- file.path(tempdir(), nombre_temporal)
     tabla_final <- tabla_manipulable()
     my_dataframe <- tabla_final
@@ -382,7 +382,7 @@ output$exportar <- downloadHandler(
   },
   content = function(file) {
     fecha <- gsub(" ", "_", session$userData$fecha_repgrid)
-    nombre_temporal <- paste(nombrePaciente(), "_Repgrid_", fecha, ".xlsx", sep="", collapse="")
+    nombre_temporal <- paste("Repgrid_", nombrePaciente(), "_", fecha, ".xlsx", sep="", collapse="")
     temporal <- file.path(tempdir(), nombre_temporal)
     file.copy(temporal, file)
     file.remove(temporal)  # Elimina el archivo temporal después de descargarlo

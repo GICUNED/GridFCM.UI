@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS repgrid_xlsx (
     id SERIAL,
     fila INTEGER,
     columna INTEGER,
-    valor varchar(40),
+    valor varchar(100),
     fecha_registro TIMESTAMP,
     fk_paciente INT REFERENCES paciente(id),
     PRIMARY KEY (id, fila, columna)
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS wimpgrid_xlsx (
     id SERIAL,
     fila INTEGER,
     columna INTEGER,
-    valor varchar(40),
+    valor varchar(100),
     fecha_registro TIMESTAMP,
     fk_paciente INT REFERENCES paciente(id),
     PRIMARY KEY (id, fila, columna)
