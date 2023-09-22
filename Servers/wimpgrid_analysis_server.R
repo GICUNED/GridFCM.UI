@@ -238,6 +238,8 @@ shinyjs::hide("open-controls-container-vis")
 
 dataaa_w <-  reactiveVal(session$userData$datos_wimpgrid)
 
+
+
 tabla_manipulable_w <- reactiveVal(tabla_aux)
 
 #tabla_manipulable_w <- session$userData$datos_to_table
@@ -255,7 +257,6 @@ output$titulo_wimpgrid <- renderText({
   nombrePaciente(nombre)
   DBI::dbDisconnect(con)
   fecha <- session$userData$fecha_wimpgrid
-
   paste("<b>", i18n$t("Simulación de "), nombre, "</b><br><p class='desccustom-date'>📅", fecha, "</p>")
 })
 
@@ -391,6 +392,7 @@ output$bert_w <- renderPlot({
 observeEvent(input$editar_w, {
     if (!is.null(session$userData$datos_wimpgrid)) {
     # Ocultar el botón "Editar" y mostrar el botón "Guardar"
+    shinyjs::hide("matriz_pesos_w")
     shinyjs::hide("editar_w")
     shinyjs::hide("guardarBD_w")
     shinyjs::show("volver_w")
@@ -411,6 +413,7 @@ observeEvent(input$editar_w, {
       shinyjs::hide("reiniciar_w")
       shinyjs::show("guardarComo_w")
       shinyjs::show("exportar_w")
+      shinyjs::show("matriz_pesos_w")
       # Cambiar a modo de tabla
       shinyjs::show("prueba_container_w")
       shinyjs::hide("tabla_datos_wimpgrid_container")
@@ -487,6 +490,7 @@ observeEvent(input$guardar_w, {
       shinyjs::show("guardarBD_w")
       shinyjs::show("guardarComo_w")
       shinyjs::show("exportar_w")
+      shinyjs::show("matriz_pesos_w")
       # Cambiar a modo de visualización
 
       shinyjs::hide("tabla_datos_wimpgrid_container")
@@ -1518,7 +1522,7 @@ actualizar_controles_bd <- function(id_wx){
         #id_wx <- as.integer(DBI::dbGetQuery(con, query2))
         actualizar_controles_bd(session$userData$id_wimpgrid)
         showNotification(
-            ui = "Los datos se han guardado correctamente en la base de datos.",
+            ui = i18n$t("Los datos se han guardado correctamente en la base de datos."),
             type = "message",
             duration = 3
         )
@@ -1802,6 +1806,65 @@ output$pscd_show <- renderPlotly({
 
   })
 
+  observeEvent(input$matriz_pesos_w, {
+    if (!is.null(session$userData$datos_wimpgrid)) {
+      # Ocultar el botón "Editar" y mostrar el botón "Guardar"
+      shinyjs::hide("editar_w")
+      shinyjs::hide("guardarBD_w")
+      shinyjs::show("volver_inicio_w")
+      shinyjs::hide("guardarComo_w")
+      shinyjs::hide("exportar_w")
+      shinyjs::hide("matriz_pesos_w")
+      # Cambiar a modo de edición
+      shinyjs::hide("prueba_container_w")
+      shinyjs::show("matriz_pesos")
+    }
+  })
  
+  observeEvent(input$volver_inicio_w,{
+    shinyjs::hide("volver_inicio_w")
+    shinyjs::show("editar_w")
+    shinyjs::show("guardarBD_w")
+    shinyjs::show("guardarComo_w")
+    shinyjs::show("exportar_w")
+    shinyjs::show("matriz_pesos_w")
+    # Cambiar a modo de tabla
+    shinyjs::show("prueba_container_w")
+    shinyjs::hide("matriz_pesos")
+  })
+
+  output$weight_matrix_graph_ejemplo2 <- renderPlotly({
+    matriz <- dataaa_w()[["scores"]][["weights"]]
+    heatmaply::heatmaply(matriz, cellnote=matriz, width = 600, height = 600)
+  })
+
+  output$weight_matrix_graph <- renderPlotly({
+    matrix_data <- dataaa_w()[["scores"]][["weights"]]
+    
+    # Crear una matriz de etiquetas con los valores de los constructos
+    constructos_der <- session$userData$constructos_der
+    constructos_izq <- session$userData$constructos_izq
+    labels_matrix <- sprintf("%.2f", matrix_data)
+
+    #message(dim(matrix_data))
+    #message(dim(labels_matrix))
+    #message(class(matrix_data))
+    #message(class(labels_matrix))
+    plotly::plot_ly(
+      x = 1:ncol(matrix_data),
+      y = 1:nrow(matrix_data),
+      z = matrix_data,
+      text = labels_matrix,  # Utilizar los valores de la matriz como texto
+      type = "heatmap",
+      colorscale = "Viridis",
+      height = 900
+    ) %>%
+    layout(
+      xaxis = list(title = "Polo derecho", tickvals = 1:ncol(matrix_data), ticktext = constructos_der),
+      yaxis = list(title = "Polo izquierdo", tickvals = 1:nrow(matrix_data), ticktext = constructos_izq),
+      title = "Matriz de pesos Heatmap"
+    )
+  })
+
 
 }

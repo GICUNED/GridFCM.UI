@@ -78,6 +78,14 @@ CREATE TABLE IF NOT EXISTS wimpgrid_params (
     FOREIGN KEY(fk_wimpgrid, fk_fila, fk_columna) REFERENCES wimpgrid_xlsx(id, fila, columna)
 );
 
+CREATE TABLE IF NOT EXISTS sugerencias (
+    id serial PRIMARY KEY,
+    sugerencia text,
+    fk_psicologo integer REFERENCES psicologo(id),
+    fecha timestamp
+);
+
+
 
 -- Seeder de prueba
 INSERT INTO psicologo (nombre, email)

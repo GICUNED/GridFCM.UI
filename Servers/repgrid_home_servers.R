@@ -206,7 +206,7 @@ output$bert <- renderPlot({
             
           }
           showNotification(
-              ui = "Los datos se han guardado correctamente en la base de datos.",
+              ui = i18n$t("Los datos se han guardado correctamente en la base de datos."),
               type = "message",
               duration = 3
             ) 
