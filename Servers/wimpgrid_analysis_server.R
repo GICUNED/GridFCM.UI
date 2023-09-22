@@ -990,6 +990,7 @@ output$inconsistences <- DT::renderDataTable({
  
 # Nº de la iteración
 simdigraph_niter <- reactiveVal(0)
+simdigraph_max_niter <- reactiveVal()
 # Diseño
 simdigraph_layout <- reactiveVal("circle")
 
@@ -1051,7 +1052,10 @@ pscd_e <- reactiveVal(0.0001)
 pscd_stop_iter <- reactiveVal(3)
 
 
-
+observe({
+  max_niter <- simdigraph_max_niter()
+  updateSliderInput(session, "simdigraph_niter", max=max_niter)
+})
 
 # Lógica para la pestaña "Laboratorio"
 
@@ -1447,7 +1451,6 @@ actualizar_controles_local <- function(id_wx){
 
 if(!is.null(session$userData$id_wimpgrid)){
   actualizar_controles_local(session$userData$id_wimpgrid)
-  
 }
 
 actualizar_controles_bd <- function(id_wx){
@@ -1561,14 +1564,12 @@ output$graph_output_laboratorio <- renderUI({
                               thr = "linear", max.iter = simdigraph_max_iter(), e = simdigraph_e(),
 
                               stop.iter = sim_stop_it)
+        
+        max_niter <- as.numeric(nrow(scn$values))
+        simdigraph_max_niter(max_niter)
 
         simdigraph.vis(scn,niter=simdigraph_niter(), layout = translate_word("en",simdigraph_layout()), color = translate_word("en",simdigraph_color()))
-        max_niter <- nrow(scn$values)
-        if(is.numeric(max_niter)){
-          message(max_niter)
-          message(class(max_niter))
-          updateSliderInput(session, "simdigraph_niter", min=0, max=nrow(scn$values), value=0)
-        }
+        
         
       }
       else{
@@ -1584,7 +1585,7 @@ output$graph_output_laboratorio <- renderUI({
                               stop.iter = sim_stop_it)
 
         simdigraph.vis(scn,niter=simdigraph_niter(), layout = simdigraph_layout(), color = simdigraph_color())
-        updateSliderInput(session, "simdigraph_niter", max=nrow(scn$values))
+        
       }
       
     } else if (graph == "pcsd") {
