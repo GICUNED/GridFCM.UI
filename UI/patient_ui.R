@@ -28,7 +28,6 @@ patient_ui <- fluidPage(class="patient-diff",
           # Boton para editar la simulacion repgrid
           div(class = "button-container pb-4",
             h4(class = "paciente-seleccionado mr-auto mb-0 font-weight-bold", htmlOutput("paciente_simulacion_header")),
-            actionButton("cargarSimulacion", i18n$t("Abrir simulación"), disabled=TRUE, icon = icon("download")),
             actionButton("borrarSimulacion", i18n$t("Borrar simulación"), disabled=TRUE, status ="danger", icon = icon("trash-can"))
           ),
             tabsetPanel(id = "tabSimulaciones",
@@ -66,6 +65,7 @@ patient_ui <- fluidPage(class="patient-diff",
                 column(6, class = "w-50 p-0 pr-2", numericInput("edad", i18n$t("Edad:"), value = 0)),
                 column(6, class = "w-50 p-0", selectInput("genero", i18n$t("Género:"), c("Hombre", "Mujer", "Sin definir"))),
               ),
+              textAreaInput("diagnostico", i18n$t("Diagnóstico:"), placeholder = "Diagnóstico preliminar"),
               textAreaInput("anotaciones", i18n$t("Anotaciones:"), placeholder = "Comentarios relativos al paciente"),
               actionButton("guardarAddPatient", i18n$t("Guardar"), status = 'success', disabled=TRUE, icon = icon("save"))
             )),
@@ -87,6 +87,7 @@ patient_ui <- fluidPage(class="patient-diff",
             column(6, class = "p-0 pr-2", numericInput("edadEdit", i18n$t("Edad:"), value = 0)),
             column(6, class = "p-0", selectInput("generoEdit", i18n$t("Género:"), c("Hombre", "Mujer", "Sin definir"))),
           ),
+          textAreaInput("diagnosticoEdit", i18n$t("Diagnóstico:")),
           textAreaInput("anotacionesEdit", i18n$t("Anotaciones:")),
           #En amarillo el boton???
           actionButton("saveEdit", i18n$t("Editar"), status = 'success', icon = icon("save"))

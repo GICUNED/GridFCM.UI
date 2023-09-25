@@ -30,16 +30,26 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
     fluidRow(class="mb-2 button-container",
       #h3(i18n$t("Tabla de Datos"), class = "mr-auto mb-0"),
       h4(class = "mr-auto mb-0", htmlOutput("titulo_wimpgrid")),
+      actionButton("matriz_pesos_w", i18n$t("Matriz de pesos")),
+      actionButton("volver_inicio_w", i18n$t("Volver atrás"), style = "display: none;"),
       actionButton("volver_w", i18n$t("Cancelar"), style = "display: none;", status = 'danger', icon = icon("circle-xmark")),
       actionButton("guardar_w", i18n$t("Guardar"), style = "display: none;", status = 'success', icon = icon("save")),
       actionButton("reiniciar_w", i18n$t("Reiniciar"), style = "display: none;", status = 'warning', icon = icon("arrow-rotate-left")),
       actionButton("editar_w", i18n$t("Editar"), icon = icon("edit")),
-      actionButton("guardarBD_w", i18n$t("Guardar BD"), status = "warning", icon = icon("database"))
+      actionButton("guardarBD_w", i18n$t("Guardar"), status = "warning", icon = icon("database")),
+      actionButton("guardarComo_w", i18n$t("Guardar como")),
+      downloadButton("exportar_w", i18n$t("Exportar"))
       ),
       shinyjs::hidden(
       div(id = "tabla_datos_wimpgrid_container",
         # Mostrar los datos de tabla_datos
         rHandsontableOutput("tabla_datos_wimpgrid")
+        )
+      ),
+      shinyjs::hidden(
+      div(id = "matriz_pesos",
+        # Mostrar los datos de tabla_datos
+          plotlyOutput("weight_matrix_graph")
         )
       ),
       div(class=("row"), id = "prueba_container_w",
@@ -274,7 +284,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
 
                     #numericInput("simdigraph_act_vector", i18n$t("Change vector:"), value = 0, step = 0.01),
 
-                    numericInput("simdigraph_e", i18n$t("Valor diferencial:"), value = 0.0001, step=0.0001),
+                    numericInput("simdigraph_e", i18n$t("Valor diferencial:"), value = 0.0001, step=0.000025),
                   
                 ),
 
@@ -300,7 +310,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                                   selected = i18n$t("lineal")),
 
 
-                      numericInput("pcsd_e", i18n$t("Valor diferencial:"), value = 0.0001, step=0.0001),
+                      numericInput("pcsd_e", i18n$t("Valor diferencial:"), value = 0.0001, step=0.000025),
                       
                     ),
 
@@ -321,7 +331,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                       #numericInput("pcsdindices_act_vector", i18n$t("Changes to simulate:"),
                       #            value = 0, step = 0.01),
                       sliderInput("pcsdindices_max_iter", i18n$t("Nº de iteraciones máximas:"), 3, 100, 30),
-                      numericInput("pcsdindices_e", i18n$t("Valor diferencial:"), value = 0.0001, step=0.0001),
+                      numericInput("pcsdindices_e", i18n$t("Valor diferencial:"), value = 0.0001, step=0.000025),
                       sliderInput("pcsdindices_stop_iter", i18n$t("Nº de iteraciones sin cambios:"), 2, 10, 2)
                       
                     ),

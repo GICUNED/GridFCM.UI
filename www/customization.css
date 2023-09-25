@@ -2050,7 +2050,8 @@ table.dataTable{
   border-radius: .5rem;
 }
 
-.patient-diff .odd td:last-child::before, .patient-diff .even td:last-child::before{
+.patient-diff .odd td:nth-child(4)::before, .patient-diff .even td:nth-child(4)::before {
+
   display: inline-block;
   visibility: visible !important;
   width: 1rem;
