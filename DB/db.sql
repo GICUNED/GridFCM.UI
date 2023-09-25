@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS paciente (
     edad INT,
     genero VARCHAR(15) CHECK (genero IN ('Hombre', 'Mujer', 'Sin definir')),
     anotaciones TEXT,
+    diagnostico TEXT,
     fecha_registro TIMESTAMP
 );
 
@@ -28,6 +29,7 @@ CREATE TABLE IF NOT EXISTS repgrid_xlsx (
     columna INTEGER,
     valor varchar(100),
     fecha_registro TIMESTAMP,
+    comentarios TEXT,
     fk_paciente INT REFERENCES paciente(id),
     PRIMARY KEY (id, fila, columna)
 );
@@ -47,6 +49,7 @@ CREATE TABLE IF NOT EXISTS wimpgrid_params (
     fk_wimpgrid INTEGER,
     fk_fila INTEGER,
     fk_columna INTEGER,
+    comentarios TEXT,
     -- simdigraph
     sim_design varchar(25),
     sim_umbral varchar(25),

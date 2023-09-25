@@ -14,18 +14,25 @@ patient_server <- function(input, output, session){
     renderizarTabla <- function(){
         output$user_table <- renderDT({
             con <- establishDBConnection()
-            query <- "SELECT * FROM paciente"
+            query <- sprintf("SELECT p.nombre, p.edad, p.genero, p.fecha_registro, p.diagnostico, p.anotaciones FROM paciente as p, psicologo_paciente as pp WHERE pp.fk_paciente = p.id and pp.fk_psicologo = %d", 1)
             users <- DBI::dbGetQuery(con, query)
             DBI::dbDisconnect(con)
-            users$genero <- as.factor(users$genero)
-            # Convertir a un objeto POSIXct (Fecha y Hora) en R con la zona horaria de Madrid
-            fecha_hora <- as.POSIXct(users$fecha_registro, origin = "1970-01-01")
-            # Formatear la fecha y hora en un formato legible
-            users$fecha_registro <- format(fecha_hora, format = "%Y-%m-%d %H:%M:%S")
+            
+            # Cambiar los nombres de las columnas
+            colnames(users) <- c("Name", "Age", "Gender", "Registered", "Diagnosis", "Annotations")
+            
+            # Convertir género en factor
+            users$Gender <- as.factor(users$Gender)
+            
+            # Convertir fecha_registro a POSIXct y formatear
+            fecha_hora <- as.POSIXct(users$Registered, origin = "1970-01-01")
+            users$Registered <- format(fecha_hora, format = "%Y-%m-%d %H:%M:%S")
+            
             user_data$users <- users # variable reactiva
             DT::datatable(users, selection = 'single', rownames = FALSE)
         })
     }
+
 
     # si se borran todos los pacientes...
     observe({
@@ -73,9 +80,14 @@ patient_server <- function(input, output, session){
             shinyjs::hide("patientSimulations")
             # Obtén el ID del usuario de la fila seleccionada
             users <- user_data$users
-            selected_user_id <- users[selected_row, "id"]
-            user_data$selected_user_id <- selected_user_id # reactiva
+            date <- users[selected_row, "Registered"]
+            name <- users[selected_row, "Name"]
+            age <- as.integer(users[selected_row, "Age"])
             con <- establishDBConnection()
+            query <- sprintf("SELECT id from PACIENTE WHERE edad=%d and nombre='%s' and fecha_registro='%s'", age, name, date)
+            selected_user_id <- as.integer(DBI::dbGetQuery(con, query))
+            user_data$selected_user_id <- selected_user_id # reactiva
+            
             pacientename <- DBI::dbGetQuery(con, sprintf("SELECT nombre from paciente WHERE id = %d", user_data$selected_user_id))
             nombrePaciente(pacientename)
             DBI::dbDisconnect(con)
@@ -94,42 +106,6 @@ patient_server <- function(input, output, session){
         }
     })
 
-    
-    # gestion de las filas seleccionadas en la tabla de simulaciones repgrid
-    observeEvent(input$simulaciones_rep_rows_selected, {
-        selected_row <- input$simulaciones_rep_rows_selected
-        proxy <- dataTableProxy("simulaciones_wimp")
-
-        if (!is.null(selected_row)) {
-            proxy %>% selectRows(NULL) # deselecciono la fila wimpgrid
-            wimpgrid_fecha_seleccionada(NULL) # reseteo la fecha wimpgrid
-            shinyjs::enable("borrarSimulacion")
-            shinyjs::enable("cargarSimulacion")
-            # hacer consulta para obtener el txt de repgrid aqui con la fecha seleccionada
-            fechas <- repgrid_data_DB$fechas
-            fecha <- fechas[selected_row]
-            session$userData$fecha_repgrid <- fecha
-            repgrid_fecha_seleccionada(fecha)
-        }
-    })
-    
-    # gestion de las filas seleccionadas en la tabla de simulaciones wimpgrid
-    observeEvent(input$simulaciones_wimp_rows_selected, {
-        selected_row <- input$simulaciones_wimp_rows_selected
-        proxy <- dataTableProxy("simulaciones_rep")
-        if (!is.null(selected_row)) {
-            proxy %>% selectRows(NULL) # deselecciono la fila repgrid
-            repgrid_fecha_seleccionada(NULL) # reseteo la fecha repgrid el boton cargar
-            shinyjs::enable("borrarSimulacion")
-            shinyjs::enable("cargarSimulacion")
-            fechas <- wimpgrid_data_DB$fechas
-            fecha <- fechas[selected_row]
-            session$userData$fecha_wimpgrid <- fecha
-            wimpgrid_fecha_seleccionada(fecha)
-        }
-    })
-    
-    
     cargar_fechas <- function(){
         con <- establishDBConnection()
         query <- sprintf("SELECT distinct(fecha_registro) FROM repgrid_xlsx WHERE fk_paciente=%d", user_data$selected_user_id)
@@ -151,7 +127,7 @@ patient_server <- function(input, output, session){
 
     cargar_fechas_wimpgrid <- function(){
         con <- establishDBConnection()
-        query <- sprintf("SELECT distinct(fecha_registro) FROM wimpgrid_xlsx WHERE fk_paciente=%d", user_data$selected_user_id)
+        query <- sprintf("SELECT distinct(fecha_registro), comentarios FROM wimpgrid_xlsx, wimpgrid_params WHERE fk_paciente=%d and wimpgrid_xlsx.id = fk_wimpgrid", user_data$selected_user_id)
         wimpgridDB <- DBI::dbGetQuery(con, query)
         DBI::dbDisconnect(con)
         
@@ -159,14 +135,112 @@ patient_server <- function(input, output, session){
             fecha_hora <- wimpgridDB$fecha_registro#as.POSIXct(repgridDB$fecha_registro, origin = "1970-01-01", tz = "Europe/Madrid")
             fechasWimp <- format(fecha_hora, format = "%Y-%m-%d %H:%M:%S")
             wimpgrid_data_DB$fechas <- fechasWimp
+            anotaciones <- wimpgridDB$comentarios 
 
             delay(200, shinyjs::show("simulationIndicatorWG"))
             
             output$simulaciones_wimp <- renderDT({
-                datatable(data.frame(Fecha = wimpgrid_data_DB$fechas), selection = 'single', options = list(order = list(1, 'asc')))
+                datatable(data.frame(Registered = fechasWimp, Annotations = anotaciones), selection = 'single', options = list(order = list(1, 'asc')))
             })
         }
     }
+    
+    # gestion de las filas seleccionadas en la tabla de simulaciones repgrid
+    observeEvent(input$simulaciones_rep_rows_selected, {
+        selected_row <- input$simulaciones_rep_rows_selected
+        proxy <- dataTableProxy("simulaciones_wimp")
+
+        if (!is.null(selected_row)) {
+            proxy %>% selectRows(NULL) # deselecciono la fila wimpgrid
+            wimpgrid_fecha_seleccionada(NULL) # reseteo la fecha wimpgrid
+            shinyjs::enable("borrarSimulacion")
+            # hacer consulta para obtener el txt de repgrid aqui con la fecha seleccionada
+            fechas <- repgrid_data_DB$fechas
+            fecha <- fechas[selected_row]
+            session$userData$fecha_repgrid <- fecha
+            repgrid_fecha_seleccionada(fecha)
+      
+            id_paciente <- user_data$selected_user_id
+            ruta_destino <- tempfile(fileext = ".xlsx")
+            id <- decodificar_BD_excel('repgrid_xlsx', ruta_destino, id_paciente, fecha)
+            datos_repgrid <- OpenRepGrid::importExcel(ruta_destino)
+            excel_repgrid <- read.xlsx(ruta_destino)
+            file.remove(ruta_destino)
+
+            #convertir nums a formato numerico y no texto como estaba importado
+            columnas_a_convertir <- 2:(ncol(excel_repgrid) - 1)
+            # Utiliza lapply para aplicar la conversión a las columnas seleccionadas
+            excel_repgrid[, columnas_a_convertir] <- lapply(excel_repgrid[, columnas_a_convertir], as.numeric)
+
+            session$userData$datos_to_table <- excel_repgrid
+            num_columnas <- ncol(session$userData$datos_to_table)
+            session$userData$num_col_repgrid <- num_columnas
+            num_rows <- nrow(session$userData$datos_to_table)
+            session$userData$num_row_repgrid <- num_rows
+            session$userData$datos_repgrid <- datos_repgrid
+            #repgrid_fecha_seleccionada(NULL)
+
+            if (!is.null(datos_repgrid)) {
+                shinyjs::hide("patientSimulations")
+                # Solo archivo RepGrid cargado, navegar a RepGrid Home
+                session$userData$id_paciente <- user_data$selected_user_id
+                repgrid_home_server(input,output,session)
+                runjs("window.location.href = '/#!/repgrid';")
+            } 
+        }
+    })
+    
+    # gestion de las filas seleccionadas en la tabla de simulaciones wimpgrid
+    observeEvent(input$simulaciones_wimp_rows_selected, {
+        selected_row <- input$simulaciones_wimp_rows_selected
+        proxy <- dataTableProxy("simulaciones_rep")
+        if (!is.null(selected_row)) {
+            proxy %>% selectRows(NULL) # deselecciono la fila repgrid
+            repgrid_fecha_seleccionada(NULL) # reseteo la fecha repgrid el boton cargar
+            shinyjs::enable("borrarSimulacion")
+            fechas <- wimpgrid_data_DB$fechas
+            fecha <- fechas[selected_row]
+            session$userData$fecha_wimpgrid <- fecha
+            wimpgrid_fecha_seleccionada(fecha)
+      
+            id_paciente <- user_data$selected_user_id
+            ruta_destino <- tempfile(fileext = ".xlsx")
+            id <- decodificar_BD_excel('wimpgrid_xlsx', ruta_destino, id_paciente, fecha)
+            session$userData$id_wimpgrid <- id
+
+            datos_wimpgrid <- importwimp(ruta_destino)
+            excel_wimp <- read.xlsx(ruta_destino)
+            file.remove(ruta_destino)
+            # convertir los numeros tipo string a tipo numerico
+            columnas_a_convertir <- 2:(ncol(excel_wimp) - 1)
+            # Utiliza lapply para aplicar la conversión a las columnas seleccionadas
+            excel_wimp[, columnas_a_convertir] <- lapply(excel_wimp[, columnas_a_convertir], as.numeric)
+
+            #constructos
+            constructos_izq <- excel_wimp[1:nrow(excel_wimp), 1]
+            constructos_der <- excel_wimp[1:nrow(excel_wimp), ncol(excel_wimp)]
+            session$userData$constructos_izq <- constructos_izq
+            session$userData$constructos_der <- constructos_der
+
+            session$userData$datos_to_table_w <- excel_wimp
+            num_columnas <- ncol(session$userData$datos_to_table_w)
+            session$userData$num_col_wimpgrid <- num_columnas
+            num_rows <- nrow(session$userData$datos_to_table_w)
+            session$userData$num_row_wimpgrid <- num_rows
+            # Almacenar los objetos importados en el entorno de la sesión para su uso posterior
+            #session$userData$datos_repgrid <- datos_repgrid
+            session$userData$datos_wimpgrid <- datos_wimpgrid
+            #wimpgrid_fecha_seleccionada(NULL)
+
+            if (!is.null(datos_wimpgrid)) {
+                shinyjs::hide("patientSimulations")
+                session$userData$id_paciente <- user_data$selected_user_id
+                wimpgrid_analysis_server(input,output,session)
+                runjs("window.location.href = '/#!/wimpgrid';")
+            }   
+        }
+    })
+    
 
     observeEvent(input$simulacionesDisponibles, {
         shinyjs::show("simulaciones_wimp")
@@ -180,7 +254,7 @@ patient_server <- function(input, output, session){
     observeEvent(input$borrarSimulacion, {
         nombrepaciente <- nombrePaciente()
         showModal(modalDialog(
-            title = "Confirmar borrado",
+            title = i18n$t("Confirmar borrado"),
             sprintf("¿Está seguro de que quiere eliminar esta simulación de %s? Esto no se puede deshacer.", nombrepaciente),
             footer = tagList(
             modalButton("Cancelar"),
@@ -217,80 +291,6 @@ patient_server <- function(input, output, session){
             }
             DBI::dbDisconnect(con)
             shinyjs::disable("borrarSimulacion")
-            shinyjs::disable("cargarSimulacion")
-        }
-    })
-    
-    # Editar simulaciones repgrid. Guardar los datos
-    # boton de cargar simulacion seleccionada
-    observeEvent(input$cargarSimulacion, {
-        id_paciente <- user_data$selected_user_id
-        fecha_rep <- session$userData$fecha_repgrid
-        fecha_wimp <- session$userData$fecha_wimpgrid
-        if(!is.null(repgrid_fecha_seleccionada()) || !is.null(wimpgrid_fecha_seleccionada())){
-            if(!is.null(repgrid_fecha_seleccionada())){
-                ruta_destino <- tempfile(fileext = ".xlsx")
-                id <- decodificar_BD_excel('repgrid_xlsx', ruta_destino, id_paciente, fecha_rep)
-                datos_repgrid <- OpenRepGrid::importExcel(ruta_destino)
-                excel_repgrid <- read.xlsx(ruta_destino)
-                file.remove(ruta_destino)
-
-                #convertir nums a formato numerico y no texto como estaba importado
-                columnas_a_convertir <- 2:(ncol(excel_repgrid) - 1)
-                # Utiliza lapply para aplicar la conversión a las columnas seleccionadas
-                excel_repgrid[, columnas_a_convertir] <- lapply(excel_repgrid[, columnas_a_convertir], as.numeric)
-
-                session$userData$datos_to_table <- excel_repgrid
-                num_columnas <- ncol(session$userData$datos_to_table)
-                session$userData$num_col_repgrid <- num_columnas
-                num_rows <- nrow(session$userData$datos_to_table)
-                session$userData$num_row_repgrid <- num_rows
-                session$userData$datos_repgrid <- datos_repgrid
-                #repgrid_fecha_seleccionada(NULL)
-
-                if (!is.null(datos_repgrid)) {
-                    # Solo archivo RepGrid cargado, navegar a RepGrid Home
-                    session$userData$id_paciente <- user_data$selected_user_id
-                    repgrid_home_server(input,output,session)
-                    runjs("window.location.href = '/#!/repgrid';")
-                } 
-            }
-            if(!is.null(wimpgrid_fecha_seleccionada())){
-                ruta_destino <- tempfile(fileext = ".xlsx")
-                id <- decodificar_BD_excel('wimpgrid_xlsx', ruta_destino, id_paciente, fecha_wimp)
-                session$userData$id_wimpgrid <- id
-
-                datos_wimpgrid <- importwimp(ruta_destino)
-                excel_wimp <- read.xlsx(ruta_destino)
-                file.remove(ruta_destino)
-                # convertir los numeros tipo string a tipo numerico
-                columnas_a_convertir <- 2:(ncol(excel_wimp) - 1)
-                # Utiliza lapply para aplicar la conversión a las columnas seleccionadas
-                excel_wimp[, columnas_a_convertir] <- lapply(excel_wimp[, columnas_a_convertir], as.numeric)
-
-                #constructos
-                constructos_izq <- excel_wimp[1:nrow(excel_wimp), 1]
-                constructos_der <- excel_wimp[1:nrow(excel_wimp), ncol(excel_wimp)]
-                session$userData$constructos_izq <- constructos_izq
-                session$userData$constructos_der <- constructos_der
-
-                session$userData$datos_to_table_w <- excel_wimp
-                num_columnas <- ncol(session$userData$datos_to_table_w)
-                session$userData$num_col_wimpgrid <- num_columnas
-                num_rows <- nrow(session$userData$datos_to_table_w)
-                session$userData$num_row_wimpgrid <- num_rows
-                # Almacenar los objetos importados en el entorno de la sesión para su uso posterior
-                #session$userData$datos_repgrid <- datos_repgrid
-                session$userData$datos_wimpgrid <- datos_wimpgrid
-                #wimpgrid_fecha_seleccionada(NULL)
-
-                if (!is.null(datos_wimpgrid)) {
-                    session$userData$id_paciente <- user_data$selected_user_id
-                    wimpgrid_analysis_server(input,output,session)
-                    runjs("window.location.href = '/#!/wimpgrid';")
-                }   
-            }
-            shinyjs::hide("patientSimulations")
         }
     })
 
@@ -317,6 +317,7 @@ patient_server <- function(input, output, session){
         updateTextInput(session, "nombreEdit", value = users$nombre)
         updateNumericInput(session, "edadEdit", value = users$edad)
         updateSelectInput(session, "generoEdit", selected = users$genero)
+        updateTextInput(session, "diagnosticoEdit", value = users$diagnostico)
         updateTextInput(session, "anotacionesEdit", value = users$anotaciones)
 
         DBI::dbDisconnect(con)
@@ -329,12 +330,13 @@ patient_server <- function(input, output, session){
         nombre <- input$nombreEdit
         edad <- input$edadEdit
         genero <- input$generoEdit
+        diagnostico <- input$diagnosticoEdit
         anotaciones <- input$anotacionesEdit
 
         if (is.numeric(edad) && edad >= 0 && edad <= 120) {
             # Insertar los datos en la base de datos
-            query <- sprintf("UPDATE paciente SET nombre = '%s', edad = %d, genero = '%s', anotaciones = '%s' WHERE id = %d",
-                 nombre, edad, genero, anotaciones, user_data$selected_user_id )
+            query <- sprintf("UPDATE paciente SET nombre = '%s', edad = %d, genero = '%s', diagnostico = '%s', anotaciones = '%s' WHERE id = %d",
+                 nombre, edad, genero, diagnostico, anotaciones, user_data$selected_user_id )
             DBI::dbExecute(con, query)
             
             renderizarTabla()
@@ -427,14 +429,15 @@ patient_server <- function(input, output, session){
         nombre <- input$nombre
         edad <- input$edad
         genero <- input$genero
+        diagnostico <- input$diagnostico
         anotaciones <- input$anotaciones
         fecha_registro <- format(Sys.time(), format = "%Y-%m-%d %H:%M:%S", tz = "Europe/Madrid")
         fk_psicologo <- 1 # de momento 
         
         if (is.numeric(edad) && edad >= 0 && edad <= 120) {
             # Insertar los datos en la base de datos
-            query <- sprintf("INSERT INTO paciente (nombre, edad, genero, anotaciones, fecha_registro) VALUES ('%s', %d, '%s', '%s', '%s')",
-                            nombre, edad, genero, anotaciones, fecha_registro)
+            query <- sprintf("INSERT INTO paciente (nombre, edad, genero, diagnostico, anotaciones, fecha_registro) VALUES ('%s', %d, '%s', '%s', '%s', '%s')",
+                            nombre, edad, genero, diagnostico, anotaciones, fecha_registro)
             DBI::dbExecute(con, query)
 
             query_id_paciente <- sprintf("SELECT id FROM paciente WHERE nombre = '%s' and anotaciones = '%s' and fecha_registro = '%s'", nombre, anotaciones, fecha_registro)
@@ -450,6 +453,7 @@ patient_server <- function(input, output, session){
             updateTextInput(session, "nombre", value = "")
             updateNumericInput(session, "edad", value = 0)
             updateSelectInput(session, "genero", selected = "")
+            updateTextInput(session, "diagnostico", value = "")
             updateTextInput(session, "anotaciones", value = "")
 
             renderizarTabla()

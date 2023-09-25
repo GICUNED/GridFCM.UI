@@ -130,7 +130,7 @@ ui <- dashboardPage(
         div(id="form-page", class = "nav-item form-page submenu-item", menuItem(i18n$t("Formularios"), href = route_link("form"), icon = icon("rectangle-list"), newTab = FALSE)),
         div(id="repgrid-page", class = "nav-item repg-page", menuItem("RepGrid", href = route_link("repgrid"), icon = icon("magnifying-glass-chart"), newTab = FALSE)),
         div(id = "wimpgrid-page", class = "nav-item wimpg-page", menuItem("WimpGrid", href = route_link("wimpgrid"), icon = icon("border-none"), newTab = FALSE)),
-        div(id="suggestion-page", class = "nav-item suggestion-page", menuItem(i18n$t("Sugerencias"), href = route_link("suggestion"), icon = icon("email"), newTab = FALSE)),
+        div(id="suggestion-page", class = "nav-item suggestion-page", menuItem(i18n$t("Sugerencias"), href = route_link("suggestion"), icon = icon(""), newTab = FALSE)),
         #div(class = 'language-selector',selectInput('selected_language',i18n$t("Idioma"), choices = i18n$get_languages(),selected = i18n$get_translation_language())),
         div(class = 'language-selector',radioGroupButtons('selected_language',i18n$t("Idioma"), choices = i18n$get_languages(), selected = i18n$get_translation_language(), width='100%', checkIcon = list()))
       )
