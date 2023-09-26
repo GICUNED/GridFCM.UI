@@ -25,7 +25,6 @@ knitr::knit_hooks$set(webgl = hook_webgl)
 
 
 
-
 source("global.R")
 
 #GRID
@@ -50,8 +49,7 @@ source("UI/repgrid_home_ui.R")
 source("UI/repgrid_analysis_ui.R")
 source("UI/repgrid_ui.R")
 source("UI/wimpgrid_analysis_ui.R")
-source("UI/form_repgrid_ui.R")
-source("UI/form_wimpgrid_ui.R")
+source("UI/form_ui.R")
 source("UI/patient_ui.R")
 source("UI/suggestion_ui.R")
 
@@ -66,8 +64,7 @@ source("Servers/repgrid_home_servers.R")
 source("Servers/repgrid_analysis_server.R")
 source("Servers/repgrid_server.R")
 source("Servers/wimpgrid_analysis_server.R")
-source("Servers/form_repgrid_server.R")
-source("Servers/form_wimpgrid_server.R")
+source("Servers/form_server.R")
 source("Servers/patient_server.R")
 source("Servers/suggestion_server.R")
 
@@ -155,7 +152,7 @@ ui <- dashboardPage(
       route(path = "excel",
             ui = import_excel_ui),
       route(path = "form",
-            ui = form_repgrid_ui), # de momento repgrid, luego poder seleccionar que form hacer
+            ui = form_ui), 
       route(path = "repgrid",
             ui = repgrid_ui),
       route(path = "wimpgrid",
@@ -277,9 +274,8 @@ server <- function(input, output, session) {
   userHome_server(input, output, session)
   import_server(input, output, session)
   #import_excel_server(input, output, session)
-  form_repgrid_server(input, output, session)
+  form_server(input, output, session)
   patient_server(input, output, session)
-  #form wimp
   repgrid_server(input, output, session)
   repgrid_home_server(input, output, session)
   repgrid_analisis_server(input, output, session)

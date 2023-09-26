@@ -382,8 +382,8 @@ observeEvent(input$tabla_datos_wimpgrid, {
 output$bert_w <- renderPlot({
   if (!is.null(session$userData$datos_wimpgrid)) {
     bertin(wimpgrid_a_mostrar()$openrepgrid , color=c("white", "#dfb639"), cex.elements = 1,
-      cex.constructs = 1, cex.text = 1, lheight = 1.25)
-      # actualizar controladores
+      cex.constructs = 1, cex.text = 1, lheight = 1.25, cc=session$userData$num_col_wimpgrid-2, col.mark.fill="#DBA901")
+    
   }
 
 })

@@ -1,4 +1,4 @@
-form_repgrid_ui <- fluidPage( class="header-tab mix-diff",
+form_ui <- fluidPage( class="header-tab mix-diff",
     shiny.i18n::usei18n(i18n),
     shinyjs::useShinyjs(),
 
@@ -31,6 +31,7 @@ tabsetPanel(
                     icon = icon("person"),
                     status = "success",
                     collapsible = FALSE,
+                    actionButton("borrarElemento", i18n$t("Borrar"), status ="danger", disabled=TRUE, icon = icon("trash-can")),
                     
 
                     column(12, shinycssloaders::withSpinner(uiOutput("lista_nombres"), type = 4, color = "#022a0c", size = 0.6)),
