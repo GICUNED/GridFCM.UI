@@ -281,7 +281,7 @@ output$tabla_datos_wimpgrid <- renderRHandsontable({
 
         hot_table(highlightCol = TRUE, highlightRow = TRUE) %>%
 
-        hot_col(col = indicess, format = "1")
+        hot_col(col = indicess, format = "3")
 
     hot_table
 
@@ -309,9 +309,9 @@ validateValue <- function(changes, tabla) {
 
  
 
-  min_val <- as.integer(nombres_columnas[1])
+  min_val <- as.numeric(nombres_columnas[1])
 
-  max_val <- as.integer(nombres_columnas[length(nombres_columnas)])
+  max_val <- as.numeric(nombres_columnas[length(nombres_columnas)])
 
  
 
@@ -364,7 +364,7 @@ observeEvent(input$tabla_datos_wimpgrid, {
       output$tabla_datos_wimpgrid <- renderRHandsontable({
         rhandsontable(tabla_original) %>%
           hot_table(highlightCol = TRUE, highlightRow = TRUE) %>%
-          hot_col(col = seq(1, session$userData$num_col_wimpgrid - 1), format = "1")
+          hot_col(col = seq(1, session$userData$num_col_wimpgrid - 1), format = "3")
       })
  
 
@@ -382,8 +382,8 @@ observeEvent(input$tabla_datos_wimpgrid, {
 output$bert_w <- renderPlot({
   if (!is.null(session$userData$datos_wimpgrid)) {
     bertin(wimpgrid_a_mostrar()$openrepgrid , color=c("white", "#dfb639"), cex.elements = 1,
-      cex.constructs = 1, cex.text = 1, lheight = 1.25)
-      # actualizar controladores
+      cex.constructs = 1, cex.text = 1, lheight = 1.25, cc=session$userData$num_col_wimpgrid-2, col.mark.fill="#DBA901")
+    
   }
 
 })
@@ -603,9 +603,7 @@ idealdigraph_inc <- reactiveVal(FALSE)
 
 idealdigraph_layout <- reactiveVal("circle")
 
-idealdigraph_vertex_size <- reactiveVal(1)
 
-idealdigraph_edge_width <- reactiveVal(1)
 
 idealdigraph_color <- reactiveVal("red/green")
 
@@ -676,27 +674,6 @@ observeEvent(input$idealdigraph_layout, {
   idealdigraph_layout(input$idealdigraph_layout)
 
 })
-
- 
-
-# Observer event para el input vertex.size de idealdigraph
-
-observeEvent(input$idealdigraph_vertex_size, {
-
-  idealdigraph_vertex_size(input$idealdigraph_vertex_size)
-
-})
-
- 
-
-# Observer event para el input edge.width de idealdigraph
-
-observeEvent(input$idealdigraph_edge_width, {
-
-  idealdigraph_edge_width(input$idealdigraph_edge_width)
-
-})
-
  
 
 # Observer event para el input color de idealdigraph
@@ -1884,27 +1861,42 @@ output$pscd_show <- renderPlotly({
     # Crear una matriz de etiquetas con los valores de los constructos
     constructos_der <- session$userData$constructos_der
     constructos_izq <- session$userData$constructos_izq
+    constructos <- paste(constructos_izq, "-", constructos_der)
     labels_matrix <- sprintf("%.2f", matrix_data)
+    
+    # Definir una paleta de colores personalizada centrada en el 0
+    color_palette <- colorspace::diverging_hcl(100, h = c(120, 300), c = 100, l = c(30, 90))
 
-    #message(dim(matrix_data))
-    #message(dim(labels_matrix))
-    #message(class(matrix_data))
-    #message(class(labels_matrix))
+
+    
     plotly::plot_ly(
       x = 1:ncol(matrix_data),
       y = 1:nrow(matrix_data),
       z = matrix_data,
       text = labels_matrix,  # Utilizar los valores de la matriz como texto
       type = "heatmap",
-      colorscale = "Viridis",
+      colorscale = color_palette,
+      zmid = 0,  # Establecer el punto medio en 0
       height = 900
     ) %>%
-    layout(
-      xaxis = list(title = "Polo derecho", tickvals = 1:ncol(matrix_data), ticktext = constructos_der),
-      yaxis = list(title = "Polo izquierdo", tickvals = 1:nrow(matrix_data), ticktext = constructos_izq),
-      title = "Matriz de pesos Heatmap"
-    )
+      layout(
+        xaxis = list(
+          title = list(text = "Consecuencia", standoff = 30, size=35),
+          tickvals = 1:ncol(matrix_data), 
+          ticktext = constructos,
+          tickangle = -45
+          ),
+        yaxis = list(
+          title = list(text = "Causa", standoff = 30, size=35), # Ajusta el valor de standoff para separar más el título
+          tickvals = 1:nrow(matrix_data),
+          ticktext = constructos,
+          tickangle = -45
+        ),
+        title = i18n$t("Matriz de pesos estilo Heatmap")
+      )
   })
+
+
 
 
 }

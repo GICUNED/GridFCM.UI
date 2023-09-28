@@ -72,6 +72,7 @@ patient_server <- function(input, output, session){
             shinyjs::enable("simulacionesDisponibles")
             shinyjs::enable("editarPaciente")
             shinyjs::enable("importarGridPaciente")
+            shinyjs::disable("borrarSimulacion")
 
             #ocultar simulaciones por si se habían desplegado
             delay(200, shinyjs::show("patientIndicator"))
@@ -91,12 +92,12 @@ patient_server <- function(input, output, session){
             pacientename <- DBI::dbGetQuery(con, sprintf("SELECT nombre from paciente WHERE id = %d", user_data$selected_user_id))
             nombrePaciente(pacientename)
             DBI::dbDisconnect(con)
-            
-            # Ahora puedes utilizar selected_user_id para realizar acciones específicas
-            # relacionadas con el usuario seleccionado, como mostrar detalles adicionales,
-            # eliminar el usuario de la base de datos, etc.
-            
-            # Por ejemplo, imprimir el ID del usuario en la consola
+            shinyjs::show("simulaciones_wimp")
+            shinyjs::show("patientSimulations")
+            shinyjs::show("simulaciones_rep")
+
+            cargar_fechas_wimpgrid()
+            cargar_fechas()
             message(paste("id del paciente: ", selected_user_id))            
             
         } else {
@@ -153,40 +154,13 @@ patient_server <- function(input, output, session){
         if (!is.null(selected_row)) {
             proxy %>% selectRows(NULL) # deselecciono la fila wimpgrid
             wimpgrid_fecha_seleccionada(NULL) # reseteo la fecha wimpgrid
+            shinyjs::enable("cargarSimulacion")
             shinyjs::enable("borrarSimulacion")
             # hacer consulta para obtener el txt de repgrid aqui con la fecha seleccionada
             fechas <- repgrid_data_DB$fechas
             fecha <- fechas[selected_row]
             session$userData$fecha_repgrid <- fecha
             repgrid_fecha_seleccionada(fecha)
-      
-            id_paciente <- user_data$selected_user_id
-            ruta_destino <- tempfile(fileext = ".xlsx")
-            id <- decodificar_BD_excel('repgrid_xlsx', ruta_destino, id_paciente, fecha)
-            datos_repgrid <- OpenRepGrid::importExcel(ruta_destino)
-            excel_repgrid <- read.xlsx(ruta_destino)
-            file.remove(ruta_destino)
-
-            #convertir nums a formato numerico y no texto como estaba importado
-            columnas_a_convertir <- 2:(ncol(excel_repgrid) - 1)
-            # Utiliza lapply para aplicar la conversión a las columnas seleccionadas
-            excel_repgrid[, columnas_a_convertir] <- lapply(excel_repgrid[, columnas_a_convertir], as.numeric)
-
-            session$userData$datos_to_table <- excel_repgrid
-            num_columnas <- ncol(session$userData$datos_to_table)
-            session$userData$num_col_repgrid <- num_columnas
-            num_rows <- nrow(session$userData$datos_to_table)
-            session$userData$num_row_repgrid <- num_rows
-            session$userData$datos_repgrid <- datos_repgrid
-            #repgrid_fecha_seleccionada(NULL)
-
-            if (!is.null(datos_repgrid)) {
-                shinyjs::hide("patientSimulations")
-                # Solo archivo RepGrid cargado, navegar a RepGrid Home
-                session$userData$id_paciente <- user_data$selected_user_id
-                repgrid_home_server(input,output,session)
-                runjs("window.location.href = '/#!/repgrid';")
-            } 
         }
     })
     
@@ -197,58 +171,85 @@ patient_server <- function(input, output, session){
         if (!is.null(selected_row)) {
             proxy %>% selectRows(NULL) # deselecciono la fila repgrid
             repgrid_fecha_seleccionada(NULL) # reseteo la fecha repgrid el boton cargar
+            shinyjs::enable("cargarSimulacion")
             shinyjs::enable("borrarSimulacion")
             fechas <- wimpgrid_data_DB$fechas
             fecha <- fechas[selected_row]
             session$userData$fecha_wimpgrid <- fecha
             wimpgrid_fecha_seleccionada(fecha)
       
-            id_paciente <- user_data$selected_user_id
-            ruta_destino <- tempfile(fileext = ".xlsx")
-            id <- decodificar_BD_excel('wimpgrid_xlsx', ruta_destino, id_paciente, fecha)
-            session$userData$id_wimpgrid <- id
-
-            datos_wimpgrid <- importwimp(ruta_destino)
-            excel_wimp <- read.xlsx(ruta_destino)
-            file.remove(ruta_destino)
-            # convertir los numeros tipo string a tipo numerico
-            columnas_a_convertir <- 2:(ncol(excel_wimp) - 1)
-            # Utiliza lapply para aplicar la conversión a las columnas seleccionadas
-            excel_wimp[, columnas_a_convertir] <- lapply(excel_wimp[, columnas_a_convertir], as.numeric)
-
-            #constructos
-            constructos_izq <- excel_wimp[1:nrow(excel_wimp), 1]
-            constructos_der <- excel_wimp[1:nrow(excel_wimp), ncol(excel_wimp)]
-            session$userData$constructos_izq <- constructos_izq
-            session$userData$constructos_der <- constructos_der
-
-            session$userData$datos_to_table_w <- excel_wimp
-            num_columnas <- ncol(session$userData$datos_to_table_w)
-            session$userData$num_col_wimpgrid <- num_columnas
-            num_rows <- nrow(session$userData$datos_to_table_w)
-            session$userData$num_row_wimpgrid <- num_rows
-            # Almacenar los objetos importados en el entorno de la sesión para su uso posterior
-            #session$userData$datos_repgrid <- datos_repgrid
-            session$userData$datos_wimpgrid <- datos_wimpgrid
-            #wimpgrid_fecha_seleccionada(NULL)
-
-            if (!is.null(datos_wimpgrid)) {
-                shinyjs::hide("patientSimulations")
-                session$userData$id_paciente <- user_data$selected_user_id
-                wimpgrid_analysis_server(input,output,session)
-                runjs("window.location.href = '/#!/wimpgrid';")
-            }   
         }
     })
-    
 
-    observeEvent(input$simulacionesDisponibles, {
-        shinyjs::show("simulaciones_wimp")
-        shinyjs::show("patientSimulations")
-        shinyjs::show("simulaciones_rep")
+    observeEvent(input$cargarSimulacion, {
+        id_paciente <- user_data$selected_user_id
+        fecha_rep <- session$userData$fecha_repgrid
+        fecha_wimp <- session$userData$fecha_wimpgrid
+        if(!is.null(repgrid_fecha_seleccionada()) || !is.null(wimpgrid_fecha_seleccionada())){
+            if(!is.null(repgrid_fecha_seleccionada())){
+                ruta_destino <- tempfile(fileext = ".xlsx")
+                id <- decodificar_BD_excel('repgrid_xlsx', ruta_destino, id_paciente, fecha_rep)
+                datos_repgrid <- OpenRepGrid::importExcel(ruta_destino)
+                excel_repgrid <- read.xlsx(ruta_destino)
+                file.remove(ruta_destino)
 
-        cargar_fechas_wimpgrid()
-        cargar_fechas()
+                #convertir nums a formato numerico y no texto como estaba importado
+                columnas_a_convertir <- 2:(ncol(excel_repgrid) - 1)
+                # Utiliza lapply para aplicar la conversión a las columnas seleccionadas
+                excel_repgrid[, columnas_a_convertir] <- lapply(excel_repgrid[, columnas_a_convertir], as.numeric)
+
+                session$userData$datos_to_table <- excel_repgrid
+                num_columnas <- ncol(session$userData$datos_to_table)
+                session$userData$num_col_repgrid <- num_columnas
+                num_rows <- nrow(session$userData$datos_to_table)
+                session$userData$num_row_repgrid <- num_rows
+                session$userData$datos_repgrid <- datos_repgrid
+                #repgrid_fecha_seleccionada(NULL)
+
+                if (!is.null(datos_repgrid)) {
+                    # Solo archivo RepGrid cargado, navegar a RepGrid Home
+                    session$userData$id_paciente <- user_data$selected_user_id
+                    repgrid_home_server(input,output,session)
+                    runjs("window.location.href = '/#!/repgrid';")
+                } 
+            }
+            if(!is.null(wimpgrid_fecha_seleccionada())){
+                ruta_destino <- tempfile(fileext = ".xlsx")
+                id <- decodificar_BD_excel('wimpgrid_xlsx', ruta_destino, id_paciente, fecha_wimp)
+                session$userData$id_wimpgrid <- id
+
+                datos_wimpgrid <- importwimp(ruta_destino)
+                excel_wimp <- read.xlsx(ruta_destino)
+                file.remove(ruta_destino)
+                # convertir los numeros tipo string a tipo numerico
+                columnas_a_convertir <- 2:(ncol(excel_wimp) - 1)
+                # Utiliza lapply para aplicar la conversión a las columnas seleccionadas
+                excel_wimp[, columnas_a_convertir] <- lapply(excel_wimp[, columnas_a_convertir], as.numeric)
+
+                #constructos
+                constructos_izq <- excel_wimp[1:nrow(excel_wimp), 1]
+                constructos_der <- excel_wimp[1:nrow(excel_wimp), ncol(excel_wimp)]
+                session$userData$constructos_izq <- constructos_izq
+                session$userData$constructos_der <- constructos_der
+
+                session$userData$datos_to_table_w <- excel_wimp
+                num_columnas <- ncol(session$userData$datos_to_table_w)
+                session$userData$num_col_wimpgrid <- num_columnas
+                num_rows <- nrow(session$userData$datos_to_table_w)
+                session$userData$num_row_wimpgrid <- num_rows
+                # Almacenar los objetos importados en el entorno de la sesión para su uso posterior
+                #session$userData$datos_repgrid <- datos_repgrid
+                session$userData$datos_wimpgrid <- datos_wimpgrid
+                #wimpgrid_fecha_seleccionada(NULL)
+
+                if (!is.null(datos_wimpgrid)) {
+                    session$userData$id_paciente <- user_data$selected_user_id
+                    wimpgrid_analysis_server(input,output,session)
+                    runjs("window.location.href = '/#!/wimpgrid';")
+                }   
+            }
+            shinyjs::hide("patientSimulations")
+        }
     })
 
     observeEvent(input$borrarSimulacion, {

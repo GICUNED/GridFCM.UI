@@ -220,7 +220,7 @@ repgrid_analisis_server <- function(input, output, session) {
   output$constructs <- renderText({
     
     INTc <- indices_list[["dilemmas"]][["Congruency"]] #Constructs congruency
-    INTc <- indexDilemma(repgrid_data,self=1,ideal=13, diff.congruent = 1, diff.discrepant = 4)
+    INTc <- indexDilemma(repgrid_data,self=1,ideal=session$userData$num_col_repgrid-2, diff.congruent = 1, diff.discrepant = 4)
     print("dilemmmmmmmm")
     print(INTc$construct_classification)
     #print(indexDilemma(repgrid_data)[[1]])
@@ -229,43 +229,38 @@ repgrid_analisis_server <- function(input, output, session) {
     kable_styling("striped", full_width = T) %>%
     row_spec(0, bold = T, color = "white", background = "#005440") %>%
     column_spec(1, bold = T)
-    
   })
 
   output$dilemmasss <- renderText({
-    
+    message(indices_list[["dilemmas"]][["Dilemmas"]])
     INTc <- indices_list[["dilemmas"]][["Dilemmas"]] #dilemmas
-    INTc <- indexDilemma(repgrid_data,self=1,ideal=13, diff.congruent = 1, diff.discrepant = 4)
-    print("dilemmmmmmmm")
+    
+    INTc <- indexDilemma(repgrid_data,self=1,ideal=session$userData$num_col_repgrid-2, diff.congruent = 1, diff.discrepant = 4)
+    
     print(INTc$dilemmas_df)
     dilemmas_df <- INTc$dilemmas_df
     
     if (nrow(dilemmas_df) > 0) {
-
+      
       dilemmas_df <- dilemmas_df %>% select(-id_c, -id_d)
+      
       dilemmas_df$R <- round(dilemmas_df$R, 2) # digits
+      
       ii <- str_detect(dilemmas_df$RexSI, "\\.")
+      
       dilemmas_df$RexSI[ii] <- as.character(round(as.numeric(dilemmas_df$RexSI[ii]), digits))
       
-      print(dilemmas_df)
+      
       
       knitr::kable(dilemmas_df,format = "html") %>%
       #knitr::kable(INTc, col.names = "Intensity",format = "html") %>%
       kable_styling("striped", full_width = F) %>%
       row_spec(0, bold = T, color = "white", background = "#005440") %>%
       column_spec(1, bold = T)
-      #cat("\n\tR = Correlation including Self & Ideal")
-      #cat("\n\tRexSI = Correlation excluding Self & Ideal")
-      #cor.used <- ifelse(exclude, "RexSI", "R")
-      #cat("\n\t", cor.used, " was used as criterion", sep = "")
+      
     } else {
       "No implicative dilemmas detected"
     }
-    #knitr::kable(INTc$construct_classification,format = "html") %>%
-    #knitr::kable(INTc, col.names = "Intensity",format = "html") %>%
-    #kable_styling("striped", full_width = F) #%>%
-    #row_spec(0, bold = T, color = "white", background = "#005440") %>%
-    #column_spec(1, bold = T, color = "#005440")
   })
 
 

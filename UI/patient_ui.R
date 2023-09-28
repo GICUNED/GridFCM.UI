@@ -17,9 +17,7 @@ patient_ui <- fluidPage(class="patient-diff",
 
     column(12, class = "patients-table p-3 bg-white rounded-lg",
       shinycssloaders::withSpinner(DTOutput("user_table"), type = 4, color = "#022a0c", size = 0.6),
-      div(class = "button-container mt-2 justify-content-center",
-        actionButton("simulacionesDisponibles", i18n$t("Ver simulaciones"), disabled=TRUE, icon = icon("head-side-virus")),
-    
+      div(class = "button-container mt-2 justify-content-center",    
         actionButton("importarGridPaciente", i18n$t("Nueva rejilla"), disabled=TRUE, icon = icon("plus"), status="success"),
         ),
     ),
@@ -28,6 +26,7 @@ patient_ui <- fluidPage(class="patient-diff",
           # Boton para editar la simulacion repgrid
           div(class = "button-container pb-4",
             h4(class = "paciente-seleccionado mr-auto mb-0 font-weight-bold", htmlOutput("paciente_simulacion_header")),
+            actionButton("cargarSimulacion", i18n$t("Abrir simulación"), disabled=TRUE, icon = icon("download")),
             actionButton("borrarSimulacion", i18n$t("Borrar simulación"), disabled=TRUE, status ="danger", icon = icon("trash-can"))
           ),
             tabsetPanel(id = "tabSimulaciones",
