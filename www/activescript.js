@@ -56,6 +56,14 @@ function navButtons(){
       $('#patient-page')
         .find('.nav-link')
         .addClass('active');
+
+     /* $('#import-page, #excel-page, #form-page')
+        .removeClass('hidden');
+
+  } else if (!window.location.href.indexOf("/import") > -1 || !window.location.href.indexOf("/excel") > -1 || !window.location.href.indexOf("/form") > -1){
+    $('#import-page, #excel-page, #form-page')
+      .addClass('hidden');
+      */ 
   };
 
   //botón de Import
