@@ -7,6 +7,38 @@ $('#import-page, #excel-page, #form-page')
 $('#incio-page').find('.nav-link').addClass('active');
 */
 
+//funcionalidad de fullscreen
+
+function openFullscreen(elem) {
+  if (elem.requestFullscreen) {
+    elem.requestFullscreen();
+  } else if (elem.mozRequestFullScreen) { /* Firefox */
+    elem.mozRequestFullScreen();
+  } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+    elem.webkitRequestFullscreen();
+  } else if (elem.msRequestFullscreen) { /* IE/Edge */
+    elem.msRequestFullscreen();
+  }
+};
+
+$("#enter_fs" ).on( "click", function() {
+
+  $('#exit_fs')
+    .removeClass('hidden');
+
+  $('#enter_fs')
+    .addClass('hidden');
+});
+
+$( "#exit_fs").on( "click", function() {
+
+  $('#enter_fs')
+    .removeClass('hidden');
+
+  $('#exit_fs')
+    .addClass('hidden');
+} );
+
 /* botonera de navegación al cargar la página */
 window.onload = (event) => {
   navButtons();

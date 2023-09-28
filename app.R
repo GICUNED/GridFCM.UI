@@ -68,6 +68,7 @@ source("Servers/form_server.R")
 source("Servers/patient_server.R")
 source("Servers/suggestion_server.R")
 
+
 #DB
 source("DB/establish_con.R")
 source("DB/gestion_excel.R")
@@ -108,14 +109,13 @@ theme <- create_theme(
 ui <- dashboardPage(
   freshTheme = theme,
   dashboardHeader(
-
     tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "customization.css"), tags$link(rel = "icon", type = "image/x-icon", href = "GridFCM.UI/www/favicon.png"), tags$title("UNED | GridFCM")),
     title = tags$a(href='https://www.uned.es/', target ="_blank", class = "logocontainer",
     tags$img(height='56.9',width='', class = "logoimg")),
     div(id="user-page", class = "nav-item user-page user-page-btn" , menuItem("User", href = route_link("user_home"), icon = icon("house-user"), newTab = FALSE)),
     div(id="patientIndicator", class = "ml-auto patient-active-label", span(class = "icon-paciente"), htmlOutput("paciente_activo"))
   ),
-  
+
   dashboardSidebar(
     sidebarMenu(
         id = "sidebar_principal",
@@ -131,7 +131,6 @@ ui <- dashboardPage(
         div(class = 'language-selector',radioGroupButtons('selected_language',i18n$t("Idioma"), choices = i18n$get_languages(), selected = i18n$get_translation_language(), width='100%', checkIcon = list()))
       )
     ),
-
 
   dashboardBody(
     usei18n(translator = i18n),

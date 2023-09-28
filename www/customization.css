@@ -29,8 +29,20 @@ button{
   line-height: 1.2 !important;
 }
 
+.fullscreen-height{
+  height: 80vh !important;
+}
+
+.fullscreen-graphic{
+  height: 60vh !important;
+}
+
+.fullscreen-control{
+  height: 80vh !important;
+  overflow-y: scroll;
+}
+
  .hidden{
-  /*display: none;*/
   display: none;
 }
 .detail .form-group:first-child{
@@ -877,11 +889,11 @@ margin: 0 !important;
 .input-field-container{
 background-color: #e3e8ec;
 padding: .5rem 1.2rem!important;
-height: 100% !important;
+height: 100%;
 margin: auto;
 margin-top: 0;
 min-width: 250px !important;
-max-width:  calc(25% - 1rem) !important;
+max-width:  calc(25% - 2rem) !important;
 box-shadow: 0 0 1px rgba(0,0,0,0.2);
 }
 
@@ -915,7 +927,7 @@ box-shadow: 0 0 1px rgba(0,0,0,0.2);
 
 .input-graphic-container{
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap !important;
   flex-direction:row-reverse;
   justify-content: end;
   gap: 1rem;
@@ -1243,7 +1255,7 @@ color: #8b0000;
  color: inherit !important; 
 }
 
-.input-container div{
+.input-container.div{
   min-width: 250px !important;
 }  
 
@@ -1254,7 +1266,7 @@ color: #8b0000;
     width: 100% !important;
   }
 
-  .input-container div{
+  .input-container.div{
     min-width: 200px !important;
   }  
   
@@ -2000,20 +2012,28 @@ table.dataTable{
   border-spacing: 1 !important;
 }
 
-.patients-table table.dataTable.display > tbody > tr.selected:hover > *, .patients-table table.dataTable.display > tbody > tr.selected > * {
+.patients-table table.dataTable.display > tbody > tr.selected:hover > *,
+.patients-table table.dataTable.display > tbody > tr.selected > * {
   box-shadow: inset 0 0 0 9999px #711a3a !important;
   font-weight: bold;
 }
 
-.patient-diff .odd td:nth-child(1),.patient-diff .even td:nth-child(1), .patient-diff .odd td:nth-child(4),.patient-diff .even td:nth-child(4){
+.patient-diff .odd td:nth-child(1),
+.patient-diff .even td:nth-child(1), 
+.patient-diff .odd td:nth-child(4),
+.patient-diff .even td:nth-child(4),
+#patientSimulations .odd td:nth-child(2),
+#patientSimulations  .even td:nth-child(2){
   font-weight: bold;
 }
 
-#simulaciones_rep table.dataTable.display > tbody > tr.selected:hover > *, #simulaciones_rep table.dataTable.display > tbody > tr.selected > * {
+#simulaciones_rep table.dataTable.display > tbody > tr.selected:hover > *,
+#simulaciones_rep table.dataTable.display > tbody > tr.selected > * {
   box-shadow: inset 0 0 0 9999px #005440 !important;
 }
 
-#simulaciones_wimp table.dataTable.display > tbody > tr.selected:hover > *, #simulaciones_wimp table.dataTable.display > tbody > tr.selected > * {
+#simulaciones_wimp table.dataTable.display > tbody > tr.selected:hover > *,
+#simulaciones_wimp table.dataTable.display > tbody > tr.selected > * {
   box-shadow: inset 0 0 0 9999px #a77f09 !important;
 }
 
@@ -2047,7 +2067,10 @@ table.dataTable{
   border-radius: .5rem;
 }
 
-.patient-diff .odd td:nth-child(4)::before, .patient-diff .even td:nth-child(4)::before {
+.patient-diff .odd td:nth-child(4)::before,
+.patient-diff .even td:nth-child(4)::before,
+#patientSimulations .odd td:nth-child(2)::before,
+#patientSimulations .even td:nth-child(2)::before{
   display: inline-block;
   visibility: visible !important;
   width: 1rem;

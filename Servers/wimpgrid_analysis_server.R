@@ -14,6 +14,7 @@ shinyjs::hide("context-wg-3-home")
   onevent("click", "exit-wg-3-tooltip", shinyjs::hide("context-wg-3-home"))
 
 
+
 #Ver y Ocultar panel de control izquierdo
 runjs("
 
@@ -102,10 +103,9 @@ shinyjs::hide("open-controls-container-vis")
   }, add = TRUE)
 
 
-# Lógica para la pestaña "Visualización"
+# Lógica para la pestaña "Datos"
 
  
-
   observeEvent(input$importar_page_d, {
 
     # Navega a la página de creación de un nuevo análisis de rejilla
@@ -113,19 +113,14 @@ shinyjs::hide("open-controls-container-vis")
     # route_link("nombre_de_la_pagina_de_creacion")
 
     runjs("window.location.href = '/#!/import';")
-
-    runjs("
-      $('.nav-pills')
-        .find('.nav-link')
-        .removeClass('active');
-      $('.user-page')
-        .find('.nav-link')
-        .removeClass('active');
-      $('#import-page')
-        .find('.nav-link')
-        .addClass('active');
-    ")
   })
+
+  observeEvent(input$patients_page_d, {
+    # Navega a la página de creación de un nuevo análisis de rejilla
+    runjs("window.location.href = '/#!/patient';")
+  })
+
+  # Lógica para la pestaña "Visualización"
 
   observeEvent(input$importar_page_v, {
 
@@ -135,33 +130,14 @@ shinyjs::hide("open-controls-container-vis")
 
     runjs("window.location.href = '/#!/import';")
 
-    runjs("
-
-      $('.nav-pills')
-
-        .find('.nav-link')
-
-        .removeClass('active');
-
- 
-
-      $('.user-page')
-
-        .find('.nav-link')
-
-        .removeClass('active');
-
- 
-
-      $('#import-page')
-
-        .find('.nav-link')
-
-        .addClass('active');
-
-    ")
-
   })
+  
+  observeEvent(input$patients_page_v, {
+    # Navega a la página de creación de un nuevo análisis de rejilla
+    runjs("window.location.href = '/#!/patient';")
+  })
+
+  # Lógica para la pestaña "Laboratorio"
 
   observeEvent(input$importar_page_l, {
 
@@ -171,32 +147,43 @@ shinyjs::hide("open-controls-container-vis")
 
     runjs("window.location.href = '/#!/import';")
 
-    runjs("
+  })
 
-      $('.nav-pills')
+  observeEvent(input$patients_page_l, {
+    # Navega a la página de creación de un nuevo análisis de rejilla
+    runjs("window.location.href = '/#!/patient';")
+  })
 
-        .find('.nav-link')
+  observeEvent(input$exit_fs, {
+    # Navega a la página de creación de un nuevo análisis de rejilla
+        shinyjs::show("enter_fs")
+        shinyjs::hide("exit_fs")
+        runjs("
+        $('.graphic-container')
+          .removeClass('fullscreen-height');
 
-        .removeClass('active');
+        $('.vis-network')
+          .removeClass('fullscreen-graphic');
 
- 
+        $('.input-field-container')
+          .removeClass('fullscreen-control');
+        ")
+  })
 
-      $('.user-page')
+   observeEvent(input$enter_fs, {
+    # Navega a la página de creación de un nuevo análisis de rejilla
+        shinyjs::show("exit_fs")
+        shinyjs::hide("enter_fs")
+        runjs("
+        $('.graphic-container')
+          .addClass('fullscreen-height');
 
-        .find('.nav-link')
+        $('.vis-network')
+          .addClass('fullscreen-graphic');
 
-        .removeClass('active');
-
- 
-
-      $('#import-page')
-
-        .find('.nav-link')
-
-        .addClass('active');
-
-    ")
-
+        $('.input-field-container')
+          .addClass('fullscreen-control');
+        ")
   })
 
   print("Wimpgrid")

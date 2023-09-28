@@ -16,13 +16,15 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
             div(id="context-wg-home", class="tooltip-container", icon("circle-xmark", id = "exit-wg-tooltip", class="fa-solid exit-tooltip"), p(i18n$t("Esta página te permite visualizar y manipular los datos importados de Wimpgrid y acceder a diferentes tipos de análisis."),  class = "desccustom-tooltip")),
           ),
 
-  shinyjs::hidden(fluidRow(id="id_warn",class="mb-4 mt-4 gap-2 justify-content-center error-help hidden",
+  shinyjs::hidden(fluidRow(id="id_warn",class="mb-4 mt-4 gap-2 justify-content-center error-help",
         column(12, class = "row flex-column justify-content-center",
           icon("triangle-exclamation", "fa-2x"),
           p(i18n$t("Para hacer el análisis es necesario importar o seleccionar un archivo o formulario"),  class = "mt-2 mb-2"),
         ),
 
-        column(12, class="d-flex justify-content-center", actionButton("importar_page_d", i18n$t("Importar archivos"), status = 'warning', icon = icon("file-lines"))),
+       column(12, class="d-flex flex-wrap justify-content-center",
+      actionButton("patients_page_d",class="m-1", i18n$t("Ver pacientes"), icon = icon("universal-access"))
+    ),
       )),
 
   # Mostrar los datos importados en una tabla
@@ -67,13 +69,15 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
             div(id="context-wg-2-home", class="tooltip-container", icon("circle-xmark", id = "exit-wg-2-tooltip", class="fa-solid exit-tooltip"), p(i18n$t("Esta página te permite..."),  class = "desccustom-tooltip")),
           ),
 
-      shinyjs::hidden(fluidRow(id="vis_warn",class="mb-4 mt-4 gap-2 justify-content-center error-help hidden",
+      shinyjs::hidden(fluidRow(id="vis_warn",class="mb-4 mt-4 gap-2 justify-content-center error-help",
         column(12, class = "row flex-column justify-content-center",
           icon("triangle-exclamation", "fa-2x"),
           p(i18n$t("Para hacer el análisis es necesario importar o seleccionar un archivo o formulario"),  class = "mt-2 mb-2"),
         ),
 
-        column(12, class="d-flex justify-content-center", actionButton("importar_page_v", i18n$t("Importar archivos"), status = 'warning', icon = icon("file-lines"))),
+        column(12, class="d-flex flex-wrap justify-content-center",
+      actionButton("patients_page_v",class="m-1", i18n$t("Ver pacientes"), icon = icon("universal-access"))
+    ),
       )),
 
       shinyjs::hidden(div(id="wg-vis-content",
@@ -179,17 +183,18 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
             div(id="context-wg-3-home", class="tooltip-container", icon("circle-xmark", id = "exit-wg-3-tooltip", class="fa-solid exit-tooltip"), p(i18n$t("Esta página te permite..."),  class = "desccustom-tooltip")),
           ),
 
-      shinyjs::hidden(fluidRow(id="lab_warn",class="mb-4 mt-4 gap-2 justify-content-center error-help hidden",
+      shinyjs::hidden(fluidRow(id="lab_warn",class="mb-4 mt-4 gap-2 justify-content-center error-help",
         column(12, class = "row flex-column justify-content-center",
           icon("triangle-exclamation", "fa-2x"),
           p(i18n$t("Para hacer el análisis es necesario importar o seleccionar un archivo o formulario"),  class = "mt-2 mb-2"),
         ),
 
-        column(12, class="d-flex justify-content-center", actionButton("importar_page_l", i18n$t("Importar archivos"), status = 'warning', icon = icon("file-lines"))),
-      )),
+          column(12, class="d-flex flex-wrap justify-content-center",
+            actionButton("patients_page_l", class="m-1", i18n$t("Ver pacientes"), icon = icon("universal-access"))
+    ),     )),
 
       shinyjs::hidden(div(id="wg-lab-content",
-      div(id="open-controls-container-lab", div(id="open-controls-lab", class="open-controls-btn", p(i18n$t("Controles")), icon(class="mr-2", "bars-progress"))),
+      div(id="open-controls-container-lab",  div(id="open-controls-lab", class="open-controls-btn", p(i18n$t("Controles")), icon(class="mr-2", "bars-progress"))),
         fluidRow(class = "input-graphic-container",
             column(9, id="graphics-lab", class = "graphic-container bg-white rounded-lg gap-2",
                 fluidRow(class = "flex-container-resp mb-2",
@@ -199,7 +204,10 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                           icon("globe"),
                           h4(i18n$t("Resultado gráfico"), class = "pagetitle2custom"),
                          ),
-                          downloadButton(class = "btn-download", "boton_download_laboratory", i18n$t("Descargar Gráfico"))
+                          downloadButton(class = "btn-download", "boton_download_laboratory", i18n$t("Descargar Gráfico")),
+                          actionButton("enter_fs", i18n$t("Expandir"), status="warning", icon = icon("maximize"), onclick = "openFullscreen(document.getElementById('wg-lab-content'));"),
+                          shinyjs::hidden(actionButton("exit_fs", i18n$t("Salir"), status="danger", icon = icon("minimize"), onclick = "exitFullscreen();")),
+
                         ),
                     shinycssloaders::withSpinner(rHandsontableOutput("simdigraph_act_vector"), type = 4, color = "#022a0c", size = 0.6)
                     ),

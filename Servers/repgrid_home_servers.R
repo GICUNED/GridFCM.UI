@@ -406,20 +406,13 @@ output$exportar <- downloadHandler(
     observeEvent(input$importar_page, {
     # Navega a la página de creación de un nuevo análisis de rejilla
     runjs("window.location.href = '/#!/import';")
-    runjs("
-      $('.nav-pills')
-        .find('.nav-link')
-        .removeClass('active');
-
-      $('.user-page')
-        .find('.nav-link')
-        .removeClass('active');
-
-      $('#import-page')
-        .find('.nav-link')
-        .addClass('active');
-    ")
   })
+
+  observeEvent(input$patients_page, {
+    # Navega a la página de creación de un nuevo análisis de rejilla
+    runjs("window.location.href = '/#!/patient';")
+  })
+
 
   repgrid_analisis_server(input,output,session)
 }

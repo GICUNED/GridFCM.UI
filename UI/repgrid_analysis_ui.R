@@ -11,10 +11,12 @@ repgrid_analysis_ui <- fluidPage( class="header-tab rg-diff",
   shinyjs::hidden(fluidRow(id = "repgrid_warning",class="mb-4 mt-4 gap-2 justify-content-center error-help hidden",
         column(12, class = "row flex-column justify-content-center",
           icon("triangle-exclamation", "fa-2x"),
-          p(i18n$t("Para hacer el análisis es necesario importar un archivo o formulario"),  class = "mt-2 mb-2"),
+          p(i18n$t("Para hacer el análisis es necesario importar o seleccionar un archivo o formulario"),  class = "mt-2 mb-2"),
         ),
 
-        column(12, class="d-flex justify-content-center", actionButton("importar_page_r", "Importar archivos", status = 'warning', icon = icon("file-lines"))),
+    column(12, class="d-flex flex-wrap justify-content-center",
+      actionButton("patients_page_r",class="m-1", i18n$t("Ver pacientes"), icon = icon("universal-access"))
+    ),
       )),
       
 shinyjs::hidden(div(id = "rg-analysis-content",

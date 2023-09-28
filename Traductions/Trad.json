@@ -486,7 +486,7 @@
     },
     {
       "es": "Para hacer el análisis es necesario importar o seleccionar un archivo o formulario",
-      "en": "To perform the analysis, it is necessary to import or select a file or form"
+      "en": "To perform the analysis, it is mandatory to import or select a file or form"
     },
     {
       "es": "Esta página te permite visualizar y manipular los datos importados de WimpGrid y acceder a diferentes tipos de análisis.",
@@ -617,8 +617,8 @@
       "en": "Delete simulation"
     },
     {
-      "es": "Ver simulaciones",
-      "en": "View simulations"
+      "es": "Ver pacientes",
+      "en": "View patients‹"
     },
     {
       "es": "Simulación de ",
