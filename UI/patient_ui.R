@@ -24,7 +24,7 @@ patient_ui <- fluidPage(class="patient-diff",
     column(12, id = "patientSimulations", class = "p-3 mt-4 bg-white rounded-lg mix-diff simulation-tab",
 
           # Boton para editar la simulacion repgrid
-          div(class = "button-container pb-4",
+          div(class = "button-container pb-2",
             h4(class = "paciente-seleccionado mr-auto mb-0 font-weight-bold", htmlOutput("paciente_simulacion_header")),
             actionButton("cargarSimulacion", i18n$t("Abrir simulación"), disabled=TRUE, icon = icon("download")),
             actionButton("borrarSimulacion", i18n$t("Borrar simulación"), disabled=TRUE, status ="danger", icon = icon("trash-can"))

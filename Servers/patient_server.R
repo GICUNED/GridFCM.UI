@@ -10,6 +10,12 @@ patient_server <- function(input, output, session){
     shinyjs::hide("patientIndicator")
     shinyjs::hide("simulationIndicatorRG")
     shinyjs::hide("simulationIndicatorWG")
+
+    runjs("
+
+            $('#import-page, #excel-page, #form-page')
+                .addClass('hidden');
+    ")
    
     renderizarTabla <- function(){
         output$user_table <- renderDT({
@@ -95,6 +101,12 @@ patient_server <- function(input, output, session){
             shinyjs::show("simulaciones_wimp")
             shinyjs::show("patientSimulations")
             shinyjs::show("simulaciones_rep")
+
+            runjs("
+
+            $('#import-page, #excel-page, #form-page')
+                .removeClass('hidden');
+            ")
 
             cargar_fechas_wimpgrid()
             cargar_fechas()

@@ -56,13 +56,6 @@ function navButtons(){
       $('#patient-page')
         .find('.nav-link')
         .addClass('active');
-
-      $('#import-page, #excel-page, #form-page')
-        .removeClass('hidden');
-
-  } else if (!window.location.href.indexOf("/import") > -1 || !window.location.href.indexOf("/excel") > -1 || !window.location.href.indexOf("/form") > -1){
-    $('#import-page, #excel-page, #form-page')
-      .addClass('hidden');
   };
 
   //botón de Import
@@ -136,5 +129,17 @@ function navButtons(){
       .find('.nav-link')
       .addClass('active');
   };
+
+  //botón de WimpGrid
+  if (window.location.href.indexOf("/suggestion") > -1) {
+    
+    $('.nav-pills, #user-page')
+     .find('.nav-link')
+     .removeClass('active');
+
+   $('#suggestion-page')
+     .find('.nav-link')
+     .addClass('active');
+ };
 
 }
