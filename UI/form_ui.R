@@ -82,7 +82,9 @@ tabsetPanel(
                 textInput("respuesta_diferencia_1", i18n$t("Yo soy:")),
                 textOutput("pregunta_diferencia_2"),
                 textInput("respuesta_diferencia_2", ""),
-                actionButton("atras_constructos_aleatorios", i18n$t("Atrás"))
+                
+                actionButton("atras_constructos_aleatorios", i18n$t("Atrás")),
+                actionButton("siguiente_constructo", i18n$t("Siguiente"), disabled=TRUE)
             ),
         ),
         

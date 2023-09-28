@@ -127,11 +127,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
 
                                 selectInput("idealdigraph_color", i18n$t("Paleta de colores:"),
                                           choices = c("rojo/verde", "escala de grises"),
-                                          selected = i18n$t("rojo/verde")),
-
-                              numericInput("idealdigraph_vertex_size", i18n$t("Tamaño de los vértices:"), value = 1),
-
-                              numericInput("idealdigraph_edge_width", i18n$t("Ancho de las aristas:"), value = 1)
+                                          selected = i18n$t("rojo/verde"))
 
 
             ),

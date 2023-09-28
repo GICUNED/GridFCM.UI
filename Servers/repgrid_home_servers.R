@@ -106,7 +106,7 @@ output$tabla_datos_repgrid <- renderRHandsontable({
 
     rhandsontable(tabla_manipulable()) %>%
       hot_table(highlightCol = TRUE, highlightRow = TRUE) %>%
-        hot_col(col = indicess, format = "1")
+        hot_col(col = indicess, format = "3")
 
   }
 })
@@ -120,8 +120,8 @@ validateValue <- function(changes, tabla) {
   tabla_r <- hot_to_r(tabla)
   nombres_columnas <- colnames(tabla_r)
 
-  min_val <- as.integer(nombres_columnas[1])
-  max_val <- as.integer(nombres_columnas[length(nombres_columnas)])
+  min_val <- as.numeric(nombres_columnas[1])
+  max_val <- as.numeric(nombres_columnas[length(nombres_columnas)])
   if(!is.na(new_v) && is.numeric(new_v) && (new_v > max_val || new_v < min_val)) {
     mensaje <- paste("El valor debe estar entre el rango", min_val, "-", max_val, ".")
     showModal(modalDialog(
@@ -155,7 +155,7 @@ observeEvent(input$tabla_datos_repgrid, {
       output$tabla_datos_repgrid <- renderRHandsontable({
         rhandsontable(tabla_original) %>%
           hot_table(highlightCol = TRUE, highlightRow = TRUE) %>%
-          hot_col(col = seq(1, session$userData$num_col_repgrid - 1), format = "1")
+          hot_col(col = seq(1, session$userData$num_col_repgrid - 1), format = "3")
       })
 
     } else if (!is.null(session$userData$datos_repgrid)) {

@@ -118,10 +118,9 @@ form_server <- function(input, output, session){
             updateTextInput(session, "constructo_der", value="")
             output$lista_constructos <- renderUI({
                 menu_items <- lapply(constructos(), function(nombre) {
-                    menuItem(nombre, icon = icon("user"), tabName=nombre)
+                    menuItem(nombre, tabName=nombre)
                 })
                 sidebarMenu(id="menu_constructos", menu_items)
-            
             })
         }
     })
@@ -189,23 +188,77 @@ form_server <- function(input, output, session){
                 # Selecciona dos valores aleatorios sin reemplazo
             aleatorio <- sample(elementos, size = n_pares, replace = FALSE)
             for(i in 1:n_pares){
-                pareja <- c(yo_actual, aleatorio[i])
-                elementos_aleatorios <- c(elementos_aleatorios, pareja)
+                pareja <- list(c(yo_actual, aleatorio[i]))
+                elementos_aleatorios <- append(elementos_aleatorios, pareja)
             }
 
             aleatorios(elementos_aleatorios)
-            message(aleatorios())
             shinyjs::show("ConstructosAleatorios")
             shinyjs::hide("preguntasDiadas")
         }
     }
 
     observe(
-        output$pregunta_semejanza <- renderText({
+        if(!is.null((aleatorios()))){
+            polo_derecho <- aleatorios()[[1]][[2]]
 
-            paste("En qué se parecen tu YO ACTUAL y tu ", aleatorios()[2])
-        })
+            output$pregunta_semejanza <- renderText({
+                paste("En qué se parecen tu YO ACTUAL y tu ", polo_derecho, "?")
+            })
+            output$pregunta_diferencia <- renderText({
+                paste("En qué se diferencian tu YO ACTUAL y tu ", polo_derecho, "?")
+            })
+            output$pregunta_diferencia_2 <- renderText({
+                paste("Por el contrario, mi ", polo_derecho, "  es:")
+            })
+        }
     )
+
+    observe(
+        if((input$respuesta_semejanza_1 != "") && (input$respuesta_semejanza_2 != "") && 
+                (input$respuesta_diferencia_1 != "") && (input$respuesta_diferencia_2 != "")){
+            shinyjs::enable("siguiente_constructo")
+        }
+    )
+
+    observeEvent(input$siguiente_constructo, {
+        r1 <- input$respuesta_semejanza_1
+        r2 <- input$respuesta_semejanza_2
+        r3 <- input$respuesta_diferencia_1
+        r4 <- input$respuesta_diferencia_2
+        aleatorios <- aleatorios()
+        if(!is.null(aleatorios)){
+            # me guardo los dos constructos
+            constructo_1 <- paste(r1, " - ", r2)
+            constructo_2 <- paste(r3, " - ", r4)
+            constructos(c(constructos(), constructo_1))
+            constructos(c(constructos(), constructo_2))
+
+            # actualizo las respuestas a ""
+            updateTextInput(session, "respuesta_semejanza_1", value="")
+            updateTextInput(session, "respuesta_semejanza_2", value="")
+            updateTextInput(session, "respuesta_diferencia_1", value="")
+            updateTextInput(session, "respuesta_diferencia_2", value="")
+
+            # lo quito de la lista de aleatorios ya que se ha usado
+            message("borro")
+            aleatorios(aleatorios[-1])
+            if(length(aleatorios()) == 0){
+                aleatorios(NULL)
+            }
+            # espero que se acutalicen las preguntas?
+            if(is.null(aleatorios())){
+                output$lista_constructos <- renderUI({
+                    menu_items <- lapply(constructos(), function(nombre) {
+                        menuItem(nombre, tabName=nombre)
+                    })
+                    sidebarMenu(id="menu_constructos", menu_items)
+                })
+                shinyjs::hide("ConstructosAleatorios")
+                shinyjs::show("Constructos")
+            }
+        }        
+    })
 
     observeEvent(input$atras_constructos_aleatorios, {
         shinyjs::hide("ConstructosAleatorios")

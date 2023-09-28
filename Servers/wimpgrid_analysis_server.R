@@ -281,7 +281,7 @@ output$tabla_datos_wimpgrid <- renderRHandsontable({
 
         hot_table(highlightCol = TRUE, highlightRow = TRUE) %>%
 
-        hot_col(col = indicess, format = "1")
+        hot_col(col = indicess, format = "3")
 
     hot_table
 
@@ -309,9 +309,9 @@ validateValue <- function(changes, tabla) {
 
  
 
-  min_val <- as.integer(nombres_columnas[1])
+  min_val <- as.numeric(nombres_columnas[1])
 
-  max_val <- as.integer(nombres_columnas[length(nombres_columnas)])
+  max_val <- as.numeric(nombres_columnas[length(nombres_columnas)])
 
  
 
@@ -364,7 +364,7 @@ observeEvent(input$tabla_datos_wimpgrid, {
       output$tabla_datos_wimpgrid <- renderRHandsontable({
         rhandsontable(tabla_original) %>%
           hot_table(highlightCol = TRUE, highlightRow = TRUE) %>%
-          hot_col(col = seq(1, session$userData$num_col_wimpgrid - 1), format = "1")
+          hot_col(col = seq(1, session$userData$num_col_wimpgrid - 1), format = "3")
       })
  
 
@@ -603,9 +603,7 @@ idealdigraph_inc <- reactiveVal(FALSE)
 
 idealdigraph_layout <- reactiveVal("circle")
 
-idealdigraph_vertex_size <- reactiveVal(1)
 
-idealdigraph_edge_width <- reactiveVal(1)
 
 idealdigraph_color <- reactiveVal("red/green")
 
@@ -676,27 +674,6 @@ observeEvent(input$idealdigraph_layout, {
   idealdigraph_layout(input$idealdigraph_layout)
 
 })
-
- 
-
-# Observer event para el input vertex.size de idealdigraph
-
-observeEvent(input$idealdigraph_vertex_size, {
-
-  idealdigraph_vertex_size(input$idealdigraph_vertex_size)
-
-})
-
- 
-
-# Observer event para el input edge.width de idealdigraph
-
-observeEvent(input$idealdigraph_edge_width, {
-
-  idealdigraph_edge_width(input$idealdigraph_edge_width)
-
-})
-
  
 
 # Observer event para el input color de idealdigraph
