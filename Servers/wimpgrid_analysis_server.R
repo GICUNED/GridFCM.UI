@@ -1861,27 +1861,42 @@ output$pscd_show <- renderPlotly({
     # Crear una matriz de etiquetas con los valores de los constructos
     constructos_der <- session$userData$constructos_der
     constructos_izq <- session$userData$constructos_izq
+    constructos <- paste(constructos_izq, "-", constructos_der)
     labels_matrix <- sprintf("%.2f", matrix_data)
+    
+    # Definir una paleta de colores personalizada centrada en el 0
+    color_palette <- colorspace::diverging_hcl(100, h = c(120, 300), c = 100, l = c(30, 90))
 
-    #message(dim(matrix_data))
-    #message(dim(labels_matrix))
-    #message(class(matrix_data))
-    #message(class(labels_matrix))
+
+    
     plotly::plot_ly(
       x = 1:ncol(matrix_data),
       y = 1:nrow(matrix_data),
       z = matrix_data,
       text = labels_matrix,  # Utilizar los valores de la matriz como texto
       type = "heatmap",
-      colorscale = "Viridis",
+      colorscale = color_palette,
+      zmid = 0,  # Establecer el punto medio en 0
       height = 900
     ) %>%
-    layout(
-      xaxis = list(title = "Polo derecho", tickvals = 1:ncol(matrix_data), ticktext = constructos_der),
-      yaxis = list(title = "Polo izquierdo", tickvals = 1:nrow(matrix_data), ticktext = constructos_izq),
-      title = "Matriz de pesos Heatmap"
-    )
+      layout(
+        xaxis = list(
+          title = list(text = "Consecuencia", standoff = 30, size=35),
+          tickvals = 1:ncol(matrix_data), 
+          ticktext = constructos,
+          tickangle = -45
+          ),
+        yaxis = list(
+          title = list(text = "Causa", standoff = 30, size=35), # Ajusta el valor de standoff para separar más el título
+          tickvals = 1:nrow(matrix_data),
+          ticktext = constructos,
+          tickangle = -45
+        ),
+        title = i18n$t("Matriz de pesos estilo Heatmap")
+      )
   })
+
+
 
 
 }

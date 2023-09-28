@@ -4,14 +4,16 @@ form_server <- function(input, output, session){
     shinyjs::hide("preguntasDiadas")
     shinyjs::hide("ConstructosAleatorios")
     shinyjs::hide("n_aleatorio")
+    shinyjs::hide("PuntuacionesRepgrid")
 
     nombres <- reactiveVal(list("Yo - Actual", "Yo - Ideal"))
     nombre_seleccionado <- reactiveVal(NULL)
     constructos <- reactiveVal(NULL)
     constructo_seleccionado <- reactiveVal(NULL)
     aleatorios <- reactiveVal(NULL)
+    puntuables <- reactiveVal(NULL)
 
-    # Formulario para elementos
+    # Formulario para elementos repgrid
 
     observeEvent(input$guardarNombre, {
         if (nchar(input$nombrePaciente) > 2) {
@@ -70,10 +72,6 @@ form_server <- function(input, output, session){
     })
 
     observeEvent(input$continuar_elementos, {
-        lista_nombres <- nombres()
-        # Asigna la lista reordenada a la variable reactiva nombres()
-        session$userData$repgrid_form$elementos = list(lista_nombres)
-
         shinyjs::hide("Elementos")
         shinyjs::show("preguntasDiadas")
     })    
@@ -99,7 +97,7 @@ form_server <- function(input, output, session){
     })
 
 
-    # Formulario para constructos manuales
+    # Formulario para constructos manuales repgrid
 
     observe(
         if((input$constructo_izq != "") && (input$constructo_der != "")){
@@ -152,12 +150,9 @@ form_server <- function(input, output, session){
     })
 
     observeEvent(input$continuar_constructo, {
-        constructos <- constructos()
-        # Asigna la lista reordenada a la variable reactiva nombres()
-        session$userData$repgrid_form$constructos = list(constructos)
-        message(session$userData$repgrid_form$constructos)
-
         shinyjs::hide("Constructos")
+        shinyjs::show("PuntuacionesRepgrid")
+        puntuables(constructos())
     })  
 
     observeEvent(input$atras_constructos, {
@@ -165,7 +160,7 @@ form_server <- function(input, output, session){
         shinyjs::show("preguntasDiadas")
     })
 
-    # Formulario para constructos aleatorios
+    # Formulario para constructos aleatorios repgrid
 
     generar_diadas <- function(n_pares){
         # elementos sin el yo-ideal que debería estar último
@@ -263,5 +258,24 @@ form_server <- function(input, output, session){
     observeEvent(input$atras_constructos_aleatorios, {
         shinyjs::hide("ConstructosAleatorios")
         shinyjs::show("preguntasDiadas")
+    })
+
+    # Puntuaciones para repgrid
+
+    output$elemento_puntuable <- renderText({
+
+    })
+    
+    output$polos_constructo <- renderText({
+        
+    })
+
+    observeEvent(input$siguiente_puntuacion, {
+
+    })
+
+    observeEvent(input$atras_puntuaciones, {
+        shinyjs::hide("PuntuacionesRepgrid")
+        shinyjs::show("Constructos")
     })
 }

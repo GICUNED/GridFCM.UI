@@ -220,9 +220,7 @@ repgrid_analisis_server <- function(input, output, session) {
   output$constructs <- renderText({
     
     INTc <- indices_list[["dilemmas"]][["Congruency"]] #Constructs congruency
-    message("1")
-    INTc <- indexDilemma(repgrid_data,self=1,ideal=13, diff.congruent = 1, diff.discrepant = 4)
-    message("2")
+    INTc <- indexDilemma(repgrid_data,self=1,ideal=session$userData$num_col_repgrid-2, diff.congruent = 1, diff.discrepant = 4)
     print("dilemmmmmmmm")
     print(INTc$construct_classification)
     #print(indexDilemma(repgrid_data)[[1]])
@@ -231,28 +229,27 @@ repgrid_analisis_server <- function(input, output, session) {
     kable_styling("striped", full_width = T) %>%
     row_spec(0, bold = T, color = "white", background = "#005440") %>%
     column_spec(1, bold = T)
-    message("3")
   })
 
   output$dilemmasss <- renderText({
     message(indices_list[["dilemmas"]][["Dilemmas"]])
     INTc <- indices_list[["dilemmas"]][["Dilemmas"]] #dilemmas
-    message("peta")
-    INTc <- indexDilemma(repgrid_data,self=1,ideal=13, diff.congruent = 1, diff.discrepant = 4)
-    message("peta")
+    
+    INTc <- indexDilemma(repgrid_data,self=1,ideal=session$userData$num_col_repgrid-2, diff.congruent = 1, diff.discrepant = 4)
+    
     print(INTc$dilemmas_df)
     dilemmas_df <- INTc$dilemmas_df
-    message("peta")
+    
     if (nrow(dilemmas_df) > 0) {
-      message("peta")
+      
       dilemmas_df <- dilemmas_df %>% select(-id_c, -id_d)
-      message("peta")
+      
       dilemmas_df$R <- round(dilemmas_df$R, 2) # digits
-      message("peta")
+      
       ii <- str_detect(dilemmas_df$RexSI, "\\.")
-      message("peta")
+      
       dilemmas_df$RexSI[ii] <- as.character(round(as.numeric(dilemmas_df$RexSI[ii]), digits))
-      message("peta")
+      
       
       
       knitr::kable(dilemmas_df,format = "html") %>%
@@ -260,7 +257,7 @@ repgrid_analisis_server <- function(input, output, session) {
       kable_styling("striped", full_width = F) %>%
       row_spec(0, bold = T, color = "white", background = "#005440") %>%
       column_spec(1, bold = T)
-      message("peta")
+      
     } else {
       "No implicative dilemmas detected"
     }

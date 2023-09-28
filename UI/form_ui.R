@@ -87,6 +87,17 @@ tabsetPanel(
                 actionButton("siguiente_constructo", i18n$t("Siguiente"), disabled=TRUE)
             ),
         ),
+        fluidRow(id="PuntuacionesRepgrid", class = "mt-4 custom-margins justify-content-center align-items-start",
+            box(
+                title = i18n$t("Puntuaciones Repgrid"),
+                
+                textOutput("elemento_puntuable"),
+                textOutput("polos_constructo"),
+                sliderInput("puntos", "", min=-1, max=1, value=0, step=0.01),
+                actionButton("atras_puntuaciones", i18n$t("Atrás")),
+                actionButton("siguiente_puntuacion", i18n$t("Siguiente"))
+            ),
+        ),
         
     ),
     tabPanel(i18n$t("WimpGrid"), id = "tab_data_w", icon = icon("border-none"),
