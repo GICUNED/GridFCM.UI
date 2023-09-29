@@ -225,7 +225,6 @@ patient_server <- function(input, output, session){
                 ruta_destino <- tempfile(fileext = ".xlsx")
                 id <- decodificar_BD_excel('wimpgrid_xlsx', ruta_destino, id_paciente, fecha_wimp)
                 session$userData$id_wimpgrid <- id
-
                 datos_wimpgrid <- importwimp(ruta_destino)
                 excel_wimp <- read.xlsx(ruta_destino)
                 file.remove(ruta_destino)

@@ -74,7 +74,6 @@ import_excel_server <- function(input, output, session) {
 
       session$userData$fecha_wimpgrid <- fecha
       session$userData$id_wimpgrid <- id
-
       datos_wimpgrid <- if (!is.null(input$archivo_wimpgrid)) {
         importwimp(ruta_destino_wimp)
       }
@@ -127,7 +126,7 @@ import_excel_server <- function(input, output, session) {
       "RepGrid_Template.xlsx"
     },
     content = function(file) {
-      file.copy("UI/plantillas/RepGrid_Template.xlsx", file)
+      file.copy("/srv/shiny-server/UI/plantillas/RepGrid_Template.xlsx", file)
     }
   )
 
@@ -139,7 +138,7 @@ import_excel_server <- function(input, output, session) {
       "WimpGrid_Template.xlsx"
     },
     content = function(file) {
-      file.copy("UI/plantillas/WimpGrid_Template.xlsx", file)
+      file.copy("/srv/shiny-server/UI/WimpGrid_Template.xlsx", file)
     }
   )
 }

@@ -299,7 +299,6 @@ validateValue <- function(changes, tabla) {
   min_val <- as.numeric(nombres_columnas[1])
 
   max_val <- as.numeric(nombres_columnas[length(nombres_columnas)])
-
  
 
   if(!is.na(new_v) && is.numeric(new_v) && (new_v > max_val || new_v < min_val)) {
@@ -329,12 +328,13 @@ validateValue <- function(changes, tabla) {
 observeEvent(input$tabla_datos_wimpgrid, {
   changes <- input$tabla_datos_wimpgrid$changes$changes
   cambios <- cambios_reactive()
-  cambios_actualizados <- c(cambios, changes)
-  cambios_reactive(cambios_actualizados)
+  
   if(!is.null(changes)) {
     shinyjs::hide("volver_w")
     shinyjs::show("guardar_w")
     val <- validateValue(changes, input$tabla_datos_wimpgrid)
+    cambios_actualizados <- c(cambios, changes)
+    cambios_reactive(cambios_actualizados)
 
     if(!val) {
 
@@ -1044,7 +1044,7 @@ pscd_stop_iter <- reactiveVal(3)
 
 observe({
   max_niter <- simdigraph_max_niter()
-  updateSliderInput(session, "simdigraph_niter", max=max_niter)
+  updateSliderInput(session, "simdigraph_niter", min=0, max=max_niter, step=1)
 })
 
 # Lógica para la pestaña "Laboratorio"
@@ -1510,14 +1510,15 @@ observeEvent(input$graph_selector_laboratorio, {
       con <- establishDBConnection()
       #gestionar los cambios y guardarlos directamente en la bd
       cambios <- cambios_reactive()
+      message(" leo cambios reactive ")
+      message(cambios)
       for(changes in cambios){
         x <- as.numeric(changes[1]) + 2 # ajustamos las coordenadas para la bd
         y <- as.numeric(changes[2]) + 1 # ajustamos ...
         old_v <- as.character(changes[3]) #ajustamos los numeros a texto como esta en la bd
         new_v <- as.character(changes[4])
-
-        query <- sprintf("UPDATE wimpgrid_xlsx SET valor='%s' WHERE fila=%d and columna=%d and valor='%s' and fk_paciente=%d and fecha_registro='%s'", 
-                    new_v, x, y, old_v, id_paciente, fecha)
+        query <- sprintf("UPDATE wimpgrid_xlsx SET valor='%s' WHERE fila=%d and columna=%d and fk_paciente=%d and fecha_registro='%s'", 
+                    new_v, x, y, id_paciente, fecha)
         
         DBI::dbExecute(con, query)
       }
@@ -1573,7 +1574,7 @@ output$graph_output_laboratorio <- renderUI({
 
                               stop.iter = sim_stop_it)
         
-        max_niter <- as.numeric(nrow(scn$values))
+        max_niter <- (as.numeric(nrow(scn$values)) - 1)
         simdigraph_max_niter(max_niter)
 
         simdigraph.vis(scn,niter=simdigraph_niter(), layout = translate_word("en",simdigraph_layout()), color = translate_word("en",simdigraph_color()))
@@ -1837,11 +1838,6 @@ output$pscd_show <- renderPlotly({
     shinyjs::hide("matriz_pesos")
   })
 
-  output$weight_matrix_graph_ejemplo2 <- renderPlotly({
-    matriz <- dataaa_w()[["scores"]][["weights"]]
-    heatmaply::heatmaply(matriz, cellnote=matriz, width = 600, height = 600)
-  })
-
   output$weight_matrix_graph <- renderPlotly({
     matrix_data <- dataaa_w()[["scores"]][["weights"]]
     
@@ -1864,7 +1860,8 @@ output$pscd_show <- renderPlotly({
       type = "heatmap",
       colorscale = color_palette,
       zmid = 0,  # Establecer el punto medio en 0
-      height = 900
+      height = 900,
+      hovertemplate = "Causa: %{y}<br>Consecuencia: %{x}<br>Peso: %{z}"
     ) %>%
       layout(
         xaxis = list(
