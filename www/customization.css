@@ -15,13 +15,22 @@
  @media only screen and (min-width: 992px) {}
  
  /* Extra large devices (large laptops and desktops, 1200px and up) */
- @media only screen and (min-width: 1200px) {} 
+ @media only screen and (min-width: 1281px) {
+  body{
+    zoom: 110%;
+  }
+ }
+
+ @media only screen and (min-width: 1367px) {
+  body{
+    zoom: 125%;
+  }
+ } 
 
 /*General*/
 
 body{
   transition:opacity .3s ease;
-  zoom: 125%;
 }
 
 button{
@@ -40,6 +49,11 @@ button{
 .fullscreen-control{
   height: 80vh !important;
   overflow-y: scroll;
+}
+
+.fullscreen-control-min{
+ position: relative;
+
 }
 
  .hidden{
@@ -890,7 +904,6 @@ margin: 0 !important;
 background-color: #e3e8ec;
 padding: .5rem 1.2rem!important;
 height: 100%;
-margin: auto;
 margin-top: 0;
 min-width: 250px !important;
 max-width:  calc(25% - 2rem) !important;

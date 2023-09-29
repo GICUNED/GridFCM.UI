@@ -167,6 +167,9 @@ shinyjs::hide("open-controls-container-vis")
 
         $('.input-field-container')
           .removeClass('fullscreen-control');
+
+        $('#open-controls-lab')
+          .removeClass('fullscreen-control-min');
         ")
   })
 
@@ -183,6 +186,9 @@ shinyjs::hide("open-controls-container-vis")
 
         $('.input-field-container')
           .addClass('fullscreen-control');
+
+        $('#open-controls-lab')
+          .addClass('fullscreen-control-min');
         ")
   })
 

@@ -53,6 +53,7 @@ source("UI/form_ui.R")
 source("UI/patient_ui.R")
 source("UI/suggestion_ui.R")
 
+
 # SERVERS
 source("Servers/home_page_server_observers.R")
 source("Servers/another_page_server_observers.R")
