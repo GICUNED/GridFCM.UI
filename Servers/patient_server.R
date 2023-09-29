@@ -11,7 +11,9 @@ patient_server <- function(input, output, session){
     shinyjs::hide("simulationIndicatorRG")
     shinyjs::hide("simulationIndicatorWG")
 
-    shinyjs::hide("import-page, form-page, excel-page")
+    shinyjs::hide("import-page")
+    shinyjs::hide("form-page")
+    shinyjs::hide("excel-page")
 
     renderizarTabla <- function(){
         output$user_table <- renderDT({
