@@ -69,6 +69,7 @@ source("Servers/patient_server.R")
 source("Servers/suggestion_server.R")
 
 
+
 #DB
 source("DB/establish_con.R")
 source("DB/gestion_excel.R")

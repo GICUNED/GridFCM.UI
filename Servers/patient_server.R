@@ -11,12 +11,8 @@ patient_server <- function(input, output, session){
     shinyjs::hide("simulationIndicatorRG")
     shinyjs::hide("simulationIndicatorWG")
 
-    runjs("
+    shinyjs::hide("import-page, form-page, excel-page")
 
-            $('#import-page, #excel-page, #form-page')
-                .addClass('hidden');
-    ")
-   
     renderizarTabla <- function(){
         output$user_table <- renderDT({
             con <- establishDBConnection()
@@ -102,11 +98,9 @@ patient_server <- function(input, output, session){
             shinyjs::show("patientSimulations")
             shinyjs::show("simulaciones_rep")
 
-            runjs("
-
-            $('#import-page, #excel-page, #form-page')
-                .removeClass('hidden');
-            ")
+            shinyjs::show("import-page")
+            shinyjs::show("form-page")
+            shinyjs::show("excel-page")
 
             cargar_fechas_wimpgrid()
             cargar_fechas()
@@ -303,7 +297,7 @@ patient_server <- function(input, output, session){
                 cargar_fechas_wimpgrid()
             }
             DBI::dbDisconnect(con)
-            shinyjs::disable("borrarSimulacion")
+            shinyjs::disable("borrarSimulacion")           
         }
     })
 
@@ -425,6 +419,11 @@ patient_server <- function(input, output, session){
         
         renderizarTabla()
         shinyjs::hide("patientSimulations")
+        shinyjs::hide("import-page")
+        shinyjs::hide("form-page")
+        shinyjs::hide("excel-page")
+
+
     })
     
     observeEvent(input$nombre, {
