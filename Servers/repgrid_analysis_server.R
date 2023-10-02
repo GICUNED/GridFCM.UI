@@ -80,7 +80,15 @@ repgrid_analisis_server <- function(input, output, session) {
   })
 
   output$matrix_constructs <- renderRHandsontable({
-    rhandsontable(indices_list[["distances"]][["Constructs"]])
+    mc <- indices_list[["distances"]][["Constructs"]]
+    izq <- session$userData$constructos_izq_rep
+    der <- session$userData$constructos_der_rep
+    res <- paste(izq, der, sep="/\n")
+    colnames(mc) <- res
+
+    rhandsontable(mc) %>%
+
+    hot_table(highlightCol = TRUE, highlightRow = TRUE)
   })
 
   output$matrix_elements <- renderRHandsontable({
@@ -94,7 +102,7 @@ repgrid_analisis_server <- function(input, output, session) {
     content = function(file) {
       # Tomar una captura de pantalla del gráfico y guardarla en un archivo PNG
       grDevices::png(file, width = 1200, height = 800, units = "px", res = 100)
-      grDevices::dev.capture(OpenRepGrid::cluster(repgrid_data,along=1, along=1, cex = 0,
+      grDevices::dev.capture(OpenRepGrid::cluster(repgrid_data, along=1, cex = 0,
    lab.cex = 1, cex.main = 1))
       grDevices::dev.off()
       file.copy("Rplot001.png", file)  # Copiar el archivo temporal a la ubicación deseada

@@ -200,8 +200,8 @@ output$bert <- renderPlot({
             new_v <- as.character(changes[4])
 
 
-            query <- sprintf("UPDATE repgrid_xlsx SET valor='%s' WHERE fila = %d and columna = %d and valor = '%s' and fk_paciente = %d and fecha_registro = '%s'", 
-                        new_v, x, y, old_v, session$userData$id_paciente, session$userData$fecha_repgrid)
+            query <- sprintf("UPDATE repgrid_xlsx SET valor='%s' WHERE fila = %d and columna = %d and fk_paciente = %d and fecha_registro = '%s'", 
+                        new_v, x, y, session$userData$id_paciente, session$userData$fecha_repgrid)
             DBI::dbExecute(con, query)
             
           }

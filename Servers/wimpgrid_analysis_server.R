@@ -305,7 +305,6 @@ validateValue <- function(changes, tabla) {
   min_val <- as.numeric(nombres_columnas[1])
 
   max_val <- as.numeric(nombres_columnas[length(nombres_columnas)])
-
  
 
   if(!is.na(new_v) && is.numeric(new_v) && (new_v > max_val || new_v < min_val)) {
@@ -335,12 +334,13 @@ validateValue <- function(changes, tabla) {
 observeEvent(input$tabla_datos_wimpgrid, {
   changes <- input$tabla_datos_wimpgrid$changes$changes
   cambios <- cambios_reactive()
-  cambios_actualizados <- c(cambios, changes)
-  cambios_reactive(cambios_actualizados)
+  
   if(!is.null(changes)) {
     shinyjs::hide("volver_w")
     shinyjs::show("guardar_w")
     val <- validateValue(changes, input$tabla_datos_wimpgrid)
+    cambios_actualizados <- c(cambios, changes)
+    cambios_reactive(cambios_actualizados)
 
     if(!val) {
 
@@ -920,14 +920,19 @@ output$distance <- renderRHandsontable({
     INTe <- wimpindices(dataaa_w())[["distance"]]
 
     #DT::datatable(INTe)
+    izq <- session$userData$constructos_izq
+    der <- session$userData$constructos_der
+    res <- paste(izq, der, sep="/\n")
+    colnames(INTe) <- res
+    rownames(INTe) <- res
 
     rhandsontable(INTe) %>%
-
     hot_table(highlightCol = TRUE, highlightRow = TRUE)
 
-    #%>%
-
-  #hot_col(c(1,7), readOnly = TRUE)
+    rhandsontable(INTe) %>%
+        hot_cols(
+          colWidths=60
+        )
 
 })
 
@@ -952,8 +957,9 @@ output$table_closeness <- DT::renderDataTable({
     centrality <- wimpindices(dataaa_w())[["centrality"]]
 
  
+    closeness <- data.frame(Closeness = round(centrality$closeness, 3))
 
-    DT::datatable(centrality$closeness)
+    DT::datatable(closeness)
 
   })
 
@@ -963,9 +969,9 @@ output$table_betweenness <- DT::renderDataTable({
 
     centrality <- wimpindices(dataaa_w())[["centrality"]]
 
- 
+    bt <- data.frame(Betweenness = round(centrality$betweenness, 3))
 
-    DT::datatable(centrality$betweenness)
+    DT::datatable(bt)
 
   })
 
@@ -1050,7 +1056,7 @@ pscd_stop_iter <- reactiveVal(3)
 
 observe({
   max_niter <- simdigraph_max_niter()
-  updateSliderInput(session, "simdigraph_niter", max=max_niter)
+  updateNumericInput(session, "simdigraph_niter", min=0, max=max_niter)
 })
 
 # Lógica para la pestaña "Laboratorio"
@@ -1175,7 +1181,7 @@ output$simdigraph_act_vector <- renderRHandsontable({
   if(!is.null(session$userData$constructos_izq) && !is.null(session$userData$constructos_der)){
     izq <- session$userData$constructos_izq
     der <- session$userData$constructos_der
-    res <- paste(izq, der, sep=" / ")
+    res <- paste(izq, der, sep="/\n")
     colnames(vv) <- res
   }
   rhandsontable(vv)
@@ -1220,7 +1226,7 @@ output$pcsdindices_act_vector <- renderRHandsontable({
   if(!is.null(session$userData$constructos_izq) && !is.null(session$userData$constructos_der)){
     izq <- session$userData$constructos_izq
     der <- session$userData$constructos_der
-    res <- paste(izq, der, sep=" / ")
+    res <- paste(izq, der, sep="/\n")
     colnames(vv) <- res
   }
   rhandsontable(vv , col_highlight = col_highlight, row_highlight = row_highlight)
@@ -1322,7 +1328,7 @@ output$pcsd_act_vector <- renderRHandsontable({
   if(!is.null(session$userData$constructos_izq) && !is.null(session$userData$constructos_der)){
     izq <- session$userData$constructos_izq
     der <- session$userData$constructos_der
-    res <- paste(izq, der, sep=" / ")
+    res <- paste(izq, der, sep="/\n")
     colnames(vv) <- res
   }
   rhandsontable(vv)
@@ -1422,25 +1428,25 @@ observeEvent(input$graph_selector_laboratorio, {
       updateSelectInput(session, "simdigraph_thr", selected=controles$sim_umbral)
       updateSelectInput(session, "simdigraph_layout", selected=controles$sim_design)
       updateSelectInput(session, "simdigraph_color", selected=controles$sim_color)
-      updateSliderInput(session, "simdigraph_niter", value=controles$sim_n_iter)
-      updateSliderInput(session, "simdigraph_max_iter", value=controles$sim_n_max_iter)
-      updateSliderInput(session, "simdigraph_stop_iter", value=controles$sim_n_stop_iter)
+      updateNumericInput(session, "simdigraph_niter", value=controles$sim_n_iter)
+      updateNumericInput(session, "simdigraph_max_iter", value=controles$sim_n_max_iter)
+      updateNumericInput(session, "simdigraph_stop_iter", value=controles$sim_n_stop_iter)
       updateNumericInput(session, "simdigraph_e", value=controles$sim_valor_diferencial)
       df_V(actualizarVector(controles$sim_vector))
 
       # pcsd
-      updateSliderInput(session, "pcsd_iter", value=controles$pcsd_n_iter)
-      updateSliderInput(session, "pcsd_max_iter", value=controles$pcsd_n_max_iter)
-      updateSliderInput(session, "pcsd_stop_iter", value=controles$pcsd_n_stop_iter)
+      updateNumericInput(session, "pcsd_iter", value=controles$pcsd_n_iter)
+      updateNumericInput(session, "pcsd_max_iter", value=controles$pcsd_n_max_iter)
+      updateNumericInput(session, "pcsd_stop_iter", value=controles$pcsd_n_stop_iter)
       updateSelectInput(session, "pcsd_e", selected=controles$pcsd_valor_diferencial)
       df_Vpcsd(actualizarVector(controles$pcsd_vector))
 
       # pcsd índices
       updateSelectInput(session, "pcsdindices_infer", selected=controles$pcind_propagacion)
       updateSelectInput(session, "pcsdindices_thr", selected=controles$pcind_umbral)
-      updateSliderInput(session, "pcsdindices_max_iter", value=controles$pcind_n_max_iter)
+      updateNumericInput(session, "pcsdindices_max_iter", value=controles$pcind_n_max_iter)
       updateNumericInput(session, "pcsdindices_e", value=controles$pcind_valor_diferencial)
-      updateSliderInput(session, "pcsdindices_stop_iter", value=controles$pcind_n_stop_iter)
+      updateNumericInput(session, "pcsdindices_stop_iter", value=controles$pcind_n_stop_iter)
       df_Vind(actualizarVector(controles$pcind_vector))
     }
   }
@@ -1516,14 +1522,15 @@ observeEvent(input$graph_selector_laboratorio, {
       con <- establishDBConnection()
       #gestionar los cambios y guardarlos directamente en la bd
       cambios <- cambios_reactive()
+      message(" leo cambios reactive ")
+      message(cambios)
       for(changes in cambios){
         x <- as.numeric(changes[1]) + 2 # ajustamos las coordenadas para la bd
         y <- as.numeric(changes[2]) + 1 # ajustamos ...
         old_v <- as.character(changes[3]) #ajustamos los numeros a texto como esta en la bd
         new_v <- as.character(changes[4])
-
-        query <- sprintf("UPDATE wimpgrid_xlsx SET valor='%s' WHERE fila=%d and columna=%d and valor='%s' and fk_paciente=%d and fecha_registro='%s'", 
-                    new_v, x, y, old_v, id_paciente, fecha)
+        query <- sprintf("UPDATE wimpgrid_xlsx SET valor='%s' WHERE fila=%d and columna=%d and fk_paciente=%d and fecha_registro='%s'", 
+                    new_v, x, y, id_paciente, fecha)
         
         DBI::dbExecute(con, query)
       }
@@ -1579,7 +1586,7 @@ output$graph_output_laboratorio <- renderUI({
 
                               stop.iter = sim_stop_it)
         
-        max_niter <- as.numeric(nrow(scn$values))
+        max_niter <- (as.numeric(nrow(scn$values)) - 1)
         simdigraph_max_niter(max_niter)
 
         simdigraph.vis(scn,niter=simdigraph_niter(), layout = translate_word("en",simdigraph_layout()), color = translate_word("en",simdigraph_color()))
@@ -1843,11 +1850,6 @@ output$pscd_show <- renderPlotly({
     shinyjs::hide("matriz_pesos")
   })
 
-  output$weight_matrix_graph_ejemplo2 <- renderPlotly({
-    matriz <- dataaa_w()[["scores"]][["weights"]]
-    heatmaply::heatmaply(matriz, cellnote=matriz, width = 600, height = 600)
-  })
-
   output$weight_matrix_graph <- renderPlotly({
     matrix_data <- dataaa_w()[["scores"]][["weights"]]
     
@@ -1870,7 +1872,8 @@ output$pscd_show <- renderPlotly({
       type = "heatmap",
       colorscale = color_palette,
       zmid = 0,  # Establecer el punto medio en 0
-      height = 900
+      height = 900,
+      hovertemplate = "Causa: %{y}<br>Consecuencia: %{x}<br>Peso: %{z}"
     ) %>%
       layout(
         xaxis = list(

@@ -16,6 +16,12 @@ import_excel_server <- function(input, output, session) {
       # meto la fecha en la session para sacarla en el título
       session$userData$fecha_repgrid <- fecha
 
+      #constructos
+      constructos_izq <- excel_repgrid_codificar[2:nrow(excel_repgrid_codificar), 1]
+      constructos_der <- excel_repgrid_codificar[2:nrow(excel_repgrid_codificar), ncol(excel_repgrid_codificar)]
+      session$userData$constructos_izq_rep <- constructos_izq
+      session$userData$constructos_der_rep <- constructos_der
+
       datos_repgrid <- if (!is.null(input$archivo_repgrid)) {
         OpenRepGrid::importExcel(ruta_destino_rep)
       }
@@ -74,7 +80,6 @@ import_excel_server <- function(input, output, session) {
 
       session$userData$fecha_wimpgrid <- fecha
       session$userData$id_wimpgrid <- id
-
       datos_wimpgrid <- if (!is.null(input$archivo_wimpgrid)) {
         importwimp(ruta_destino_wimp)
       }
@@ -127,11 +132,9 @@ import_excel_server <- function(input, output, session) {
       "RepGrid_Template.xlsx"
     },
     content = function(file) {
-      file.copy("UI/plantillas/RepGrid_Template.xlsx", file)
+      file.copy("/srv/shiny-server/UI/plantillas/RepGrid_Template.xlsx", file)
     }
   )
-
-  
 
   output$download_link_wimpgrid <- downloadHandler(
     # Specify the filename and content type
@@ -139,7 +142,7 @@ import_excel_server <- function(input, output, session) {
       "WimpGrid_Template.xlsx"
     },
     content = function(file) {
-      file.copy("UI/plantillas/WimpGrid_Template.xlsx", file)
+      file.copy("/srv/shiny-server/UI/plantillas/WimpGrid_Template.xlsx", file)
     }
   )
 }

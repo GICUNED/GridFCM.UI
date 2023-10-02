@@ -27,38 +27,28 @@ importwimp <- function(path, sheet = 1, opr = TRUE){
   
   # Scale -------------------------------------------------------------------
 
-
   scale.min <- as.numeric(names(xlsx)[1])
   scale.max <- as.numeric(names(xlsx)[n.constructs + 3])
   scale.center <- (scale.min + scale.max)/2
-
   scale <- c(scale.min,scale.max)
   names(scale) <- c("min","max")
-
   wimp$scale <- scale
-
 
   # Constructs --------------------------------------------------------------
 
   left.poles <- as.vector(xlsx[,1])[[1]]
   right.poles <- as.vector(xlsx[,n.constructs + 3])[[1]]
-
   constructs <- paste(left.poles,"—",right.poles,sep = "")
-
   wimp$constructs[[1]] <- left.poles
   wimp$constructs[[2]] <- right.poles
   wimp$constructs[[3]] <- constructs
-
   names(wimp[["constructs"]]) <- c("left.poles","right.poles","constructs")
-
 
   # Self vector -------------------------------------------------------------
   xlsx.scores <- as.numeric(as.matrix(xlsx[,1:n.constructs+1]))
   direct.scores <- matrix(xlsx.scores,ncol=n.constructs,nrow=n.constructs)
   direct.self <- as.numeric(diag(direct.scores))
-
   standarized.self <- (direct.self - (scale.center * rep(1,n.constructs))) / (0.5 * (scale.max - scale.min))
-
   wimp$self[[1]] <- direct.self
   wimp$self[[2]] <- standarized.self
   names(wimp$self) <- c("direct","standarized")
@@ -113,7 +103,6 @@ importwimp <- function(path, sheet = 1, opr = TRUE){
   wimp$openrepgrid <- openrepgrid.object
   }
   # Function return ---------------------------------------------------------
-
 
   return(wimp)
 }

@@ -15,7 +15,6 @@ patient_server <- function(input, output, session){
     shinyjs::hide("form-page")
     shinyjs::hide("excel-page")
 
-
     renderizarTabla <- function(){
         output$user_table <- renderDT({
             con <- establishDBConnection()
@@ -24,7 +23,7 @@ patient_server <- function(input, output, session){
             DBI::dbDisconnect(con)
             
             # Cambiar los nombres de las columnas
-            colnames(users) <- c("Name", "Age", "Gender", "Registered", "Diagnosis", "Annotations")
+            colnames(users) <- c("Name", "Age", "Gender", "Registered", "Problem", "Annotations")
             
             # Convertir género en factor
             users$Gender <- as.factor(users$Gender)
@@ -130,7 +129,7 @@ patient_server <- function(input, output, session){
             delay(200, shinyjs::show("simulationIndicatorRG"))
 
             output$simulaciones_rep <- renderDT({
-                datatable(data.frame(Fecha = repgrid_data_DB$fechas),  selection = 'single', options = list(order = list(1, 'asc')))
+                datatable(data.frame(Fecha = repgrid_data_DB$fechas), selection = 'single', rownames = FALSE, options = list(order = list(0, 'asc')))
             })
         }
     }
@@ -150,7 +149,7 @@ patient_server <- function(input, output, session){
             delay(200, shinyjs::show("simulationIndicatorWG"))
             
             output$simulaciones_wimp <- renderDT({
-                datatable(data.frame(Registered = fechasWimp, Annotations = anotaciones), selection = 'single', options = list(order = list(1, 'asc')))
+                datatable(data.frame(Registered = fechasWimp, Annotations = anotaciones), selection = 'single', rownames = FALSE, options = list(order = list(0, 'asc')))
             })
         }
     }
@@ -207,6 +206,12 @@ patient_server <- function(input, output, session){
                 # Utiliza lapply para aplicar la conversión a las columnas seleccionadas
                 excel_repgrid[, columnas_a_convertir] <- lapply(excel_repgrid[, columnas_a_convertir], as.numeric)
 
+                #constructos
+                constructos_izq <- excel_repgrid[1:nrow(excel_repgrid), 1]
+                constructos_der <- excel_repgrid[1:nrow(excel_repgrid), ncol(excel_repgrid)]
+                session$userData$constructos_izq_rep <- constructos_izq
+                session$userData$constructos_der_rep <- constructos_der
+
                 session$userData$datos_to_table <- excel_repgrid
                 num_columnas <- ncol(session$userData$datos_to_table)
                 session$userData$num_col_repgrid <- num_columnas
@@ -226,7 +231,6 @@ patient_server <- function(input, output, session){
                 ruta_destino <- tempfile(fileext = ".xlsx")
                 id <- decodificar_BD_excel('wimpgrid_xlsx', ruta_destino, id_paciente, fecha_wimp)
                 session$userData$id_wimpgrid <- id
-
                 datos_wimpgrid <- importwimp(ruta_destino)
                 excel_wimp <- read.xlsx(ruta_destino)
                 file.remove(ruta_destino)
@@ -257,6 +261,8 @@ patient_server <- function(input, output, session){
                     runjs("window.location.href = '/#!/wimpgrid';")
                 }   
             }
+            proxy <- dataTableProxy("user_table")
+            proxy %>% selectRows(NULL)
             shinyjs::hide("patientSimulations")
         }
     })
@@ -308,6 +314,8 @@ patient_server <- function(input, output, session){
     observeEvent(input$importarGridPaciente, {
         shinyjs::hide("patientSimulations")
         session$userData$id_paciente <- user_data$selected_user_id
+        proxy <- dataTableProxy("user_table")
+        proxy %>% selectRows(NULL)
         import_excel_server(input, output, session)
         runjs("window.location.href = '/#!/import';")
     })
