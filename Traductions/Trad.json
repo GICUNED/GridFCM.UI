@@ -537,6 +537,10 @@
       "en": "Centrality"
     },
     {
+      "es": "Inconsistencias",
+      "en": "Inconsistencies"
+    },
+    {
       "es": "Cancelar",
       "en": "Cancel"
     },
@@ -631,9 +635,17 @@
     {
       "es": "Sugerencias",
       "en": "Suggestions"
+    },
+    {
+      "es": "Grado",
+      "en": "Degree"
+    },
+    {
+      "es": "Cercanía",
+      "en": "Closeness"
+    },
+    {
+      "es": "Intermediación",
+      "en": "Betweenness"
     }
-
-
-    
-    
 ]}

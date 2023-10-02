@@ -8,7 +8,7 @@ repgrid_home_ui <- fluidPage(
     div(id="context-rg-home", class="tooltip-container", icon("circle-xmark", id = "exit-rg-tooltip", class="exit-tooltip fa-solid"), p(i18n$t("Esta página te permite visualizar y manipular los datos importados de RepGrid y acceder a diferentes tipos de análisis."),  class = "desccustom-tooltip")),
   ),
 
-shinyjs::hidden(fluidRow(id="repgrid_home_warn",class="mb-4 mt-4 gap-2 justify-content-center error-help hidden",
+shinyjs::hidden(fluidRow(id="repgrid_home_warn",class="mb-4 mt-4 gap-2 justify-content-center error-help",
   column(12, class = "row flex-column justify-content-center",
       icon("triangle-exclamation", "fa-2x"),
       p(i18n$t("Para hacer el análisis es necesario importar o seleccionar un archivo o formulario"), class = "mt-2 mb-2"),
@@ -40,7 +40,7 @@ shinyjs::hidden(fluidRow(id="repgrid_home_warn",class="mb-4 mt-4 gap-2 justify-c
     div(id = "tabla_datos_repgrid_container",
         # Mostrar los datos de tabla_datos_repgrid
         tags$style(".my-table .htCore .htNoWrap { white-space: normal; }"),
-      rHandsontableOutput("tabla_datos_repgrid")
+      rHandsontableOutput("tabla_datos_repgrid", width = '100%')
       # rHandsontableOutput("tabla_datos_repgrid")
     )
     ),

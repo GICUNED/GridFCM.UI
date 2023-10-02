@@ -156,21 +156,21 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
 
                             fluidRow(class = "subheader-tab",
                             tabsetPanel(
-                                tabPanel("Degree", shinycssloaders::withSpinner(DT::dataTableOutput("table_degree"), type = 4, color = "#022a0c", size = 0.6), icon = icon("gauge-simple-high")),
-                                tabPanel("Closeness", shinycssloaders::withSpinner(DT::dataTableOutput("table_closeness"), type = 4, color = "#022a0c", size = 0.6),  icon = icon("person-walking-dashed-line-arrow-right")),
-                                tabPanel("Betweenness", shinycssloaders::withSpinner(DT::dataTableOutput("table_betweenness"), type = 4, color = "#022a0c", size = 0.6), icon = icon("people-arrows"))
+                                tabPanel(i18n$t("Grado"), shinycssloaders::withSpinner(DT::dataTableOutput("table_degree"), type = 4, color = "#022a0c", size = 0.6), icon = icon("gauge-simple-high")),
+                                tabPanel(i18n$t("Cercanía"),shinycssloaders::withSpinner(DT::dataTableOutput("table_closeness"), type = 4, color = "#022a0c", size = 0.6),  icon = icon("person-walking-dashed-line-arrow-right")),
+                                tabPanel(i18n$t("Intermediación"), shinycssloaders::withSpinner(DT::dataTableOutput("table_betweenness"), type = 4, color = "#022a0c", size = 0.6), icon = icon("people-arrows"))
                             )),
 
-                            fluidRow(class = "subheader-tab flex-container-sm mt-4 mb-4",
-
-                            fluidRow(class = "flex-container-sm mt-4 mb-4",
+                            fluidRow(class = "flex-container-sm mt-4 mb-2",
                               icon("water"),
                               h4(i18n$t("Inconsistencias"), class = "pagetitle2custom"),
                             ),
-                              
+
+                            fluidRow(class = "subheader-tab",
                               shinycssloaders::withSpinner(DT::dataTableOutput("inconsistences"), type = 4, color = "#022a0c", size = 0.6)
                             )
         ),
+
 
       ))
   ),
@@ -206,17 +206,21 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                          ),
                           downloadButton(class = "btn-download", "boton_download_laboratory", i18n$t("Descargar Gráfico")),
                           actionButton("enter_fs", i18n$t("Expandir"), status="warning", icon = icon("maximize"), onclick = "openFullscreen(document.getElementById('wg-lab-content'));"),
-                          shinyjs::hidden(actionButton("exit_fs", i18n$t("Salir"), status="danger", icon = icon("minimize"), onclick = "exitFullscreen();")),
+                          actionButton("exit_fs", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "exitFullscreen();"),
 
                         ),
                     shinycssloaders::withSpinner(rHandsontableOutput("simdigraph_act_vector"), type = 4, color = "#022a0c", size = 0.6)
                     ),
 
                     conditionalPanel(class = "graphic-subcontainer", condition = "input.graph_selector_laboratorio == 'pcsd'",
-                      div(class = "flex-container-sm align-left-title p-2 pb-3 border-divider",
-                        icon("line-chart"),
-                        h4(i18n$t("Resultado gráfico"), class = "pagetitle2custom"),
-                      ),
+                      fluidRow(class = "flex-container-resp p-2 pb-3 border-divider",
+                        div(class = "flex-container-sm align-left-title",
+                          icon("line-chart"),
+                          h4(i18n$t("Resultado gráfico"), class = "pagetitle2custom"),
+                          ),
+                          actionButton("enter_fs", i18n$t("Expandir"), status="warning", icon = icon("maximize"), onclick = "openFullscreen(document.getElementById('wg-lab-content'));"),
+                          actionButton("exit_fs", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "exitFullscreen();"),
+                        ),
                     shinycssloaders::withSpinner(rHandsontableOutput("pcsd_act_vector"), type = 4, color = "#022a0c", size = 0.6)
                       
                     ),

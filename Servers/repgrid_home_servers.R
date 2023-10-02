@@ -104,9 +104,10 @@ output$tabla_datos_repgrid <- renderRHandsontable({
     indicess <- seq(1, session$userData$num_col_repgrid - 1)
 
 
-    rhandsontable(tabla_manipulable()) %>%
-      hot_table(highlightCol = TRUE, highlightRow = TRUE) %>%
-        hot_col(col = indicess, format = "3")
+    rhandsontable(tabla_manipulable(), rowHeaders = NULL) %>%
+      hot_table(highlightCol = TRUE, highlightRow = TRUE, stretchH="all") %>%
+      hot_cols(fixedColumnsLeft = 1) %>%
+      hot_col(col = indicess, format = "1")
 
   }
 })

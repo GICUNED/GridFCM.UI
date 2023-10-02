@@ -8,7 +8,7 @@ repgrid_analysis_ui <- fluidPage( class="header-tab rg-diff",
 
   # Mostrar el gráfico seleccionado usando conditionalPanel
 
-  shinyjs::hidden(fluidRow(id = "repgrid_warning",class="mb-4 mt-4 gap-2 justify-content-center error-help hidden",
+  shinyjs::hidden(fluidRow(id = "repgrid_warning",class="mb-4 mt-4 gap-2 justify-content-center error-help",
         column(12, class = "row flex-column justify-content-center",
           icon("triangle-exclamation", "fa-2x"),
           p(i18n$t("Para hacer el análisis es necesario importar o seleccionar un archivo o formulario"),  class = "mt-2 mb-2"),
@@ -105,7 +105,7 @@ div(id="open-controls-container-rg", div(id="open-controls-rg", class="open-cont
       ),
   ),
 
-  conditionalPanel(class = "custom-margins-lg graphic-container bg-white rounded-lg", condition = "input.graph_selector == 'Índices Cognitivos' || input.graph_selector=='Cognitive Indices'",
+  conditionalPanel(class = "custom-margins-lg mt-4 graphic-container bg-white rounded-lg", condition = "input.graph_selector == 'Índices Cognitivos' || input.graph_selector=='Cognitive Indices'",
       
       fluidRow(class = "flex-container-sm p-2 pb-3 border-divider",
         icon("brain"),

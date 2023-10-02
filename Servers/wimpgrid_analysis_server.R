@@ -14,7 +14,63 @@ shinyjs::hide("context-wg-3-home")
   onevent("click", "exit-wg-3-tooltip", shinyjs::hide("context-wg-3-home"))
 
 
+#Pantalla completa de elementos
 
+runjs("
+
+if (document.addEventListener)
+{
+ document.addEventListener('fullscreenchange', exitHandler, false);
+ document.addEventListener('mozfullscreenchange', exitHandler, false);
+ document.addEventListener('MSFullscreenChange', exitHandler, false);
+ document.addEventListener('webkitfullscreenchange', exitHandler, false);
+}
+
+function exitHandler()
+{
+ if (!document.webkitIsFullScreen && !document.mozFullScreen && !document.msFullscreenElement)
+ {
+  $('#enter_fs')
+  .removeClass('hidden');
+
+  $('#exit_fs')
+  .addClass('hidden');
+
+  $('.graphic-container')
+  .removeClass('fullscreen-height');
+
+  $('#graph_output_laboratorio')
+  .removeClass('fullscreen-graphic');
+
+  $('.input-field-container')
+  .removeClass('fullscreen-control');
+
+  $('#open-controls-lab')
+  .removeClass('fullscreen-control-min');
+
+ } else {
+
+    $('#enter_fs')
+    .addClass('hidden');
+
+    $('#exit_fs')
+    .removeClass('hidden');
+
+    $('.graphic-container')
+      .addClass('fullscreen-height');
+
+    $('#graph_output_laboratorio')
+      .addClass('fullscreen-graphic');
+
+    $('.input-field-container')
+      .addClass('fullscreen-control');
+
+    $('#open-controls-lab')
+      .addClass('fullscreen-control-min');
+ }
+}
+")
+        
 #Ver y Ocultar panel de control izquierdo
 runjs("
 
@@ -156,40 +212,12 @@ shinyjs::hide("open-controls-container-vis")
 
   observeEvent(input$exit_fs, {
     # Navega a la página de creación de un nuevo análisis de rejilla
-        shinyjs::show("enter_fs")
         shinyjs::hide("exit_fs")
-        runjs("
-        $('.graphic-container')
-          .removeClass('fullscreen-height');
-
-        $('.vis-network')
-          .removeClass('fullscreen-graphic');
-
-        $('.input-field-container')
-          .removeClass('fullscreen-control');
-
-        $('#open-controls-lab')
-          .removeClass('fullscreen-control-min');
-        ")
   })
 
    observeEvent(input$enter_fs, {
     # Navega a la página de creación de un nuevo análisis de rejilla
         shinyjs::show("exit_fs")
-        shinyjs::hide("enter_fs")
-        runjs("
-        $('.graphic-container')
-          .addClass('fullscreen-height');
-
-        $('.vis-network')
-          .addClass('fullscreen-graphic');
-
-        $('.input-field-container')
-          .addClass('fullscreen-control');
-
-        $('#open-controls-lab')
-          .addClass('fullscreen-control-min');
-        ")
   })
 
   print("Wimpgrid")
@@ -268,17 +296,15 @@ output$tabla_datos_wimpgrid <- renderRHandsontable({
 
     indicess <- seq(1, session$userData$num_col_wimpgrid - 1)
 
- 
 
-    hot_table <- rhandsontable(tabla_manipulable_w()) %>%
+    hot_table <- rhandsontable(tabla_manipulable_w(), rowHeaders=NULL) %>%
 
-        hot_table(highlightCol = TRUE, highlightRow = TRUE) %>%
-
+        hot_table(highlightCol = TRUE, highlightRow = TRUE, stretchH="all") %>%
+        hot_cols(fixedColumnsLeft = 1) %>%
         hot_col(col = indicess, format = "3")
+        
 
     hot_table
-
- 
 
   }
 
@@ -354,6 +380,7 @@ observeEvent(input$tabla_datos_wimpgrid, {
       tabla_original[xi+1, yi+1] <- old_v
 
       tabla_manipulable_w(tabla_original)
+
       output$tabla_datos_wimpgrid <- renderRHandsontable({
         rhandsontable(tabla_original) %>%
           hot_table(highlightCol = TRUE, highlightRow = TRUE) %>%
@@ -374,8 +401,9 @@ observeEvent(input$tabla_datos_wimpgrid, {
 
 output$bert_w <- renderPlot({
   if (!is.null(session$userData$datos_wimpgrid)) {
-    bertin(wimpgrid_a_mostrar()$openrepgrid , color=c("white", "#dfb639"), cex.elements = 1,
-      cex.constructs = 1, cex.text = 1, lheight = 1.25, cc=session$userData$num_col_wimpgrid-2, col.mark.fill="#DBA901")
+    bertin(wimpgrid_a_mostrar()$openrepgrid , xlim = c(.2,
+   .8), ylim = c(0, .6), margins = c(0, 1, 1), color=c("white", "#dfb639"), cex.elements = 1,
+      cex.constructs = 1, cex.text = 1, lheight = 1.5, cc=session$userData$num_col_wimpgrid-2, col.mark.fill="#DBA901")
     
   }
 
@@ -926,14 +954,11 @@ output$distance <- renderRHandsontable({
     colnames(INTe) <- res
     rownames(INTe) <- res
 
-    rhandsontable(INTe) %>%
-    hot_table(highlightCol = TRUE, highlightRow = TRUE)
-
-    rhandsontable(INTe) %>%
-        hot_cols(
-          colWidths=60
-        )
-
+    rhandsontable(INTe, rowHeaderWidth = 250) %>%
+          hot_table(highlightCol = TRUE, highlightRow = TRUE, readOnly = TRUE, stretchH="all") %>%
+          hot_context_menu(allowRowEdit = FALSE, allowColEdit = FALSE) %>%
+          hot_cols(colWidths=200)
+      
 })
 
  
@@ -1184,7 +1209,7 @@ output$simdigraph_act_vector <- renderRHandsontable({
     res <- paste(izq, der, sep="/\n")
     colnames(vv) <- res
   }
-  rhandsontable(vv)
+  rhandsontable(vv, rowHeaders = NULL)
 
 })
 
@@ -1229,7 +1254,7 @@ output$pcsdindices_act_vector <- renderRHandsontable({
     res <- paste(izq, der, sep="/\n")
     colnames(vv) <- res
   }
-  rhandsontable(vv , col_highlight = col_highlight, row_highlight = row_highlight)
+  rhandsontable(vv ,rowHeaders = NULL, col_highlight = col_highlight, row_highlight = row_highlight)
 })
 
  
@@ -1331,7 +1356,7 @@ output$pcsd_act_vector <- renderRHandsontable({
     res <- paste(izq, der, sep="/\n")
     colnames(vv) <- res
   }
-  rhandsontable(vv)
+  rhandsontable(vv, rowHeaders = NULL)
 
 })
 

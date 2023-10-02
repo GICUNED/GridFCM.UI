@@ -24,9 +24,7 @@ library(dplyr)
 knitr::knit_hooks$set(webgl = hook_webgl)
 
 
-
 source("global.R")
-
 #GRID
 source("R/GraphFunctions.R")
 source("R/HideFunctions.R")
@@ -106,7 +104,6 @@ theme <- create_theme(
     info = "#90214a"
   )
 )
-
 
 ui <- dashboardPage(
   freshTheme = theme,

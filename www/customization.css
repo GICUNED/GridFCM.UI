@@ -17,13 +17,13 @@
  /* Extra large devices (large laptops and desktops, 1200px and up) */
  @media only screen and (min-width: 1281px) {
   body{
-    zoom: 110%;
+    /*zoom: 110%;*/
   }
  }
 
  @media only screen and (min-width: 1367px) {
   body{
-    zoom: 125%;
+    /*zoom: 125%;*/
   }
  } 
 
@@ -38,27 +38,64 @@ button{
   line-height: 1.2 !important;
 }
 
+/*Pantalla completa*/
+
+
+:not(:root):fullscreen::backdrop {
+  background: #f4f6f9;
+}
+
+.dark-mode :not(:root):fullscreen::backdrop {
+  background: #454d55;
+}
+
+:not(:root):fullscreen{
+  padding: 1rem;
+  overflow-y: scroll;
+  max-height: 100vh;
+}
+
+@media (min-width: 1417px){
+  
+    :not(:root):fullscreen .input-graphic-container{
+      height: 100%;
+    }
+}
+
+:not(:root):fullscreen #laboratory,
+:not(:root):fullscreen .shiny-spinner-output-container,
+:not(:root):fullscreen .vis-network,
+:not(:root):fullscreen .visNetwork{ 
+  height: 100% !important;
+}
+
+.shiny-spinner-output-container{
+  width: 100%;
+}
+
 .fullscreen-height{
-  height: 80vh !important;
+  height: 100% !important;
+  max-height: 100vh;
 }
 
 .fullscreen-graphic{
-  height: 60vh !important;
+  height: 100% !important;
 }
 
 .fullscreen-control{
-  height: 80vh !important;
-  overflow-y: scroll;
+  height: 100% !important;
 }
 
 .fullscreen-control-min{
  position: relative;
-
 }
 
- .hidden{
-  display: none;
+
+
+.hidden{
+  display: none !important;
 }
+
 .detail .form-group:first-child{
   width: 100% !important;
   margin-top: 1rem;
@@ -902,9 +939,9 @@ margin: 0 !important;
 /*contenedores*/
 .input-field-container{
 background-color: #e3e8ec;
-padding: .5rem 1.2rem!important;
+padding: .5rem 1rem!important;
 height: 100%;
-margin-top: 0;
+margin: 0 auto auto auto;
 min-width: 250px !important;
 max-width:  calc(25% - 2rem) !important;
 box-shadow: 0 0 1px rgba(0,0,0,0.2);
@@ -920,9 +957,7 @@ box-shadow: 0 0 1px rgba(0,0,0,0.2);
 
 .dark-mode .input-field-container{
   background-color: #23272A;
-
 }
-
 
 .graphic-container{
 padding: .5rem 1rem !important;
@@ -1207,13 +1242,12 @@ color: #8b0000;
 */
 #bert_w, #bert{
 
-  height: 700px !important;
+  min-height: 700px !important;
 }
 
 #bert_w img, #bert img{
 
 }
-
 
 .visNetwork{
   width: 100%;
@@ -1390,20 +1424,43 @@ color: #8b0000;
   color: #0A0A0A;
 }
 
-/*slider
+/*slider*/
 
 .irs--flat .irs-line {
   background-color: #fff;
   cursor: pointer;
-}*/
+}
 
-.irs-bar{
+#PuntuacionesRepgrid .irs-min,
+#PuntuacionesRepgrid .irs-max,
+#PuntuacionesRepgrid .irs-from,
+#PuntuacionesRepgrid .irs-to,
+#PuntuacionesRepgrid .irs-single {
+  display: none;
+}
+#PuntuacionesRepgrid .irs-bar {
+  visibility: hidden;
+}
+#PuntuacionesRepgrid .irs-line {
+  background-color: #e1e4e9;
+}
+.dark-mode #PuntuacionesRepgrid .irs-line {
+  background-color: #4b545c;
+}
+
+.irs--flat .irs-handle>i:first-child {
+  width: 18px;
+  border-radius: 10px;
+  left: 0;
+}
+
+.irs-bar, .irs-line{
   cursor: pointer;
 }
-/*
+
 .irs-handle{
   cursor: grab !important;
-}*/
+}
 
 /* Personalizar el color del cuadro de inicio de sesión */
 #login_box.box.box-primary {
@@ -1863,68 +1920,52 @@ margin: auto;
   margin: 0 !important;
 }
 
+/*kpis*/
+
 .kpi{
   width: 100%;
 }
 
-.kpi div table, .kpi table{
-  min-width: 200px;
-}
-
-.kpi div table th, .kpi table th{
+#convergence table th,  #dens table th{
   text-align: center !important;
   padding: 1.5px;
   color: #333333 !important;
   background-color: #fff !important;
 }
 
-.dark-mode .kpi div table th, .dark-mode .kpi table th{
-  text-align: center !important;
-  padding: 1.5px;
+.dark-mode #convergence table th, .dark-mode  #dens table th{
   color: #fff !important;
   background-color: #343A40 !important
 }
 
-
-
-.kpi div table td, .kpi table td{
+#convergence table td,  #dens table td{
   text-align: center !important;
   padding: 3px;
   background-color: #fff3b8 !important;
 
 }
-
-
-.dark-mode .kpi div table td, .dark-mode .kpi table td{
+.dark-mode #convergence table td, .dark-mode  #dens table td{
   color: #fff;
   background-color: #9c7f28 !important;
 }
 
-/*datatables*/
-/*
-.rhandsontable{
-
-  width: 100% !important;
-  border-radius: .5rem;
-  border: 1px solid #fff;
-}
-*/
-/*
-.htCore col{
-width: 100px !important;
-}*/
-
-#convergence table{
-  margin: 0 auto !important;
+#convergence table, #dens table{
+  min-width: 100% !important;
+  margin: 0;
 }
 
 #convergence{
-  max-width: 200px;
+  margin: auto;
+}
+
+#convergence, #dens{
+  min-width: 200px;
+  max-width: 250px;
   border-radius: .5rem !important;
   border: 2px solid #dee2e6;
   overflow: hidden;
-  margin: 0 auto !important;
 }
+
 
 #distance .colHeader{
   font-weight: 600 !important;
@@ -1932,16 +1973,6 @@ width: 100px !important;
   width: 100%;
   position: relative;
   top: 5px;
-}
-
-.colHeader{
-  font-weight: 600 !important;
-  text-align: center;
-  width: 100%;
-}
-
-.htRight{
-  text-align: center !important;
 }
 
 #distance .htCore thead{
@@ -1962,6 +1993,46 @@ width: 100px !important;
   width: inherit !important;
   min-width: 320px !important;
 }
+
+/*handsontables*/
+
+.handsontable{
+  overflow: hidden;
+ }
+ 
+.colHeader{
+  font-weight: 600 !important;
+  text-align: center;
+}
+
+.rowHeader{
+  font-weight: 600 !important;
+  text-align: left;
+}
+
+.htRight{
+  text-align: center !important;
+}
+
+
+ /*
+.rhandsontable{
+
+  width: 100% !important;
+  border-radius: .5rem;
+  border: 1px solid #fff;
+}
+*/
+/*
+.htCore col{
+width: 100px !important;
+}*/
+/*
+.htCore{
+  width: 100% !important;
+}
+*/
+
 /*
 .handsontable .htDimmed {
   color: inherit;
@@ -1988,16 +2059,13 @@ width: 100px !important;
 .handsontable tr{
   padding: 2px;
 }
-
-.handsontable{
-  overflow: hidden;
- }
  
 .dark-mode .handsontable td{
   background-color: #343A40 !important;
   color: #fff;
 }
 */
+
 .dataTables_filter input{
 background-color: #fff !important;
 }
@@ -2034,9 +2102,7 @@ table.dataTable{
 .patient-diff .odd td:nth-child(1),
 .patient-diff .even td:nth-child(1), 
 .patient-diff .odd td:nth-child(4),
-.patient-diff .even td:nth-child(4),
-#patientSimulations .odd td:nth-child(2),
-#patientSimulations  .even td:nth-child(2){
+.patient-diff .even td:nth-child(4){
   font-weight: bold;
 }
 
@@ -2082,8 +2148,8 @@ table.dataTable{
 
 .patient-diff .odd td:nth-child(4)::before,
 .patient-diff .even td:nth-child(4)::before,
-#patientSimulations .odd td:nth-child(2)::before,
-#patientSimulations .even td:nth-child(2)::before{
+#patientSimulations .odd td:nth-child(1)::before,
+#patientSimulations .even td:nth-child(1)::before{
   display: inline-block;
   visibility: visible !important;
   width: 1rem;

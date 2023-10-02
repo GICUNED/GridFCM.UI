@@ -224,7 +224,11 @@ patient_server <- function(input, output, session){
                     # Solo archivo RepGrid cargado, navegar a RepGrid Home
                     session$userData$id_paciente <- user_data$selected_user_id
                     repgrid_home_server(input,output,session)
-                    runjs("window.location.href = '/#!/repgrid';")
+                    runjs("
+                    setTimeout(function () {
+                    window.location.href = '/#!/repgrid';
+                    }, 200)
+                        ")
                 } 
             }
             if(!is.null(wimpgrid_fecha_seleccionada())){
@@ -258,7 +262,9 @@ patient_server <- function(input, output, session){
                 if (!is.null(datos_wimpgrid)) {
                     session$userData$id_paciente <- user_data$selected_user_id
                     wimpgrid_analysis_server(input,output,session)
-                    runjs("window.location.href = '/#!/wimpgrid';")
+                    runjs("setTimeout(function () {
+                    window.location.href = '/#!/wimpgrid';
+                    }, 200)")
                 }   
             }
             proxy <- dataTableProxy("user_table")
