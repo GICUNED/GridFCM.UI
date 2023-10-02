@@ -954,7 +954,7 @@ output$distance <- renderRHandsontable({
     colnames(INTe) <- res
     rownames(INTe) <- res
 
-    rhandsontable(INTe, rowHeaderWidth = 250) %>%
+    rhandsontable(INTe,  colHeaderHeight = 100, rowHeaderWidth = 250) %>%
           hot_table(highlightCol = TRUE, highlightRow = TRUE, readOnly = TRUE, stretchH="all") %>%
           hot_context_menu(allowRowEdit = FALSE, allowColEdit = FALSE) %>%
           hot_cols(colWidths=200)

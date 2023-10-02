@@ -105,6 +105,7 @@ theme <- create_theme(
   )
 )
 
+
 ui <- dashboardPage(
   freshTheme = theme,
   dashboardHeader(
