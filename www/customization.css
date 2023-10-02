@@ -1390,20 +1390,20 @@ color: #8b0000;
   color: #0A0A0A;
 }
 
-/*slider*/
+/*slider
 
 .irs--flat .irs-line {
   background-color: #fff;
   cursor: pointer;
-}
+}*/
 
 .irs-bar{
   cursor: pointer;
 }
-
+/*
 .irs-handle{
   cursor: grab !important;
-}
+}*/
 
 /* Personalizar el color del cuadro de inicio de sesión */
 #login_box.box.box-primary {
