@@ -914,14 +914,19 @@ output$distance <- renderRHandsontable({
     INTe <- wimpindices(dataaa_w())[["distance"]]
 
     #DT::datatable(INTe)
+    izq <- session$userData$constructos_izq
+    der <- session$userData$constructos_der
+    res <- paste(izq, der, sep="/\n")
+    colnames(INTe) <- res
+    rownames(INTe) <- res
 
     rhandsontable(INTe) %>%
-
     hot_table(highlightCol = TRUE, highlightRow = TRUE)
 
-    #%>%
-
-  #hot_col(c(1,7), readOnly = TRUE)
+    rhandsontable(INTe) %>%
+        hot_cols(
+          colWidths=60
+        )
 
 })
 
@@ -946,8 +951,9 @@ output$table_closeness <- DT::renderDataTable({
     centrality <- wimpindices(dataaa_w())[["centrality"]]
 
  
+    closeness <- data.frame(Closeness = round(centrality$closeness, 3))
 
-    DT::datatable(centrality$closeness)
+    DT::datatable(closeness)
 
   })
 
@@ -957,9 +963,9 @@ output$table_betweenness <- DT::renderDataTable({
 
     centrality <- wimpindices(dataaa_w())[["centrality"]]
 
- 
+    bt <- data.frame(Betweenness = round(centrality$betweenness, 3))
 
-    DT::datatable(centrality$betweenness)
+    DT::datatable(bt)
 
   })
 
@@ -1044,7 +1050,7 @@ pscd_stop_iter <- reactiveVal(3)
 
 observe({
   max_niter <- simdigraph_max_niter()
-  updateSliderInput(session, "simdigraph_niter", min=0, max=max_niter, step=1)
+  updateNumericInput(session, "simdigraph_niter", min=0, max=max_niter)
 })
 
 # Lógica para la pestaña "Laboratorio"
@@ -1169,7 +1175,7 @@ output$simdigraph_act_vector <- renderRHandsontable({
   if(!is.null(session$userData$constructos_izq) && !is.null(session$userData$constructos_der)){
     izq <- session$userData$constructos_izq
     der <- session$userData$constructos_der
-    res <- paste(izq, der, sep=" / ")
+    res <- paste(izq, der, sep="/\n")
     colnames(vv) <- res
   }
   rhandsontable(vv)
@@ -1214,7 +1220,7 @@ output$pcsdindices_act_vector <- renderRHandsontable({
   if(!is.null(session$userData$constructos_izq) && !is.null(session$userData$constructos_der)){
     izq <- session$userData$constructos_izq
     der <- session$userData$constructos_der
-    res <- paste(izq, der, sep=" / ")
+    res <- paste(izq, der, sep="/\n")
     colnames(vv) <- res
   }
   rhandsontable(vv , col_highlight = col_highlight, row_highlight = row_highlight)
@@ -1316,7 +1322,7 @@ output$pcsd_act_vector <- renderRHandsontable({
   if(!is.null(session$userData$constructos_izq) && !is.null(session$userData$constructos_der)){
     izq <- session$userData$constructos_izq
     der <- session$userData$constructos_der
-    res <- paste(izq, der, sep=" / ")
+    res <- paste(izq, der, sep="/\n")
     colnames(vv) <- res
   }
   rhandsontable(vv)
@@ -1416,25 +1422,25 @@ observeEvent(input$graph_selector_laboratorio, {
       updateSelectInput(session, "simdigraph_thr", selected=controles$sim_umbral)
       updateSelectInput(session, "simdigraph_layout", selected=controles$sim_design)
       updateSelectInput(session, "simdigraph_color", selected=controles$sim_color)
-      updateSliderInput(session, "simdigraph_niter", value=controles$sim_n_iter)
-      updateSliderInput(session, "simdigraph_max_iter", value=controles$sim_n_max_iter)
-      updateSliderInput(session, "simdigraph_stop_iter", value=controles$sim_n_stop_iter)
+      updateNumericInput(session, "simdigraph_niter", value=controles$sim_n_iter)
+      updateNumericInput(session, "simdigraph_max_iter", value=controles$sim_n_max_iter)
+      updateNumericInput(session, "simdigraph_stop_iter", value=controles$sim_n_stop_iter)
       updateNumericInput(session, "simdigraph_e", value=controles$sim_valor_diferencial)
       df_V(actualizarVector(controles$sim_vector))
 
       # pcsd
-      updateSliderInput(session, "pcsd_iter", value=controles$pcsd_n_iter)
-      updateSliderInput(session, "pcsd_max_iter", value=controles$pcsd_n_max_iter)
-      updateSliderInput(session, "pcsd_stop_iter", value=controles$pcsd_n_stop_iter)
+      updateNumericInput(session, "pcsd_iter", value=controles$pcsd_n_iter)
+      updateNumericInput(session, "pcsd_max_iter", value=controles$pcsd_n_max_iter)
+      updateNumericInput(session, "pcsd_stop_iter", value=controles$pcsd_n_stop_iter)
       updateSelectInput(session, "pcsd_e", selected=controles$pcsd_valor_diferencial)
       df_Vpcsd(actualizarVector(controles$pcsd_vector))
 
       # pcsd índices
       updateSelectInput(session, "pcsdindices_infer", selected=controles$pcind_propagacion)
       updateSelectInput(session, "pcsdindices_thr", selected=controles$pcind_umbral)
-      updateSliderInput(session, "pcsdindices_max_iter", value=controles$pcind_n_max_iter)
+      updateNumericInput(session, "pcsdindices_max_iter", value=controles$pcind_n_max_iter)
       updateNumericInput(session, "pcsdindices_e", value=controles$pcind_valor_diferencial)
-      updateSliderInput(session, "pcsdindices_stop_iter", value=controles$pcind_n_stop_iter)
+      updateNumericInput(session, "pcsdindices_stop_iter", value=controles$pcind_n_stop_iter)
       df_Vind(actualizarVector(controles$pcind_vector))
     }
   }

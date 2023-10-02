@@ -67,7 +67,7 @@ tabsetPanel(
                         actionButton("borrarConstructo", i18n$t("Borrar"), status ="danger", disabled=TRUE, icon = icon("trash-can")),
                         
 
-                        column(12, shinycssloaders::withSpinner(uiOutput("lista_constructos"), type = 4, color = "#022a0c", size = 0.6)),
+                        column(12, uiOutput("lista_constructos")),
                         column(12, class="d-flex justify-content-center mt-3", actionButton("continuar_constructo", i18n$t("Continuar"), status="success", icon = icon("arrow-right") )),
                         actionButton("atras_constructos", i18n$t("Atrás"))
                 ),
@@ -93,7 +93,7 @@ tabsetPanel(
                 
                 textOutput("elemento_puntuable"),
                 textOutput("polos_constructo"),
-                sliderInput("puntos", "", min=-1, max=1, value=0, step=0.01),
+                sliderInput("puntos", "", min=-1, max=1, value=0, step=0.01, ticks=FALSE, label=NULL),
                 actionButton("atras_puntuaciones", i18n$t("Atrás")),
                 actionButton("siguiente_puntuacion", i18n$t("Siguiente"))
             ),
