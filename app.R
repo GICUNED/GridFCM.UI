@@ -25,6 +25,9 @@ knitr::knit_hooks$set(webgl = hook_webgl)
 
 
 
+
+
+
 source("global.R")
 
 #GRID
@@ -284,5 +287,8 @@ server <- function(input, output, session) {
 }
 
 shinyApp(ui, server)
+
+
+
 
 

@@ -1391,6 +1391,32 @@ color: #8b0000;
   cursor: grab !important;
 }
 
+/*slider puntuacion formulario*/
+/* Ocultar los valores mínimo y máximo y el valor seleccionado */
+#PuntuacionesRepgrid .irs-min,
+#PuntuacionesRepgrid .irs-max,
+#PuntuacionesRepgrid .irs-from,
+#PuntuacionesRepgrid .irs-to,
+#PuntuacionesRepgrid .irs-single {
+  display: none;
+}
+#PuntuacionesRepgrid .irs-bar {
+  visibility: hidden;
+}
+#PuntuacionesRepgrid .irs-line {
+  background-color: #e1e4e9;
+}
+.dark-mode #PuntuacionesRepgrid .irs-line {
+  background-color: #4b545c;
+}
+
+.irs--flat .irs-handle>i:first-child {
+  width: 18px;
+  border-radius: 10px;
+  left: 0;
+}
+
+
 /* Personalizar el color del cuadro de inicio de sesión */
 #login_box.box.box-primary {
   border-top-color: #45CE98;

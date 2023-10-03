@@ -317,6 +317,7 @@ patient_server <- function(input, output, session){
         proxy <- dataTableProxy("user_table")
         proxy %>% selectRows(NULL)
         import_excel_server(input, output, session)
+        form_server(input, output, session)
         runjs("window.location.href = '/#!/import';")
     })
 
