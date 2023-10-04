@@ -10,7 +10,7 @@ tabsetPanel(
             h2(i18n$t("Inicio formulario RepGrid"), class = "rg pagetitlecustom mt-2"),
         ),
         
-        fluidRow(id="Elementos", class = "mt-4 custom-margins justify-content-center align-items-start", style = "display: none;", 
+        fluidRow(id="Elementos", class = "mt-4 custom-margins justify-content-center align-items-start", 
             column(5, id= "formElementos",
                 box(
                     width = 12,
@@ -38,7 +38,7 @@ tabsetPanel(
             ),
         ),
 
-        column(12, id = "preguntasDiadas", style = "display: none;", 
+        column(12, id = "preguntasDiadas",
             box(
                 title = i18n$t("¿Desea añdir los constructos de forma manual o de forma aleatoria?"),
                 actionButton("manual", i18n$t("Manual")),
@@ -49,7 +49,7 @@ tabsetPanel(
             )
         ),
         
-        fluidRow(id="Constructos", class = "mt-4 custom-margins justify-content-center align-items-start", style = "display: none;", 
+        fluidRow(id="Constructos", class = "mt-4 custom-margins justify-content-center align-items-start",  
             
             textInput("constructo_izq", i18n$t("Polo izquierdo:"), ""),
             
@@ -72,7 +72,7 @@ tabsetPanel(
                 ),
             ),
         ),
-        fluidRow(id="ConstructosAleatorios", class = "mt-4 custom-margins justify-content-center align-items-start", style = "display: none;", 
+        fluidRow(id="ConstructosAleatorios", class = "mt-4 custom-margins justify-content-center align-items-start",  
             box(
                 textOutput("pregunta_semejanza"),
                 textInput("respuesta_semejanza_1", i18n$t("Ambos somos:")),
@@ -86,19 +86,22 @@ tabsetPanel(
                 actionButton("siguiente_constructo", i18n$t("Siguiente"), disabled=TRUE)
             ),
         ),
-        fluidRow(id="PuntuacionesRepgrid", class = "mt-4 custom-margins justify-content-center align-items-start", style = "display: none;", 
+        fluidRow(id="PuntuacionesRepgrid", class = "mt-4 custom-margins justify-content-center align-items-start",  
             box(
                 title = i18n$t("Puntuaciones Repgrid"),
                 textOutput("elemento_puntuable"),
-                textOutput("polo_izq"),
-                textOutput("polo_der"),
+                fluidRow(
+                    textOutput("polo_izq"),
+                    p(" - "),
+                    textOutput("polo_der")
+                ),
                 
                 sliderInput("puntos", "", min=-1, max=1, value=0, step=0.01, ticks=FALSE),
                 actionButton("atras_puntuaciones", i18n$t("Atrás")),
                 actionButton("siguiente_puntuacion", i18n$t("Siguiente"))
             ),
         ),
-        fluidRow(id="ConfirmacionRepgrid", class = "mt-4 custom-margins justify-content-center align-items-start", style = "display: none;", 
+        fluidRow(id="ConfirmacionRepgrid", class = "mt-4 custom-margins justify-content-center align-items-start",  
             box(
                 title = i18n$t("Puntuaciones guardadas con éxito. Desea crear la rejilla?"),
                 actionButton("crearRepgrid", i18n$t("Crear Repgrid")),

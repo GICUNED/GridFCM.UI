@@ -19,9 +19,6 @@ import_server <- function(input, output, session) {
   })
 
   observeEvent(input$importar_formulario, {
-    #me paso la variable session 
-
-    form_server(input, output, session)
     # Navigates to the "Form" page when the specified input is clicked
     runjs("window.location.href = '/#!/form';")
     # revisar este runjs ???

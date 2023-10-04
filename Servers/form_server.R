@@ -75,28 +75,28 @@ form_server <- function(input, output, session){
         }
     })
 
-    observeEvent(input$continuar_elementos, {
+    shinyjs::onclick("continuar_elementos", {
         shinyjs::hide("Elementos")
         shinyjs::show("preguntasDiadas")
         
     })    
 
     # Preguntas sobre los constructos
-    observeEvent(input$aleatorio, {
+    shinyjs::onclick("aleatorio", {
         shinyjs::show("n_aleatorio")
         shinyjs::show("generar_aleatorio")
     })
 
-    observeEvent(input$manual, {
+    shinyjs::onclick("manual", {
         shinyjs::show("Constructos")
         shinyjs::hide("preguntasDiadas")
     })
 
-    observeEvent(input$generar_aleatorio, {
+    shinyjs::onclick("generar_aleatorio", {
         generar_diadas(input$n_aleatorio)
     })
 
-    observeEvent(input$atras_preguntas_diada, {
+    shinyjs::onclick("atras_preguntas_diada", {
         shinyjs::hide("preguntasDiadas")
         shinyjs::show("Elementos")
     })
@@ -114,7 +114,7 @@ form_server <- function(input, output, session){
     )
 
     observeEvent(input$guardarConstructo, {
-        if((length(input$constructo_izq) > 0) && (length(input$constructo_der) > 0)){
+        if((nchar(input$constructo_izq) > 0) && (nchar(input$constructo_der) > 0)){
             constructo <- paste(input$constructo_izq, " - ", input$constructo_der)
             constructos(c(constructos(), constructo))
             updateTextInput(session, "constructo_izq", value="")
@@ -162,7 +162,7 @@ form_server <- function(input, output, session){
         }
     )
 
-    observeEvent(input$continuar_constructo, {
+    shinyjs::onclick("continuar_constructo", {
         shinyjs::hide("Constructos")
         shinyjs::show("PuntuacionesRepgrid")
         constructos_puntuables(constructos())
@@ -170,7 +170,7 @@ form_server <- function(input, output, session){
         puntos_repgrid(NULL)
     })  
 
-    observeEvent(input$atras_constructos, {
+    shinyjs::onclick("atras_constructos", {
         shinyjs::hide("Constructos")
         shinyjs::show("preguntasDiadas")
     })
@@ -270,7 +270,7 @@ form_server <- function(input, output, session){
         }        
     })
 
-    observeEvent(input$atras_constructos_aleatorios, {
+    shinyjs::onclick("atras_constructos_aleatorios", {
         shinyjs::hide("ConstructosAleatorios")
         shinyjs::show("preguntasDiadas")
     })
@@ -298,7 +298,7 @@ form_server <- function(input, output, session){
         }
     )
                 
-    observeEvent(input$siguiente_puntuacion, {
+    shinyjs::onclick("siguiente_puntuacion", {
         if(length(constructos_puntuables()) > 0){
             puntos_repgrid(c(puntos_repgrid(), input$puntos))
             constructos_puntuables(constructos_puntuables()[-1])
@@ -309,13 +309,13 @@ form_server <- function(input, output, session){
             elementos_puntuables(elementos_puntuables()[-1])
             
         }
-        if(length(elementos_puntuables()) ==0){
+        if(length(elementos_puntuables()) == 0){
             shinyjs::hide("PuntuacionesRepgrid")
             shinyjs::show("ConfirmacionRepgrid")
         }
     })
 
-    observeEvent(input$atras_puntuaciones, {
+    shinyjs::onclick("atras_puntuaciones", {
         shinyjs::hide("PuntuacionesRepgrid")
         shinyjs::show("Constructos")
     })
@@ -333,8 +333,6 @@ form_server <- function(input, output, session){
         constructos_separados <- strsplit(constructos, " - ")
         polo_izq <- sapply(constructos_separados, function(x) x[1])
         polo_der <- sapply(constructos_separados, function(x) x[2])
-        message(polo_izq)
-        message(polo_der)
 
         wb <- createWorkbook()
         sheet <- addWorksheet(wb, "Sheet1")
@@ -361,6 +359,7 @@ form_server <- function(input, output, session){
     }
     
     shinyjs::onclick("crearRepgrid", {
+        
         ruta_excel <- generar_excel()
         id_paciente <- session$userData$id_paciente
 
@@ -390,13 +389,28 @@ form_server <- function(input, output, session){
             session$userData$datos_repgrid <- datos_repgrid
             file.remove(ruta_destino_rep)
             if (!is.null(datos_repgrid)) {
-                repgrid_home_server(input,output,session)
-                runjs("window.location.href = '/#!/repgrid';")
+                try <- tryCatch(
+                    {
+                        repgrid_home_server(input,output,session)
+                        runjs("window.location.href = '/#!/repgrid';")
+                    },
+                    error = function(e){
+                        message("Se ha producido un error: ", conditionMessage(e), "\n")
+                    }
+                )
+                
+                shinyjs::hide("ConfirmacionRepgrid")
+                nombres(NULL)
+                constructos(NULL)
+                aleatorios(NULL)
+                elementos_puntuables(NULL)
+                constructos_puntuables(NULL)
+                puntos_repgrid(NULL)
             } 
         }
     })
 
-    observeEvent(input$atras_confirmacion_repgrid, {
+    shinyjs::onclick("atras_confirmacion_repgrid", {
         shinyjs::hide("ConfirmacionRepgrid")
         shinyjs::show("Constructos")
     })
