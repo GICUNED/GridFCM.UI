@@ -5,13 +5,17 @@ form_server <- function(input, output, session){
     shinyjs::hide("ConstructosAleatorios")
     shinyjs::hide("n_aleatorio")
     shinyjs::hide("PuntuacionesRepgrid")
+    shinyjs::hide("ConfirmacionRepgrid")
+    shinyjs::show("Elementos")
 
     nombres <- reactiveVal(list("Yo - Actual", "Yo - Ideal"))
     nombre_seleccionado <- reactiveVal(NULL)
     constructos <- reactiveVal(NULL)
     constructo_seleccionado <- reactiveVal(NULL)
     aleatorios <- reactiveVal(NULL)
-    puntuables <- reactiveVal(NULL)
+    elementos_puntuables <- reactiveVal(NULL)
+    constructos_puntuables <- reactiveVal(NULL)
+    puntos_repgrid <- reactiveVal(NULL)
 
     # Formulario para elementos repgrid
 
@@ -71,27 +75,28 @@ form_server <- function(input, output, session){
         }
     })
 
-    observeEvent(input$continuar_elementos, {
+    shinyjs::onclick("continuar_elementos", {
         shinyjs::hide("Elementos")
         shinyjs::show("preguntasDiadas")
+        
     })    
 
     # Preguntas sobre los constructos
-    observeEvent(input$aleatorio, {
+    shinyjs::onclick("aleatorio", {
         shinyjs::show("n_aleatorio")
         shinyjs::show("generar_aleatorio")
     })
 
-    observeEvent(input$manual, {
+    shinyjs::onclick("manual", {
         shinyjs::show("Constructos")
         shinyjs::hide("preguntasDiadas")
     })
 
-    observeEvent(input$generar_aleatorio, {
+    shinyjs::onclick("generar_aleatorio", {
         generar_diadas(input$n_aleatorio)
     })
 
-    observeEvent(input$atras_preguntas_diada, {
+    shinyjs::onclick("atras_preguntas_diada", {
         shinyjs::hide("preguntasDiadas")
         shinyjs::show("Elementos")
     })
@@ -109,7 +114,7 @@ form_server <- function(input, output, session){
     )
 
     observeEvent(input$guardarConstructo, {
-        if((length(input$constructo_izq) > 0) && (length(input$constructo_der) > 0)){
+        if((nchar(input$constructo_izq) > 0) && (nchar(input$constructo_der) > 0)){
             constructo <- paste(input$constructo_izq, " - ", input$constructo_der)
             constructos(c(constructos(), constructo))
             updateTextInput(session, "constructo_izq", value="")
@@ -149,13 +154,23 @@ form_server <- function(input, output, session){
         }
     })
 
-    observeEvent(input$continuar_constructo, {
+    observe(
+        if(length(constructos()) > 0){
+            shinyjs::enable("continuar_constructo")
+        }else{
+            shinyjs::disable("continuar_constructo")
+        }
+    )
+
+    shinyjs::onclick("continuar_constructo", {
         shinyjs::hide("Constructos")
         shinyjs::show("PuntuacionesRepgrid")
-        puntuables(constructos())
+        constructos_puntuables(constructos())
+        elementos_puntuables(nombres())
+        puntos_repgrid(NULL)
     })  
 
-    observeEvent(input$atras_constructos, {
+    shinyjs::onclick("atras_constructos", {
         shinyjs::hide("Constructos")
         shinyjs::show("preguntasDiadas")
     })
@@ -194,7 +209,7 @@ form_server <- function(input, output, session){
     }
 
     observe(
-        if(!is.null((aleatorios()))){
+        if(length(aleatorios()) > 0){
             polo_derecho <- aleatorios()[[1]][[2]]
 
             output$pregunta_semejanza <- renderText({
@@ -236,7 +251,6 @@ form_server <- function(input, output, session){
             updateTextInput(session, "respuesta_diferencia_2", value="")
 
             # lo quito de la lista de aleatorios ya que se ha usado
-            message("borro")
             aleatorios(aleatorios[-1])
             if(length(aleatorios()) == 0){
                 aleatorios(NULL)
@@ -251,31 +265,153 @@ form_server <- function(input, output, session){
                 })
                 shinyjs::hide("ConstructosAleatorios")
                 shinyjs::show("Constructos")
+
             }
         }        
     })
 
-    observeEvent(input$atras_constructos_aleatorios, {
+    shinyjs::onclick("atras_constructos_aleatorios", {
         shinyjs::hide("ConstructosAleatorios")
         shinyjs::show("preguntasDiadas")
     })
 
+
     # Puntuaciones para repgrid
 
-    output$elemento_puntuable <- renderText({
+    observe(
+        if(length(elementos_puntuables()) > 0){
+            output$elemento_puntuable <- renderText({
+                unlist(elementos_puntuables()[1])
+            })
+        }
+    )
 
+    observe(
+        if(length(constructos_puntuables()) > 0){
+            output$polo_izq <- renderText({
+                unlist(strsplit(constructos_puntuables()[1], " - "))[1]
+            })
+
+            output$polo_der <- renderText({
+                unlist(strsplit(constructos_puntuables()[1], " - "))[2]
+            })
+        }
+    )
+                
+    shinyjs::onclick("siguiente_puntuacion", {
+        if(length(constructos_puntuables()) > 0){
+            puntos_repgrid(c(puntos_repgrid(), input$puntos))
+            constructos_puntuables(constructos_puntuables()[-1])
+        }
+        if(length(constructos_puntuables()) == 0 && length(elementos_puntuables()) > 0){
+            
+            constructos_puntuables(constructos())
+            elementos_puntuables(elementos_puntuables()[-1])
+            
+        }
+        if(length(elementos_puntuables()) == 0){
+            shinyjs::hide("PuntuacionesRepgrid")
+            shinyjs::show("ConfirmacionRepgrid")
+        }
     })
-    
-    output$polos_constructo <- renderText({
-        
-    })
 
-    observeEvent(input$siguiente_puntuacion, {
-
-    })
-
-    observeEvent(input$atras_puntuaciones, {
+    shinyjs::onclick("atras_puntuaciones", {
         shinyjs::hide("PuntuacionesRepgrid")
+        shinyjs::show("Constructos")
+    })
+
+
+    # Página de confirmación puntuaciones. Sacar un resumen?
+
+    generar_excel <- function(){
+        puntuaciones <- puntos_repgrid()
+        elementos <- nombres()
+        constructos <- constructos()
+        n_constructos <- length(constructos)
+        n_elementos <- length(elementos)
+        primera_fila <- c("-1", elementos, "1")
+        constructos_separados <- strsplit(constructos, " - ")
+        polo_izq <- sapply(constructos_separados, function(x) x[1])
+        polo_der <- sapply(constructos_separados, function(x) x[2])
+
+        wb <- createWorkbook()
+        sheet <- addWorksheet(wb, "Sheet1")
+        num_filas <- n_constructos + 1
+        num_columnas <- n_elementos + 2
+
+        writeData(wb, sheet, primera_fila, startRow=1)
+        writeData(wb, sheet, polo_izq, startRow=2, startCol=1)
+        writeData(wb, sheet, polo_der, startRow=2, startCol=num_columnas)
+        
+        i = 1
+        for (columna in 3:num_columnas-1) {
+            for (fila in 2:num_filas) {
+                writeData(wb, sheet, puntuaciones[i], startCol = columna, startRow = fila)
+                i <- i+1
+            }
+        }
+
+        ruta <- tempdir()
+        nombre <- file.path(ruta, "formulario_repgrid.xlsx")
+        saveWorkbook(wb, nombre, overwrite=TRUE)
+
+        return(nombre)
+    }
+    
+    shinyjs::onclick("crearRepgrid", {
+        
+        ruta_excel <- generar_excel()
+        id_paciente <- session$userData$id_paciente
+
+        if(file.exists(ruta_excel)){
+            excel_repgrid_codificar <- read.xlsx(ruta_excel, colNames=FALSE)
+            file.remove(ruta_excel)
+            ruta_destino_rep <- tempfile(fileext = ".xlsx")
+            fecha <- codificar_excel_BD(excel_repgrid_codificar, 'repgrid_xlsx', id_paciente)
+            id <- decodificar_BD_excel('repgrid_xlsx', ruta_destino_rep, id_paciente)
+            session$userData$fecha_repgrid <- fecha
+            #constructos
+            constructos_izq <- excel_repgrid_codificar[2:nrow(excel_repgrid_codificar), 1]
+            constructos_der <- excel_repgrid_codificar[2:nrow(excel_repgrid_codificar), ncol(excel_repgrid_codificar)]
+            session$userData$constructos_izq_rep <- constructos_izq
+            session$userData$constructos_der_rep <- constructos_der
+            datos_repgrid <- OpenRepGrid::importExcel(ruta_destino_rep)
+            excel_repgrid <- read.xlsx(ruta_destino_rep)
+            # aqui voy a comprobar si estoy importando el excel exportado con los numeros como strings
+            columnas_a_convertir <- 2:(ncol(excel_repgrid) - 1)
+            # Utiliza lapply para aplicar la conversión a las columnas seleccionadas
+            excel_repgrid[, columnas_a_convertir] <- lapply(excel_repgrid[, columnas_a_convertir], as.numeric)
+            session$userData$datos_to_table <- excel_repgrid
+            num_columnas <- ncol(session$userData$datos_to_table)
+            session$userData$num_col_repgrid <- num_columnas
+            num_rows <- nrow(session$userData$datos_to_table)
+            session$userData$num_row_repgrid <- num_rows
+            session$userData$datos_repgrid <- datos_repgrid
+            file.remove(ruta_destino_rep)
+            if (!is.null(datos_repgrid)) {
+                try <- tryCatch(
+                    {
+                        repgrid_home_server(input,output,session)
+                        runjs("window.location.href = '/#!/repgrid';")
+                    },
+                    error = function(e){
+                        message("Se ha producido un error: ", conditionMessage(e), "\n")
+                    }
+                )
+                
+                shinyjs::hide("ConfirmacionRepgrid")
+                nombres(NULL)
+                constructos(NULL)
+                aleatorios(NULL)
+                elementos_puntuables(NULL)
+                constructos_puntuables(NULL)
+                puntos_repgrid(NULL)
+            } 
+        }
+    })
+
+    shinyjs::onclick("atras_confirmacion_repgrid", {
+        shinyjs::hide("ConfirmacionRepgrid")
         shinyjs::show("Constructos")
     })
 }

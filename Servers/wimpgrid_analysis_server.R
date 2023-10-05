@@ -296,14 +296,15 @@ output$tabla_datos_wimpgrid <- renderRHandsontable({
 
     indicess <- seq(1, session$userData$num_col_wimpgrid - 1)
 
+    #izq <- session$userData$constructos_izq
+    #der <- session$userData$constructos_der
+    #res <- paste(izq, der, sep="/\n")
+    #message(res)
 
-    hot_table <- rhandsontable(tabla_manipulable_w(), rowHeaders=NULL) %>%
-
-        hot_table(highlightCol = TRUE, highlightRow = TRUE, stretchH="all") %>%
-        hot_cols(fixedColumnsLeft = 1) %>%
+    hot_table <- rhandsontable(tabla_manipulable_w()) %>%
+        hot_table(highlightCol = TRUE, highlightRow = TRUE) %>%
         hot_col(col = indicess, format = "3")
         
-
     hot_table
 
   }
