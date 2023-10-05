@@ -77,7 +77,7 @@ div(id="open-controls-container-rg", div(id="open-controls-rg", class="open-cont
  
         ),
 
-  conditionalPanel(class = "graphic-container bg-white rounded-lg", condition = "input.graph_selector == 'Cluster Analysis' || input.graph_selector == 'Análisis por Conglomerados'",
+  conditionalPanel(class = "graphic-container bg-white rounded-lg mt-2", condition = "input.graph_selector == 'Cluster Analysis' || input.graph_selector == 'Análisis por Conglomerados'",
       fluidRow(class = "flex-container-sm p-2 pb-3 border-divider",
         icon("network-wired"),
         h4(i18n$t("Análisis por Conglomerados"), class = "pagetitle2custom")

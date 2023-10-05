@@ -1,7 +1,7 @@
 suggestion_ui <- fluidPage(
     useShinyjs(),
 
-    titlePanel("Página de Sugerencias"),
+    titlePanel(i18n$t("Sugerencias")),
   
     # Cuadro de texto grande
     textAreaInput("sugerencia", i18n$t("Escriba su sugerencia aquí:"), rows = 10),

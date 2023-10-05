@@ -622,7 +622,7 @@
     },
     {
       "es": "Ver pacientes",
-      "en": "View patients‹"
+      "en": "View patients"
     },
     {
       "es": "Simulación de ",
@@ -647,5 +647,15 @@
     {
       "es": "Intermediación",
       "en": "Betweenness"
+    },
+    {
+      "es": "Escriba su sugerencia aquí:",
+      "en": "Write down your suggestion:"
+    },
+    {
+      "es": "Enviar",
+      "en": "Send"
     }
+
+    
 ]}
