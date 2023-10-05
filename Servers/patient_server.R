@@ -136,7 +136,12 @@ patient_server <- function(input, output, session){
 
     cargar_fechas_wimpgrid <- function(){
         con <- establishDBConnection()
-        query <- sprintf("SELECT distinct(fecha_registro), comentarios FROM wimpgrid_xlsx, wimpgrid_params WHERE fk_paciente=%d and wimpgrid_xlsx.id = fk_wimpgrid", user_data$selected_user_id)
+        query <- sprintf("SELECT DISTINCT wimpgrid_xlsx.fecha_registro, wimpgrid_params.comentarios 
+                 FROM wimpgrid_xlsx
+                 LEFT JOIN wimpgrid_params
+                 ON wimpgrid_xlsx.id = wimpgrid_params.fk_wimpgrid
+                 WHERE wimpgrid_xlsx.fk_paciente = %d", user_data$selected_user_id)
+
         wimpgridDB <- DBI::dbGetQuery(con, query)
         DBI::dbDisconnect(con)
         
@@ -314,6 +319,7 @@ patient_server <- function(input, output, session){
     observeEvent(input$importarGridPaciente, {
         shinyjs::hide("patientSimulations")
         session$userData$id_paciente <- user_data$selected_user_id
+        message(session$userData$id_paciente)
         proxy <- dataTableProxy("user_table")
         proxy %>% selectRows(NULL)
         import_excel_server(input, output, session)
