@@ -312,6 +312,7 @@ form_server <- function(input, output, session){
             shinyjs::hide("PuntuacionesRepgrid")
             shinyjs::show("ConfirmacionRepgrid")
         }
+        updateSliderInput(session, "puntos", value=0)
     })
 
     # siguiente puntuacion valorando los elementos y constructos a la inversa
@@ -455,6 +456,7 @@ form_server <- function(input, output, session){
     valoracion_actual <- reactiveVal(list())
     valoracion_ideal <- reactiveVal(list())
     valoracion_hipotetico <- reactiveVal(list())
+    valoracion_actual_slider <- reactiveVal(list())
 
     # COMPROBAR DATOS PREVIOS ------------------------------------------------------
     shinyjs::onclick("comprobar_datos_previos_w", {
@@ -833,6 +835,7 @@ form_server <- function(input, output, session){
             shinyjs::show("puntuaciones_w")
             message(valoracion_hipotetico())
         }
+        updateSliderInput(session, "valora", value=0)
     })
 
     shinyjs::onclick("atras_evaluaciones_w", {
@@ -856,7 +859,6 @@ form_server <- function(input, output, session){
             }
             i <- i+1
         }
-        message(elementos)
         return(elementos)
     }
 
@@ -865,6 +867,10 @@ form_server <- function(input, output, session){
         shinyjs::show("PuntuacionesWimpgrid")
         constructos_puntuables_w(constructos_w())
         elementos_puntuables_w(generar_elementos_wimpgrid(constructos_w()))
+        ideales <- rep(valoracion_actual(), each = length(constructos_puntuables_w()))
+        message("ideales")
+        message(ideales)
+        valoracion_actual_slider(ideales)
     })
 
     observe(
@@ -872,7 +878,6 @@ form_server <- function(input, output, session){
             output$elemento_puntuable_w <- renderText({
                 unlist(elementos_puntuables_w()[1])
             })
-            message(unlist(elementos_puntuables_w()[1]))
         }
     )
 
@@ -887,12 +892,17 @@ form_server <- function(input, output, session){
             })
         }
     )
+
+    observe(
+        if(length(valoracion_actual_slider()) > 0){
+            updateSliderInput(session, "puntos_w", value = valoracion_actual_slider()[1])
+        }
+    )
                 
     shinyjs::onclick("siguiente_puntuacion_w", {
         if(length(constructos_puntuables_w()) > 0){
             puntos_wimpgrid(c(puntos_wimpgrid(), input$puntos_w))
             constructos_puntuables_w(constructos_puntuables_w()[-1])
-            message(constructos_puntuables_w())
          }
         if(length(constructos_puntuables_w()) == 0 && length(elementos_puntuables_w()) > 0){
             
@@ -904,6 +914,7 @@ form_server <- function(input, output, session){
             shinyjs::hide("PuntuacionesWimpgrid")
             shinyjs::show("ConfirmacionWimpgrid")
         }
+        valoracion_actual_slider(valoracion_actual_slider()[-1])
     })
 
     shinyjs::onclick("atras_puntuaciones_w", {
@@ -916,4 +927,113 @@ form_server <- function(input, output, session){
         shinyjs::show("preguntasDiadas_w")
     })
     # FIN PUNTUACIONES WIMPGRID ---------------------------------------------------------
+
+    # CREAR WIMPGRID XSLX ----------------------------------------------------
+
+    generar_excel_w <- function(){
+        puntuaciones <- puntos_wimpgrid()
+        constructos <- constructos_w()
+        elementos <- generar_elementos_wimpgrid(constructos)
+        n_constructos <- length(constructos)
+        n_elementos <- length(elementos)
+        primera_fila <- c("-1", elementos, "Yo - Ideal", "1")
+        constructos_separados <- strsplit(constructos, " - ")
+        polo_izq <- sapply(constructos_separados, function(x) x[1])
+        polo_der <- sapply(constructos_separados, function(x) x[2])
+
+        wb <- createWorkbook()
+        sheet <- addWorksheet(wb, "Sheet1")
+        num_filas <- n_constructos + 1
+        num_columnas <- n_elementos + 3
+
+        writeData(wb, sheet, primera_fila, startRow=1)
+        writeData(wb, sheet, polo_izq, startRow=2, startCol=1)
+        writeData(wb, sheet, polo_der, startRow=2, startCol=num_columnas)
+        writeData(wb, sheet, valoracion_ideal(), startRow=2, startCol=num_columnas-1)
+        
+        i = 1
+        for (columna in 3:num_columnas-2) {
+            for (fila in 2:num_filas) {
+                writeData(wb, sheet, puntuaciones[i], startCol = columna, startRow = fila)
+                i <- i+1
+            }
+        }
+
+        ruta <- tempdir()
+        nombre <- file.path(ruta, "formulario_wimprid.xlsx")
+        saveWorkbook(wb, nombre, overwrite=TRUE)
+
+        return(nombre)
+    }
+
+    output$crearWimpgrid <- downloadHandler(
+        filename = function() {
+            "wimp.xlsx"
+        },
+        content = function(file) {
+            ruta_excel <- generar_excel_w()
+
+            file.copy(ruta_excel, file)
+        }
+    )
+
+    shinyjs::onclick("crearWimpgridd", {
+        ruta_excel <- generar_excel_w()
+        id_paciente <- session$userData$id_paciente
+
+        if(file.exists(ruta_excel)){
+            excel_wimp_codificar <- read.xlsx(ruta_excel, colNames=FALSE)
+            file.remove(ruta_excel)
+            ruta_destino_wimp <- tempfile(fileext = ".xlsx")
+            fecha <- codificar_excel_BD(excel_wimp_codificar, 'wimpgrid_xlsx', id_paciente)
+            id <- decodificar_BD_excel('wimpgrid_xlsx', ruta_destino_wimp, id_paciente)
+
+            #constructos
+            constructos_izq <- excel_wimp_codificar[2:nrow(excel_wimp_codificar), 1]
+            constructos_der <- excel_wimp_codificar[2:nrow(excel_wimp_codificar), ncol(excel_wimp_codificar)]
+            session$userData$constructos_izq <- constructos_izq
+            session$userData$constructos_der <- constructos_der
+
+            session$userData$fecha_wimpgrid <- fecha
+            session$userData$id_wimpgrid <- id
+            datos_wimpgrid <- importwimp(ruta_destino_wimp)
+            excel_wimp<-read.xlsx(ruta_destino_wimp)
+            
+            columnas_a_convertir <- 2:(ncol(excel_wimp) - 1)
+            # Utiliza lapply para aplicar la conversión a las columnas seleccionadas
+            excel_wimp[, columnas_a_convertir] <- lapply(excel_wimp[, columnas_a_convertir], as.numeric)
+
+            session$userData$datos_to_table_w <- excel_wimp
+            num_columnas <- ncol(session$userData$datos_to_table_w)
+            session$userData$num_col_wimpgrid <- num_columnas
+
+            num_rows <- nrow(session$userData$datos_to_table_w)
+            session$userData$num_row_wimpgrid <- num_rows
+            session$userData$datos_wimpgrid <- datos_wimpgrid
+            
+            file.remove(ruta_destino_wimp)
+            if (!is.null(datos_wimpgrid)) {
+                # Solo archivo WimpGrid cargado, navegar a WimpGrid Home
+                wimpgrid_analysis_server(input,output,session)
+                runjs("window.location.href = '/#!/wimpgrid';")
+                shinyjs::hide("ConfirmacionWimpgrid")
+                nombres_w(NULL)
+                nombres_valoraciones_w(NULL)
+                nombre_seleccionado_w(NULL)
+                constructos_w(NULL)
+                constructo_seleccionado_w(NULL)
+                aleatorios_w(NULL)
+                elementos_evaluables_w(NULL)
+                elementos_puntuables_w(NULL)
+                constructos_puntuables_w(NULL)
+                puntos_wimpgrid(NULL)
+                valoracion_actual(NULL)
+                valoracion_hipotetico(NULL)
+                valoracion_actual_slider(NULL)
+            }  
+        }
+    })
+
+
+    # FIN CREAR WIMPGRID XLSX ---------------------------------------------------
 }
