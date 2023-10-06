@@ -282,7 +282,7 @@ tabsetPanel(
         fluidRow(id="ConfirmacionWimpgrid", class = "mt-4 custom-margins justify-content-center align-items-start",  
             box(
                 title = i18n$t("Puntuaciones guardadas con éxito. Desea crear la rejilla?"),
-                downloadButton("crearWimpgrid", i18n$t("Crear Wimpgrid")),
+                actionButton("crearWimpgrid", i18n$t("Crear Wimpgrid")),
                 actionButton("atras_confirmacion_wimpgrid", i18n$t("Atrás"))
             )
         )

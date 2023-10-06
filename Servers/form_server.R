@@ -867,10 +867,10 @@ form_server <- function(input, output, session){
         shinyjs::show("PuntuacionesWimpgrid")
         constructos_puntuables_w(constructos_w())
         elementos_puntuables_w(generar_elementos_wimpgrid(constructos_w()))
-        ideales <- rep(valoracion_actual(), each = length(constructos_puntuables_w()))
-        message("ideales")
-        message(ideales)
-        valoracion_actual_slider(ideales)
+        actuales <- rep(valoracion_actual(), each = length(constructos_puntuables_w()))
+        message("actuales")
+        message(actuales)
+        valoracion_actual_slider(actuales)
     })
 
     observe(
@@ -932,6 +932,7 @@ form_server <- function(input, output, session){
 
     generar_excel_w <- function(){
         puntuaciones <- puntos_wimpgrid()
+        message(puntuaciones)
         constructos <- constructos_w()
         elementos <- generar_elementos_wimpgrid(constructos)
         n_constructos <- length(constructos)
@@ -952,7 +953,7 @@ form_server <- function(input, output, session){
         writeData(wb, sheet, valoracion_ideal(), startRow=2, startCol=num_columnas-1)
         
         i = 1
-        for (columna in 3:num_columnas-2) {
+        for (columna in 4:num_columnas-2) {
             for (fila in 2:num_filas) {
                 writeData(wb, sheet, puntuaciones[i], startCol = columna, startRow = fila)
                 i <- i+1
@@ -966,18 +967,18 @@ form_server <- function(input, output, session){
         return(nombre)
     }
 
-    output$crearWimpgrid <- downloadHandler(
-        filename = function() {
-            "wimp.xlsx"
-        },
-        content = function(file) {
-            ruta_excel <- generar_excel_w()
+    #output$crearWimpgrid <- downloadHandler(
+     #   filename = function() {
+     #       "wimp.xlsx"
+     #   },
+     #   content = function(file) {
+     #       ruta_excel <- generar_excel_w()
 
-            file.copy(ruta_excel, file)
-        }
-    )
+           # file.copy(ruta_excel, file)
+        #}
+    #)
 
-    shinyjs::onclick("crearWimpgridd", {
+    shinyjs::onclick("crearWimpgrid", {
         ruta_excel <- generar_excel_w()
         id_paciente <- session$userData$id_paciente
 
