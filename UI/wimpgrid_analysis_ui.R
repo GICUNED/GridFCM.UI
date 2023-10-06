@@ -94,6 +94,8 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
       shinyjs::hidden(div(id="wg-vis-content",
        
         fluidRow(class = "input-graphic-container",
+
+        #autodigrafo e idealigraph
             conditionalPanel(class = "graphics-vis col-sm-9 graphic-container bg-white rounded-lg gap-2", condition = "input.graph_selector_visualizacion == 'idealdigraph' || input.graph_selector_visualizacion == 'digrafo del ideal' || input.graph_selector_visualizacion == 'selfdigraph' || input.graph_selector_visualizacion == 'autodigrafo'",
               fluidRow(class = "flex-container-resp p-2 pb-3 border-divider",
 
