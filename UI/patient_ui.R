@@ -64,7 +64,7 @@ patient_ui <- fluidPage(class="patient-diff",
                 column(6, class = "w-50 p-0 pr-2", numericInput("edad", i18n$t("Edad:"), value = 0)),
                 column(6, class = "w-50 p-0", selectInput("genero", i18n$t("Género:"), c("Hombre", "Mujer", "Sin definir"))),
               ),
-              textAreaInput("diagnostico", i18n$t("Diagnóstico:"), placeholder = "Diagnóstico preliminar"),
+              textAreaInput("diagnostico", i18n$t("Problema:"), placeholder = "Diagnóstico preliminar"),
               textAreaInput("anotaciones", i18n$t("Anotaciones:"), placeholder = "Comentarios relativos al paciente"),
               actionButton("guardarAddPatient", i18n$t("Guardar"), status = 'success', disabled=TRUE, icon = icon("save"))
             )),
@@ -86,7 +86,7 @@ patient_ui <- fluidPage(class="patient-diff",
             column(6, class = "p-0 pr-2", numericInput("edadEdit", i18n$t("Edad:"), value = 0)),
             column(6, class = "p-0", selectInput("generoEdit", i18n$t("Género:"), c("Hombre", "Mujer", "Sin definir"))),
           ),
-          textAreaInput("diagnosticoEdit", i18n$t("Diagnóstico:")),
+          textAreaInput("diagnosticoEdit", i18n$t("Problema:")),
           textAreaInput("anotacionesEdit", i18n$t("Anotaciones:")),
           #En amarillo el boton???
           actionButton("saveEdit", i18n$t("Editar"), status = 'success', icon = icon("save"))

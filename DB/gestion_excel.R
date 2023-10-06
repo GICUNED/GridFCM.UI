@@ -3,7 +3,7 @@ codificar_excel_BD <- function(excel, tabla_destino, id_paciente){
     t_inicio <- Sys.time()
     fecha <- as.POSIXct(Sys.time(), origin = "1970-01-01")
     fecha <- format(fecha, format = "%Y-%m-%d %H:%M:%S", tz = "Europe/Madrid")
-    message(fecha)
+    message(id_paciente)
     # consultar max id y meter manual
     # Consultar el máximo valor actual de 'id'
     max_id <- as.integer(DBI::dbGetQuery(con, sprintf("SELECT MAX(id) FROM %s", tabla_destino)))

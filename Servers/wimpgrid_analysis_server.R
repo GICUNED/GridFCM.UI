@@ -930,7 +930,7 @@ output$boton_download_laboratory <- downloadHandler(
  
 
 output$dens <- renderText({
-    INTe <- wimpindices(dataaa_w())[["density"]]
+    INTe <- round(wimpindices(dataaa_w())[["density"]], 3)
 
     knitr::kable(INTe, col.names = "density",format = "html") %>%
 
@@ -943,17 +943,16 @@ output$dens <- renderText({
 })
 
 output$distance <- renderRHandsontable({
-
- 
-
+    # no me deja ponerlo sin decimalesS
     INTe <- wimpindices(dataaa_w())[["distance"]]
+    INTe <- formatC(round(INTe, 0), format = "d", digits=0)
 
     #DT::datatable(INTe)
     izq <- session$userData$constructos_izq
     der <- session$userData$constructos_der
     res <- paste(izq, der, sep="/\n")
     colnames(INTe) <- res
-    rownames(INTe) <- res
+    #data_frame <- data.frame(row_names = res, INTe)
 
     rhandsontable(INTe,  colHeaderHeight = 100, rowHeaderWidth = 250) %>%
           hot_table(highlightCol = TRUE, highlightRow = TRUE, readOnly = TRUE, stretchH="all") %>%

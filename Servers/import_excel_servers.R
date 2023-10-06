@@ -1,7 +1,7 @@
 import_excel_server <- function(input, output, session) {
-  id_paciente <- session$userData$id_paciente
-
+  
   observeEvent(input$importar_datos, {
+    id_paciente <- session$userData$id_paciente
     if(file.exists(input$archivo_repgrid$datapath)){
       # Importar datos de RepGrid y WimpGrid utilizando las funciones importwimp() y OpenRepGrid::importExcel() si los archivos están presentes
       # llamada al metodo de codificar para luego meter en la bd y demás
@@ -64,11 +64,11 @@ import_excel_server <- function(input, output, session) {
   
 
   observeEvent(input$importar_datos_w, {
+    id_paciente <- session$userData$id_paciente
     if(file.exists(input$archivo_wimpgrid$datapath)){
       #llamada al metodo de codificar para luego meter en la bd y demas
       excel_wimp_codificar <- read.xlsx(input$archivo_wimpgrid$datapath, colNames=FALSE)
       ruta_destino_wimp <- tempfile(fileext = ".xlsx")
-
       fecha <- codificar_excel_BD(excel_wimp_codificar, 'wimpgrid_xlsx', id_paciente)
       id <- decodificar_BD_excel('wimpgrid_xlsx', ruta_destino_wimp, id_paciente)
 
