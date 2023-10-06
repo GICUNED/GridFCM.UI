@@ -226,9 +226,6 @@ li.nav-item::marker{
 
   height: 40px;
 
-  position: absolute;
-  z-index: 1000;
-
   cursor: pointer;
 
   display: flex;
@@ -239,7 +236,6 @@ li.nav-item::marker{
   background-color: #e3e8ec;
   border-radius: .3rem;
   padding: .5rem;
-  margin: -3rem 0;
 }
 
 .open-controls-btn p{
@@ -262,8 +258,7 @@ li.nav-item::marker{
 }
 
 .close-controls-btn{
-  font-size: 1.25rem;
-  margin-top: -1rem;
+  font-size: 1.33rem;
 }
 
 .radiobtn.active, .radiobtn.active:hover{
@@ -1114,7 +1109,7 @@ box-shadow: none !important;
 }
 
 #rg-analysis-content, #wg-vis-content, #wg-lab-content{
-  margin-top: 2rem;
+  margin-top: 1rem;
 
 }
 
@@ -1326,19 +1321,19 @@ box-shadow: none !important;
 }
 
 
-.error-help div:nth-child(2) button{
+.error-help button{
   background-color: #ffffff !important;
   border-color: #acacac !important;
   color: #3b1a1a !important;
 }
 
-.error-help div:nth-child(2) button:hover{
+.error-help button:hover{
   background-color: #e2e2e2 !important;
   border-color: #acacac !important;
   color: #3b1a1a !important;
 }
 
-.error-help div:nth-child(2) button:active{
+.error-help button:active{
   background-color: #ffffff !important;
   border-color: #acacac !important;
   color: #3b1a1a !important;
@@ -1635,7 +1630,32 @@ color: #8b0000;
   background-color: #4b545c;
 }
 
+#PuntuacionesRepgrid  .irs--flat .irs-handle>i:first-child {
+  background-color: #13906d;
+  border: 2px solid #095540;
+}
 
+#PuntuacionesRepgrid .irs--flat .irs-handle.state_hover>i:first-child, #PuntuacionesRepgrid .irs--flat .irs-handle:hover>i:first-child {
+  background-color: #31b681;
+}
+
+#PuntuacionesWimpgrid  .irs--flat .irs-handle>i:first-child {
+  background-color: #cb9b0b;
+  border: 2px solid #775c0b;
+}
+
+#PuntuacionesWimpgrid .irs--flat .irs-handle.state_hover>i:first-child, #PuntuacionesRepgrid .irs--flat .irs-handle:hover>i:first-child {
+  background-color: #deba4c;
+}
+
+#ValoracionesWimpgrid  .irs--flat .irs-handle>i:first-child {
+  background-color: #cc4576;
+  border: 2px solid #90214a;
+}
+
+#ValoracionesWimpgrid .irs--flat .irs-handle.state_hover>i:first-child, #PuntuacionesRepgrid .irs--flat .irs-handle:hover>i:first-child {
+  background-color: #d76f95;
+}
 
 /* Personalizar el color del cuadro de inicio de sesión */
 #login_box.box.box-primary {

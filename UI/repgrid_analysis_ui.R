@@ -58,7 +58,7 @@ div(id="open-controls-container-rg", div(id="open-controls-rg", class="open-cont
                       icon("bars-progress"),
                       h4(i18n$t("Controles"), class = "pagetitle2custom"),
                 ),
-                icon("window-minimize", id="exit-controls-rg", class="close-controls-btn tooltip-icon ml-2 fa-solid"),
+                icon("square-minus", id="exit-controls-rg", class="close-controls-btn tooltip-icon ml-2"),
                 ),
 
     column(12, class = ("input-container"),

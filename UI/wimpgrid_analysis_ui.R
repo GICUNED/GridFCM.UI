@@ -92,10 +92,15 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
       )),
 
       shinyjs::hidden(div(id="wg-vis-content",
-      div(id="open-controls-container-vis", div(id="open-controls-vis", class="open-controls-btn", p(i18n$t("Controles")), icon(class="mr-2", "bars-progress"))),
+       
         fluidRow(class = "input-graphic-container",
             conditionalPanel(class = "graphics-vis col-sm-9 graphic-container bg-white rounded-lg gap-2", condition = "input.graph_selector_visualizacion == 'idealdigraph' || input.graph_selector_visualizacion == 'digrafo del ideal' || input.graph_selector_visualizacion == 'selfdigraph' || input.graph_selector_visualizacion == 'autodigrafo'",
               fluidRow(class = "flex-container-resp p-2 pb-3 border-divider",
+
+              div(id="open-controls-container-vis",
+                  div(id="open-controls-vis", class="open-controls-btn",
+                  p(i18n$t("Controles")), icon(class="mr-2", "bars-progress"))),
+
                 div(class = "flex-container-sm align-left-title",
                   icon("globe"),
                   h4(i18n$t("Resultado gráfico"), class = "pagetitle2custom"),
@@ -110,7 +115,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                       icon("bars-progress"),
                       h4(i18n$t("Controles"), class = "pagetitle2custom"),
                 ),
-                icon("window-minimize", id="exit-controls-vis", class="close-controls-btn tooltip-icon ml-2 fa-solid"),
+                icon("square-minus", id="exit-controls-vis", class="close-controls-btn tooltip-icon ml-2"),
                 ),
 
             column(12, class = ("wg input-container"),
@@ -205,12 +210,19 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
     ),     )),
 
       shinyjs::hidden(div(id="wg-lab-content",
-      div(id="open-controls-container-lab",  div(id="open-controls-lab", class="open-controls-btn", p(i18n$t("Controles")), icon(class="mr-2", "bars-progress"))),
+        
         fluidRow(class = "input-graphic-container",
             column(9, id="graphics-lab", class = "graphic-container bg-white rounded-lg gap-2",
                 fluidRow(class = "flex-container-resp mb-2",
+
+                #Simdigraph
                     conditionalPanel(class = "graphic-subcontainer", condition = "input.graph_selector_laboratorio == 'simdigraph' || input.graph_selector_laboratorio == 'simdigrafo'",
                       fluidRow(class = "flex-container-resp p-2 pb-3 border-divider",
+
+                      div(id="open-controls-container-lab",
+                            div(id="open-controls-lab", class="open-controls-btn",
+                            p(i18n$t("Controles")), icon(class="mr-2", "bars-progress"))),
+
                         div(class = "flex-container-sm align-left-title",
                           icon("globe"),
                           h4(i18n$t("Resultado gráfico"), class = "pagetitle2custom"),
@@ -223,8 +235,13 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                     shinycssloaders::withSpinner(rHandsontableOutput("simdigraph_act_vector"), type = 4, color = "#022a0c", size = 0.6)
                     ),
 
+                #PCSD
                     conditionalPanel(class = "graphic-subcontainer", condition = "input.graph_selector_laboratorio == 'pcsd'",
                       fluidRow(class = "flex-container-resp p-2 pb-3 border-divider",
+                      div(id="open-controls-container-lab",
+                            div(id="open-controls-lab", class="open-controls-btn",
+                      p(i18n$t("Controles")), icon(class="mr-2", "bars-progress"))),
+                            
                         div(class = "flex-container-sm align-left-title",
                           icon("line-chart"),
                           h4(i18n$t("Resultado gráfico"), class = "pagetitle2custom"),
@@ -235,8 +252,14 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                     shinycssloaders::withSpinner(rHandsontableOutput("pcsd_act_vector"), type = 4, color = "#022a0c", size = 0.6)
                       
                     ),
-
+                    
+                #PCSD INDICES     
                     conditionalPanel(class = "graphic-subcontainer",  condition = "input.graph_selector_laboratorio == 'pcsdindices'",
+                      
+                      div(id="open-controls-container-lab",
+                            div(id="open-controls-lab", class="open-controls-btn",
+                            p(i18n$t("Controles")), icon(class="mr-2", "bars-progress"))),
+                      
                       div(class = "flex-container-sm align-left-title p-2 pb-3 border-divider",
                         icon("table"),
                         h4(i18n$t("Resultados"), class = "pagetitle2custom"),
@@ -263,7 +286,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                       icon("bars-progress"),
                       h4(i18n$t("Controles"), class = "pagetitle2custom"),
                 ),
-                icon("window-minimize", id="exit-controls-lab", class="close-controls-btn tooltip-icon ml-2 fa-solid"),
+                icon("square-minus", id="exit-controls-lab", class="close-controls-btn tooltip-icon ml-2"),
                 ),
 
               column(12, class = ("wg input-container "),
