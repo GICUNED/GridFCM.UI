@@ -213,13 +213,13 @@ form_server <- function(input, output, session){
             polo_derecho <- aleatorios()[[1]][[2]]
 
             output$pregunta_semejanza <- renderText({
-                paste("En qué se parecen tu YO ACTUAL y tu ", polo_derecho, "?")
+                paste(i18n$t("¿En qué se parecen tu YO ACTUAL y tu"), polo_derecho, "?")
             })
             output$pregunta_diferencia <- renderText({
-                paste("En qué se diferencian tu YO ACTUAL y tu ", polo_derecho, "?")
+                paste(i18n$t("¿En qué se diferencian tu YO ACTUAL y tu"), polo_derecho, "?")
             })
             output$pregunta_diferencia_2 <- renderText({
-                paste("Por el contrario, mi ", polo_derecho, "  es:")
+                paste(i18n$t("Por el contrario, mi "), polo_derecho, i18n$t("  es:"))
             })
         }
     )

@@ -77,15 +77,14 @@ div(id="open-controls-container-rg", div(id="open-controls-rg", class="open-cont
  
         ),
 
-  conditionalPanel(class = "graphic-container bg-white rounded-lg mt-2", condition = "input.graph_selector == 'Cluster Analysis' || input.graph_selector == 'Análisis por Conglomerados'",
+  conditionalPanel(class = "graphic-container bg-white rounded-lg mt-3", condition = "input.graph_selector == 'Cluster Analysis' || input.graph_selector == 'Análisis por Conglomerados'",
       fluidRow(class = "flex-container-sm p-2 pb-3 border-divider",
         icon("network-wired"),
         h4(i18n$t("Análisis por Conglomerados"), class = "pagetitle2custom")
       ),
 
       fluidRow( class="flex-container-graph",        # Primer gráfico de cluster
-        column(
-          6,class ="mb-4 pl-4 pr-4",
+        column(6,class ="mb-4 pl-4 pr-4",
           fluidRow(class = "flex-container-subtitle",
             h4(i18n$t("Constructos"), class = "pagesubtitlecustom"),
             downloadButton("btn_download_cluster1", i18n$t("Descargar Gráfico")),
@@ -105,7 +104,7 @@ div(id="open-controls-container-rg", div(id="open-controls-rg", class="open-cont
       ),
   ),
 
-  conditionalPanel(class = "custom-margins-lg mt-4 graphic-container bg-white rounded-lg", condition = "input.graph_selector == 'Índices Cognitivos' || input.graph_selector=='Cognitive Indices'",
+  conditionalPanel(class = "custom-margins-lg mt-3 graphic-container bg-white rounded-lg", condition = "input.graph_selector == 'Índices Cognitivos' || input.graph_selector=='Cognitive Indices'",
       
       fluidRow(class = "flex-container-sm p-2 pb-3 border-divider",
         icon("brain"),
@@ -133,7 +132,7 @@ div(id="open-controls-container-rg", div(id="open-controls-rg", class="open-cont
   ),
 
 
-  conditionalPanel(class="graphic-container bg-white rounded-lg", condition = "input.graph_selector == 'Dilemas' || input.graph_selector == 'Dilemmas'",
+  conditionalPanel(class="graphic-container bg-white rounded-lg mt-3", condition = "input.graph_selector == 'Dilemas' || input.graph_selector == 'Dilemmas'",
     fluidRow(class = "flex-container-sm p-2 pb-3 border-divider",
       icon("calculator"),
       h4(i18n$t("Índices y Valores Matemáticos"), class = "pagetitle2custom mt-2 mb-2")

@@ -68,8 +68,6 @@ source("Servers/form_server.R")
 source("Servers/patient_server.R")
 source("Servers/suggestion_server.R")
 
-
-
 #DB
 source("DB/establish_con.R")
 source("DB/gestion_excel.R")
@@ -105,8 +103,6 @@ theme <- create_theme(
     info = "#90214a"
   )
 )
-
-
 ui <- dashboardPage(
   freshTheme = theme,
   dashboardHeader(
@@ -132,6 +128,7 @@ ui <- dashboardPage(
         div(class = 'language-selector',radioGroupButtons('selected_language',i18n$t("Idioma"), choices = i18n$get_languages(), selected = i18n$get_translation_language(), width='100%', checkIcon = list()))
       )
     ),
+
 
   dashboardBody(
     usei18n(translator = i18n),

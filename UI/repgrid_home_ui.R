@@ -2,7 +2,7 @@ repgrid_home_ui <- fluidPage(
   shiny.i18n::usei18n(i18n),
   shinyjs::useShinyjs(),
   
-  fluidRow( class = ("flex-container-titles"),
+  fluidRow( class = ("flex-container-titles mt-3"),
     h2(i18n$t("Inicio de RepGrid"), class = "pagetitlecustom  mt-2"),
     icon("circle-question", id = "tooltip-rg-home", class="tooltip-icon mb-4 ml-2"),
     div(id="context-rg-home", class="tooltip-container", icon("circle-xmark", id = "exit-rg-tooltip", class="exit-tooltip fa-solid"), p(i18n$t("Esta página te permite visualizar y manipular los datos importados de RepGrid y acceder a diferentes tipos de análisis."),  class = "desccustom-tooltip")),
@@ -25,15 +25,23 @@ shinyjs::hidden(fluidRow(id="repgrid_home_warn",class="mb-4 mt-4 gap-2 justify-c
     fluidRow( class="mb-2 button-container",
       #h3(id="i18n$t("Tabla de Datos"), class = "mr-auto mb-0"),
       #text output
-      h4(class = "mr-auto mb-0", htmlOutput("titulo_repgrid")),
+
+       div(class = "mr-auto",
+        h4(htmlOutput("titulo_repgrid")),),
+
+      div(class = "flex-container-mini",
+        actionButton("guardarBD", i18n$t("Guardar"), status = "primary", icon = icon("database")),
+        actionButton("guardarComo", icon=icon("question"), i18n$t("Guardar como...")),
+       ),
 
       actionButton("volver", i18n$t("Cancelar"), style = "display: none;", status = 'danger', icon = icon("circle-xmark")),
       actionButton("guardar", i18n$t("Guardar"), style = "display: none;", status = 'success', icon = icon("save")),
       actionButton("reiniciar", i18n$t("Reiniciar"), style = "display: none;", status = 'warning', icon = icon("arrow-rotate-left")),
-      actionButton("editar", i18n$t("Editar"), icon = icon("edit")),
-      actionButton("guardarBD", i18n$t("Guardar"), status = 'primary', icon = icon("database")),
-      actionButton("guardarComo", i18n$t("Guardar como")),
-      downloadButton("exportar", i18n$t("Exportar"))
+      
+      div(class = "flex-container-mini",
+        actionButton("editar", i18n$t("Editar"), icon = icon("edit")),
+        downloadButton("exportar", status ="primary", i18n$t("Exportar"))
+      ),
     ),
 
     shinyjs::hidden(

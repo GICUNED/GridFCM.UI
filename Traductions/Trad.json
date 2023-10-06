@@ -649,12 +649,20 @@
       "en": "Betweenness"
     },
     {
-      "es": "Escriba su sugerencia aquí:",
+      "es": "Escriba su sugerencia aquí",
       "en": "Write down your suggestion:"
     },
     {
       "es": "Enviar",
       "en": "Send"
+    },
+    {
+      "es": "Volver atrás",
+      "en": "Come back"
+    },
+    {
+      "es": "Buzón",
+      "en": "Mailbox"
     }
 
     

@@ -96,6 +96,7 @@ patient_server <- function(input, output, session){
             pacientename <- DBI::dbGetQuery(con, sprintf("SELECT nombre from paciente WHERE id = %d", user_data$selected_user_id))
             nombrePaciente(pacientename)
             DBI::dbDisconnect(con)
+            
             shinyjs::show("simulaciones_wimp")
             shinyjs::show("patientSimulations")
             shinyjs::show("simulaciones_rep")

@@ -6,17 +6,17 @@ tabsetPanel(
     
     tabPanel(i18n$t("RepGrid"), id = "tab_data", icon = icon("magnifying-glass-chart"),
 
-        fluidRow(class = ("flex-container-titles"),
-            h2(i18n$t("Inicio formulario RepGrid"), class = "rg pagetitlecustom mt-2"),
+        fluidRow(class = ("flex-container-titles mt-3"),
+            h2(i18n$t("Inicio formulario RepGrid"), class = "rg pagetitlecustom"),
         ),
         
-        fluidRow(id="Elementos", class = "mt-4 custom-margins justify-content-center align-items-start", 
+        fluidRow(id="Elementos", class = "mt-2 custom-margins justify-content-center align-items-start", 
             column(5, id= "formElementos",
                 box(
                     width = 12,
                     title = i18n$t("Elementos a valorar"),
                     icon = icon("people-arrows"),
-                    collapsible = TRUE,
+                    collapsible = FALSE,
                     
                     textInput("nombrePaciente", i18n$t("Nombre:"), ""),
                     column(12, class="d-flex justify-content-center mt-3", actionButton("guardarNombre", i18n$t("Añadir"), status = "primary", icon = icon("plus")))
@@ -28,91 +28,136 @@ tabsetPanel(
                         title = i18n$t("Nombres Guardados"),
                         icon = icon("person"),
                         status = "success",
-                        collapsible = FALSE,
-                        actionButton("borrarElemento", i18n$t("Borrar"), status ="danger", disabled=TRUE, icon = icon("trash-can")),
-                        
+                        collapsible = TRUE,
+                        column(12, class="d-flex align-items-center mb-3",
+                            h5(strong(i18n$t("Lista"))),
+                            actionButton(class="ml-auto", "borrarElemento", i18n$t("Borrar"), status ="danger", disabled=TRUE, icon = icon("trash-can"))
+                        ),
 
                         column(12, shinycssloaders::withSpinner(uiOutput("lista_nombres"), type = 4, color = "#022a0c", size = 0.6)),
-                        column(12, class="d-flex justify-content-center mt-3", actionButton("continuar_elementos", i18n$t("Continuar"), status="success", icon = icon("arrow-right") ))
+                        column(12, class="d-flex justify-content-end mt-3", actionButton("continuar_elementos", i18n$t("Continuar"), status="success", icon = icon("arrow-right") ))
                 ),
             ),
         ),
 
-        column(12, id = "preguntasDiadas",
-            box(
-                title = i18n$t("¿Desea añdir los constructos de forma manual o de forma aleatoria?"),
-                actionButton("manual", i18n$t("Manual")),
-                actionButton("aleatorio", i18n$t("Aleatoria")),
-                numericInput("n_aleatorio", i18n$t("Número de constructos que desea generar:"), value = 1, step=1),
-                actionButton("generar_aleatorio", i18n$t("Generar diadas"), style = "display: none;"),
-                actionButton("atras_preguntas_diada", i18n$t("Atrás"))
+        column(12, class="mt-2 d-flex justify-content-center align-items-start",
+            box(id = "preguntasDiadas",
+                width=7,
+                title = i18n$t("¿Desea añadir los constructos de forma manual o de forma aleatoria?"),
+                collapsible = FALSE,
+                    column(12, class="d-flex justify-content-center",
+                    actionButton("atras_preguntas_diada", class="mr-2", status = "primary", icon=icon("left-long"), i18n$t("Atrás")),
+
+                    actionButton("manual", class="ml-auto", icon=icon("hand"), i18n$t("Manual")),
+                    actionButton("aleatorio", class="ml-2", status = "warning", icon=icon("dice"), i18n$t("Aleatoria")),
+                ),
+
+                div(class="mt-2",
+                    numericInput("n_aleatorio", i18n$t("Número de constructos que desea generar:"), value = 1, step=1),
+                ),
+                column(12, class="d-flex justify-content-center mt-2",
+                    actionButton("generar_aleatorio", i18n$t("Generar diadas"), status = "success", icon=icon("gears"),  style = "display: none;")
+                )
             )
         ),
         
-        fluidRow(id="Constructos", class = "mt-4 custom-margins justify-content-center align-items-start",  
-            
-            textInput("constructo_izq", i18n$t("Polo izquierdo:"), ""),
-            
-            textInput("constructo_der", i18n$t("Polo derecho:"), ""),
-            
-            # boton add constructos
-            actionButton("guardarConstructo", i18n$t("Añadir"), disabled=TRUE),
+        fluidRow(id="Constructos", class = "mt-2 custom-margins justify-content-center align-items-start",  
+        
+            column(5,
+                box(
+                    width = 12,
+                    title = i18n$t("Polos"),
+                    icon = icon("compass"),
+                    collapsible = FALSE,
+                    
+                    div(class="mb-2",textInput("constructo_izq", i18n$t("Polo izquierdo:"), "")),
+                    div(textInput("constructo_der", i18n$t("Polo derecho:"), "")),
+
+                    # boton add constructos
+                    column(12, class="d-flex justify-content-center mt-3", 
+                    actionButton("guardarConstructo", i18n$t("Añadir"), icon = icon("plus"), disabled=TRUE)
+                    )
+                ),
+            ),
 
             column(7, id = "listadoConstructos",
                 box(
                         width = 12,
                         title = i18n$t("Constructos guardados"),
+                        icon = icon("arrow-right-arrow-left"),
                         status = "success",
-                        collapsible = FALSE,
-                        actionButton("borrarConstructo", i18n$t("Borrar"), status ="danger", disabled=TRUE, icon = icon("trash-can")),
+                        collapsible = TRUE,
+                        column(12, class="d-flex align-items-center mb-3",
+                            h5(strong(i18n$t("Lista"))),
+                            actionButton(class="ml-auto", "borrarConstructo", i18n$t("Borrar"), status ="danger", disabled=TRUE, icon = icon("trash-can"))
+                        ),
                         
                         column(12, uiOutput("lista_constructos")),
-                        column(12, class="d-flex justify-content-center mt-3", actionButton("continuar_constructo", i18n$t("Continuar"), disabled=TRUE, status="success", icon = icon("arrow-right") )),
-                        actionButton("atras_constructos", i18n$t("Atrás"))
+                        column(12, class="d-flex justify-content-center mt-3",
+                        
+                            actionButton("atras_constructos", class="mr-2", status = "primary", icon=icon("left-long"), i18n$t("Atrás")),
+                            actionButton("continuar_constructo",class="ml-auto", i18n$t("Continuar"), disabled=TRUE, status="success", icon = icon("arrow-right"))
+                        )
                 ),
             ),
         ),
-        fluidRow(id="ConstructosAleatorios", class = "mt-4 custom-margins justify-content-center align-items-start",  
+
+        fluidRow(id="ConstructosAleatorios", class = "mt-2 justify-content-center align-items-start",  
             box(
-                textOutput("pregunta_semejanza"),
-                textInput("respuesta_semejanza_1", i18n$t("Ambos somos:")),
-                textInput("respuesta_semejanza_2", i18n$t("¿Qué sería en, tu opinión, lo opuesto?")),
-                textOutput("pregunta_diferencia"),
-                textInput("respuesta_diferencia_1", i18n$t("Yo soy:")),
-                textOutput("pregunta_diferencia_2"),
-                textInput("respuesta_diferencia_2", ""),
+                width = 6,
+                title = i18n$t("Cuestionario"),
+                icon = icon("question"),
+
+                div(textOutput("pregunta_semejanza")),
+                div(class="mt-2",textInput("respuesta_semejanza_1", i18n$t("Ambos somos:"))),
+                div(class="mt-2",textInput("respuesta_semejanza_2", i18n$t("¿Qué sería en, tu opinión, lo opuesto?"))),
                 
-                actionButton("atras_constructos_aleatorios", i18n$t("Atrás")),
-                actionButton("siguiente_constructo", i18n$t("Siguiente"), disabled=TRUE)
+                div(class="mt-2", textOutput("pregunta_diferencia")),
+                div(class="mt-2", textInput("respuesta_diferencia_1", i18n$t("Yo soy:") )),
+
+                div(class="mt-2", textOutput("pregunta_diferencia_2")),
+                div(class="mt-2", textInput("respuesta_diferencia_2", label = NULL)),
+                
+                column(12, class="d-flex justify-content-center mt-3",
+                    actionButton("atras_constructos_aleatorios", class="mr-2", status = "primary", icon=icon("left-long"), i18n$t("Atrás")),
+                    actionButton("siguiente_constructo",class="ml-auto", i18n$t("Siguiente"), icon = icon("arrow-right"), disabled=TRUE)
+                )
             ),
         ),
-        fluidRow(id="PuntuacionesRepgrid", class = "mt-4 custom-margins justify-content-center align-items-start",  
+        fluidRow(id="PuntuacionesRepgrid", class = "mt-2 custom-margins justify-content-center align-items-start",  
             box(
                 title = i18n$t("Puntuaciones Repgrid"),
-                textOutput("elemento_puntuable"),
-                fluidRow(
+                h6(strong(textOutput("elemento_puntuable"))),
+                fluidRow( class="gap-1",
                     textOutput("polo_izq"),
-                    p(" - "),
+                    strong(" - "),
                     textOutput("polo_der")
                 ),
                 
                 sliderInput("puntos", "", min=-1, max=1, value=0, step=0.01, ticks=FALSE),
-                actionButton("atras_puntuaciones", i18n$t("Atrás")),
-                actionButton("siguiente_puntuacion", i18n$t("Siguiente"))
+
+                column(12, class="d-flex justify-content-center mt-3",
+                    actionButton("atras_puntuaciones", class="mr-2", status = "primary", icon=icon("left-long"), i18n$t("Atrás")),
+                    actionButton("siguiente_puntuacion",class="ml-auto", i18n$t("Siguiente"), icon = icon("arrow-right"))
+                )
             ),
         ),
-        fluidRow(id="ConfirmacionRepgrid", class = "mt-4 custom-margins justify-content-center align-items-start",  
+        fluidRow(id="ConfirmacionRepgrid", class = "mt-2 justify-content-center align-items-start",  
             box(
-                title = i18n$t("Puntuaciones guardadas con éxito. Desea crear la rejilla?"),
-                actionButton("crearRepgrid", i18n$t("Crear Repgrid")),
-                actionButton("atras_confirmacion_repgrid", i18n$t("Atrás"))
+                title = i18n$t("Puntuaciones guardadas con éxito. ¿Desea crear la rejilla?"),
+                collapsible = FALSE,
+                column(12, class="d-flex justify-content-center",
+                actionButton("atras_confirmacion_repgrid",  class="mr-2", status = "primary", icon=icon("left-long"), i18n$t("Atrás")),
+                actionButton("crearRepgrid", status = "success", icon=icon("magnifying-glass-chart"), i18n$t("Crear Repgrid"))
+                    
+                )
             )
         ),
     ),
     tabPanel(i18n$t("WimpGrid"), id = "tab_data_w", icon = icon("border-none"),
 
-        fluidRow(class = ("flex-container-titles"),
-            h2(i18n$t("Inicio formulario WimpGrid"), class = "wg pagetitlecustom mt-4"),
+        fluidRow(class = ("flex-container-titles mt-3"),
+            h2(i18n$t("Inicio formulario WimpGrid"), class = "wg pagetitlecustom"),
         ),
     
     )
