@@ -25,8 +25,6 @@ knitr::knit_hooks$set(webgl = hook_webgl)
 
 
 
-
-
 source("global.R")
 #GRID
 source("R/GraphFunctions.R")
@@ -37,8 +35,6 @@ source("R/PCSDindicesFunctions.R")
 source("R/SimulationFunctions.R")
 source("R/WimpIndicesFunctions.R")
 source("R/visnetworks.R")
-
-
 
 # UI
 source("UI/home_page_ui.R")
@@ -94,11 +90,12 @@ tags$li(a(
   "Wimpgrid analysis"
 )))
 
+
 theme <- create_theme(
   bs4dash_status(
     primary = "#095540",
     danger = "#BF616A",
-    light = "#272c30",
+    secondary = "#272c30",
     success = "#13906d",
     warning = "#cb9b0b",
     info = "#90214a"
@@ -264,12 +261,11 @@ server <- function(input, output, session) {
                               "Análisis Tridimensional","Análisis por Conglomerados","Índices Cognitivos","Dilemas")))
   })
 
-
   router_server()
+
 
   home_server(input, output, session)
   inicio_server(input, output, session)
-  another_server(input, output, session)
   userHome_server(input, output, session)
   import_server(input, output, session)
   #import_excel_server(input, output, session)
