@@ -14,65 +14,12 @@ shinyjs::hide("context-wg-3-home")
   onevent("click", "exit-wg-3-tooltip", shinyjs::hide("context-wg-3-home"))
 
 
-#Pantalla completa de elementos
 
-runjs("
-
-if (document.addEventListener)
-{
- document.addEventListener('fullscreenchange', exitHandler, false);
- document.addEventListener('mozfullscreenchange', exitHandler, false);
- document.addEventListener('MSFullscreenChange', exitHandler, false);
- document.addEventListener('webkitfullscreenchange', exitHandler, false);
-}
-
-function exitHandler()
-{
- if (!document.webkitIsFullScreen && !document.mozFullScreen && !document.msFullscreenElement)
- {
-  $('#enter_fs')
-  .removeClass('hidden');
-
-  $('#exit_fs')
-  .addClass('hidden');
-
-  $('.graphic-container')
-  .removeClass('fullscreen-height');
-
-  $('#graph_output_laboratorio')
-  .removeClass('fullscreen-graphic');
-
-  $('.input-field-container')
-  .removeClass('fullscreen-control');
-
-  $('#open-controls-lab')
-  .removeClass('fullscreen-control-min');
-
- } else {
-
-    $('#enter_fs')
-    .addClass('hidden');
-
-    $('#exit_fs')
-    .removeClass('hidden');
-
-    $('.graphic-container')
-      .addClass('fullscreen-height');
-
-    $('#graph_output_laboratorio')
-      .addClass('fullscreen-graphic');
-
-    $('.input-field-container')
-      .addClass('fullscreen-control');
-
-    $('#open-controls-lab')
-      .addClass('fullscreen-control-min');
- }
-}
-")
         
 #Ver y Ocultar panel de control izquierdo
 runjs("
+
+//Visualizacion ---------------------------------------------------
 
 $('#exit-controls-vis').on('click', function (){
 
@@ -82,10 +29,15 @@ $('#exit-controls-vis').on('click', function (){
   $('#controls-panel-vis').removeClass('anim-fade-in');
   $('#controls-panel-vis').addClass('anim-fade-out');
 
-  $('#open-controls-container-vis').removeClass('anim-fade-out');
-  $('#open-controls-container-vis').addClass('anim-fade-in');
+  $('#open-controls-vis').removeClass('anim-fade-out');
+  $('#open-controls-vis').addClass('anim-fade-in');
+
+  $('#open-controls-vis-in').removeClass('anim-fade-out');
+  $('#open-controls-vis-in').addClass('anim-fade-in');
 
 });
+
+//Autodigrafo e ideal ---------------------------------------------------
 
 $('#open-controls-vis').on('click', function (){
 
@@ -95,10 +47,27 @@ $('#open-controls-vis').on('click', function (){
   $('#controls-panel-vis').removeClass('anim-fade-out');
   $('#controls-panel-vis').addClass('anim-fade-in');
 
-  $('#open-controls-container-vis').addClass('anim-fade-out');
-  $('#open-controls-container-vis').removeClass('anim-fade-in');
+  $('#open-controls-vis').addClass('anim-fade-out');
+  $('#open-controls-vis').removeClass('anim-fade-in');
 
 });
+
+//Indices ---------------------------------------------------
+
+$('#open-controls-vis-in').on('click', function (){
+
+  $('.graphics-vis').removeClass('mw-100');
+  $('.graphics-vis').removeClass('flex-bs-100');
+
+  $('#controls-panel-vis').removeClass('anim-fade-out');
+  $('#controls-panel-vis').addClass('anim-fade-in');
+
+  $('#open-controls-vis-in').addClass('anim-fade-out');
+  $('#open-controls-vis-in').removeClass('anim-fade-in');
+
+});
+
+//Laboratorio ---------------------------------------------------
 
 $('#exit-controls-lab').on('click', function (){
 
@@ -108,9 +77,17 @@ $('#exit-controls-lab').on('click', function (){
   $('#controls-panel-lab').removeClass('anim-fade-in');
   $('#controls-panel-lab').addClass('anim-fade-out');
 
-  $('#open-controls-container-lab').removeClass('anim-fade-out');
-  $('#open-controls-container-lab').addClass('anim-fade-in');
+  $('#open-controls-lab').removeClass('anim-fade-out');
+  $('#open-controls-lab').addClass('anim-fade-in');
+  
+  $('#open-controls-lab-pcsd').removeClass('anim-fade-out');
+  $('#open-controls-lab-pcsd').addClass('anim-fade-in');
+
+  $('#open-controls-lab-in').removeClass('anim-fade-out');
+  $('#open-controls-lab-in').addClass('anim-fade-in');
 });
+
+//Simdigrafo ---------------------------------------------------
 
 $('#open-controls-lab').on('click', function (){
 
@@ -120,43 +97,138 @@ $('#open-controls-lab').on('click', function (){
   $('#controls-panel-lab').removeClass('anim-fade-out');
   $('#controls-panel-lab').addClass('anim-fade-in');
 
-  $('#open-controls-container-lab').addClass('anim-fade-out');
-  $('#open-controls-container-lab').removeClass('anim-fade-in');
+  $('#open-controls-lab').addClass('anim-fade-out');
+  $('#open-controls-lab').removeClass('anim-fade-in');
+
+});
+
+//pcsd ---------------------------------------------------
+
+$('#open-controls-lab-pcsd').on('click', function (){
+
+  $('#graphics-lab').removeClass('mw-100');
+  $('#graphics-lab').removeClass('flex-bs-100');
+
+  $('#controls-panel-lab').removeClass('anim-fade-out');
+  $('#controls-panel-lab').addClass('anim-fade-in');
+
+  $('#open-controls-lab-pcsd').addClass('anim-fade-out');
+  $('#open-controls-lab-pcsd').removeClass('anim-fade-in');
+
+});
+
+//pcsd indices ---------------------------------------------------
+
+
+$('#open-controls-lab-in').on('click', function (){
+
+  $('#graphics-lab').removeClass('mw-100');
+  $('#graphics-lab').removeClass('flex-bs-100');
+
+  $('#controls-panel-lab').removeClass('anim-fade-out');
+  $('#controls-panel-lab').addClass('anim-fade-in');
+
+  $('#open-controls-lab-in').addClass('anim-fade-out');
+  $('#open-controls-lab-in').removeClass('anim-fade-in');
 
 });
 
 ")
+#Control panel graphics
 
-shinyjs::hide("open-controls-container-vis")
+shinyjs::hide("open-controls-vis")
+shinyjs::hide("open-controls-vis-in")
+shinyjs::hide("open-controls-lab")
+shinyjs::hide("open-controls-lab-pcsd")
+shinyjs::hide("open-controls-lab-in")
+
+
+#controles de pestaña visualizacion ----------------------------------
+
   onevent("click", "exit-controls-vis", {
   
-    shinyjs::show("open-controls-container-vis")
+    shinyjs::show("open-controls-vis") 
+    shinyjs::show("open-controls-vis-in")
+
     delay(100, shinyjs::hide("controls-panel-vis"))
     
   }, add = TRUE)
 
+  #autodigrafio e ideal
+
   onevent("click", "open-controls-vis", {
   
-    delay(100, shinyjs::hide("open-controls-container-vis"))
+    shinyjs::hide("open-controls-vis")
+    shinyjs::hide("open-controls-vis-in")
+
     shinyjs::show("controls-panel-vis")
     
   }, add = TRUE)
 
-  shinyjs::hide("open-controls-container-lab")
+#indices
 
-  onevent("click", "exit-controls-lab", {
+shinyjs::hide("open-controls-vis-in")
+
+  onevent("click", "open-controls-vis-in", {
   
-    shinyjs::show("open-controls-container-lab")
+    shinyjs::hide("open-controls-vis-in")
+    shinyjs::hide("open-controls-vis")
+
+    shinyjs::show("controls-panel-vis")
+    
+  }, add = TRUE)
+
+
+#controles de pestaña laboratorio --------------------------------------
+
+onevent("click", "exit-controls-lab", {
+  
+    shinyjs::show("open-controls-lab-pcsd")
+    shinyjs::show("open-controls-lab-in")
+    shinyjs::show("open-controls-lab")
+
     delay(100, shinyjs::hide("controls-panel-lab"))
     
   }, add = TRUE)
 
+  #graph
+
   onevent("click", "open-controls-lab", {
   
-    delay(100, shinyjs::hide("open-controls-container-lab"))
+    shinyjs::hide("open-controls-lab")
+    shinyjs::hide("open-controls-lab-in")
+    shinyjs::hide("open-controls-lab-pcsd")
+
     shinyjs::show("controls-panel-lab")
     
   }, add = TRUE)
+
+#pcsd
+
+  onevent("click", "open-controls-lab-pcsd", {
+  
+    shinyjs::hide("open-controls-lab")
+    shinyjs::hide("open-controls-lab-in")
+    shinyjs::hide("open-controls-lab-pcsd")
+
+    shinyjs::show("controls-panel-lab")
+    
+  }, add = TRUE)
+
+#pcsd indices
+
+  onevent("click", "open-controls-lab-in", {
+  
+    shinyjs::hide("open-controls-lab")
+    shinyjs::hide("open-controls-lab-in")
+    shinyjs::hide("open-controls-lab-pcsd")
+
+    shinyjs::show("controls-panel-lab")
+    
+  }, add = TRUE)
+
+
+
 
 
 # Lógica para la pestaña "Datos"
@@ -404,7 +476,7 @@ output$bert_w <- renderPlot({
   if (!is.null(session$userData$datos_wimpgrid)) {
     bertin(wimpgrid_a_mostrar()$openrepgrid , xlim = c(.2,
    .8), ylim = c(0, .6), margins = c(0, 1, 1), color=c("white", "#dfb639"), cex.elements = 1,
-      cex.constructs = 1, cex.text = 1, lheight = 1.5, cc=session$userData$num_col_wimpgrid-2, col.mark.fill="#DBA901")
+      cex.constructs = 1, cex.text = 1, lheight = .7, cc=session$userData$num_col_wimpgrid-2, col.mark.fill="#DBA901")
     
   }
 
@@ -1210,7 +1282,9 @@ output$simdigraph_act_vector <- renderRHandsontable({
     res <- paste(izq, der, sep="/\n")
     colnames(vv) <- res
   }
-  rhandsontable(vv, rowHeaders = NULL)
+  rhandsontable(vv, rowHeaders = NULL) %>% 
+          hot_table(stretchH="all")
+
 
 })
 
@@ -1255,7 +1329,8 @@ output$pcsdindices_act_vector <- renderRHandsontable({
     res <- paste(izq, der, sep="/\n")
     colnames(vv) <- res
   }
-  rhandsontable(vv ,rowHeaders = NULL, col_highlight = col_highlight, row_highlight = row_highlight)
+  rhandsontable(vv ,rowHeaders = NULL, col_highlight = col_highlight, row_highlight = row_highlight) %>% 
+          hot_table(stretchH="all")
 })
 
  
@@ -1357,7 +1432,8 @@ output$pcsd_act_vector <- renderRHandsontable({
     res <- paste(izq, der, sep="/\n")
     colnames(vv) <- res
   }
-  rhandsontable(vv, rowHeaders = NULL)
+  rhandsontable(vv, rowHeaders = NULL) %>% 
+          hot_table(stretchH="all")
 
 })
 

@@ -155,7 +155,7 @@ observeEvent(input$tabla_datos_repgrid, {
 
       output$tabla_datos_repgrid <- renderRHandsontable({
         rhandsontable(tabla_original) %>%
-          hot_table(highlightCol = TRUE, highlightRow = TRUE) %>%
+          hot_table(highlightCol = TRUE, highlightRow = TRUE, stretchH="all") %>%
           hot_col(col = seq(1, session$userData$num_col_repgrid - 1), format = "3")
       })
 

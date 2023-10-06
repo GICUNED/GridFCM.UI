@@ -99,14 +99,17 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
             conditionalPanel(class = "graphics-vis col-sm-9 graphic-container bg-white rounded-lg gap-2", condition = "input.graph_selector_visualizacion == 'idealdigraph' || input.graph_selector_visualizacion == 'digrafo del ideal' || input.graph_selector_visualizacion == 'selfdigraph' || input.graph_selector_visualizacion == 'autodigrafo'",
               fluidRow(class = "flex-container-resp p-2 pb-3 border-divider",
 
-              div(id="open-controls-container-vis",
-                  div(id="open-controls-vis", class="open-controls-btn",
-                  p(i18n$t("Controles")), icon(class="mr-2", "bars-progress"))),
+              
+                div(id="open-controls-vis", class="open-controls-btn", p(i18n$t("Controles")), icon(class="mr-2", "bars-progress")),
 
                 div(class = "flex-container-sm align-left-title",
                   icon("globe"),
                   h4(i18n$t("Resultado gráfico"), class = "pagetitle2custom"),
                 ),
+
+                actionButton("enter_fs_1", i18n$t("Expandir"), status="warning", icon = icon("maximize"), onclick = "openFullscreen(document.getElementById('wg-vis-content'));"),
+                actionButton("exit_fs_1", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "exitFullscreen();"),
+                        
                 downloadButton(class = "btn-download", "btn_download_visualizacion", i18n$t("Descargar Gráfico"))
               ),
               shinycssloaders::withSpinner(uiOutput("graph_output_visualizacion"), type = 4, color = "#022a0c", size = 0.6)
@@ -156,13 +159,19 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
 
           ),
         ),
-
+      #indices de wimp
         conditionalPanel(class="graphic-container bg-white rounded-lg mt-3",condition = "input.graph_selector_visualizacion == 'wimpindices' || input.graph_selector_visualizacion == 'índices de Wimp' ",
             
 
                           fluidRow(class = "table-container pb-0 flex-row kpi",
-                            h3(i18n$t("Desglose Índices"), class = "mr-auto mb-0"),
-                            htmlOutput("dens")
+
+                            div(id="open-controls-vis-in", class="open-controls-btn", p(i18n$t("Controles")), icon(class="mr-2", "bars-progress")),
+
+                            h4(i18n$t("Desglose Índices"), class = "mr-auto ml-2 mb-0"),
+                            htmlOutput("dens"),
+                            actionButton("enter_fs_2", i18n$t("Expandir"), class="ml-2", status="warning", icon = icon("maximize"), onclick = "openFullscreen(document.getElementById('wg-vis-content'));"),
+                            actionButton("exit_fs_2", i18n$t("Salir"), class="hidden ml-2", status="danger", icon = icon("minimize"), onclick = "exitFullscreen();"),
+                    
                           ),
                             
                             shinycssloaders::withSpinner(rHandsontableOutput("distance"), type = 4, color = "#022a0c", size = 0.6),
@@ -220,18 +229,16 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                 #Simdigraph
                     conditionalPanel(class = "graphic-subcontainer", condition = "input.graph_selector_laboratorio == 'simdigraph' || input.graph_selector_laboratorio == 'simdigrafo'",
                       fluidRow(class = "flex-container-resp p-2 pb-3 border-divider",
-
-                      div(id="open-controls-container-lab",
-                            div(id="open-controls-lab", class="open-controls-btn",
-                            p(i18n$t("Controles")), icon(class="mr-2", "bars-progress"))),
+                      
+                        div(id="open-controls-lab", class="open-controls-btn",p(i18n$t("Controles")), icon(class="mr-2", "bars-progress")),
 
                         div(class = "flex-container-sm align-left-title",
                           icon("globe"),
                           h4(i18n$t("Resultado gráfico"), class = "pagetitle2custom"),
                          ),
                           downloadButton(class = "btn-download", "boton_download_laboratory", i18n$t("Descargar Gráfico")),
-                          actionButton("enter_fs", i18n$t("Expandir"), status="warning", icon = icon("maximize"), onclick = "openFullscreen(document.getElementById('wg-lab-content'));"),
-                          actionButton("exit_fs", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "exitFullscreen();"),
+                          actionButton("enter_fs_3", i18n$t("Expandir"), status="warning", icon = icon("maximize"), onclick = "openFullscreen(document.getElementById('wg-lab-content'));"),
+                          actionButton("exit_fs_3", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "exitFullscreen();"),
 
                         ),
                     shinycssloaders::withSpinner(rHandsontableOutput("simdigraph_act_vector"), type = 4, color = "#022a0c", size = 0.6)
@@ -240,16 +247,15 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                 #PCSD
                     conditionalPanel(class = "graphic-subcontainer", condition = "input.graph_selector_laboratorio == 'pcsd'",
                       fluidRow(class = "flex-container-resp p-2 pb-3 border-divider",
-                      div(id="open-controls-container-lab",
-                            div(id="open-controls-lab", class="open-controls-btn",
-                      p(i18n$t("Controles")), icon(class="mr-2", "bars-progress"))),
+                      
+                        div(id="open-controls-lab-pcsd", class="open-controls-btn", p(i18n$t("Controles")), icon(class="mr-2", "bars-progress")),
                             
                         div(class = "flex-container-sm align-left-title",
                           icon("line-chart"),
                           h4(i18n$t("Resultado gráfico"), class = "pagetitle2custom"),
                           ),
-                          #actionButton("enter_fs", i18n$t("Expandir"), status="warning", icon = icon("maximize"), onclick = "openFullscreen(document.getElementById('wg-lab-content'));"),
-                          actionButton("exit_fs", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "exitFullscreen();"),
+                          actionButton("enter_fs_4", i18n$t("Expandir"), status="warning", icon = icon("maximize"), onclick = "openFullscreen(document.getElementById('wg-lab-content'));"),
+                          actionButton("exit_fs_4", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "exitFullscreen();"),
                         ),
                     shinycssloaders::withSpinner(rHandsontableOutput("pcsd_act_vector"), type = 4, color = "#022a0c", size = 0.6)
                       
@@ -257,18 +263,20 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                     
                 #PCSD INDICES     
                     conditionalPanel(class = "graphic-subcontainer",  condition = "input.graph_selector_laboratorio == 'pcsdindices'",
-                      
-                      div(id="open-controls-container-lab",
-                            div(id="open-controls-lab", class="open-controls-btn",
-                            p(i18n$t("Controles")), icon(class="mr-2", "bars-progress"))),
-                      
+                    fluidRow(class = "flex-container-resp p-2 pb-3 border-divider",
+                      div(id="open-controls-lab-in", class="open-controls-btn", p(i18n$t("Controles")), icon(class="mr-2", "bars-progress")),
+
                       div(class = "flex-container-sm align-left-title p-2 pb-3 border-divider",
                         icon("table"),
                         h4(i18n$t("Resultados"), class = "pagetitle2custom"),
                       ),
+                        actionButton("enter_fs_3", i18n$t("Expandir"), status="warning", icon = icon("maximize"), onclick = "openFullscreen(document.getElementById('wg-lab-content'));"),
+                        actionButton("exit_fs_3", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "exitFullscreen();"),
+                        
+                    ),
                     shinycssloaders::withSpinner(rHandsontableOutput("pcsdindices_act_vector"), type = 4, color = "#022a0c", size = 0.6),
       
-                    fluidRow(class = "subheader-tab flex-container-sm",
+                    fluidRow(class = "subheader-tab flex-container-sm mt-2",
                       tabsetPanel(
                           tabPanel(i18n$t("Resumen"),  shinycssloaders::withSpinner(DT::dataTableOutput("summary"), type = 4, color = "#022a0c", size = 0.6), icon = icon("book")),
                           tabPanel(i18n$t("Auc"),  shinycssloaders::withSpinner(DT::dataTableOutput("auc"), type = 4, color = "#022a0c", size = 0.6), icon = icon("cube")),

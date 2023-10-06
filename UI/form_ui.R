@@ -46,7 +46,7 @@ tabsetPanel(
                 title = i18n$t("¿Desea añadir los constructos de forma manual o de forma aleatoria?"),
                 collapsible = FALSE,
                     column(12, class="d-flex justify-content-center",
-                    actionButton("atras_preguntas_diada", class="mr-2", status = "primary", icon=icon("left-long"), i18n$t("Atrás")),
+                    actionButton("atras_preguntas_diada", class="mr-2", status = "danger", icon=icon("left-long"), i18n$t("Atrás")),
 
                     actionButton("manual", class="ml-auto", icon=icon("hand"), i18n$t("Manual")),
                     actionButton("aleatorio", class="ml-2", status = "warning", icon=icon("dice"), i18n$t("Aleatoria")),
@@ -95,7 +95,7 @@ tabsetPanel(
                         column(12, uiOutput("lista_constructos")),
                         column(12, class="d-flex justify-content-center mt-3",
                         
-                            actionButton("atras_constructos", class="mr-2", status = "primary", icon=icon("left-long"), i18n$t("Atrás")),
+                            actionButton("atras_constructos", class="mr-2", status = "danger", icon=icon("left-long"), i18n$t("Atrás")),
                             actionButton("continuar_constructo",class="ml-auto", i18n$t("Continuar"), disabled=TRUE, status="success", icon = icon("arrow-right"))
                         )
                 ),
@@ -119,7 +119,7 @@ tabsetPanel(
                 div(class="mt-2", textInput("respuesta_diferencia_2", label = NULL)),
                 
                 column(12, class="d-flex justify-content-center mt-3",
-                    actionButton("atras_constructos_aleatorios", class="mr-2", status = "primary", icon=icon("left-long"), i18n$t("Atrás")),
+                    actionButton("atras_constructos_aleatorios", class="mr-2", status = "danger", icon=icon("left-long"), i18n$t("Atrás")),
                     actionButton("siguiente_constructo",class="ml-auto", i18n$t("Siguiente"), icon = icon("arrow-right"), disabled=TRUE)
                 )
             ),
@@ -136,7 +136,7 @@ tabsetPanel(
                 sliderInput("puntos", "", min=-1, max=1, value=0, step=0.01, ticks=FALSE),
 
                 column(12, class="d-flex justify-content-center mt-3",
-                    actionButton("atras_puntuaciones", class="mr-2", status = "primary", icon=icon("left-long"), i18n$t("Atrás")),
+                    actionButton("atras_puntuaciones", class="mr-2", status = "danger", icon=icon("left-long"), i18n$t("Atrás")),
                     actionButton("siguiente_puntuacion",class="ml-auto", i18n$t("Siguiente"), icon = icon("arrow-right"))
                 )
             ),
@@ -146,7 +146,7 @@ tabsetPanel(
                 title = i18n$t("Puntuaciones guardadas con éxito. ¿Desea crear la rejilla?"),
                 collapsible = FALSE,
                 column(12, class="d-flex justify-content-center",
-                actionButton("atras_confirmacion_repgrid",  class="mr-2", status = "primary", icon=icon("left-long"), i18n$t("Atrás")),
+                actionButton("atras_confirmacion_repgrid",  class="mr-2", status = "danger", icon=icon("left-long"), i18n$t("Atrás")),
                 actionButton("crearRepgrid", status = "success", icon=icon("magnifying-glass-chart"), i18n$t("Crear Repgrid"))
                     
                 )

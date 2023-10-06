@@ -32,6 +32,9 @@ div(id="open-controls-container-rg", div(id="open-controls-rg", class="open-cont
                 h4(i18n$t("Análisis Bidimensional"), class = "pagetitle2custom")
               ),
               downloadButton("btn_download_2d", i18n$t("Descargar Gráfico")),
+              actionButton("enter_fs_5", i18n$t("Expandir"), status="primary", icon = icon("maximize"), onclick = "openFullscreen(document.getElementById('rg-analysis-content'));"),
+              actionButton("exit_fs_5", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "exitFullscreen();"),
+                
             ),
           shinycssloaders::withSpinner(plotOutput("biplot2d_plot"), type = 4, color = "#022a0c", size = 0.6),
         ),
@@ -43,10 +46,13 @@ div(id="open-controls-container-rg", div(id="open-controls-rg", class="open-cont
               icon("cube"),
               h4(i18n$t("Análisis Tridimensional"), class = "pagetitle2custom"),
             ),
-            div(class = "flex-container-sm",
+            div(class = "flex-container-sm graphics-hint",
               icon("circle-info"),
               p(i18n$t("Haz click y arrastra para Interactuar."),  class = "desccustom-hint"),
             ),
+            actionButton("enter_fs_6", i18n$t("Expandir"), status="primary", icon = icon("maximize"), onclick = "openFullscreen(document.getElementById('rg-analysis-content'));"),
+            actionButton("exit_fs_6", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "exitFullscreen();"),
+                
           ),
           shinycssloaders::withSpinner(rglwidgetOutput("biplot3d_plot"), type = 4, color = "#022a0c", size = 0.6),
           
@@ -79,8 +85,14 @@ div(id="open-controls-container-rg", div(id="open-controls-rg", class="open-cont
 
   conditionalPanel(class = "graphic-container bg-white rounded-lg mt-3", condition = "input.graph_selector == 'Cluster Analysis' || input.graph_selector == 'Análisis por Conglomerados'",
       fluidRow(class = "flex-container-sm p-2 pb-3 border-divider",
-        icon("network-wired"),
-        h4(i18n$t("Análisis por Conglomerados"), class = "pagetitle2custom")
+        
+        div(class = "flex-container-sm align-left-title",
+          icon("network-wired"),
+          h4(i18n$t("Análisis por Conglomerados"), class = "pagetitle2custom")
+        ),
+        #actionButton("enter_fs_7", i18n$t("Expandir"), status="primary", icon = icon("maximize"), onclick = "openFullscreen(document.getElementById('rg-analysis-content'));"),
+        #actionButton("exit_fs_7", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "exitFullscreen();"),
+             
       ),
 
       fluidRow( class="flex-container-graph",        # Primer gráfico de cluster
@@ -107,8 +119,15 @@ div(id="open-controls-container-rg", div(id="open-controls-rg", class="open-cont
   conditionalPanel(class = "custom-margins-lg mt-3 graphic-container bg-white rounded-lg", condition = "input.graph_selector == 'Índices Cognitivos' || input.graph_selector=='Cognitive Indices'",
       
       fluidRow(class = "flex-container-sm p-2 pb-3 border-divider",
+
+      div(class = "flex-container-sm align-left-title",
         icon("brain"),
-        h4(i18n$t("Índices"), class = "pagetitle2custom mt-2 mb-2")
+        h4(i18n$t("Índices"), class = "pagetitle2custom mt-2 mb-2"),
+      ),
+
+        actionButton("enter_fs_8", i18n$t("Expandir"), status="primary", icon = icon("maximize"), onclick = "openFullscreen(document.getElementById('rg-analysis-content'));"),
+        actionButton("exit_fs_8", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "exitFullscreen();"),
+            
       ),
       fluidRow(class = "table-container mt-4",
         h4(i18n$t("Índices y Valores Matemáticos"), class = "pagesubtitlecustom mb-4"),
@@ -134,8 +153,13 @@ div(id="open-controls-container-rg", div(id="open-controls-rg", class="open-cont
 
   conditionalPanel(class="graphic-container bg-white rounded-lg mt-3", condition = "input.graph_selector == 'Dilemas' || input.graph_selector == 'Dilemmas'",
     fluidRow(class = "flex-container-sm p-2 pb-3 border-divider",
+    div(class = "flex-container-sm align-left-title",
       icon("calculator"),
       h4(i18n$t("Índices y Valores Matemáticos"), class = "pagetitle2custom mt-2 mb-2")
+    ),
+      #actionButton("enter_fs_9", i18n$t("Expandir"), status="primary", icon = icon("maximize"), onclick = "openFullscreen(document.getElementById('rg-analysis-content'));"),
+      #actionButton("exit_fs_9", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "exitFullscreen();"),
+           
     ),
     fluidRow(
       column(6, h4(i18n$t("Constructos Congruentes/Discordantes"), class = "pagesubtitlecustom mt-4 mb-4"), shinycssloaders::withSpinner(htmlOutput("constructs"), type = 4, color = "#022a0c", size = 0.6)),

@@ -3,9 +3,6 @@ $('#sidebarId').removeClass('sidebar-dark-primary');
 
 $('#import-page, #excel-page, #form-page')
     .addClass('hidden');
-/*
-$('#incio-page').find('.nav-link').addClass('active');
-*/
 
 //funcionalidad de fullscreen
 
@@ -20,6 +17,100 @@ function openFullscreen(elem) {
     elem.msRequestFullscreen();
   }
 };
+
+
+
+$(document).ready(function() {
+  // Encuentra todos los botones "enter_fs" y "exit_fs"
+  const enterFsButtons = $("button[id^='enter_fs_']");
+  const exitFsButtons = $("button[id^='exit_fs_']");
+
+  // Agrega un evento fullscreenchange al documento
+  document.addEventListener("fullscreenchange", function() {
+    // Encuentra el elemento en modo de pantalla completa
+    const fullscreenElement = document.fullscreenElement || document.mozFullScreenElement || document.msFullscreenElement || document.webkitFullscreenElement;
+
+    if (fullscreenElement) {
+      exitFsButtons.removeClass("hidden");
+      enterFsButtons.addClass("hidden");
+
+      $('.graphic-container').addClass('fullscreen-height');
+      $('#graph_output_laboratorio').addClass('fullscreen-graphic');
+      $('.input-field-container').addClass('fullscreen-control');
+
+    } else {
+      exitFsButtons.addClass("hidden");
+      enterFsButtons.removeClass("hidden");
+
+      $('.graphic-container').addClass('fullscreen-height');
+      $('#graph_output_laboratorio').addClass('fullscreen-graphic');
+      $('.input-field-container').addClass('fullscreen-control');
+    }
+  });
+});
+
+/* 
+if (document.addEventListener)
+{
+ document.addEventListener('fullscreenchange', exitHandler, false);
+ document.addEventListener('mozfullscreenchange', exitHandler, false);
+ document.addEventListener('MSFullscreenChange', exitHandler, false);
+ document.addEventListener('webkitfullscreenchange', exitHandler, false);
+};
+
+function exitHandler()
+{
+ if (!document.webkitIsFullScreen || !document.mozFullScreen || !document.msFullscreenElement)
+ {
+  $('#enter_fs')
+  .removeClass('hidden');
+
+  $('#exit_fs')
+  .addClass('hidden');
+
+  $('.graphic-container')
+  .removeClass('fullscreen-height');
+
+  $('#graph_output_laboratorio')
+  .removeClass('fullscreen-graphic');
+
+  $('.input-field-container')
+  .removeClass('fullscreen-control');
+
+
+ } else {
+
+    $('#enter_fs')
+    .addClass('hidden');
+
+    $('#exit_fs')
+    .removeClass('hidden');
+
+    $('.graphic-container')
+      .addClass('fullscreen-height');
+
+    $('#graph_output_laboratorio')
+      .addClass('fullscreen-graphic');
+
+    $('.input-field-container')
+      .addClass('fullscreen-control');
+
+ }
+};
+
+$('#enter_fs')
+$(document.addEventListener).each( function( i ) {
+    if (document.webkitIsFullScreen && document.mozFullScreen && document.msFullscreenElement) {
+      this.addClass('hidden');
+      $('#exit_fs').removeClass('hidden');
+
+    } else {
+      this.removeClass('hidden');
+      $('#exit_fs').addClass('hidden');
+    }
+  })
+ 
+
 
 $("#enter_fs" ).on( "click", function() {
 
@@ -38,6 +129,8 @@ $( "#exit_fs").on( "click", function() {
   $('#exit_fs')
     .addClass('hidden');
 } );
+*/
+
 
 /* botonera de navegación al cargar la página */
 window.onload = (event) => {

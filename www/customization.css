@@ -225,7 +225,7 @@ li.nav-item::marker{
 .open-controls-btn{
 
   height: 40px;
-
+  overflow: hidden;
   cursor: pointer;
 
   display: flex;
@@ -254,7 +254,9 @@ li.nav-item::marker{
   ease-in-out;
 }
 
-#graphics{
+#open-controls-rg{
+  max-width: 150px;
+  margin-bottom: .2rem;
 }
 
 .close-controls-btn{
@@ -352,11 +354,23 @@ li.nav-item::marker{
   max-height: 100vh;
 }
 
+:not(:root):fullscreen{
+  padding: 1rem;
+  max-height: 100vh;
+}
+
 @media (min-width: 1417px){
   
     :not(:root):fullscreen .input-graphic-container{
       height: 100%;
     }
+}
+
+@media (max-width: 1417px){
+  
+  :not(:root):fullscreen{
+    overflow-y: scroll;
+  }
 }
 
 :not(:root):fullscreen #laboratory,
@@ -372,7 +386,6 @@ li.nav-item::marker{
 
 .fullscreen-height{
   height: 100% !important;
-  max-height: 100vh;
 }
 
 .fullscreen-graphic{
@@ -380,7 +393,7 @@ li.nav-item::marker{
 }
 
 .fullscreen-control{
-  height: 100% !important;
+  height: fit-content !important;
 }
 
 .fullscreen-control-min{
@@ -490,6 +503,9 @@ background-color: #454D55;
   box-shadow: 0 2px 10px #11111176;
 
   animation: fade-in 200ms forwards;
+}
+
+.graphics-hint{
 }
 
 @media ( max-width: 1356px ){
@@ -630,9 +646,12 @@ background-color: #454D55;
   text-align: left;
   color: #56606a;
   margin: 0 !important;
+  white-space: normal;
+  line-height: 1.1;
 }
 
 .dark-mode .desccustom-hint{
+  color: #b2b9c0;
 }
 
 
@@ -998,7 +1017,7 @@ background-color: #454D55;
 background-color: #e3e8ec;
 padding: .5rem 1rem!important;
 height: 100%;
-margin: 0 auto auto auto;
+margin: 0 auto;
 min-width: 250px !important;
 max-width:  calc(25% - 2rem) !important;
 box-shadow: 0 0 1px rgba(0,0,0,0.2);
@@ -1266,7 +1285,7 @@ box-shadow: none !important;
   margin-bottom: 1rem;
 }
 
-.table-container div div{
+.table-container #dens{
   overflow: auto;
   border-radius: .5rem;
   border: 2px solid #dee2e6;
@@ -1726,7 +1745,6 @@ color: #8b0000;
 {
   .header-tab.rg-diff  .nav.nav-tabs, .header-tab.mix-diff  .nav.nav-tabs{
   position: inherit !important;
-  margin-bottom: 1rem;
 }
   .tabbable{
     margin-top: -1rem;
@@ -1737,7 +1755,6 @@ color: #8b0000;
 {
   .header-tab.wg-diff .nav.nav-tabs{
   position: inherit !important;
-  margin-bottom: 1rem;
 }
   .tabbable{
     margin-top: -1rem;

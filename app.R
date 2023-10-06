@@ -37,9 +37,9 @@ source("R/WimpIndicesFunctions.R")
 source("R/visnetworks.R")
 
 
+
 # UI
 source("UI/home_page_ui.R")
-source("UI/another_page_ui.R")
 source("UI/userHome_ui.R")
 source("UI/inicio_page_ui.R")
 source("UI/import_ui.R")
@@ -55,7 +55,6 @@ source("UI/suggestion_ui.R")
 
 # SERVERS
 source("Servers/home_page_server_observers.R")
-source("Servers/another_page_server_observers.R")
 source("Servers/userHome_page_server.R")
 source("Servers/inicio_page_servers.R")
 source("Servers/import_servers.R")
@@ -104,7 +103,6 @@ theme <- create_theme(
   )
 )
 
-
 ui <- dashboardPage(
   freshTheme = theme,
   dashboardHeader(
@@ -114,6 +112,7 @@ ui <- dashboardPage(
     div(id="user-page", class = "nav-item user-page user-page-btn" , menuItem("User", href = route_link("user_home"), icon = icon("house-user"), newTab = FALSE)),
     div(id="patientIndicator", class = "ml-auto patient-active-label", span(class = "icon-paciente"), htmlOutput("paciente_activo"))
   ),
+
 
   dashboardSidebar(
     sidebarMenu(
