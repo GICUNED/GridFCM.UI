@@ -125,8 +125,8 @@ div(id="open-controls-container-rg", div(id="open-controls-rg", class="open-cont
         h4(i18n$t("Índices"), class = "pagetitle2custom mt-2 mb-2"),
       ),
 
-        actionButton("enter_fs_8", i18n$t("Expandir"), status="primary", icon = icon("maximize"), onclick = "openFullscreen(document.getElementById('rg-analysis-content'));"),
-        actionButton("exit_fs_8", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "exitFullscreen();"),
+        #actionButton("enter_fs_8", i18n$t("Expandir"), status="primary", icon = icon("maximize"), onclick = "openFullscreen(document.getElementById('rg-analysis-content'));"),
+        #actionButton("exit_fs_8", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "exitFullscreen();"),
             
       ),
       fluidRow(class = "table-container mt-4",
