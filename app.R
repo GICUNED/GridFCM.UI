@@ -113,6 +113,7 @@ ui <- dashboardPage(
     div(id="patientIndicator", class = "ml-auto patient-active-label", span(class = "icon-paciente"), htmlOutput("paciente_activo"))
   ),
 
+
   dashboardSidebar(
     sidebarMenu(
         id = "sidebar_principal",
@@ -128,7 +129,6 @@ ui <- dashboardPage(
         div(class = 'language-selector',radioGroupButtons('selected_language',i18n$t("Idioma"), choices = i18n$get_languages(), selected = i18n$get_translation_language(), width='100%', checkIcon = list()))
       )
     ),
-
 
   dashboardBody(
     usei18n(translator = i18n),

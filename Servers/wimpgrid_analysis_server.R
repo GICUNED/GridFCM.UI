@@ -1884,20 +1884,17 @@ output$pscd_show <- renderPlotly({
     constructos_izq <- session$userData$constructos_izq
     constructos <- paste(constructos_izq, "-", constructos_der)
     labels_matrix <- sprintf("%.2f", matrix_data)
-    min_color <- hcl(h = 120, c = 100, l = 30)
-    mid_color <- hcl(h = 0, c = 100, l = 50)
-    max_color <- hcl(h = 300, c = 100, l = 90)
 
-    #wg_palette <- colorspace::diverging_hcl(
-     # 100,
-     # h = c(120, 300), c = 100, l = c(30, 90),
-
-    #)
+  
     # Definir una paleta de colores personalizada centrada en el 0
+
+    #wg_palette <- c(min_color, mid_color, max_color)
     wg_palette <- colorspace::diverging_hcl(100, h = c(120, 0, 300), c = 100, l = c(30, 50, 90))
 
 
+    
     plotly::plot_ly(
+      
       x = 1:ncol(matrix_data),
       y = 1:nrow(matrix_data),
       z = matrix_data,

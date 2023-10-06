@@ -128,9 +128,8 @@ tabsetPanel(
             box(
                 title = i18n$t("Puntuaciones Repgrid"),
                 h6(strong(textOutput("elemento_puntuable"))),
-                fluidRow( class="gap-1",
+                column(12, class="d-flex justify-content-between gap-1mt-3",
                     textOutput("polo_izq"),
-                    strong(" - "),
                     textOutput("polo_der")
                 ),
                 
