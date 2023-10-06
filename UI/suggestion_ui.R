@@ -1,13 +1,27 @@
-suggestion_ui <- fluidPage(
+suggestion_ui <- fluidPage(class="custom-margins",
     useShinyjs(),
 
-    titlePanel("Página de Sugerencias"),
-  
-    # Cuadro de texto grande
-    textAreaInput("sugerencia", i18n$t("Escriba su sugerencia aquí:"), rows = 10),
-    
-    # Botón de enviar
-    actionButton("send_suggestion", i18n$t("Enviar"), disable= TRUE),
+    fluidRow(class = "flex-container-titles",
+                h2(i18n$t("Sugerencias"), class = "rg pagetitlecustom mt-2"),
+    ),
 
-    
+   
+
+    fluidRow(class="mt-2 justify-content-center align-items-start",
+
+      column(7,
+        box(title = i18n$t("Buzón"),
+            icon = icon("envelopes-bulk"),
+            status = "success",
+            width = 12,
+            textAreaInput("sugerencia", i18n$t("Escriba su sugerencia aquí"),  rows = 5),
+            # Botón de enviar
+            column(12, class=" d-flex justify-content-center", actionButton("send_suggestion", class = "mt-2", status="success", icon=icon("paper-plane"), i18n$t("Enviar"), disable= TRUE))
+            
+        ))
+    )
 )
+    
+
+              
+        

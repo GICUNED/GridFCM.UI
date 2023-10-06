@@ -537,6 +537,10 @@
       "en": "Centrality"
     },
     {
+      "es": "Inconsistencias",
+      "en": "Inconsistencies"
+    },
+    {
       "es": "Cancelar",
       "en": "Cancel"
     },
@@ -618,7 +622,7 @@
     },
     {
       "es": "Ver pacientes",
-      "en": "View patients‹"
+      "en": "View patients"
     },
     {
       "es": "Simulación de ",
@@ -631,9 +635,35 @@
     {
       "es": "Sugerencias",
       "en": "Suggestions"
+    },
+    {
+      "es": "Grado",
+      "en": "Degree"
+    },
+    {
+      "es": "Cercanía",
+      "en": "Closeness"
+    },
+    {
+      "es": "Intermediación",
+      "en": "Betweenness"
+    },
+    {
+      "es": "Escriba su sugerencia aquí",
+      "en": "Write down your suggestion:"
+    },
+    {
+      "es": "Enviar",
+      "en": "Send"
+    },
+    {
+      "es": "Volver atrás",
+      "en": "Come back"
+    },
+    {
+      "es": "Buzón",
+      "en": "Mailbox"
     }
 
-
-    
     
 ]}

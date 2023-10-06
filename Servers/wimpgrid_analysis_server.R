@@ -14,7 +14,63 @@ shinyjs::hide("context-wg-3-home")
   onevent("click", "exit-wg-3-tooltip", shinyjs::hide("context-wg-3-home"))
 
 
+#Pantalla completa de elementos
 
+runjs("
+
+if (document.addEventListener)
+{
+ document.addEventListener('fullscreenchange', exitHandler, false);
+ document.addEventListener('mozfullscreenchange', exitHandler, false);
+ document.addEventListener('MSFullscreenChange', exitHandler, false);
+ document.addEventListener('webkitfullscreenchange', exitHandler, false);
+}
+
+function exitHandler()
+{
+ if (!document.webkitIsFullScreen && !document.mozFullScreen && !document.msFullscreenElement)
+ {
+  $('#enter_fs')
+  .removeClass('hidden');
+
+  $('#exit_fs')
+  .addClass('hidden');
+
+  $('.graphic-container')
+  .removeClass('fullscreen-height');
+
+  $('#graph_output_laboratorio')
+  .removeClass('fullscreen-graphic');
+
+  $('.input-field-container')
+  .removeClass('fullscreen-control');
+
+  $('#open-controls-lab')
+  .removeClass('fullscreen-control-min');
+
+ } else {
+
+    $('#enter_fs')
+    .addClass('hidden');
+
+    $('#exit_fs')
+    .removeClass('hidden');
+
+    $('.graphic-container')
+      .addClass('fullscreen-height');
+
+    $('#graph_output_laboratorio')
+      .addClass('fullscreen-graphic');
+
+    $('.input-field-container')
+      .addClass('fullscreen-control');
+
+    $('#open-controls-lab')
+      .addClass('fullscreen-control-min');
+ }
+}
+")
+        
 #Ver y Ocultar panel de control izquierdo
 runjs("
 
@@ -156,34 +212,12 @@ shinyjs::hide("open-controls-container-vis")
 
   observeEvent(input$exit_fs, {
     # Navega a la página de creación de un nuevo análisis de rejilla
-        shinyjs::show("enter_fs")
         shinyjs::hide("exit_fs")
-        runjs("
-        $('.graphic-container')
-          .removeClass('fullscreen-height');
-
-        $('.vis-network')
-          .removeClass('fullscreen-graphic');
-
-        $('.input-field-container')
-          .removeClass('fullscreen-control');
-        ")
   })
 
    observeEvent(input$enter_fs, {
     # Navega a la página de creación de un nuevo análisis de rejilla
         shinyjs::show("exit_fs")
-        shinyjs::hide("enter_fs")
-        runjs("
-        $('.graphic-container')
-          .addClass('fullscreen-height');
-
-        $('.vis-network')
-          .addClass('fullscreen-graphic');
-
-        $('.input-field-container')
-          .addClass('fullscreen-control');
-        ")
   })
 
   print("Wimpgrid")
@@ -270,9 +304,8 @@ output$tabla_datos_wimpgrid <- renderRHandsontable({
     hot_table <- rhandsontable(tabla_manipulable_w()) %>%
         hot_table(highlightCol = TRUE, highlightRow = TRUE) %>%
         hot_col(col = indicess, format = "3")
+        
     hot_table
-
- 
 
   }
 
@@ -348,6 +381,7 @@ observeEvent(input$tabla_datos_wimpgrid, {
       tabla_original[xi+1, yi+1] <- old_v
 
       tabla_manipulable_w(tabla_original)
+
       output$tabla_datos_wimpgrid <- renderRHandsontable({
         rhandsontable(tabla_original) %>%
           hot_table(highlightCol = TRUE, highlightRow = TRUE) %>%
@@ -368,8 +402,9 @@ observeEvent(input$tabla_datos_wimpgrid, {
 
 output$bert_w <- renderPlot({
   if (!is.null(session$userData$datos_wimpgrid)) {
-    bertin(wimpgrid_a_mostrar()$openrepgrid , color=c("white", "#dfb639"), cex.elements = 1,
-      cex.constructs = 1, cex.text = 1, lheight = 1.25, cc=session$userData$num_col_wimpgrid-2, col.mark.fill="#DBA901")
+    bertin(wimpgrid_a_mostrar()$openrepgrid , xlim = c(.2,
+   .8), ylim = c(0, .6), margins = c(0, 1, 1), color=c("white", "#dfb639"), cex.elements = 1,
+      cex.constructs = 1, cex.text = 1, lheight = 1.5, cc=session$userData$num_col_wimpgrid-2, col.mark.fill="#DBA901")
     
   }
 
@@ -920,14 +955,11 @@ output$distance <- renderRHandsontable({
     colnames(INTe) <- res
     rownames(INTe) <- res
 
-    rhandsontable(INTe) %>%
-    hot_table(highlightCol = TRUE, highlightRow = TRUE)
-
-    rhandsontable(INTe) %>%
-        hot_cols(
-          colWidths=60
-        )
-
+    rhandsontable(INTe,  colHeaderHeight = 100, rowHeaderWidth = 250) %>%
+          hot_table(highlightCol = TRUE, highlightRow = TRUE, readOnly = TRUE, stretchH="all") %>%
+          hot_context_menu(allowRowEdit = FALSE, allowColEdit = FALSE) %>%
+          hot_cols(colWidths=200)
+      
 })
 
  
@@ -1178,7 +1210,7 @@ output$simdigraph_act_vector <- renderRHandsontable({
     res <- paste(izq, der, sep="/\n")
     colnames(vv) <- res
   }
-  rhandsontable(vv)
+  rhandsontable(vv, rowHeaders = NULL)
 
 })
 
@@ -1223,7 +1255,7 @@ output$pcsdindices_act_vector <- renderRHandsontable({
     res <- paste(izq, der, sep="/\n")
     colnames(vv) <- res
   }
-  rhandsontable(vv , col_highlight = col_highlight, row_highlight = row_highlight)
+  rhandsontable(vv ,rowHeaders = NULL, col_highlight = col_highlight, row_highlight = row_highlight)
 })
 
  
@@ -1325,7 +1357,7 @@ output$pcsd_act_vector <- renderRHandsontable({
     res <- paste(izq, der, sep="/\n")
     colnames(vv) <- res
   }
-  rhandsontable(vv)
+  rhandsontable(vv, rowHeaders = NULL)
 
 })
 
@@ -1852,19 +1884,26 @@ output$pscd_show <- renderPlotly({
     constructos_izq <- session$userData$constructos_izq
     constructos <- paste(constructos_izq, "-", constructos_der)
     labels_matrix <- sprintf("%.2f", matrix_data)
-    
+    min_color <- hcl(h = 120, c = 100, l = 30)
+    mid_color <- hcl(h = 0, c = 100, l = 50)
+    max_color <- hcl(h = 300, c = 100, l = 90)
+
+    #wg_palette <- colorspace::diverging_hcl(
+     # 100,
+     # h = c(120, 300), c = 100, l = c(30, 90),
+
+    #)
     # Definir una paleta de colores personalizada centrada en el 0
-    color_palette <- colorspace::diverging_hcl(100, h = c(120, 300), c = 100, l = c(30, 90))
+    wg_palette <- colorspace::diverging_hcl(100, h = c(120, 0, 300), c = 100, l = c(30, 50, 90))
 
 
-    
     plotly::plot_ly(
       x = 1:ncol(matrix_data),
       y = 1:nrow(matrix_data),
       z = matrix_data,
       text = labels_matrix,  # Utilizar los valores de la matriz como texto
       type = "heatmap",
-      colorscale = color_palette,
+      colorscale = wg_palette,
       zmid = 0,  # Establecer el punto medio en 0
       height = 900,
       hovertemplate = "Causa: %{y}<br>Consecuencia: %{x}<br>Peso: %{z}"

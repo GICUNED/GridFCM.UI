@@ -10,8 +10,8 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
     
   tabPanel(i18n$t("Datos"), id = "tab_data_w", icon = icon("table"),
 
-          fluidRow( class = ("flex-container-titles"),
-            h2(i18n$t("Inicio de WimpGrid"), class = "wg pagetitlecustom  mt-2"),
+          fluidRow( class = ("flex-container-titles mt-3"),
+            h2(i18n$t("Inicio de WimpGrid"), class = "wg pagetitlecustom"),
             icon("circle-question", id = "tooltip-wg-home", class="tooltip-icon mb-4 ml-2"),
             div(id="context-wg-home", class="tooltip-container", icon("circle-xmark", id = "exit-wg-tooltip", class="fa-solid exit-tooltip"), p(i18n$t("Esta página te permite visualizar y manipular los datos importados de Wimpgrid y acceder a diferentes tipos de análisis."),  class = "desccustom-tooltip")),
           ),
@@ -31,17 +31,28 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
   shinyjs::hidden(div(class = "custom-margins-lg", id="wg-data-content",
     fluidRow(class="mb-2 button-container",
       #h3(i18n$t("Tabla de Datos"), class = "mr-auto mb-0"),
-      h4(class = "mr-auto mb-0", htmlOutput("titulo_wimpgrid")),
-      actionButton("matriz_pesos_w", i18n$t("Matriz de pesos")),
-      actionButton("volver_inicio_w", i18n$t("Volver atrás"), style = "display: none;"),
+    
+      div(class = "mr-auto",
+        h4(class = "mr-4 mb-0",htmlOutput("titulo_wimpgrid")),
+        actionButton("matriz_pesos_w", status = 'primary', icon=icon("table-cells"), i18n$t("Matriz de Pesos")),
+        actionButton("volver_inicio_w", status = 'warning', icon=icon("table"), i18n$t("Tabla de Datos"), style = "display: none;"),
+      ),
+
+      div(class = "flex-container-mini",
+        actionButton("guardarBD_w", i18n$t("Guardar"), status = "warning", icon = icon("database")),
+        actionButton("guardarComo_w", icon=icon("question"), i18n$t("Guardar como...")),
+       ),
+
       actionButton("volver_w", i18n$t("Cancelar"), style = "display: none;", status = 'danger', icon = icon("circle-xmark")),
       actionButton("guardar_w", i18n$t("Guardar"), style = "display: none;", status = 'success', icon = icon("save")),
       actionButton("reiniciar_w", i18n$t("Reiniciar"), style = "display: none;", status = 'warning', icon = icon("arrow-rotate-left")),
-      actionButton("editar_w", i18n$t("Editar"), icon = icon("edit")),
-      actionButton("guardarBD_w", i18n$t("Guardar"), status = "warning", icon = icon("database")),
-      actionButton("guardarComo_w", i18n$t("Guardar como")),
-      downloadButton("exportar_w", i18n$t("Exportar"))
+      
+      div(class = "flex-container-mini",
+        actionButton("editar_w", i18n$t("Editar"), icon = icon("edit")),
+        downloadButton("exportar_w", status ="primary", i18n$t("Exportar"))
       ),
+    ),
+
       shinyjs::hidden(
       div(id = "tabla_datos_wimpgrid_container",
         # Mostrar los datos de tabla_datos
@@ -63,8 +74,8 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
 
   tabPanel(i18n$t("Visualización"), id = "tab_visualizacion", icon = icon("square-poll-vertical"),
 
-      fluidRow( class = ("flex-container-titles"),
-            h2(i18n$t("Análisis WimpGrid"), class = "wg pagetitlecustom  mt-2"),
+      fluidRow( class = ("flex-container-titles mt-3"),
+            h2(i18n$t("Análisis WimpGrid"), class = "wg pagetitlecustom"),
             icon("circle-question", id = "tooltip-wg-2-home", class="tooltip-icon mb-4 ml-2"),
             div(id="context-wg-2-home", class="tooltip-container", icon("circle-xmark", id = "exit-wg-2-tooltip", class="fa-solid exit-tooltip"), p(i18n$t("Esta página te permite..."),  class = "desccustom-tooltip")),
           ),
@@ -156,29 +167,29 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
 
                             fluidRow(class = "subheader-tab",
                             tabsetPanel(
-                                tabPanel("Degree", shinycssloaders::withSpinner(DT::dataTableOutput("table_degree"), type = 4, color = "#022a0c", size = 0.6), icon = icon("gauge-simple-high")),
-                                tabPanel("Closeness", shinycssloaders::withSpinner(DT::dataTableOutput("table_closeness"), type = 4, color = "#022a0c", size = 0.6),  icon = icon("person-walking-dashed-line-arrow-right")),
-                                tabPanel("Betweenness", shinycssloaders::withSpinner(DT::dataTableOutput("table_betweenness"), type = 4, color = "#022a0c", size = 0.6), icon = icon("people-arrows"))
+                                tabPanel(i18n$t("Grado"), shinycssloaders::withSpinner(DT::dataTableOutput("table_degree"), type = 4, color = "#022a0c", size = 0.6), icon = icon("gauge-simple-high")),
+                                tabPanel(i18n$t("Cercanía"),shinycssloaders::withSpinner(DT::dataTableOutput("table_closeness"), type = 4, color = "#022a0c", size = 0.6),  icon = icon("person-walking-dashed-line-arrow-right")),
+                                tabPanel(i18n$t("Intermediación"), shinycssloaders::withSpinner(DT::dataTableOutput("table_betweenness"), type = 4, color = "#022a0c", size = 0.6), icon = icon("people-arrows"))
                             )),
 
-                            fluidRow(class = "subheader-tab flex-container-sm mt-4 mb-4",
-
-                            fluidRow(class = "flex-container-sm mt-4 mb-4",
+                            fluidRow(class = "flex-container-sm mt-4 mb-2",
                               icon("water"),
                               h4(i18n$t("Inconsistencias"), class = "pagetitle2custom"),
                             ),
-                              
+
+                            fluidRow(class = "subheader-tab",
                               shinycssloaders::withSpinner(DT::dataTableOutput("inconsistences"), type = 4, color = "#022a0c", size = 0.6)
                             )
         ),
+
 
       ))
   ),
 
   tabPanel(i18n$t("Laboratorio"), id = "tab_laboratorio", icon = icon("flask-vial"),
 
-      fluidRow( class = ("flex-container-titles"),
-            h2(i18n$t("Análisis WimpGrid"), class = "wg pagetitlecustom  mt-2"),
+      fluidRow( class = ("flex-container-titles mt-3"),
+            h2(i18n$t("Análisis WimpGrid"), class = "wg pagetitlecustom"),
             icon("circle-question", id = "tooltip-wg-3-home", class="tooltip-icon mb-4 ml-2"),
             div(id="context-wg-3-home", class="tooltip-container", icon("circle-xmark", id = "exit-wg-3-tooltip", class="fa-solid exit-tooltip"), p(i18n$t("Esta página te permite..."),  class = "desccustom-tooltip")),
           ),
@@ -206,17 +217,21 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                          ),
                           downloadButton(class = "btn-download", "boton_download_laboratory", i18n$t("Descargar Gráfico")),
                           actionButton("enter_fs", i18n$t("Expandir"), status="warning", icon = icon("maximize"), onclick = "openFullscreen(document.getElementById('wg-lab-content'));"),
-                          shinyjs::hidden(actionButton("exit_fs", i18n$t("Salir"), status="danger", icon = icon("minimize"), onclick = "exitFullscreen();")),
+                          actionButton("exit_fs", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "exitFullscreen();"),
 
                         ),
                     shinycssloaders::withSpinner(rHandsontableOutput("simdigraph_act_vector"), type = 4, color = "#022a0c", size = 0.6)
                     ),
 
                     conditionalPanel(class = "graphic-subcontainer", condition = "input.graph_selector_laboratorio == 'pcsd'",
-                      div(class = "flex-container-sm align-left-title p-2 pb-3 border-divider",
-                        icon("line-chart"),
-                        h4(i18n$t("Resultado gráfico"), class = "pagetitle2custom"),
-                      ),
+                      fluidRow(class = "flex-container-resp p-2 pb-3 border-divider",
+                        div(class = "flex-container-sm align-left-title",
+                          icon("line-chart"),
+                          h4(i18n$t("Resultado gráfico"), class = "pagetitle2custom"),
+                          ),
+                          #actionButton("enter_fs", i18n$t("Expandir"), status="warning", icon = icon("maximize"), onclick = "openFullscreen(document.getElementById('wg-lab-content'));"),
+                          actionButton("exit_fs", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "exitFullscreen();"),
+                        ),
                     shinycssloaders::withSpinner(rHandsontableOutput("pcsd_act_vector"), type = 4, color = "#022a0c", size = 0.6)
                       
                     ),

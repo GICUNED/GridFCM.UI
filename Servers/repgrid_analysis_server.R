@@ -86,13 +86,15 @@ repgrid_analisis_server <- function(input, output, session) {
     res <- paste(izq, der, sep="/\n")
     colnames(mc) <- res
 
-    rhandsontable(mc) %>%
-
-    hot_table(highlightCol = TRUE, highlightRow = TRUE)
+    rhandsontable(mc, rowHeaderWidth = 250) %>%
+      hot_table(highlightCol = TRUE, highlightRow = TRUE, readOnly = TRUE, stretchH="all") %>%
+      hot_context_menu(allowRowEdit = FALSE, allowColEdit = FALSE)
   })
 
   output$matrix_elements <- renderRHandsontable({
-    rhandsontable(indices_list[["distances"]][["Elements"]])
+    rhandsontable(indices_list[["distances"]][["Elements"]], rowHeaderWidth = 100) %>%
+      hot_table(highlightCol = TRUE, highlightRow = TRUE, readOnly = TRUE, stretchH="all") %>%
+      hot_context_menu(allowRowEdit = FALSE, allowColEdit = FALSE)
   })
 
   output$btn_download_cluster1 <- downloadHandler(

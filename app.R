@@ -25,11 +25,7 @@ knitr::knit_hooks$set(webgl = hook_webgl)
 
 
 
-
-
-
 source("global.R")
-
 #GRID
 source("R/GraphFunctions.R")
 source("R/HideFunctions.R")
@@ -56,6 +52,7 @@ source("UI/form_ui.R")
 source("UI/patient_ui.R")
 source("UI/suggestion_ui.R")
 
+
 # SERVERS
 source("Servers/home_page_server_observers.R")
 source("Servers/another_page_server_observers.R")
@@ -70,8 +67,6 @@ source("Servers/wimpgrid_analysis_server.R")
 source("Servers/form_server.R")
 source("Servers/patient_server.R")
 source("Servers/suggestion_server.R")
-
-
 
 #DB
 source("DB/establish_con.R")
@@ -108,8 +103,6 @@ theme <- create_theme(
     info = "#90214a"
   )
 )
-
-
 ui <- dashboardPage(
   freshTheme = theme,
   dashboardHeader(
@@ -135,6 +128,7 @@ ui <- dashboardPage(
         div(class = 'language-selector',radioGroupButtons('selected_language',i18n$t("Idioma"), choices = i18n$get_languages(), selected = i18n$get_translation_language(), width='100%', checkIcon = list()))
       )
     ),
+
 
   dashboardBody(
     usei18n(translator = i18n),

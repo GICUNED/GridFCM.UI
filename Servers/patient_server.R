@@ -96,6 +96,7 @@ patient_server <- function(input, output, session){
             pacientename <- DBI::dbGetQuery(con, sprintf("SELECT nombre from paciente WHERE id = %d", user_data$selected_user_id))
             nombrePaciente(pacientename)
             DBI::dbDisconnect(con)
+            
             shinyjs::show("simulaciones_wimp")
             shinyjs::show("patientSimulations")
             shinyjs::show("simulaciones_rep")
@@ -229,7 +230,11 @@ patient_server <- function(input, output, session){
                     # Solo archivo RepGrid cargado, navegar a RepGrid Home
                     session$userData$id_paciente <- user_data$selected_user_id
                     repgrid_home_server(input,output,session)
-                    runjs("window.location.href = '/#!/repgrid';")
+                    runjs("
+                    setTimeout(function () {
+                    window.location.href = '/#!/repgrid';
+                    }, 200)
+                        ")
                 } 
             }
             if(!is.null(wimpgrid_fecha_seleccionada())){
@@ -263,7 +268,9 @@ patient_server <- function(input, output, session){
                 if (!is.null(datos_wimpgrid)) {
                     session$userData$id_paciente <- user_data$selected_user_id
                     wimpgrid_analysis_server(input,output,session)
-                    runjs("window.location.href = '/#!/wimpgrid';")
+                    runjs("setTimeout(function () {
+                    window.location.href = '/#!/wimpgrid';
+                    }, 200)")
                 }   
             }
             proxy <- dataTableProxy("user_table")
@@ -440,6 +447,8 @@ patient_server <- function(input, output, session){
         shinyjs::hide("import-page")
         shinyjs::hide("form-page")
         shinyjs::hide("excel-page")
+        shinyjs::hide("patientIndicator")
+
 
 
     })
