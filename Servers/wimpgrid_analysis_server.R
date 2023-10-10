@@ -1022,14 +1022,15 @@ output$distance <- renderRHandsontable({
     #DT::datatable(INTe)
     izq <- session$userData$constructos_izq
     der <- session$userData$constructos_der
-    res <- paste(izq, der, sep="/\n")
+    res <- paste(izq, der, sep="/<br>")
     colnames(INTe) <- res
+    rownames(INTe) <- res
     #data_frame <- data.frame(row_names = res, INTe)
 
     rhandsontable(INTe,  colHeaderHeight = 100, rowHeaderWidth = 250) %>%
-          hot_table(highlightCol = TRUE, highlightRow = TRUE, readOnly = TRUE, stretchH="all") %>%
+          hot_table(highlightCol = TRUE, highlightRow = TRUE, readOnly = TRUE) %>%
           hot_context_menu(allowRowEdit = FALSE, allowColEdit = FALSE) %>%
-          hot_cols(colWidths=200)
+          hot_cols(colWidths = 130)
       
 })
 
