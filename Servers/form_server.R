@@ -276,60 +276,57 @@ form_server <- function(input, output, session){
 
 
     # Puntuaciones para repgrid
+    renderizar_puntos <- function(){
+        output$pagina_puntuaciones <- renderUI({
+            num_constructos <- length(constructos_puntuables())
+            constructos_separados <- strsplit(constructos_puntuables(), " - ")
+            polo_izq <- sapply(constructos_separados, function(x) x[1])
+            polo_der <- sapply(constructos_separados, function(x) x[2])
+
+            constructos <- c()
+            for(j in 1:num_constructos){
+                constructos[[j]] <- fluidRow(
+                    column(12,
+                        polo_izq[j],
+                        polo_der[j]
+                    ),
+                    column(12, 
+                        sliderInput(
+                            paste("slider_", j),
+                            label = " ",
+                            min = -1, max = 1, value = 0, step = 0.01, ticks = FALSE
+                        )
+                    )
+                )
+            }
+            constructos
+        })
+    }
 
     observe(
         if(length(elementos_puntuables()) > 0){
             output$elemento_puntuable <- renderText({
                 unlist(elementos_puntuables()[1])
             })
-        }
-    )
-
-    observe(
-        if(length(constructos_puntuables()) > 0){
-            output$polo_izq <- renderText({
-                unlist(strsplit(constructos_puntuables()[1], " - "))[1]
-            })
-
-            output$polo_der <- renderText({
-                unlist(strsplit(constructos_puntuables()[1], " - "))[2]
-            })
+            renderizar_puntos()
         }
     )
                 
     shinyjs::onclick("siguiente_puntuacion", {
-        if(length(constructos_puntuables()) > 0){
-            puntos_repgrid(c(puntos_repgrid(), input$puntos))
-            constructos_puntuables(constructos_puntuables()[-1])
+        slider_names <- list()
+        for(i in 1:length(constructos())){
+            slider <- paste("slider_", i)
+            puntos_repgrid(c(puntos_repgrid(), input[[slider]]))
         }
-        if(length(constructos_puntuables()) == 0 && length(elementos_puntuables()) > 0){
-            
-            constructos_puntuables(constructos())
+        if(length(elementos_puntuables()) > 0){
             elementos_puntuables(elementos_puntuables()[-1])
-            
         }
         if(length(elementos_puntuables()) == 0){
             shinyjs::hide("PuntuacionesRepgrid")
             shinyjs::show("ConfirmacionRepgrid")
         }
-        updateSliderInput(session, "puntos", value=0)
     })
 
-    # siguiente puntuacion valorando los elementos y constructos a la inversa
-    #shinyjs::onclick("siguiente_puntuacion", {
-     #   if(length(elementos_puntuables()) > 0){
-     ##       puntos_repgrid(c(puntos_repgrid(), input$puntos))
-      #      elementos_puntuables(elementos_puntuables()[-1])
-       # }
-        #if(length(elementos_puntuables()) == 0 && length(constructos_puntuables()) > 0){
-         #   elementos_puntuables(nombres())
-          #  constructos_puntuables(constructos_puntuables()[-1])
-        #}
-        #if(length(constructos_puntuables()) == 0){
-         #   shinyjs::hide("PuntuacionesRepgrid")
-         #   shinyjs::show("ConfirmacionRepgrid")
-        #}
-    #})
 
     shinyjs::onclick("atras_puntuaciones", {
         shinyjs::hide("PuntuacionesRepgrid")
@@ -441,6 +438,9 @@ form_server <- function(input, output, session){
     shinyjs::hide("ConfirmacionWimpgrid")
     shinyjs::hide("ValoracionesWimpgrid")
     shinyjs::hide("Elementos_w")
+    shinyjs::hide("puntuaciones_w")
+    shinyjs::hide("generar_aleatorio_w")
+    shinyjs::hide("generar_elementos_w")
     shinyjs::show("ComprobarDatos_w")
 
     nombres_w <- reactiveVal(list("Yo - Actual", "Yo - Ideal"))
@@ -456,7 +456,6 @@ form_server <- function(input, output, session){
     valoracion_actual <- reactiveVal(list())
     valoracion_ideal <- reactiveVal(list())
     valoracion_hipotetico <- reactiveVal(list())
-    valoracion_actual_slider <- reactiveVal(list())
 
     # COMPROBAR DATOS PREVIOS ------------------------------------------------------
     shinyjs::onclick("comprobar_datos_previos_w", {
@@ -833,7 +832,6 @@ form_server <- function(input, output, session){
             shinyjs::hide("ValoracionesWimpgrid")
             shinyjs::show("preguntasDiadas_w")
             shinyjs::show("puntuaciones_w")
-            message(valoracion_hipotetico())
         }
         updateSliderInput(session, "valora", value=0)
     })
@@ -867,54 +865,69 @@ form_server <- function(input, output, session){
         shinyjs::show("PuntuacionesWimpgrid")
         constructos_puntuables_w(constructos_w())
         elementos_puntuables_w(generar_elementos_wimpgrid(constructos_w()))
-        actuales <- rep(valoracion_actual(), each = length(constructos_puntuables_w()))
-        message("actuales")
-        message(actuales)
-        valoracion_actual_slider(actuales)
+        puntos_wimpgrid(NULL)
+        #actuales <- rep(valoracion_actual(), each = length(constructos_puntuables_w()))
     })
+
+    observe(
+        if(length(valoracion_actual()) == length(constructos_w()) && length(valoracion_actual()) > 0){
+            shinyjs::show("puntuaciones_w")
+        }
+        else{
+            shinyjs::hide("puntuaciones_w")
+        }
+    )
+    
+    renderizar_puntos_w <- function(){
+        output$pagina_puntuaciones_w <- renderUI({
+            num_constructos <- length(constructos_puntuables_w())
+            constructos_separados <- strsplit(constructos_puntuables_w(), " - ")
+            polo_izq <- sapply(constructos_separados, function(x) x[1])
+            polo_der <- sapply(constructos_separados, function(x) x[2])
+
+            constructos <- c()
+            for(j in 1:num_constructos){
+                actual <- valoracion_actual()[j]
+                constructos[[j]] <- fluidRow(
+                    column(12,
+                        polo_izq[j],
+                        polo_der[j]
+                    ),
+                    column(12, 
+                        sliderInput(
+                            paste("slider_", j),
+                            label = " ",
+                            min = -1, max = 1, value = actual, step = 0.01, ticks = FALSE
+                        )
+                    )
+                )
+            }
+            constructos
+        })
+    }
 
     observe(
         if(length(elementos_puntuables_w()) > 0){
             output$elemento_puntuable_w <- renderText({
                 unlist(elementos_puntuables_w()[1])
             })
+            renderizar_puntos_w()
         }
     )
 
-    observe(
-        if(length(constructos_puntuables_w()) > 0){
-            output$polo_izq_p_w <- renderText({
-                unlist(strsplit(constructos_puntuables_w()[1], " - "))[1]
-            })
-
-            output$polo_der_p_w <- renderText({
-                unlist(strsplit(constructos_puntuables_w()[1], " - "))[2]
-            })
-        }
-    )
-
-    observe(
-        if(length(valoracion_actual_slider()) > 0){
-            updateSliderInput(session, "puntos_w", value = valoracion_actual_slider()[1])
-        }
-    )
-                
     shinyjs::onclick("siguiente_puntuacion_w", {
-        if(length(constructos_puntuables_w()) > 0){
-            puntos_wimpgrid(c(puntos_wimpgrid(), input$puntos_w))
-            constructos_puntuables_w(constructos_puntuables_w()[-1])
-         }
-        if(length(constructos_puntuables_w()) == 0 && length(elementos_puntuables_w()) > 0){
-            
-            constructos_puntuables_w(constructos_w())
+        slider_names <- list()
+        for(i in 1:length(constructos_w())){
+            slider <- paste("slider_", i)
+            puntos_wimpgrid(c(puntos_wimpgrid(), input[[slider]]))
+        }
+        if(length(elementos_puntuables_w()) > 0){
             elementos_puntuables_w(elementos_puntuables_w()[-1])
-            
         }
         if(length(elementos_puntuables_w()) == 0){
             shinyjs::hide("PuntuacionesWimpgrid")
             shinyjs::show("ConfirmacionWimpgrid")
         }
-        valoracion_actual_slider(valoracion_actual_slider()[-1])
     })
 
     shinyjs::onclick("atras_puntuaciones_w", {
@@ -932,7 +945,6 @@ form_server <- function(input, output, session){
 
     generar_excel_w <- function(){
         puntuaciones <- puntos_wimpgrid()
-        message(puntuaciones)
         constructos <- constructos_w()
         elementos <- generar_elementos_wimpgrid(constructos)
         n_constructos <- length(constructos)
@@ -1030,7 +1042,6 @@ form_server <- function(input, output, session){
                 puntos_wimpgrid(NULL)
                 valoracion_actual(NULL)
                 valoracion_hipotetico(NULL)
-                valoracion_actual_slider(NULL)
             }  
         }
     })

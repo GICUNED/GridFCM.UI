@@ -129,12 +129,7 @@ tabsetPanel(
             box(
                 title = i18n$t("Puntuaciones RepGrid"),
                 h6(strong(textOutput("elemento_puntuable"))),
-                column(12, class="d-flex justify-content-between gap-1mt-3",
-                    textOutput("polo_izq"),
-                    textOutput("polo_der")
-                ),
-                
-                sliderInput("puntos", "", min=-1, max=1, value=0, step=0.01, ticks=FALSE),
+                uiOutput("pagina_puntuaciones"),
 
                 column(12, class="d-flex justify-content-center mt-3",
                     actionButton("atras_puntuaciones", class="mr-2",icon=icon("left-long"), i18n$t("Atrás")),
@@ -316,12 +311,7 @@ tabsetPanel(
                 box(
                     title = i18n$t("Puntuaciones WimpgGrid"),
                     h6(strong(textOutput("elemento_puntuable_w"))),
-                    column(12, class="d-flex justify-content-between gap-1mt-3",
-                        textOutput("polo_izq_p_w"),
-                        textOutput("polo_der_p_w")
-                    ),
-                    
-                    sliderInput("puntos_w", "", min=-1, max=1, value=0, step=0.01, ticks=FALSE),
+                    uiOutput("pagina_puntuaciones_w"),
 
                     column(12, class="d-flex justify-content-center mt-3",
                         actionButton("atras_puntuaciones_w", class="mr-2",icon=icon("left-long"), i18n$t("Atrás")),
