@@ -330,9 +330,7 @@ li.nav-item::marker{
 }
 
 #volver_inicio_w, #matriz_pesos_w{
-    background-color: transparent;
-    border: none;
-}
+    background-color: transparent;}
 
 #volver_inicio_w:hover, #matriz_pesos_w:hover{
   opacity: 0.9;
