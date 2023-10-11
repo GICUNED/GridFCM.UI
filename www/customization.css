@@ -383,6 +383,8 @@ li.nav-item::marker{
   background-color: #f8f9fa;
   border: 1px solid #c7bcbc;
   color: #444;
+  cursor: pointer;
+
 }
 
 #custom_btn_borrar{
@@ -391,6 +393,7 @@ li.nav-item::marker{
   color: #fff;
   background-color: #BF616A;
   border: 1px solid #94343e;
+  cursor: pointer;
 }
 
 #custom_btn_borrar::before{
@@ -2390,6 +2393,7 @@ td.dataTables_empty{
   pointer-events: none !important;
 }
 
+
 .my-custom-table.dataTable thead th {
   writing-mode: vertical-rl;
   transform: rotate(180deg);
@@ -2451,10 +2455,31 @@ table.dataTable{
   box-shadow: inset 0 0 0 9999px #a77f09 !important;
 }
 
-#simulaciones_rep .dataTable tr td:last-child, #simulaciones_wimp .dataTable tr td:last-child{
+#simulaciones_rep .dataTable tr td:last-child,
+#simulaciones_wimp .dataTable tr td:last-child{
 text-align: right;
 }
 
+#simulaciones_rep .dataTable tr,
+#simulaciones_wimp .dataTable tr{
+  cursor: auto;
+}
+
+#simulaciones_rep .dataTable tr td:nth-child(1),
+
+#simulaciones_wimp .dataTable tr td:nth-child(1),
+#simulaciones_wimp .dataTable tr td:nth-child(2){
+  pointer-events: none !important;
+}
+
+#simulaciones_wimp .dataTable tr th:nth-child(3).sorting::before,
+#simulaciones_wimp .dataTable tr th:nth-child(3).sorting::after,
+#simulaciones_rep .dataTable tr th:nth-child(2).sorting::before,
+#simulaciones_rep .dataTable tr th:nth-child(2).sorting::after{
+
+  display: none;
+
+}
 
 #simulaciones_wimp .dataTables_length::before{
   display: block;

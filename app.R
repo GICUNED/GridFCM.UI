@@ -24,6 +24,7 @@ library(dplyr)
 library(glue)
 knitr::knit_hooks$set(webgl = hook_webgl)
 
+
 source("global.R")
 #GRID
 source("R/GraphFunctions.R")
@@ -100,9 +101,11 @@ theme <- create_theme(
 
 
 ui <- dashboardPage(
+  title = "PsychLab UNED | GridFCM",
   freshTheme = theme,
   dashboardHeader(
-    tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "customization.css"), tags$link(rel = "icon", type = "image/x-icon", href = "GridFCM.UI/www/favicon.png"), tags$title("UNED | GridFCM")),
+    tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "customization.css")),
+    tags$head(tags$link(rel = "icon", type = "image/x-icon", href = 'favicon.png')),
     title = tags$a(href='https://www.uned.es/', target ="_blank", class = "logocontainer",
     tags$img(height='56.9',width='', class = "logoimg")),
     div(id="user-page", class = "nav-item user-page user-page-btn" , menuItem("User", href = route_link("user_home"), icon = icon("house-user"), newTab = FALSE)),
@@ -206,6 +209,7 @@ server <- function(input, output, session) {
     i18n
   })
 
+
   observeEvent(input$volver_a_inicio, {
     runjs("window.location.href = '/#!/';")
   })
@@ -257,6 +261,7 @@ server <- function(input, output, session) {
                       choices = i18n_r()$t(c("Análisis Bidimensional",
                               "Análisis Tridimensional","Análisis por Conglomerados","Índices Cognitivos","Dilemas")))
   })
+
 
   router_server()
   inicio_server(input, output, session)

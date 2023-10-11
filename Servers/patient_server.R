@@ -143,7 +143,11 @@ patient_server <- function(input, output, session){
                     selection = "single",
                     rownames = FALSE,
                     escape = FALSE,
-                    options = list(order = list(0, 'asc')),
+                    options = list(
+                        order = list(0, 'asc'),
+                        columnDefs = list(list(width = '125px', targets = ncol(data_rep) - 1 ))
+                    ),
+                    
                     colnames = c(i18n$t("Fecha"), "")
                 )
             })
@@ -183,10 +187,14 @@ patient_server <- function(input, output, session){
                     selection = "single",
                     rownames = FALSE,
                     escape = FALSE,
-                    options = list(order = list(0, 'asc')),
+                    options = list(
+                        order = list(0, 'asc'),
+                        columnDefs = list(list(width = '125px', targets = ncol(data_wimp) - 1))
+                    ),
                     colnames = c(i18n$t("Fecha"), i18n$t("Anotaciones"), "")
                 )
-            })
+            },
+            )
         }
     }
 

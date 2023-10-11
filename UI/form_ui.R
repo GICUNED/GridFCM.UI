@@ -1,4 +1,5 @@
 form_ui <- fluidPage( class="header-tab mix-diff",
+
     shiny.i18n::usei18n(i18n),
     shinyjs::useShinyjs(),
 
