@@ -99,7 +99,6 @@ theme <- create_theme(
   )
 )
 
-
 ui <- dashboardPage(
   title = "PsychLab UNED | GridFCM",
   freshTheme = theme,

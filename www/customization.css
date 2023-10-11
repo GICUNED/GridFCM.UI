@@ -465,9 +465,22 @@ li.nav-item::marker{
 :not(:root):fullscreen #pscd_showw,
 :not(:root):fullscreen .plotly,
 
-:not(:root):fullscreen .shiny-plot-output
-:not(:root):fullscreen #biplot3d_plot{
+:not(:root):fullscreen .shiny-plot-output,
+:not(:root):fullscreen #biplot3d_plot,
+:not(:root):fullscreen #biplot2d_plot,
+:not(:root):fullscreen .graphic-container > div:nth-child(1),
+:not(:root):fullscreen .graphic-container > div:nth-child(2){
   height: 100% !important;
+}
+
+:not(:root):fullscreen #biplot2d_plot{
+  width: 65% !important;
+}
+
+:not(:fullscreen) #biplot2d_plot,
+:not(:root) #biplot2d_plot {
+  width: 800px !important;
+  height: 800px !important;
 }
 
 :not(:root):fullscreen .input-field-container{
@@ -1527,8 +1540,6 @@ color: #8b0000;
 }
 
 #biplot2d_plot{
-  width: 800px !important;
-  height: 800px !important;
   max-width: 100%;
   margin: auto !important;
 }
@@ -1538,6 +1549,9 @@ color: #8b0000;
   height: 800px !important;
   max-width: 100%;
   margin: auto !important;
+
+  display: flex;
+  justify-content: center;
 }
 
 #constructs, #dilemmasss  {

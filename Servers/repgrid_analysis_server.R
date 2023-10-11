@@ -47,7 +47,7 @@ repgrid_analisis_server <- function(input, output, session) {
   output$biplot2d_plot <- renderPlot({
     
       OpenRepGrid::biplot2d(repgrid_data, c.label.col = "#005440",c.grid = "gray", c.grid.lty = "dotted", e.point.cex = 1,
-   e.label.cex = 1.1, c.point.cex = 1, c.label.cex = 1,c.grid.lwd = 0.7, cex.axis = 1, cex.labels = 1, var.cex = 1)
+   e.label.cex = 1.1, c.point.cex = 1, rect.margins = c(.1, .1), c.label.cex = 1,c.grid.lwd = 0.7, cex.axis = 1, cex.labels = 1, var.cex = 1)
     
   })
 
