@@ -5,22 +5,96 @@ repgrid_home_server <- function(input, output, session) {
   onevent("click", "tooltip-rg-home", shinyjs::show("context-rg-home"))
   onevent("click", "exit-rg-tooltip", shinyjs::hide("context-rg-home"))
 
-  shinyjs::hide("open-controls-container-rg")
+  shinyjs::hide("open-controls-rg-2d")
+  shinyjs::hide("open-controls-rg-3d")
+  shinyjs::hide("open-controls-rg-cong")
+  shinyjs::hide("open-controls-rg-in")
+  shinyjs::hide("open-controls-rg-dil")
+  
+
+  #controles de pestaña Results ----------------------------------
+
   onevent("click", "exit-controls-rg", {
   
-    shinyjs::show("open-controls-container-rg")
+    shinyjs::show("open-controls-rg-2d")
+    shinyjs::show("open-controls-rg-3d")
+    shinyjs::show("open-controls-rg-cong")
+    shinyjs::show("open-controls-rg-in")
+    shinyjs::show("open-controls-rg-dil")
     shinyjs::hide("controls-panel-rg")
     
   }, add = TRUE)
+
+    #Biplot 2d
   
-  onevent("click", "open-controls-rg", {
+  onevent("click", "open-controls-rg-2d", {
   
-    shinyjs::hide("open-controls-container-rg")
+    shinyjs::hide("open-controls-rg-2d")
+    shinyjs::hide("open-controls-rg-3d")
+    shinyjs::hide("open-controls-rg-cong")
+    shinyjs::hide("open-controls-rg-in")
+    shinyjs::hide("open-controls-rg-dil")
+    shinyjs::show("controls-panel-rg")
+    
+  }, add = TRUE)
+
+    #Biplot 3d
+
+
+  onevent("click", "open-controls-rg-3d", {
+  
+    shinyjs::hide("open-controls-rg-2d")
+    shinyjs::hide("open-controls-rg-3d")
+    shinyjs::hide("open-controls-rg-cong")
+    shinyjs::hide("open-controls-rg-in")
+    shinyjs::hide("open-controls-rg-dil")
+    shinyjs::show("controls-panel-rg")
+    
+  }, add = TRUE)
+
+    #Analisis conglomerados
+
+
+  onevent("click", "open-controls-rg-cong", {
+  
+    shinyjs::hide("open-controls-rg-2d")
+    shinyjs::hide("open-controls-rg-3d")
+    shinyjs::hide("open-controls-rg-cong")
+    shinyjs::hide("open-controls-rg-in")
+    shinyjs::hide("open-controls-rg-dil")
+    shinyjs::show("controls-panel-rg")
+    
+  }, add = TRUE)
+
+  #Indices cognitivos
+
+  onevent("click", "open-controls-rg-in", {
+  
+    shinyjs::hide("open-controls-rg-2d")
+    shinyjs::hide("open-controls-rg-3d")
+    shinyjs::hide("open-controls-rg-cong")
+    shinyjs::hide("open-controls-rg-in")
+    shinyjs::hide("open-controls-rg-dil")
+    shinyjs::show("controls-panel-rg")
+    
+  }, add = TRUE)
+
+  #Dilemas
+
+  onevent("click", "open-controls-rg-dil", {
+  
+    shinyjs::hide("open-controls-rg-2d")
+    shinyjs::hide("open-controls-rg-3d")
+    shinyjs::hide("open-controls-rg-cong")
+    shinyjs::hide("open-controls-rg-in")
+    shinyjs::hide("open-controls-rg-dil")
     shinyjs::show("controls-panel-rg")
     
   }, add = TRUE)
 
 runjs("
+
+//Results ---------------------------------------------------
 
 $('#exit-controls-rg').on('click', function (){
 
@@ -30,15 +104,99 @@ $('#exit-controls-rg').on('click', function (){
   $('#controls-panel-rg').removeClass('anim-fade-in');
   $('#controls-panel-rg').addClass('anim-fade-out');
 
+  $('#open-controls-rg-2d').removeClass('anim-fade-out');
+  $('#open-controls-rg-2d').addClass('anim-fade-in');
+
+  $('#open-controls-rg-3d').removeClass('anim-fade-out');
+  $('#open-controls-rg-3d').addClass('anim-fade-in');
+  
+  $('#open-controls-rg-cong').removeClass('anim-fade-out');
+  $('#open-controls-rg-cong').addClass('anim-fade-in');
+
+  $('#open-controls-rg-in').removeClass('anim-fade-out');
+  $('#open-controls-rg-in').addClass('anim-fade-in');
+
+  $('#open-controls-rg-dil').removeClass('anim-fade-out');
+  $('#open-controls-rg-dil').addClass('anim-fade-in');
+
 });
 
-$('#open-controls-rg').on('click', function (){
+//2d plot ---------------------------------------------------
+
+$('#open-controls-rg-2d').on('click', function (){
 
   $('.graphics-rg').removeClass('mw-100');
   $('.graphics-rg').removeClass('flex-bs-100');
 
   $('#controls-panel-rg').addClass('anim-fade-in');
   $('#controls-panel-rg').removeClass('anim-fade-out');
+
+  $('#open-controls-rg-2d').addClass('anim-fade-out');
+  $('#open-controls-rg-2d').removeClass('anim-fade-in');
+
+});
+
+//3d plot ---------------------------------------------------
+
+
+$('#open-controls-rg-3d').on('click', function (){
+
+  $('.graphics-rg').removeClass('mw-100');
+  $('.graphics-rg').removeClass('flex-bs-100');
+
+  $('#controls-panel-rg').addClass('anim-fade-in');
+  $('#controls-panel-rg').removeClass('anim-fade-out');
+
+  $('#open-controls-rg-3d').addClass('anim-fade-out');
+  $('#open-controls-rg-3d').removeClass('anim-fade-in');
+
+});
+
+//Conglomerados ---------------------------------------------------
+
+
+$('#open-controls-rg-cong').on('click', function (){
+
+  $('.graphics-rg').removeClass('mw-100');
+  $('.graphics-rg').removeClass('flex-bs-100');
+
+  $('#controls-panel-rg').addClass('anim-fade-in');
+  $('#controls-panel-rg').removeClass('anim-fade-out');
+
+  $('#open-controls-rg-cong').addClass('anim-fade-out');
+  $('#open-controls-rg-cong').removeClass('anim-fade-in');
+
+});
+
+//indices cognitivos ---------------------------------------------------
+
+
+$('#open-controls-rg-in').on('click', function (){
+
+  $('.graphics-rg').removeClass('mw-100');
+  $('.graphics-rg').removeClass('flex-bs-100');
+
+  $('#controls-panel-rg').addClass('anim-fade-in');
+  $('#controls-panel-rg').removeClass('anim-fade-out');
+
+  $('#open-controls-rg-in').addClass('anim-fade-out');
+  $('#open-controls-rg-in').removeClass('anim-fade-in');
+
+});
+
+//Dilemas ---------------------------------------------------
+
+
+$('#open-controls-rg-dil').on('click', function (){
+
+  $('.graphics-rg').removeClass('mw-100');
+  $('.graphics-rg').removeClass('flex-bs-100');
+
+  $('#controls-panel-rg').addClass('anim-fade-in');
+  $('#controls-panel-rg').removeClass('anim-fade-out');
+
+  $('#open-controls-rg-dil').addClass('anim-fade-out');
+  $('#open-controls-rg-dil').removeClass('anim-fade-in');
 
 });")
 

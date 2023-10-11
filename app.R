@@ -24,9 +24,6 @@ library(dplyr)
 library(glue)
 knitr::knit_hooks$set(webgl = hook_webgl)
 
-
-
-
 source("global.R")
 #GRID
 source("R/GraphFunctions.R")
@@ -38,9 +35,7 @@ source("R/SimulationFunctions.R")
 source("R/WimpIndicesFunctions.R")
 source("R/visnetworks.R")
 
-# UI
-source("UI/home_page_ui.R")
-source("UI/userHome_ui.R")
+# UIsource("UI/userHome_ui.R")
 source("UI/inicio_page_ui.R")
 source("UI/import_ui.R")
 source("UI/import_excel_ui.R")
@@ -54,7 +49,6 @@ source("UI/suggestion_ui.R")
 
 
 # SERVERS
-source("Servers/home_page_server_observers.R")
 source("Servers/userHome_page_server.R")
 source("Servers/inicio_page_servers.R")
 source("Servers/import_servers.R")
@@ -104,6 +98,7 @@ theme <- create_theme(
   )
 )
 
+
 ui <- dashboardPage(
   freshTheme = theme,
   dashboardHeader(
@@ -131,18 +126,16 @@ ui <- dashboardPage(
       )
     ),
 
+
   dashboardBody(
     usei18n(translator = i18n),
     tags$script(src = "activescript.js"),
     useShinyjs(),
 
     router_ui(
-      default = route(path = "/home",
-                      ui = home_page),
+      default = 
       route(path = "/",
             ui = inicio_ui),
-      route(path = "user_home",
-            ui = user_home_ui),
       route(path = "import",
             ui = import_ui),
       route(path = "patient",
@@ -206,6 +199,7 @@ ui <- dashboardPage(
 
   ),
 )
+
 server <- function(input, output, session) {
 
   i18n_r <- reactive({
@@ -258,14 +252,13 @@ server <- function(input, output, session) {
     updateSelectInput(session, "pcsdindices_thr",
                       choices = i18n_r()$t(c("lineal", "sigmoide", "binario")))
 
+
     updateSelectInput(session, "graph_selector",
                       choices = i18n_r()$t(c("Análisis Bidimensional",
                               "Análisis Tridimensional","Análisis por Conglomerados","Índices Cognitivos","Dilemas")))
   })
 
-
   router_server()
-  home_server(input, output, session)
   inicio_server(input, output, session)
   userHome_server(input, output, session)
   import_server(input, output, session)

@@ -11,7 +11,20 @@ repgrid_analisis_server <- function(input, output, session) {
     runjs("window.location.href = '/#!/patient';")
   })
 
-  
+
+  observeEvent(input$graph_selector, {
+
+  seleccion <- input$graph_selector
+
+  if(seleccion == 'Cluster Analysis' || seleccion == 'Análisis por Conglomerados'){
+    runjs("document.exitFullscreen();")
+  } else if (seleccion == 'Índices Cognitivos' || seleccion == 'Cognitive Indices'){
+    runjs("document.exitFullscreen();")
+  } else if (seleccion == 'Dilemas' || seleccion == 'Dilemmas'){
+    runjs("document.exitFullscreen();")
+  }
+  })
+
   #if (is.null(session$userData$datos_repgrid)) {
   #  datos_control <- 0
   #  indice_control <- 0

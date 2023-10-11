@@ -1,5 +1,15 @@
 wimpgrid_analysis_server <- function(input, output, session) {
 
+
+observeEvent(input$graph_selector_visualizacion, {
+
+  seleccion <- input$graph_selector_visualizacion
+
+  if(seleccion == 'wimpindices' || seleccion == 'índices de Wimp'){
+    runjs("document.exitFullscreen();")
+  }
+})
+
 shinyjs::hide("context-wg-home")
   onevent("click", "tooltip-wg-home", shinyjs::show("context-wg-home"))
   onevent("click", "exit-wg-tooltip", shinyjs::hide("context-wg-home"))
@@ -118,7 +128,6 @@ $('#open-controls-lab-pcsd').on('click', function (){
 
 //pcsd indices ---------------------------------------------------
 
-
 $('#open-controls-lab-in').on('click', function (){
 
   $('#graphics-lab').removeClass('mw-100');
@@ -149,7 +158,7 @@ shinyjs::hide("open-controls-lab-in")
     shinyjs::show("open-controls-vis") 
     shinyjs::show("open-controls-vis-in")
 
-    delay(100, shinyjs::hide("controls-panel-vis"))
+    shinyjs::hide("controls-panel-vis")
     
   }, add = TRUE)
 

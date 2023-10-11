@@ -21,27 +21,29 @@ repgrid_analysis_ui <- fluidPage( class="header-tab rg-diff",
       
 shinyjs::hidden(div(id = "rg-analysis-content",
 
-div(id="open-controls-container-rg", div(id="open-controls-rg", class="open-controls-btn", p(i18n$t("Controles")), icon(class="mr-2", "bars-progress"))),
         fluidRow(class = "input-graphic-container",
           conditionalPanel(class = "graphics-rg col-sm-9 graphic-container bg-white rounded-lg", condition = "input.graph_selector == 'Análisis Bidimensional'  ||  input.graph_selector =='Two-Dimensional Analysis' || input.graph_selector == 'Three-Dimensional Analysis' || input.graph_selector == 'Análisis Tridimensional'",
           
         conditionalPanel(condition = "input.graph_selector == 'Análisis Bidimensional'  ||  input.graph_selector =='Two-Dimensional Analysis'",
             fluidRow(class = "flex-container-resp pb-3 p-2 border-divider",
+            div(id="open-controls-rg-2d", class="open-controls-btn", p(i18n$t("Controles")), icon(class="mr-2", "bars-progress")),
               div(class = "flex-container-sm align-left-title",
                 icon("arrow-up-right-dots"),
                 h4(i18n$t("Análisis Bidimensional"), class = "pagetitle2custom")
               ),
               downloadButton("btn_download_2d", i18n$t("Descargar Gráfico")),
-              actionButton("enter_fs_5", i18n$t("Expandir"), status="primary", icon = icon("maximize"), onclick = "openFullscreen(document.getElementById('rg-analysis-content'));"),
+              actionButton("enter_fs_5", label=NULL, status="primary", icon = icon("maximize"), onclick = "openFullscreen(document.getElementById('rg-analysis-content'));"),
               actionButton("exit_fs_5", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "exitFullscreen();"),
                 
             ),
-          shinycssloaders::withSpinner(plotOutput("biplot2d_plot"), type = 4, color = "#022a0c", size = 0.6),
+          plotOutput("biplot2d_plot"),
         ),
         
         conditionalPanel(condition = "input.graph_selector == 'Three-Dimensional Analysis' || input.graph_selector == 'Análisis Tridimensional'",
   
           fluidRow(class = "flex-container-resp p-2 border-divider",
+            div(id="open-controls-rg-3d", class="open-controls-btn", p(i18n$t("Controles")), icon(class="mr-2", "bars-progress")),
+
             div(class = "flex-container-sm align-left-title",
               icon("cube"),
               h4(i18n$t("Análisis Tridimensional"), class = "pagetitle2custom"),
@@ -50,11 +52,11 @@ div(id="open-controls-container-rg", div(id="open-controls-rg", class="open-cont
               icon("circle-info"),
               p(i18n$t("Haz click y arrastra para Interactuar."),  class = "desccustom-hint"),
             ),
-            actionButton("enter_fs_6", i18n$t("Expandir"), status="primary", icon = icon("maximize"), onclick = "openFullscreen(document.getElementById('rg-analysis-content'));"),
+            actionButton("enter_fs_6", label=NULL, status="primary", icon = icon("maximize"), onclick = "openFullscreen(document.getElementById('rg-analysis-content'));"),
             actionButton("exit_fs_6", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "exitFullscreen();"),
                 
           ),
-          shinycssloaders::withSpinner(rglwidgetOutput("biplot3d_plot"), type = 4, color = "#022a0c", size = 0.6),
+          rglwidgetOutput("biplot3d_plot"),
           
         ),
     ),
@@ -84,7 +86,11 @@ div(id="open-controls-container-rg", div(id="open-controls-rg", class="open-cont
         ),
 
   conditionalPanel(class = "graphic-container bg-white rounded-lg mt-3", condition = "input.graph_selector == 'Cluster Analysis' || input.graph_selector == 'Análisis por Conglomerados'",
+    
+      
       fluidRow(class = "flex-container-sm p-2 pb-3 border-divider",
+
+        div(id="open-controls-rg-cong", class="open-controls-btn", p(i18n$t("Controles")), icon(class="mr-2", "bars-progress")),
         
         div(class = "flex-container-sm align-left-title",
           icon("network-wired"),
@@ -120,6 +126,8 @@ div(id="open-controls-container-rg", div(id="open-controls-rg", class="open-cont
       
       fluidRow(class = "flex-container-sm p-2 pb-3 border-divider",
 
+      div(id="open-controls-rg-in", class="open-controls-btn", p(i18n$t("Controles")), icon(class="mr-2", "bars-progress")),
+
       div(class = "flex-container-sm align-left-title",
         icon("brain"),
         h4(i18n$t("Índices"), class = "pagetitle2custom mt-2 mb-2"),
@@ -153,6 +161,10 @@ div(id="open-controls-container-rg", div(id="open-controls-rg", class="open-cont
 
   conditionalPanel(class="graphic-container bg-white rounded-lg mt-3", condition = "input.graph_selector == 'Dilemas' || input.graph_selector == 'Dilemmas'",
     fluidRow(class = "flex-container-sm p-2 pb-3 border-divider",
+
+    div(id="open-controls-rg-dil", class="open-controls-btn", p(i18n$t("Controles")), icon(class="mr-2", "bars-progress")),
+
+
     div(class = "flex-container-sm align-left-title",
       icon("calculator"),
       h4(i18n$t("Índices y Valores Matemáticos"), class = "pagetitle2custom mt-2 mb-2")

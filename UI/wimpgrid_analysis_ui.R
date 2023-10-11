@@ -113,7 +113,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                 actionButton("exit_fs_1", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "exitFullscreen();")
                         
               ),
-              shinycssloaders::withSpinner(uiOutput("graph_output_visualizacion"), type = 4, color = "#022a0c", size = 0.6)
+              uiOutput("graph_output_visualizacion")
             ),
             column(3, id="controls-panel-vis", class = "input-field-container rounded-lg",
               div(class = "flex-container-sm p-2 pb-3 border-divider",
@@ -268,7 +268,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                     fluidRow(class = "flex-container-resp p-2 pb-3 border-divider",
                       div(id="open-controls-lab-in", class="open-controls-btn", p(i18n$t("Controles")), icon(class="mr-2", "bars-progress")),
 
-                      div(class = "flex-container-sm align-left-title p-2 pb-3",
+                      div(class = "flex-container-sm align-left-title",
                         icon("table"),
                         h4(i18n$t("Resultados"), class = "pagetitle2custom"),
                       ),
@@ -289,8 +289,8 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
 
                     ),
                     
-              div(id = "pscd_showw", shinycssloaders::withSpinner(plotlyOutput("pscd_show"), type = 4, color = "#022a0c", size = 0.6)),
-              div(id = "laboratory",shinycssloaders::withSpinner(uiOutput("graph_output_laboratorio"), type = 4, color = "#022a0c", size = 0.6))
+              div(id = "pscd_showw", plotlyOutput("pscd_show")),
+              div(id = "laboratory", uiOutput("graph_output_laboratorio"))
             ),
             column(3, id="controls-panel-lab", class = "input-field-container rounded-lg",
               div(class = "flex-container-sm p-2 pb-3 border-divider",

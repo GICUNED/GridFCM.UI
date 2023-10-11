@@ -33,10 +33,16 @@ body{
   transition:opacity .3s ease;
 }
 
+html {
+  height: 100%;
+}
+
 button{
   max-height: 60px;
   min-height: 40px;
   line-height: 1.2 !important;
+  border-width: none;
+  border-style: none;
 }
 
 
@@ -354,6 +360,53 @@ li.nav-item::marker{
 
 }
 
+#custom_btn_borrar:hover, #custom_btn_abrir:hover{
+  opacity: 0.8;
+}
+
+#custom_btn_borrar, #custom_btn_abrir{
+  padding: 0 .8rem;
+  border-radius: .25rem;
+  font-weight: bold;
+
+  min-height: 30px;
+}
+
+#custom_btn_abrir{
+  
+  display: inline-flex;
+  align-items: center;
+
+  margin-left: .5rem;
+  gap: .5rem;
+
+  background-color: #f8f9fa;
+  border: 1px solid #c7bcbc;
+  color: #444;
+}
+
+#custom_btn_borrar{
+  margin-left: .5rem;
+
+  color: #fff;
+  background-color: #BF616A;
+  border: 1px solid #94343e;
+}
+
+#custom_btn_borrar::before{
+  display: block;
+  font-family: "Font Awesome 6 Free";
+  content: "\f2ed";
+  font-weight: 900;
+}
+
+#custom_btn_abrir::before{
+  display: block;
+  font-family: "Font Awesome 6 Free";
+  content: "\f360";
+  font-weight: 900;
+}
+
 /*Pantalla completa -----------------------------------------------------------------*/
 
 :not(:root):fullscreen::backdrop {
@@ -372,7 +425,9 @@ li.nav-item::marker{
 
 :not(:root):fullscreen{
   padding: 1rem;
+  height: 100%;
   max-height: 100vh;
+  overflow-y: hidden;
 }
 
 @media (min-width: 1417px){
@@ -389,31 +444,33 @@ li.nav-item::marker{
   }
 }
 
-:not(:root):fullscreen #laboratory,
 :not(:root):fullscreen .shiny-spinner-output-container,
 :not(:root):fullscreen .vis-network,
 :not(:root):fullscreen .visNetwork{ 
-  height: 100% !important;
+  /*height: 100% !important;*/
 }
-
+      
 .shiny-spinner-output-container{
   width: 100%;
 }
 
-.fullscreen-height{
+:not(:root):fullscreen .graphic-container,
+:not(:root):fullscreen [id^='htmlwidget-'],
+
+:not(:root):fullscreen #graph_output_visualizacion,
+:not(:root):fullscreen #graph_output_laboratorio,
+:not(:root):fullscreen #laboratory,
+
+:not(:root):fullscreen #pscd_showw,
+:not(:root):fullscreen .plotly,
+
+:not(:root):fullscreen .shiny-plot-output
+:not(:root):fullscreen #biplot3d_plot{
   height: 100% !important;
 }
 
-.fullscreen-graphic{
-  height: 100% !important;
-}
-
-.fullscreen-control{
+:not(:root):fullscreen .input-field-container{
   height: fit-content !important;
-}
-
-.fullscreen-control-min{
- position: relative;
 }
 
 
@@ -457,6 +514,12 @@ li.nav-item::marker{
   display: flex;
   text-overflow: ellipsis;
   gap: .5rem;
+}
+
+.paciente-seleccionado div i{
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .patient-active-label{
@@ -2322,6 +2385,11 @@ width: 100px !important;
 
 /*datatables --------------------------------------------------------------------------------------------*/
 
+td.dataTables_empty{
+  text-align: center !important;
+  pointer-events: none !important;
+}
+
 .my-custom-table.dataTable thead th {
   writing-mode: vertical-rl;
   transform: rotate(180deg);
@@ -2381,6 +2449,10 @@ table.dataTable{
 #simulaciones_wimp table.dataTable.display > tbody > tr.selected:hover > *,
 #simulaciones_wimp table.dataTable.display > tbody > tr.selected > * {
   box-shadow: inset 0 0 0 9999px #a77f09 !important;
+}
+
+#simulaciones_rep .dataTable tr td:last-child, #simulaciones_wimp .dataTable tr td:last-child{
+text-align: right;
 }
 
 

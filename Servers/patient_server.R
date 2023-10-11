@@ -135,7 +135,7 @@ patient_server <- function(input, output, session){
                     mutate(
                         actionable = glue(
                             '<button id="custom_btn_abrir" onclick="Shiny.onInputChange(\'button_id_abrir\', {row_number()})">Abrir</button>',
-                            '<button id="custom_btn_borrar" onclick="Shiny.onInputChange(\'button_id_borrar\', {row_number()})">Borrar</button>'
+                            '<button id="custom_btn_borrar" onclick="Shiny.onInputChange(\'button_id_borrar\', {row_number()})"></button>'
                         )
                     )
                 datatable(
@@ -175,7 +175,7 @@ patient_server <- function(input, output, session){
                     mutate(
                         actionable = glue(
                             '<button id="custom_btn_abrir" onclick="Shiny.onInputChange(\'button_id_abrir_w\', {row_number()})">Abrir</button>',
-                            '<button id="custom_btn_borrar" onclick="Shiny.onInputChange(\'button_id_borrar_w\', {row_number()})">Borrar</button>'
+                            '<button id="custom_btn_borrar" onclick="Shiny.onInputChange(\'button_id_borrar_w\', {row_number()})"></button>'
                         )
                     )
                 datatable(
