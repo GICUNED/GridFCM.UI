@@ -1930,10 +1930,14 @@ output$pscd_show <- renderPlotly({
       # Ocultar el botón "Editar" y mostrar el botón "Guardar"
       shinyjs::hide("editar_w")
       shinyjs::hide("guardarBD_w")
-      shinyjs::show("volver_inicio_w")
+      #shinyjs::show("volver_inicio_w")
+
+      runjs("$('#matriz_pesos_w').addClass('tab-active');
+      $('#volver_inicio_w').removeClass('tab-active');")
+      
       shinyjs::hide("guardarComo_w")
       shinyjs::hide("exportar_w")
-      shinyjs::hide("matriz_pesos_w")
+      #shinyjs::hide("matriz_pesos_w")
       # Cambiar a modo de edición
       shinyjs::hide("prueba_container_w")
       shinyjs::show("matriz_pesos")
@@ -1941,7 +1945,11 @@ output$pscd_show <- renderPlotly({
   })
  
   observeEvent(input$volver_inicio_w,{
-    shinyjs::hide("volver_inicio_w")
+    #shinyjs::hide("volver_inicio_w")
+
+    runjs("$('#volver_inicio_w').addClass('tab-active');
+      $('#matriz_pesos_w').removeClass('tab-active');")
+
     shinyjs::show("editar_w")
     shinyjs::show("guardarBD_w")
     shinyjs::show("guardarComo_w")
@@ -1965,36 +1973,47 @@ output$pscd_show <- renderPlotly({
     # Definir una paleta de colores personalizada centrada en el 0
 
     #wg_palette <- c(min_color, mid_color, max_color)
-    wg_palette <- colorspace::diverging_hcl(100, h = c(120, 0, 300), c = 100, l = c(30, 50, 90))
-
-
+    wg_palette <- colorspace::diverging_hcl(10, h = c(10, 65), c = 100, l = c(30, 95), power = 2)
+    m <- list(
+      l = 50,
+      r = 50,
+      b = 50,
+      t = 100,
+      pad = 4
+    )
     
     plotly::plot_ly(
       
       x = 1:ncol(matrix_data),
       y = 1:nrow(matrix_data),
       z = matrix_data,
+      
       text = labels_matrix,  # Utilizar los valores de la matriz como texto
       type = "heatmap",
-      colorscale = wg_palette,
+      colors = colorRamp(wg_palette),
       zmid = 0,  # Establecer el punto medio en 0
       height = 900,
       hovertemplate = "Causa: %{y}<br>Consecuencia: %{x}<br>Peso: %{z}"
     ) %>%
       layout(
+        autosize = T,
+        margin = m,
         xaxis = list(
+          titlefont = list(size=20),
           title = list(text = "Consecuencia", standoff = 30, size=35),
           tickvals = 1:ncol(matrix_data), 
           ticktext = constructos,
           tickangle = -45
           ),
         yaxis = list(
+          titlefont = list(size=20),
           title = list(text = "Causa", standoff = 30, size=35), # Ajusta el valor de standoff para separar más el título
           tickvals = 1:nrow(matrix_data),
           ticktext = constructos,
           tickangle = -45
         ),
-        title = i18n$t("Matriz de pesos estilo Heatmap")
+        title = i18n$t("<b>Matriz de pesos estilo Heatmap</b>"),
+        titlefont = list(size=20)
       )
   })
 

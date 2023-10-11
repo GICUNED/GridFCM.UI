@@ -33,9 +33,9 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
       #h3(i18n$t("Tabla de Datos"), class = "mr-auto mb-0"),
     
       div(class = "mr-auto",
-        h4(class = "mr-4 mb-0",htmlOutput("titulo_wimpgrid")),
-        actionButton("matriz_pesos_w", status = 'primary', icon=icon("table-cells"), i18n$t("Matriz de Pesos")),
-        actionButton("volver_inicio_w", status = 'warning', icon=icon("table"), i18n$t("Tabla de Datos"), style = "display: none;"),
+        h4(class = "mr-4 mb-0", htmlOutput("titulo_wimpgrid")),
+        actionButton("volver_inicio_w", class="tab-active", icon=icon("table"), i18n$t("Tabla de Datos")),
+        actionButton("matriz_pesos_w", icon=icon("table-cells"), i18n$t("Matriz de Pesos")),
       ),
 
       div(class = "flex-container-mini",

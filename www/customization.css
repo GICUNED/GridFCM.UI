@@ -27,7 +27,7 @@
   }
  } 
 
-/*General*/
+/*General ----------------------------------------------------------------*/
 
 body{
   transition:opacity .3s ease;
@@ -144,7 +144,7 @@ li.nav-item::marker{
   }
 }
 
-/*Modo oscuro no nativo*/
+/*Modo oscuro general no nativo -------------------------------------------------------------*/
 
 .dark-mode .bg-white{
   background-color: #343a40 !important;
@@ -152,7 +152,7 @@ li.nav-item::marker{
 }
 
 
-/*Botones no nativo*/
+/*Botones no nativo ----------------------------------------------------------------------*/
 
 
 .btn-primary:focus{
@@ -194,20 +194,6 @@ li.nav-item::marker{
   font-weight: bolder !important;
 }
 
-#matriz_pesos_w{
-  font-weight: bold;
-  background-color: #6f5716;
-  border-color: #cb9b0b;
-}
-
-#matriz_pesos_w:hover{
-  opacity: .8;
-}
-
-#volver_inicio_w{
-  font-weight: bold;
-}
-
 #editar_w{
   border: 2px solid #cb9b0b;
 }
@@ -220,7 +206,6 @@ li.nav-item::marker{
 #guardarBD, #guardarBD_w{
   font-weight: bolder !important;
 }
-
 
 .open-controls-btn{
 
@@ -336,9 +321,40 @@ li.nav-item::marker{
 
 .input-group-btn{
   margin: 0 !important;
-  }
+}
 
-/*Pantalla completa*/
+#volver_inicio_w, #matriz_pesos_w{
+    background-color: transparent;
+    border: none;
+}
+
+#volver_inicio_w:hover, #matriz_pesos_w:hover{
+  opacity: 0.9;
+  background-color: #dcdcdc;
+}
+
+.dark-mode #volver_inicio_w:not(.tab-active):hover,
+.dark-mode #matriz_pesos_w:not(.tab-active):hover{
+  background-color: #1d222a;
+}
+
+#matriz_pesos_w.tab-active{
+  background-color: #976f02;
+  color: #fff;
+  border: 1px solid #cb9b0b;
+  font-weight: bold;
+
+}
+
+#volver_inicio_w.tab-active{
+  background-color: #3e3b32;
+  color: #fff;
+  border: 1px solid #737360;
+  font-weight: bold;
+
+}
+
+/*Pantalla completa -----------------------------------------------------------------*/
 
 :not(:root):fullscreen::backdrop {
   background: #f4f6f9;
@@ -1012,58 +1028,8 @@ background-color: #454D55;
 
 .reducirfix{margin-bottom: -0.1px;}
 
-/*contenedores -----------------------------------------------------------------------------*/
-.input-field-container{
-background-color: #e3e8ec;
-padding: .5rem 1rem!important;
-height: 100%;
-margin: 0 auto;
-min-width: 250px !important;
-max-width:  calc(25% - 2rem) !important;
-box-shadow: 0 0 1px rgba(0,0,0,0.2);
-}
+/*Botones de listas -----------------------------------------------------------------------------*/
 
-.anim-fade-in{
-  animation: fade-in 200ms forwards;
-}
-
-.anim-fade-out{
-  animation: fade-out 200ms forwards;
-}
-
-.dark-mode .input-field-container{
-  background-color: #23272A;
-}
-
-.graphic-container{
-padding: .5rem 1rem !important;
-height: fit-content;
-
-transform-origin: right;
-
-transition: all .1s ease-in-out !important;
-box-shadow: 0 0 1px rgba(0,0,0,0.2);
-}
-
-.dark-mode .graphic-container{
-  
-}
-
-.input-graphic-container{
-  display: flex;
-  flex-wrap: nowrap !important;
-  flex-direction:row-reverse;
-  justify-content: end;
-  gap: 1rem;
-  
-
-  box-shadow: 0 0 1px rgba(0,0,0,0.125),
-}
-
-.graphic-subcontainer{
-
-width: 100% !important;
-}
 
 #lista_nombres, #lista_constructos,
 #lista_nombres_w, #lista_constructos_w{
@@ -1157,13 +1123,61 @@ box-shadow: none !important;
 
 }
 
-@media (max-width: 992px){
-  
-}
 
+/*Contenedores -----------------------------------------------------------------------------*/
+
+
+.input-field-container{
+  background-color: #e3e8ec;
+  padding: .5rem 1rem!important;
+  height: 100%;
+  margin: 0 auto;
+  min-width: 250px !important;
+  max-width:  calc(25% - 2rem) !important;
+  box-shadow: 0 0 1px rgba(0,0,0,0.2);
+  }
+  
+  .anim-fade-in{
+    animation: fade-in 200ms forwards;
+  }
+  
+  .anim-fade-out{
+    animation: fade-out 200ms forwards;
+  }
+  
+  .dark-mode .input-field-container{
+    background-color: #23272A;
+  }
+  
+  .graphic-container{
+  padding: .5rem 1rem !important;
+  height: fit-content;
+  
+  transform-origin: right;
+  
+  transition: all .1s ease-in-out !important;
+  box-shadow: 0 0 1px rgba(0,0,0,0.2);
+  }
+  
+  .dark-mode .graphic-container{
+    
+  }
+  
+  .input-graphic-container{
+    display: flex;
+    flex-wrap: nowrap !important;
+    flex-direction:row-reverse;
+    justify-content: end;
+    gap: 1rem;
+    
+  
+    box-shadow: 0 0 1px rgba(0,0,0,0.125),
+  }
+
+  
 @media (max-width: 1417px){
   .input-graphic-container{
-    flex-direction: column-reverse;
+    flex-direction: column-reverse !important;;
   }
   .graphic-container, #graphics-vis, #graphics-rg{
     max-width: 100% !important;
@@ -1178,8 +1192,11 @@ box-shadow: none !important;
   }
 
 }
-.sidebar-mini.sidebar-collapse .patient-form-container {
-}
+  
+  .graphic-subcontainer{
+  
+  width: 100% !important;
+  }
 
 .patient-form-container{
   background-color: #fff;
@@ -1340,7 +1357,7 @@ box-shadow: none !important;
   border-color: #56606a;
 }
 
-/*Mensajes de error*/
+/*Mensajes de error ---------------------------------------------------------------*/
 
 .error-help {
   background-color: #eebfbf;
@@ -1403,7 +1420,7 @@ color: #8b0000;
 }
 
 
-/*Tablas, graphs, etc.*/
+/*Tablas, graphs, etc.----------------------------------------------------------------------------*/
 
 /*
 
@@ -1472,7 +1489,11 @@ color: #8b0000;
   text-align: center;
 }
 
-/*inputs select*/
+.plotly{
+  height: auto !important;
+}
+
+/*inputs select --------------------------------------------------------------------------------------------*/
 
 .wg-diff .shiny-input-container:not(.shiny-input-container-inline), .rg-diff .shiny-input-container:not(.shiny-input-container-inline)  {
   width:  fit-content;
@@ -1613,7 +1634,7 @@ color: #8b0000;
   color: #0A0A0A;
 }
 
-/*sliders*/
+/*sliders --------------------------------------------------------------------------------------------*/
 
 .irs--flat .irs-line {
   background-color: #fff;
@@ -1639,7 +1660,9 @@ color: #8b0000;
   cursor: grab !important;
 }
 
-/*slider puntuacion formulario*/
+/*slider puntuacion formulario --------------------------------------------------------------------------------------------*/
+
+
 /* Ocultar los valores mínimo y máximo y el valor seleccionado */
 
 
@@ -1749,7 +1772,7 @@ color: #8b0000;
 
 }
 
-/*revisar*/
+
 .dropdown select {
   background-color: #005440;
   color: #BFE9D8;
@@ -1781,7 +1804,68 @@ color: #8b0000;
   margin-top: .4rem;
 }
 
-/*Estilo de botones de navegación y Tabs*/
+/*Estilo de botones de navegación y Tabs --------------------------------------------------------------------------------------------*/
+
+.submenu-item li{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.submenu-item li a{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.submenu-item li a p{
+  width: 140px !important;
+}
+
+.user-page-btn{
+position: absolute;
+right: 80px;
+width: 86px;
+border-radius: 1rem;
+padding: .2rem;
+overflow: hidden;
+}
+
+.user-page-btn li a{
+  display: flex;
+  gap: .3rem;
+  align-items: center;
+  justify-content: center;
+
+}
+
+.user-page-btn li a.active, .user-page-btn li a.active:hover{
+  color: #fff;
+  background-color: #0b382c !important;
+  box-shadow: 0 0 3px #0d513e !important;
+}
+
+.dark-mode .user-page-btn li a.active, .dark-mode .user-page-btn li a.active:hover{
+  color: #0b382c;
+  background-color: #fff !important;
+  box-shadow: 0 0 3px #fff !important;
+}
+
+
+.user-page-btn li a:hover{
+  background-color: rgba(35, 35, 35, 0.2) !important;
+}
+
+
+.user-page-btn li a i{
+width: fit-content;
+margin: auto;
+}
+
+.user-page-btn li a p{
+  margin: 0 !important;
+}
 
 @media ( max-width: 1250px )
 {
@@ -1871,7 +1955,7 @@ color: #8b0000;
   color: #fff;
 }
 
-/*header normal*/
+/*header normal --------------------------------------------------------------------------------------------*/
 
 .header-tab{
   position: relative;
@@ -1964,7 +2048,7 @@ color: #8b0000;
   }
   
   
-  /*RESPONSIVE RELATIVO A SUB TABS*/
+  /*RESPONSIVE RELATIVO A SUB TABS --------------------------------------------------------------------------------------------*/
   
   .subheader-tab .nav.nav-tabs{
     display: flex;
@@ -2035,7 +2119,7 @@ color: #8b0000;
   background-color: #671735 !important;
 }
 
-/*Categorías por color*/
+/*Categorías por color --------------------------------------------------------------------------------------------*/
 
 .nav-pills .nav-link.active,
 .nav-pills .show>.nav-link {
@@ -2079,7 +2163,7 @@ color: #8b0000;
 }
 
 
-/**/
+/*--------------------------------------------------------------------------------------------*/
 
 .custom-control-input:checked ~ .custom-control-label::before {
   background-color: #13906d !important;
@@ -2087,79 +2171,9 @@ color: #8b0000;
 }
 
 /*revisar*/
-.submenu-item li{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.submenu-item li a{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-}
-
-.submenu-item li a p{
-  width: 140px !important;
-}
 
 
-.my-custom-table.dataTable thead th {
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
-  white-space: nowrap;
-  text-align: left;
-  height: 80px;
-  vertical-align: bottom;
-  padding: 5px;
-}
-
-.user-page-btn{
-position: absolute;
-right: 80px;
-width: 86px;
-border-radius: 1rem;
-padding: .2rem;
-overflow: hidden;
-}
-
-.user-page-btn li a{
-  display: flex;
-  gap: .3rem;
-  align-items: center;
-  justify-content: center;
-
-}
-
-.user-page-btn li a.active, .user-page-btn li a.active:hover{
-  color: #fff;
-  background-color: #0b382c !important;
-  box-shadow: 0 0 3px #0d513e !important;
-}
-
-.dark-mode .user-page-btn li a.active, .dark-mode .user-page-btn li a.active:hover{
-  color: #0b382c;
-  background-color: #fff !important;
-  box-shadow: 0 0 3px #fff !important;
-}
-
-
-.user-page-btn li a:hover{
-  background-color: rgba(35, 35, 35, 0.2) !important;
-}
-
-
-.user-page-btn li a i{
-width: fit-content;
-margin: auto;
-}
-
-.user-page-btn li a p{
-  margin: 0 !important;
-}
-
-/*kpis*/
+/*kpis --------------------------------------------------------------------------------------------*/
 
 .kpi{
   width: 100%;
@@ -2233,7 +2247,7 @@ margin: auto;
   min-width: 320px !important;
 }
 
-/*handsontables*/
+/*handsontables --------------------------------------------------------------------------------------------*/
 
 .handsontable{
   overflow: hidden;
@@ -2304,6 +2318,20 @@ width: 100px !important;
   color: #fff;
 }
 */
+
+
+/*datatables --------------------------------------------------------------------------------------------*/
+
+.my-custom-table.dataTable thead th {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  white-space: nowrap;
+  text-align: left;
+  height: 80px;
+  vertical-align: bottom;
+  padding: 5px;
+}
+
 
 .dataTables_filter input{
 background-color: #fff !important;

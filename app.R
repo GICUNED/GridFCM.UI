@@ -263,8 +263,8 @@ server <- function(input, output, session) {
                               "Análisis Tridimensional","Análisis por Conglomerados","Índices Cognitivos","Dilemas")))
   })
 
-  router_server()
 
+  router_server()
   home_server(input, output, session)
   inicio_server(input, output, session)
   userHome_server(input, output, session)
