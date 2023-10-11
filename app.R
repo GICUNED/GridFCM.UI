@@ -21,8 +21,8 @@ library(shiny.router)
 library(shiny.i18n)
 library(visNetwork)
 library(dplyr)
+library(glue)
 knitr::knit_hooks$set(webgl = hook_webgl)
-
 
 
 
