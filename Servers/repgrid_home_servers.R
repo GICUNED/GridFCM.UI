@@ -169,8 +169,9 @@ observeEvent(input$tabla_datos_repgrid, {
 
 output$bert <- renderPlot({
     if (!is.null(session$userData$datos_repgrid)) {
-        bertin(repgrid_a_mostrar() , color=c("white", "#005440"), cex.elements = 1,
-      cex.constructs = 1, cex.text = 1, lheight = 1.25, cc=session$userData$num_col_repgrid-2, col.mark.fill="#0B614B")
+      bertin(repgrid_a_mostrar(), xlim = c(.2,
+   .8), ylim = c(.03, .6), margins = c(0, 1, 1), color=c("white", "#005440"), cex.elements = .9,
+      cex.constructs = 1, cex.text = 1, lheight = .7, cc=session$userData$num_col_repgrid-2, col.mark.fill="#0B614B")
     }
   })
 

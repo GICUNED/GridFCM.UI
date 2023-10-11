@@ -475,7 +475,7 @@ observeEvent(input$tabla_datos_wimpgrid, {
 output$bert_w <- renderPlot({
   if (!is.null(session$userData$datos_wimpgrid)) {
     bertin(wimpgrid_a_mostrar()$openrepgrid , xlim = c(.2,
-   .8), ylim = c(0, .6), margins = c(0, 1, 1), color=c("white", "#dfb639"), cex.elements = 1,
+   .8), ylim = c(.03, .6), margins = c(0, 1, 1), color=c("white", "#dfb639"), cex.elements = .9,
       cex.constructs = 1, cex.text = 1, lheight = .7, cc=session$userData$num_col_wimpgrid-2, col.mark.fill="#DBA901")
     
   }

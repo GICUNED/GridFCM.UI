@@ -286,8 +286,9 @@ form_server <- function(input, output, session){
             constructos <- c()
             for(j in 1:num_constructos){
                 constructos[[j]] <- fluidRow(
-                    column(12,
+                    column(12, class="d-flex justify-content-between gap-1",
                         polo_izq[j],
+                        textOutput("-"),
                         polo_der[j]
                     ),
                     column(12, 
@@ -889,8 +890,9 @@ form_server <- function(input, output, session){
             for(j in 1:num_constructos){
                 actual <- valoracion_actual()[j]
                 constructos[[j]] <- fluidRow(
-                    column(12,
+                    column(12, class="d-flex justify-content-between gap-1",
                         polo_izq[j],
+                        textOutput("-"),
                         polo_der[j]
                     ),
                     column(12, 

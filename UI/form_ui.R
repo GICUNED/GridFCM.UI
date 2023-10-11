@@ -34,7 +34,7 @@ tabsetPanel(
                             actionButton(class="ml-auto", "borrarElemento", i18n$t("Borrar"), status ="danger", disabled=TRUE, icon = icon("trash-can"))
                         ),
 
-                        column(12, shinycssloaders::withSpinner(uiOutput("lista_nombres"), type = 4, color = "#022a0c", size = 0.6)),
+                        column(12, uiOutput("lista_nombres")),
                         column(12, class="d-flex justify-content-end mt-3", actionButton("continuar_elementos", i18n$t("Continuar"), status="success", icon = icon("arrow-right") ))
                 ),
             ),
@@ -42,7 +42,7 @@ tabsetPanel(
 
         column(12, class="mt-2 d-flex justify-content-center align-items-start",
             box(id = "preguntasDiadas",
-                width=6,
+                width=5,
                 title = i18n$t("¿Desea añadir los constructos de forma manual o de forma aleatoria?"),
                 collapsible = FALSE,
                     column(12, class="d-flex justify-content-center",
@@ -120,7 +120,7 @@ tabsetPanel(
                 
                 column(12, class="d-flex justify-content-center mt-3",
                     actionButton("atras_constructos_aleatorios", class="mr-2", icon=icon("left-long"), i18n$t("Atrás")),
-                    actionButton("siguiente_constructo",class="ml-auto", i18n$t("Siguiente"), icon = icon("arrow-right"), disabled=TRUE)
+                    actionButton("siguiente_constructo", status="success", class="ml-auto", i18n$t("Siguiente"), icon = icon("arrow-right"), disabled=TRUE)
                 )
             ),
         ),
@@ -128,12 +128,13 @@ tabsetPanel(
         fluidRow(id="PuntuacionesRepgrid", class = "mt-2 custom-margins justify-content-center align-items-start",  
             box(
                 title = i18n$t("Puntuaciones RepGrid"),
+                icon=icon("star"),
                 h6(strong(textOutput("elemento_puntuable"))),
                 uiOutput("pagina_puntuaciones"),
 
                 column(12, class="d-flex justify-content-center mt-3",
                     actionButton("atras_puntuaciones", class="mr-2",icon=icon("left-long"), i18n$t("Atrás")),
-                    actionButton("siguiente_puntuacion",class="ml-auto", i18n$t("Siguiente"), icon = icon("arrow-right"))
+                    actionButton("siguiente_puntuacion", status="success", class="ml-auto", i18n$t("Siguiente"), icon = icon("arrow-right"))
                 )
             ),
         ),
@@ -168,7 +169,7 @@ tabsetPanel(
 
             column(12, class="mt-2 d-flex justify-content-center align-items-start",
                 box(id = "preguntasDiadas_w",
-                    width=6,
+                    width=5,
                     title = i18n$t("¿Desea añadir los constructos de forma manual o de forma aleatoria?"),
                     collapsible = FALSE,
                         column(12, class="d-flex justify-content-center",
@@ -238,7 +239,7 @@ tabsetPanel(
                 box(
                     title = i18n$t("Valoraciones Wimpgrid"),
                     h6(strong(textOutput("elemento_evaluable_w"))),
-                    column(12, class="d-flex justify-content-between gap-1mt-3",
+                    column(12, class="d-flex justify-content-between gap-1",
                         textOutput("polo_izq_w"),
                         textOutput("polo_der_w")
                     ),
@@ -247,7 +248,7 @@ tabsetPanel(
                     
                     column(12, class="d-flex justify-content-center mt-3",
                         actionButton("atras_evaluaciones_w", class="mr-2",icon=icon("left-long"), i18n$t("Atrás")),
-                        actionButton("siguiente_evaluacion_w",class="ml-auto", i18n$t("Siguiente"), icon = icon("arrow-right"))
+                        actionButton("siguiente_evaluacion_w",class="ml-auto", status="warning", i18n$t("Siguiente"), icon = icon("arrow-right"))
                     )
                 )
             ),
@@ -276,7 +277,7 @@ tabsetPanel(
                                 actionButton(class="ml-auto", "borrarElemento_w", i18n$t("Borrar"), status ="danger", disabled=TRUE, icon = icon("trash-can"))
                             ),
 
-                            column(12, shinycssloaders::withSpinner(uiOutput("lista_nombres_w"), type = 4, color = "#022a0c", size = 0.6)),
+                            column(12, uiOutput("lista_nombres_w")),
                             column(12, class="d-flex justify-content-center mt-3", 
                             actionButton("atras_elementos_w", class="mr-2", icon = icon("left-long"), i18n$t("Atrás")),
                             actionButton("continuar_elementos_w", class="ml-auto", i18n$t("Continuar"), status="success", icon = icon("arrow-right") ))
@@ -302,7 +303,7 @@ tabsetPanel(
                     
                     column(12, class="d-flex justify-content-center mt-3",
                         actionButton("atras_constructos_aleatorios_w", class="mr-2", icon=icon("left-long"), i18n$t("Atrás")),
-                        actionButton("siguiente_constructo_w",class="ml-auto", i18n$t("Siguiente"), icon = icon("arrow-right"), disabled=TRUE)
+                        actionButton("siguiente_constructo_w", status="warning", class="ml-auto", i18n$t("Siguiente"), icon = icon("arrow-right"), disabled=TRUE)
                     )
                 ),
             ),
@@ -310,12 +311,13 @@ tabsetPanel(
             fluidRow(id="PuntuacionesWimpgrid", class = "mt-2 custom-margins justify-content-center align-items-start",  
                 box(
                     title = i18n$t("Puntuaciones WimpgGrid"),
+                     icon=icon("star"),
                     h6(strong(textOutput("elemento_puntuable_w"))),
                     uiOutput("pagina_puntuaciones_w"),
 
                     column(12, class="d-flex justify-content-center mt-3",
                         actionButton("atras_puntuaciones_w", class="mr-2",icon=icon("left-long"), i18n$t("Atrás")),
-                        actionButton("siguiente_puntuacion_w",class="ml-auto", i18n$t("Siguiente"), icon = icon("arrow-right"))
+                        actionButton("siguiente_puntuacion_w",  status="warning", class="ml-auto", i18n$t("Siguiente"), icon = icon("arrow-right"))
                     )
                 ),
             ),

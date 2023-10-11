@@ -1065,20 +1065,27 @@ box-shadow: 0 0 1px rgba(0,0,0,0.2);
 width: 100% !important;
 }
 
-#lista_nombres, #lista_constructos{
+#lista_nombres, #lista_constructos,
+#lista_nombres_w, #lista_constructos_w{
   background-color:#F4F6F9;
   padding: .5rem;
   border-radius: .5rem;
 }
 
 .dark-mode #lista_nombres,
-.dark-mode #lista_constructos{
+.dark-mode #lista_constructos,
+
+.dark-mode #lista_nombres_w, 
+.dark-mode #lista_constructos_w{
   background-color:#454D55;
   padding: .5rem;
 }
 
 #lista_nombres .nav-item .nav-link.active,
-#lista_constructos .nav-item .nav-link.active{
+#lista_constructos .nav-item .nav-link.active,
+
+#lista_nombres_w .nav-item .nav-link.active,
+#lista_constructos_w .nav-item .nav-link.active{
 
   background-color: #747b81 !important;
   box-shadow: 0 0 3px #747b81 !important;
@@ -1089,41 +1096,59 @@ width: 100% !important;
   color: #111;  
 }
 
-.dark-mode #lista_nombres .nav-item .nav-link:not(.active):hover,
-.dark-mode #lista_constructos  .nav-item .nav-link:not(.active):hover{
+#lista_nombres .nav-item .nav-link:not(.active):hover,
+#lista_constructos .nav-item .nav-link:not(.active):hover,
+
+.dark-mode #lista_nombres_w .nav-item .nav-link:not(.active):hover,
+.dark-mode #lista_constructos_w  .nav-item .nav-link:not(.active):hover{
   color: #fff;  
 }
 
 #lista_nombres .nav-item:first-child .nav-link,
-#lista_nombres .nav-item:last-of-type .nav-link{
+#lista_nombres .nav-item:last-of-type .nav-link,
+
+#lista_nombres_w .nav-item:first-child .nav-link,
+#lista_nombres_w .nav-item:last-of-type .nav-link{
 font-weight: bolder;
 cursor:inherit;
 pointer-events: none;
 color: #111;
 }
 
+
 .dark-mode #lista_nombres .nav-item:first-child .nav-link,
-.dark-mode #lista_nombres .nav-item:last-of-type .nav-link{
+.dark-mode #lista_nombres .nav-item:last-of-type .nav-link,
+
+.dark-mode #lista_nombres_w .nav-item:first-child .nav-link,
+.dark-mode #lista_nombres_w .nav-item:last-of-type .nav-link{
 color: #fff;
 }
 
 #lista_nombres .nav-item:first-child .nav-link,
-#lista_nombres .nav-item:last-of-type .nav-link{
+#lista_nombres .nav-item:last-of-type .nav-link,
+
+#lista_nombres_w .nav-item:first-child .nav-link,
+#lista_nombres_w .nav-item:last-of-type .nav-link{
 background-color: transparent !important;
 }
 
 #lista_nombres .nav-item:first-child .nav-link.active,
-#lista_nombres .nav-item:last-of-type .nav-link.active{
+#lista_nombres .nav-item:last-of-type .nav-link.active,
+
+#lista_nombres_w .nav-item:first-child .nav-link.active,
+#lista_nombres_w .nav-item:last-of-type .nav-link.active{
 background-color: transparent !important;
 box-shadow: none !important;
 
 }
 
-#lista_nombres ul li:first-child a i::before{
+#lista_nombres ul li:first-child a i::before,
+#lista_nombres_w ul li:first-child a i::before{
   content: "\f5a4";
 }
 
-#lista_nombres ul li:last-of-type a i::before{
+#lista_nombres ul li:last-of-type a i::before,
+#lista_nombres_w ul li:last-of-type a i::before{
   content: "\f118";
 }
 
@@ -1266,6 +1291,14 @@ box-shadow: none !important;
 
 .flex-container-mini button{
   width: 100%;
+}
+
+@media (max-width:495px){
+
+  .button-container{
+    justify-content: center;
+  }
+  
 }
 
 .flex-container-titles{
@@ -1562,6 +1595,10 @@ color: #8b0000;
   margin-right: 4px !important;
 }
 
+.btn[id^='enter_fs_'] i{
+  margin-right: 0px !important;
+}
+
 .btn i{
   margin-right: 4px !important;
 }
@@ -1580,8 +1617,13 @@ color: #8b0000;
 
 .irs--flat .irs-line {
   background-color: #fff;
+}
+
+.irs--flat .irs-line:hover {
+  opacity: 0.6;
   cursor: pointer;
 }
+
 
 .irs--flat .irs-handle>i:first-child {
   width: 18px;

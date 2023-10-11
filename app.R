@@ -265,7 +265,6 @@ server <- function(input, output, session) {
 
   router_server()
 
-
   home_server(input, output, session)
   inicio_server(input, output, session)
   userHome_server(input, output, session)
