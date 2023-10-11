@@ -1,5 +1,4 @@
 wimpgrid_analysis_server <- function(input, output, session) {
-message(paste("id wimpgrid: ", session$userData$id_wimpgrid))
 
 shinyjs::hide("context-wg-home")
   onevent("click", "tooltip-wg-home", shinyjs::show("context-wg-home"))
