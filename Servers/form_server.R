@@ -297,7 +297,7 @@ form_server <- function(input, output, session){
                 constructos[[j]] <- fluidRow(
                     column(12, class="d-flex justify-content-between gap-1",
                         polo_izq[j],
-                        textOutput("-"),
+                        textOutput(""),
                         polo_der[j]
                     ),
                     column(12, 
@@ -927,7 +927,7 @@ form_server <- function(input, output, session){
         i <- 1
         for(e in resultado){
             if(valores_hipoteticos[i] == 1){
-                elementos <- c(elementos, sprintf("Yo - Totalmente%s", e[2]))
+                elementos <- c(elementos, sprintf("Yo - Totalmente %s", e[2]))
             }
             else{
                 elementos <- c(elementos, sprintf("Yo - Totalmente %s", e[1]))
@@ -968,7 +968,7 @@ form_server <- function(input, output, session){
                 constructos[[j]] <- fluidRow(
                     column(12, class="d-flex justify-content-between gap-1",
                         polo_izq[j],
-                        textOutput("-"),
+                        textOutput(""),
                         polo_der[j]
                     ),
                     column(12, 
