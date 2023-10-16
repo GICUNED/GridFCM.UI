@@ -215,6 +215,7 @@ server <- function(input, output, session) {
     runjs("window.location.href = '/#!/';")
   })
 
+
   observeEvent(input$selected_language, {
     shiny.i18n::update_lang(input$selected_language)
     i18n_r()$set_translation_language(input$selected_language)

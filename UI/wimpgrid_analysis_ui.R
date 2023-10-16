@@ -330,11 +330,12 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                                   choices = c("rojo/verde", "escala de grises"),
                                   selected = i18n$t("rojo/verde")),
 
-                    sliderInput("simdigraph_niter", i18n$t("Nº de la iteración:"), 0, 3, 0),
-
-                    sliderInput("simdigraph_max_iter", i18n$t("Nº de iteraciones máximas:"), 3, 100, 30),
-
-                    sliderInput("simdigraph_stop_iter", i18n$t("Nº de iteraciones sin cambios:"), 2, 10, 2),
+                    sliderInput("simdigraph_niter", "Nº de la iteración:", 0, 3, 0, 
+                          animate = animationOptions(interval = 2000, loop = FALSE)),
+                    sliderInput("simdigraph_max_iter", "Nº de iteraciones máximas:", 3, 100, 30, 
+                          animate = animationOptions(interval = 2000, loop = FALSE)),
+                    sliderInput("simdigraph_stop_iter", "Nº de iteraciones sin cambios:", 2, 10, 2, 
+                          animate = animationOptions(interval = 2000, loop = FALSE)),
 
                     #numericInput("simdigraph_act_vector", i18n$t("Change vector:"), value = 0, step = 0.01),
 
@@ -347,11 +348,14 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
 
                       #fileInput("pcsd_wimp", i18n$t("Input file:"), accept = c(".xlsx")),
 
-                      sliderInput("pcsd_iter", i18n$t("Nº de la iteración:"), 0, 3, 0),
+                      sliderInput("pcsd_iter", i18n$t("Nº de la iteración:"), 0, 3, 0,
+                            animate = animationOptions(interval = 2000, loop = FALSE)),
 
-                      sliderInput("pcsd_max_iter", i18n$t("Nº de iteraciones máximas:"), 3, 100, 30),
+                      sliderInput("pcsd_max_iter", i18n$t("Nº de iteraciones máximas:"), 3, 100, 30,
+                            animate = animationOptions(interval = 2000, loop = FALSE)),
 
-                      sliderInput("pcsd_stop_iter", i18n$t("Nº de iteraciones sin cambios:"), 2, 10, 2),
+                      sliderInput("pcsd_stop_iter", i18n$t("Nº de iteraciones sin cambios:"), 2, 10, 2,
+                            animate = animationOptions(interval = 2000, loop = FALSE)),
 
                       #numericInput("pcsd_act_vector", i18n$t("Change vector:"), value = 0, step = 0.01),
 
@@ -386,7 +390,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                       #            value = 0, step = 0.01),
                       sliderInput("pcsdindices_max_iter", i18n$t("Nº de iteraciones máximas:"), 3, 100, 30),
                       numericInput("pcsdindices_e", i18n$t("Valor diferencial:"), value = 0.0001, step=0.000025),
-                      sliderInput("pcsdindices_stop_iter", i18n$t("Nº de iteraciones sin cambios:"), 2, 10, 2)
+                      sliderInput("pcsdindices_stop_iter", i18n$t("Nº de iteraciones sin cambios:"), 2, 10, 2),
                       
                     ),
 
