@@ -111,7 +111,7 @@ tabsetPanel(
 
                 div(textOutput("pregunta_semejanza")),
                 div(class="mt-2",textInput("respuesta_semejanza_1", i18n$t("Ambos somos:"))),
-                div(class="mt-2",textInput("respuesta_semejanza_2", i18n$t("¿Qué sería en, tu opinión, lo opuesto?"))),
+                div(class="mt-2",textInput("respuesta_semejanza_2", i18n$t("¿Qué sería, en tu opinión, lo opuesto?"))),
                 
                 div(class="mt-2", textOutput("pregunta_diferencia")),
                 div(class="mt-2", textInput("respuesta_diferencia_1", i18n$t("Yo soy:") )),
@@ -298,7 +298,7 @@ tabsetPanel(
 
                     div(textOutput("pregunta_semejanza_w")),
                     div(class="mt-2",textInput("respuesta_semejanza_1_w", i18n$t("Ambos somos:"))),
-                    div(class="mt-2",textInput("respuesta_semejanza_2_w", i18n$t("¿Qué sería en, tu opinión, lo opuesto?"))),
+                    div(class="mt-2",textInput("respuesta_semejanza_2_w", i18n$t("¿Qué sería, en tu opinión, lo opuesto?"))),
                     
                     div(class="mt-2", textOutput("pregunta_diferencia_w")),
                     div(class="mt-2", textInput("respuesta_diferencia_1_w", i18n$t("Yo soy:") )),

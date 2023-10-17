@@ -224,7 +224,7 @@ form_server <- function(input, output, session){
                 paste(i18n$t("¿En qué se diferencian tu YO ACTUAL y tu"), polo_derecho, "?")
             })
             output$pregunta_diferencia_2 <- renderText({
-                paste(i18n$t("Por el contrario, mi "), polo_derecho, i18n$t("  es:"))
+                paste(i18n$t("Por el contrario, mi "), polo_derecho, i18n$t(" es:"))
             })
         }
     )
@@ -771,13 +771,13 @@ form_server <- function(input, output, session){
             polo_derecho <- aleatorios_w()[[1]][[2]]
 
             output$pregunta_semejanza_w <- renderText({
-                paste("En qué se parecen tu YO ACTUAL y tu ", polo_derecho, "?")
+                paste(i18n$t("¿En qué se parecen tu YO ACTUAL y tu"), polo_derecho, "?")
             })
             output$pregunta_diferencia_w <- renderText({
-                paste("En qué se diferencian tu YO ACTUAL y tu ", polo_derecho, "?")
+                paste(i18n$t("¿En qué se diferencian tu YO ACTUAL y tu"), polo_derecho, "?")
             })
             output$pregunta_diferencia_2_w <- renderText({
-                paste("Por el contrario, mi ", polo_derecho, "  es:")
+                paste(i18n$t("Por el contrario, mi "), polo_derecho, i18n$t(" es:"))
             })
         }
     )
@@ -882,7 +882,7 @@ form_server <- function(input, output, session){
             h <- 1
         }
         else{
-            message("algo fue mal en valor_hipotetico_calculado")
+            message(i18n$t("algo fue mal en valor_hipotetico_calculado"))
         }
 
         return(h)

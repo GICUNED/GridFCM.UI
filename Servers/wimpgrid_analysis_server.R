@@ -2009,14 +2009,14 @@ output$pscd_show <- renderPlotly({
         margin = m,
         xaxis = list(
           titlefont = list(size=20),
-          title = list(text = "Consecuencia", standoff = 30, size=35),
+          title = list(text = i18n$t("Consecuencia"), standoff = 30, size=35),
           tickvals = 1:ncol(matrix_data), 
           ticktext = constructos,
           tickangle = -45
           ),
         yaxis = list(
           titlefont = list(size=20),
-          title = list(text = "Causa", standoff = 30, size=35), # Ajusta el valor de standoff para separar más el título
+          title = list(text = i18n$t("Causa"), standoff = 30, size=35), # Ajusta el valor de standoff para separar más el título
           tickvals = 1:nrow(matrix_data),
           ticktext = constructos,
           tickangle = -45

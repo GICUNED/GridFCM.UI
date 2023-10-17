@@ -31,7 +31,7 @@ patient_server <- function(input, output, session){
             user_data$users <- users # variable reactiva
             df <- data.frame(n=users$nombre, e=users$edad, g=users$genero, f=users$fecha_registro, d=users$diagnostico, a=users$anotaciones)
             DT::datatable(df, selection = 'single', rownames = FALSE,
-                colnames = c(i18n$t("Nombre"), i18n$t("Edad"), i18n$t("Género"), i18n$t("Fecha registro"), i18n$t("Problema"), i18n$t("Anotaciones")))
+                colnames = c(i18n$t("Nombre"), i18n$t("Edad"), i18n$t("Género"), i18n$t("Fecha de Registro"), i18n$t("Problema"), i18n$t("Anotaciones")))
         })
     }
 
@@ -320,10 +320,10 @@ patient_server <- function(input, output, session){
         nombrepaciente <- nombrePaciente()
         showModal(modalDialog(
             title = i18n$t("Confirmar borrado"),
-            sprintf("¿Está seguro de que quiere eliminar esta simulación de %s? Esto no se puede deshacer.", nombrepaciente),
+            sprintf(i18n$t("¿Está seguro de que quiere eliminar esta simulación de %s? Esto no se puede deshacer."), nombrepaciente),
             footer = tagList(
-            modalButton("Cancelar"),
-            actionButton("confirmarBorradoSimulacion", "Confirmar", class = "btn-danger")
+            modalButton(i18n$t("Cancelar")),
+            actionButton("confirmarBorradoSimulacion", i18n$t("Confirmar"), class = "btn-danger")
             )
         ))
     }
