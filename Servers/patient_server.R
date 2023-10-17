@@ -31,6 +31,7 @@ patient_server <- function(input, output, session){
             user_data$users <- users # variable reactiva
             df <- data.frame(n=users$nombre, e=users$edad, g=users$genero, f=users$fecha_registro, d=users$diagnostico, a=users$anotaciones)
             DT::datatable(df, selection = 'single', rownames = FALSE,
+                options = list(order = list(3, 'asc')),
                 colnames = c(i18n$t("Nombre"), i18n$t("Edad"), i18n$t("Género"), i18n$t("Fecha de Registro"), i18n$t("Problema"), i18n$t("Anotaciones")))
         })
     }
@@ -105,6 +106,7 @@ patient_server <- function(input, output, session){
             cargar_fechas_wimpgrid()
             cargar_fechas()
             message(paste("id del paciente: ", selected_user_id))     
+            message(paste("nombre: ", name))
             session$userData$id_paciente <- selected_user_id       
             
         } else {
