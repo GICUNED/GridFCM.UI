@@ -163,8 +163,12 @@ tabsetPanel(
                     collapsible = FALSE,
                     title = i18n$t("Comprobación de datos previos"),
                     column(12, class="d-flex justify-content-center align-items-center",
-                    actionButton("comprobar_datos_previos_w", status ="warning", icon=icon("clock-rotate-left"), i18n$t("Comprobar datos previos"))
-                    )
+                        actionButton("comprobar_datos_previos_w", status ="warning", icon=icon("clock-rotate-left"), i18n$t("Comprobar datos previos")),
+                        tags$div(style = "margin-left: 10px;"),
+                        actionButton("iniciar_nuevo_w", status ="warning", i18n$t("Iniciar formulario nuevo"))
+                    ),
+                    br(),
+                    DTOutput("sim_rep_w")
                 )
             ),
 
@@ -312,7 +316,7 @@ tabsetPanel(
             fluidRow(id="PuntuacionesWimpgrid", class = "mt-2 custom-margins justify-content-center align-items-start",  
                 box(
                     title = i18n$t("Puntuaciones WimpgGrid"),
-                     icon=icon("star"),
+                    icon=icon("star"),
                     h6(strong(textOutput("elemento_puntuable_w"))),
                     uiOutput("pagina_puntuaciones_w"),
 

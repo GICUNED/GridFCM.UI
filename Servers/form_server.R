@@ -115,7 +115,13 @@ form_server <- function(input, output, session){
     observeEvent(input$guardarConstructo, {
         if((nchar(input$constructo_izq) > 0) && (nchar(input$constructo_der) > 0)){
             constructo <- paste(input$constructo_izq, " - ", input$constructo_der)
-            constructos(c(constructos(), constructo))
+            if (!(constructo %in% constructos())) {
+                constructos(c(constructos(), constructo))
+            } else {
+                # Puedes mostrar un mensaje de error si el constructo ya existe
+                # Por ejemplo, usando showNotification
+                showNotification(i18n$t("El constructo ya existe"), type = "error")
+            }
             updateTextInput(session, "constructo_izq", value="")
             updateTextInput(session, "constructo_der", value="")
             output$lista_constructos <- renderUI({
@@ -240,9 +246,12 @@ form_server <- function(input, output, session){
             # me guardo los dos constructos
             constructo_1 <- paste(r1, " - ", r2)
             constructo_2 <- paste(r3, " - ", r4)
-            constructos(c(constructos(), constructo_1))
-            constructos(c(constructos(), constructo_2))
-
+            if (!(constructo_1 %in% constructos())) {
+                constructos(c(constructos(), constructo_1))
+            }
+            if (!(constructo_2 %in% constructos())) {
+                constructos(c(constructos(), constructo_2))
+            }
             # actualizo las respuestas a ""
             updateTextInput(session, "respuesta_semejanza_1", value="")
             updateTextInput(session, "respuesta_semejanza_2", value="")
@@ -288,7 +297,7 @@ form_server <- function(input, output, session){
                 constructos[[j]] <- fluidRow(
                     column(12, class="d-flex justify-content-between gap-1",
                         polo_izq[j],
-                        textOutput("-"),
+                        textOutput(""),
                         polo_der[j]
                     ),
                     column(12, 
@@ -442,6 +451,7 @@ form_server <- function(input, output, session){
     shinyjs::hide("puntuaciones_w")
     shinyjs::hide("generar_aleatorio_w")
     shinyjs::hide("generar_elementos_w")
+    shinyjs::hide("sim_rep_w")
     shinyjs::show("ComprobarDatos_w")
 
     nombres_w <- reactiveVal(list("Yo - Actual", "Yo - Ideal"))
@@ -457,19 +467,83 @@ form_server <- function(input, output, session){
     valoracion_actual <- reactiveVal(list())
     valoracion_ideal <- reactiveVal(list())
     valoracion_hipotetico <- reactiveVal(list())
+    fechas_repgrid <- reactiveVal(list())
+
+    observe(
+        output$lista_constructos_w <- renderUI({
+            menu_items <- lapply(constructos_w(), function(nombre) {
+                menuItem(nombre, tabName=nombre)
+            })
+            sidebarMenu(id="menu_constructos_w", menu_items)
+        })
+    )
 
     # COMPROBAR DATOS PREVIOS ------------------------------------------------------
-    shinyjs::onclick("comprobar_datos_previos_w", {
+    cargar_fechas <- function(){
+        con <- establishDBConnection()
+        query <- sprintf("SELECT distinct(fecha_registro) FROM repgrid_xlsx WHERE fk_paciente=%d", session$userData$id_paciente)
+        repgridDB <- DBI::dbGetQuery(con, query)
+        DBI::dbDisconnect(con)
+        
+        if(!is.null(repgridDB)){
+            fecha_hora <- repgridDB$fecha_registro
+            fechasRep <- format(fecha_hora, format = "%Y-%m-%d %H:%M:%S")
+            
+            df <- data.frame(Fechas = fechasRep)
+            fechas_repgrid(fechasRep)
+            output$sim_rep_w <- renderDT(
+                datatable(df, 
+                    selection = "single",
+                    rownames = FALSE,
+                    escape = FALSE,
+                    options = list(
+                        order = list(0, 'asc'),
+                        searching = FALSE
+                    ),
+                    colnames = i18n$t("Simulaciones Repgrid")
+                )
+            ) 
+        }
+    }
+
+    observeEvent(input$comprobar_datos_previos_w, {
+        if(!is.null(session$userData$id_paciente)){
+            shinyjs::show("sim_rep_w")
+            cargar_fechas()
+        }
+    })  
+
+    observeEvent(input$sim_rep_w_rows_selected, {
+        selected_row <- input$sim_rep_w_rows_selected
+        fechas <- fechas_repgrid()
+        fecha <- fechas[selected_row]
+        ruta_destino <- tempfile(fileext = ".xlsx")
+        id <- decodificar_BD_excel('repgrid_xlsx', ruta_destino, session$userData$id_paciente, fecha)
+        excel_repgrid <- read.xlsx(ruta_destino)
+        file.remove(ruta_destino)
+        # saco los constructos
+        constructos_izq <- excel_repgrid[1:nrow(excel_repgrid), 1]
+        constructos_der <- excel_repgrid[1:nrow(excel_repgrid), ncol(excel_repgrid)]
+        res <- paste(constructos_izq, constructos_der, sep=" - ")
+        constructos_w(res)
+        # oculto cosas
         shinyjs::hide("ComprobarDatos_w")
-        datos_previos <- FALSE
-        if(!datos_previos){
-            shinyjs::show("preguntasDiadas_w")
-        }
-        else{
-            message("Si hay datos previos")
-            #shinyjs::show("PuntuacionesWimpgrid")
-        }
-    })    
+        shinyjs::hide("iniciar_nuevo_w")
+        shinyjs::hide("sim_rep_w")
+        shinyjs::show("Constructos_w")
+        
+    })
+    
+    shinyjs::onclick("iniciar_nuevo_w", {
+        shinyjs::hide("ComprobarDatos_w")
+        shinyjs::hide("iniciar_nuevo_w")
+        shinyjs::hide("sim_rep_w")
+        shinyjs::hide("n_aleatorio_w")
+        shinyjs::hide("generar_aleatorio_w")
+        shinyjs::hide("generar_elementos_w")
+        shinyjs::show("preguntasDiadas_w")
+        constructos_w(NULL)
+    })  
 
     # FIN COMPROBAR DATOS PREVIOS --------------------------------------------------
 
@@ -485,6 +559,7 @@ form_server <- function(input, output, session){
     shinyjs::onclick("atras_preguntas_diada_w", {
         shinyjs::hide("preguntasDiadas_w")
         shinyjs::show("ComprobarDatos_w")
+        shinyjs::show("iniciar_nuevo_w")
     })
 
     # FIN PREGUNTAS GENERACION DE CONSTRUCTOS ---------------------------------------
@@ -504,15 +579,16 @@ form_server <- function(input, output, session){
     observeEvent(input$guardarConstructo_w, {
         if((nchar(input$constructo_izq_w) > 0) && (nchar(input$constructo_der_w) > 0)){
             constructo <- paste(input$constructo_izq_w, " - ", input$constructo_der_w)
-            constructos_w(c(constructos_w(), constructo))
+            if (!(constructo %in% constructos_w())) {
+                constructos_w(c(constructos_w(), constructo))
+            } else {
+                # Puedes mostrar un mensaje de error si el constructo ya existe
+                # Por ejemplo, usando showNotification
+                showNotification(i18n$t("El constructo ya existe"), type = "error")
+            }
             updateTextInput(session, "constructo_izq_w", value="")
             updateTextInput(session, "constructo_der_w", value="")
-            output$lista_constructos_w <- renderUI({
-                menu_items <- lapply(constructos_w(), function(nombre) {
-                    menuItem(nombre, tabName=nombre)
-                })
-                sidebarMenu(id="menu_constructos_w", menu_items)
-            })
+            
         }
     })
 
@@ -533,12 +609,7 @@ form_server <- function(input, output, session){
             # Eliminar el nombre seleccionado
             lista_constructos <- constructos[constructos != constructo]
             constructos_w(lista_constructos)
-            output$lista_constructos_w <- renderUI({
-                menu_items <- lapply(constructos_w(), function(nombre) {
-                    menuItem(nombre, tabName=nombre)
-                })
-                sidebarMenu(id="menu_constructos_w", menu_items)
-            })
+            
         }
     })
 
@@ -712,6 +783,9 @@ form_server <- function(input, output, session){
                 (input$respuesta_diferencia_1_w != "") && (input$respuesta_diferencia_2_w != "")){
             shinyjs::enable("siguiente_constructo_w")
         }
+        else{
+            shinyjs::disable("siguiente_constructo_w")
+        }
     )
 
     observeEvent(input$siguiente_constructo_w, {
@@ -724,8 +798,12 @@ form_server <- function(input, output, session){
             # me guardo los dos constructos
             constructo_1 <- paste(r1, " - ", r2)
             constructo_2 <- paste(r3, " - ", r4)
-            constructos_w(c(constructos_w(), constructo_1))
-            constructos_w(c(constructos_w(), constructo_2))
+            if (!(constructo_1 %in% constructos_w())) {
+                constructos_w(c(constructos_w(), constructo_1))
+            }
+            if (!(constructo_2 %in% constructos_w())) {
+                constructos_w(c(constructos_w(), constructo_2))
+            }
 
             # actualizo las respuestas a ""
             updateTextInput(session, "respuesta_semejanza_1_w", value="")
@@ -740,12 +818,7 @@ form_server <- function(input, output, session){
             }
             # espero que se acutalicen las preguntas?
             if(is.null(aleatorios_w())){
-                output$lista_constructos_w <- renderUI({
-                    menu_items <- lapply(constructos_w(), function(nombre) {
-                        menuItem(nombre, tabName=nombre)
-                    })
-                    sidebarMenu(id="menu_constructos_w", menu_items)
-                })
+                
                 shinyjs::hide("ConstructosAleatorios_w")
                 shinyjs::show("Constructos_w")
 
@@ -833,6 +906,9 @@ form_server <- function(input, output, session){
             shinyjs::hide("ValoracionesWimpgrid")
             shinyjs::show("preguntasDiadas_w")
             shinyjs::show("puntuaciones_w")
+            shinyjs::hide("n_aleatorio_w")
+            shinyjs::hide("generar_aleatorio_w")
+            shinyjs::hide("generar_elementos_w")
         }
         updateSliderInput(session, "valora", value=0)
     })
@@ -851,7 +927,7 @@ form_server <- function(input, output, session){
         i <- 1
         for(e in resultado){
             if(valores_hipoteticos[i] == 1){
-                elementos <- c(elementos, sprintf("Yo - Totalmente%s", e[2]))
+                elementos <- c(elementos, sprintf("Yo - Totalmente %s", e[2]))
             }
             else{
                 elementos <- c(elementos, sprintf("Yo - Totalmente %s", e[1]))
@@ -892,7 +968,7 @@ form_server <- function(input, output, session){
                 constructos[[j]] <- fluidRow(
                     column(12, class="d-flex justify-content-between gap-1",
                         polo_izq[j],
-                        textOutput("-"),
+                        textOutput(""),
                         polo_der[j]
                     ),
                     column(12, 
@@ -910,6 +986,7 @@ form_server <- function(input, output, session){
 
     observe(
         if(length(elementos_puntuables_w()) > 0){
+            message(unlist(elementos_puntuables_w()[1]))
             output$elemento_puntuable_w <- renderText({
                 unlist(elementos_puntuables_w()[1])
             })
