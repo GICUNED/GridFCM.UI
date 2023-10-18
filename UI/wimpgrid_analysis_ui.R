@@ -189,7 +189,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                                 tabPanel(i18n$t("Intermediación"), shinycssloaders::withSpinner(DT::dataTableOutput("table_betweenness"), type = 4, color = "#022a0c", size = 0.6), icon = icon("people-arrows"))
                             )),
 
-                            fluidRow(class = "flex-container-sm mt-4 mb-2",
+                            fluidRow(class = "flex-container-sm mt-4 mb-2 p-2 border-divider",
                               icon("water"),
                               h4(i18n$t("Inconsistencias"), class = "pagetitle2custom"),
                             ),
