@@ -468,7 +468,6 @@ li.nav-item::marker{
 :not(:root):fullscreen .shiny-plot-output,
 :not(:root):fullscreen #biplot3d_plot,
 :not(:root):fullscreen #biplot2d_plot,
-:not(:root):fullscreen .graphic-container > div:nth-child(1),
 :not(:root):fullscreen .graphic-container > div:nth-child(2){
   height: 100% !important;
 }

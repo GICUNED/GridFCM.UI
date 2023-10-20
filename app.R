@@ -27,7 +27,6 @@ knitr::knit_hooks$set(webgl = hook_webgl)
 
 
 
-
 source("global.R")
 #GRID
 source("R/GraphFunctions.R")
@@ -215,7 +214,6 @@ server <- function(input, output, session) {
   observeEvent(input$volver_a_inicio, {
     runjs("window.location.href = '/#!/';")
   })
-
 
   observeEvent(input$selected_language, {
     shiny.i18n::update_lang(input$selected_language)

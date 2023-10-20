@@ -117,6 +117,7 @@ patient_server <- function(input, output, session){
     })
 
     cargar_fechas <- function(){
+        numero_aleatorio <- sample(1:1000, 1)
         con <- establishDBConnection()
         query <- sprintf("SELECT DISTINCT fecha_registro, comentarios FROM repgrid_xlsx WHERE fk_paciente=%d", user_data$selected_user_id)
         repgridDB <- DBI::dbGetQuery(con, query)
@@ -132,8 +133,8 @@ patient_server <- function(input, output, session){
                 data_rep <- df %>%
                     mutate(
                         actionable = glue(
-                            '<button id="custom_btn_abrir" onclick="Shiny.onInputChange(\'button_id_abrir\', {row_number()})">Abrir</button>',
-                            '<button id="custom_btn_borrar" onclick="Shiny.onInputChange(\'button_id_borrar\', {row_number()})"></button>'
+                            '<button id="custom_btn_abrir" onclick="Shiny.onInputChange(\'button_id_abrir\', {row_number()+numero_aleatorio})">Abrir</button>',
+                            '<button id="custom_btn_borrar" onclick="Shiny.onInputChange(\'button_id_borrar\', {row_number()+numero_aleatorio})"></button>'
                         )
                     )
                 datatable(
@@ -153,6 +154,7 @@ patient_server <- function(input, output, session){
     }
 
     cargar_fechas_wimpgrid <- function(){
+        numero_aleatorio <- sample(1:1000, 1)
         con <- establishDBConnection()
         query <- sprintf("SELECT DISTINCT wimpgrid_xlsx.fecha_registro, wimpgrid_params.comentarios 
                  FROM wimpgrid_xlsx
@@ -176,8 +178,8 @@ patient_server <- function(input, output, session){
                 data_wimp <- df %>%
                     mutate(
                         actionable = glue(
-                            '<button id="custom_btn_abrir" onclick="Shiny.onInputChange(\'button_id_abrir_w\', {row_number()})">Abrir</button>',
-                            '<button id="custom_btn_borrar" onclick="Shiny.onInputChange(\'button_id_borrar_w\', {row_number()})"></button>'
+                            '<button id="custom_btn_abrir" onclick="Shiny.onInputChange(\'button_id_abrir_w\', {row_number()+numero_aleatorio})">Abrir</button>',
+                            '<button id="custom_btn_borrar" onclick="Shiny.onInputChange(\'button_id_borrar_w\', {row_number()+numero_aleatorio})"></button>'
                         )
                     )
                 datatable(
@@ -366,6 +368,7 @@ patient_server <- function(input, output, session){
     })
 
     observeEvent(input$button_id_abrir_w, {
+        message("entro en abrir wimp")
         abrir_wimpgrid()
     })
 
