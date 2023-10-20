@@ -150,7 +150,6 @@ shinyjs::hide("open-controls-lab")
 shinyjs::hide("open-controls-lab-pcsd")
 shinyjs::hide("open-controls-lab-in")
 
-
 #controles de pestaña visualizacion ----------------------------------
 
   onevent("click", "exit-controls-vis", {

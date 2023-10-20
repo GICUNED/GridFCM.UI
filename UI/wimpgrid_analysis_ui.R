@@ -198,8 +198,6 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                               shinycssloaders::withSpinner(DT::dataTableOutput("inconsistences"), type = 4, color = "#022a0c", size = 0.6)
                             )
         ),
-
-
       ))
   ),
 

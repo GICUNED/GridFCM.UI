@@ -251,6 +251,7 @@ patient_server <- function(input, output, session){
                 window.location.href = '/#!/repgrid';
                 }, 200)
                     ")
+                shinyjs::show("controls-panel-rg")
             } 
         }
         proxy <- dataTableProxy("user_table")
@@ -312,6 +313,8 @@ patient_server <- function(input, output, session){
                 runjs("setTimeout(function () {
                 window.location.href = '/#!/wimpgrid';
                 }, 200)")
+                shinyjs::show("controls-panel-vis")
+                shinyjs::show("controls-panel-lab")
             }   
         }
         proxy <- dataTableProxy("user_table")
