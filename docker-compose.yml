@@ -5,6 +5,8 @@ name: "gridfcm"
 x-traefik-image: &traefik-image "docker.io/traefik:2.10"
 # https://repo.stratebi.com
 x-shiny-server-image: &shiny-server-image "repo.stratebi.com/stratebi/shiny-server:v1.5.20.1002-15"
+# https://quay.io/repository/keycloak/keycloak
+x-keycloak-image: &keycloak-image "quay.io/keycloak/keycloak:21.1"
 # https://hub.docker.com/_/postgres
 x-postgres-image: &postgres-image "docker.io/postgres:15-bookworm"
 
@@ -71,6 +73,40 @@ services:
     depends_on:
       postgres:
         condition: "service_healthy"
+  
+  keycloak:
+    image: *keycloak-image
+    restart: "on-failure:3"
+    container_name: "gridfcm-keycloak"
+    hostname: "keycloak"
+    networks:
+      - "gridfcm"
+    #volumes:
+    #  - { type: "bind", source: "./config/keycloak/realm.json", target: "/opt/keycloak/data/import/realm.json", read_only: true }
+    environment:
+      DOMAIN_PRIMARY: "${DOMAIN:?}"
+      KC_HTTP_ENABLED: "true"
+      KC_HTTP_HOST: "0.0.0.0"
+      KC_HTTP_PORT: "7070"
+      KC_HTTP_RELATIVE_PATH: "/keycloak"
+      KC_HOSTNAME_STRICT: "false"
+      KC_PROXY: "edge"
+      KC_DB: "postgres"
+      KC_DB_URL: "jdbc:postgresql://postgres:5432/keycloak"
+      KC_DB_USERNAME: "keycloak"
+      KC_DB_PASSWORD: "${KEYCLOAK_POSTGRES_PASSWORD:?}"
+      KEYCLOAK_ADMIN: "admin"
+      KEYCLOAK_ADMIN_PASSWORD: "${KEYCLOAK_ADMIN_PASSWORD:?}"
+    command: ["start-dev"]
+    healthcheck:
+      test: ["CMD", "bash", "-euc", ">/dev/tcp/127.0.0.1/7070"]
+      start_period: "5m"
+      interval: "10s"
+      timeout: "5s"
+      retries: 2
+    depends_on:
+      postgres:
+        condition: "service_healthy"
 
   postgres:
     image: *postgres-image
@@ -80,12 +116,13 @@ services:
     networks:
       - "gridfcm"
     volumes:
-      - "./DB/db.sql:/docker-entrypoint-initdb.d/db.sql:ro"
+      - "./config/postgres/initdb.d/:/docker-entrypoint-initdb.d/:ro"
       - "postgres-data:/var/lib/postgresql/data/"
     environment:
       POSTGRES_DB: "${DB_NAME:-gridfcm}"
       POSTGRES_USER: "${DB_USER:-gridfcm}"
       POSTGRES_PASSWORD: "${DB_PASSWORD:-password}"
+      KEYCLOAK_POSTGRES_PASSWORD: "${KEYCLOAK_POSTGRES_PASSWORD:?}"
     healthcheck:
       test: ["CMD-SHELL", 'pg_isready -q -d "$${POSTGRES_DB:?}" -U "$${POSTGRES_USER:?}"']
       start_period: "5m"

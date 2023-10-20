@@ -14,6 +14,7 @@ import_excel_server <- function(input, output, session) {
       # transformo la tabla de la bd a excel para usarla en la aplicación
       id <- decodificar_BD_excel('repgrid_xlsx', ruta_destino_rep, id_paciente)
       # meto la fecha en la session para sacarla en el título
+      session$userData$id_repgrid <- id
       session$userData$fecha_repgrid <- fecha
 
       #constructos
@@ -57,6 +58,9 @@ import_excel_server <- function(input, output, session) {
         # Solo archivo RepGrid cargado, navegar a RepGrid Home
         repgrid_home_server(input,output,session)
         runjs("window.location.href = '/#!/repgrid';")
+        shinyjs::hide("import-page")
+        shinyjs::hide("form-page")
+        shinyjs::hide("excel-page")
       } 
     }
       
@@ -117,6 +121,9 @@ import_excel_server <- function(input, output, session) {
         # Solo archivo WimpGrid cargado, navegar a WimpGrid Home
         wimpgrid_analysis_server(input,output,session)
         runjs("window.location.href = '/#!/wimpgrid';")
+        shinyjs::hide("import-page")
+        shinyjs::hide("form-page")
+        shinyjs::hide("excel-page")
         
       }  
     } 

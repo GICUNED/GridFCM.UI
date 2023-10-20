@@ -577,10 +577,6 @@
       "en": "Items to evaluate"
     },
     {
-      "es": "Comentarios relativos al paciente",
-      "en": "Relative comments to patients"
-    },
-    {
       "es": "Pacientes",
       "en": "Patients"
     },
@@ -629,8 +625,8 @@
       "en": "Simulation from "
     },
     {
-      "es": "Simulaciones disponibles ",
-      "en": "Available simulations "
+      "es": "Simulaciones disponibles",
+      "en": "Available simulations"
     },
     {
       "es": "Sugerencias",
@@ -663,7 +659,233 @@
     {
       "es": "Buzón",
       "en": "Mailbox"
-    }
+    },
+    {
+      "es": "Guardar como...",
+      "en": "Save as..."
+    },
+    {
+      "es": "Exportar",
+      "en": "Export"
+    },
+    {
+      "es": "Matriz de Pesos",
+      "en": "Weight Matrix"
+    },
+    {
+      "es": "<b>Matriz de pesos estilo Heatmap</b>",
+      "en": "<b>Heatmap-style Weight Matrix</b>"
+    },
+    {
+      "es": "Causa",
+      "en": "Cause"
+    },
+    {
+      "es": "Consecuencia",
+      "en": "Consequence"
+    },
+    {
+      "es": "Nombre",
+      "en": "Name"
+    },
+    {
+      "es": "Edad",
+      "en": "Age"
+    },
+    {
+      "es": "Género",
+      "en": "Gender"
+    },
+    {
+      "es": "Fecha de Registro",
+      "en": "Registration Date"
+    },
+    {
+      "es": "Problema",
+      "en": "Issue"
+    },
+    {
+      "es": "Anotaciones",
+      "en": "Notes"
+    },
+    {
+      "es": "Problema:",
+      "en": "Issue:"
+    },
+    {
+      "es": "Fecha",
+      "en": "Date"
+    },
+    {
+      "es": "Fecha:",
+      "en": "Date:"
+    },
+    {
+      "es": "¿Está seguro de que quiere eliminar esta simulación de %s? Esto no se puede deshacer.",
+      "en": "Are you sure you want to delete this simulation of %s? This cannot be undone."
+    },
+    {
+      "es": "Confirmar",
+      "en": "Confirm"
+    },
+    {
+      "es": "Confirmar borrado",
+      "en": "Confirm Deletion"
+    },
+    {
+      "es": "¿Está seguro de que quiere eliminar al paciente? Se borrarán todas sus simulaciones.",
+      "en": "Are you sure you want to delete the patient? All their simulations will be erased."
+    },
+    {
+      "es": "El constructo ya existe",
+      "en": "The construct already exists"
+    },
+    {
+      "es": "Debe introducir un número entre 1 y ",
+      "en": "You must enter a number between 1 and "
+    },
+    {
+      "es": "¿En qué se parecen tu YO ACTUAL y tu",
+      "en": "What are the similarities between your YO ACTUAL and your"
+    },
+    {
+      "es": "¿En qué se diferencian tu YO ACTUAL y tu",
+      "en": "What are the differences between your YO ACTUAL and your"
+    },
+    {
+      "es": "Por el contrario, mi ",
+      "en": "On the contrary, my "
+    },
 
+    {
+      "es": "algo fue mal en valor_hipotetico_calculado",
+      "en": "something went wrong in calculated_hypothetical_value"
+    },
+    {
+      "es": "Lista",
+      "en": "List"
+    },
+    {
+      "es": "¿Desea añadir los constructos de forma manual o de forma aleatoria?",
+      "en": "Do you want to add constructs manually or randomly?"
+    },
+    {
+      "es": "Atrás",
+      "en": "Back"
+    },
+    {
+      "es": "Manual",
+      "en": "Manual"
+    },
+    {
+      "es": "Aleatoria",
+      "en": "Random"
+    },
+    {
+      "es": "Cuestionario",
+      "en": "Questionnaire"
+    },
+    {
+      "es": "Ambos somos:",
+      "en": "Both of us are:"
+    },
+    {
+      "es": "¿Qué sería, en tu opinión, lo opuesto?",
+      "en": "What would be, in your opinion, the opposite?"
+    },
+    {
+      "es": "Yo soy:",
+      "en": "I am:"
+    },
+    {
+      "es": "Siguiente",
+      "en": "Next"
+    },
+    {
+      "es": "Puntuaciones RepGrid",
+      "en": "RepGrid Scores"
+    },
+    {
+      "es": "Polo izquierdo:",
+      "en": "Left pole:"
+    },
+    {
+      "es": "Polo derecho:",
+      "en": "Right pole:"
+    },
+    {
+      "es": "Polos",
+      "en": "Poles"
+    },
+    {
+      "es": "Crear RepGrid",
+      "en": "Create RepGrid"
+    },
+    {
+      "es": "Constructos guardados",
+      "en": "Saved Constructs"
+    },
+    {
+      "es": "Puntuaciones guardadas con éxito. ¿Desea crear la rejilla?",
+      "en": "Scores saved successfully. Do you want to create the grid?"
+    },
+    {
+      "es": " es:",
+      "en": " is:"
+    },
+    {
+      "es": "Diagnóstico preliminar",
+      "en": "Preliminary diagnosis"
+    },
+    {
+      "es": "Comentarios relativos al paciente",
+      "en": "Patient-related comments"
+    },
+    {
+      "es": "Número de constructos que desea generar:",
+      "en": "Number of constructs you want to generate:"
+    },
+    {
+      "es": "Generar diadas",
+      "en": "Generate dyads"
+    },
+    {
+      "es": "Comprobación de datos previos",
+      "en": "Previous data check"
+    },
+    {
+      "es": "Comprobar datos previos",
+      "en": "Check previous data"
+    },    
+    {
+      "es": "Iniciar formulario nuevo",
+      "en": "Start a new form"
+    },
+    {
+      "es": "Simulaciones Repgrid",
+      "en": "Repgrid Simulations"
+    },
+    {
+      "es": "Valoraciones Wimpgrid",
+      "en": "Wimpgrid Ratings"
+    },
+    {
+      "es": "Puntuar constructos",
+      "en": "Punctuate constructs"
+    },
+    {
+      "es": "Introducir elementos",
+      "en": "Enter elements"
+    },
+    {
+      "es": "Puntuaciones WimpgGrid",
+      "en": "WimpgGrid Scores"
+    },
+    {
+      "es": "Crear WimpGrid",
+      "en": "Create WimpGrid"
+    }
+    
+    
     
 ]}

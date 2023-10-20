@@ -18,22 +18,21 @@ patient_server <- function(input, output, session){
     renderizarTabla <- function(){
         output$user_table <- renderDT({
             con <- establishDBConnection()
-            query <- sprintf("SELECT p.nombre, p.edad, p.genero, p.fecha_registro, p.diagnostico, p.anotaciones FROM paciente as p, psicologo_paciente as pp WHERE pp.fk_paciente = p.id and pp.fk_psicologo = %d", 1)
+            query <- sprintf("SELECT p.nombre, p.edad, p.genero, p.fecha_registro, p.diagnostico, p.anotaciones FROM paciente as p, psicologo_paciente as pp WHERE pp.fk_paciente = p.id and pp.fk_psicologo = %d", 1) # de momento
             users <- DBI::dbGetQuery(con, query)
             DBI::dbDisconnect(con)
-            
-            # Cambiar los nombres de las columnas
-            colnames(users) <- c("Name", "Age", "Gender", "Registered", "Problem", "Annotations")
-            
             # Convertir género en factor
-            users$Gender <- as.factor(users$Gender)
+            users$genero <- as.factor(users$genero)
             
             # Convertir fecha_registro a POSIXct y formatear
-            fecha_hora <- as.POSIXct(users$Registered, origin = "1970-01-01")
-            users$Registered <- format(fecha_hora, format = "%Y-%m-%d %H:%M:%S")
+            fecha_hora <- as.POSIXct(users$fecha_registro, origin = "1970-01-01")
+            users$fecha_registro <- format(fecha_hora, format = "%Y-%m-%d %H:%M:%S")
             
             user_data$users <- users # variable reactiva
-            DT::datatable(users, selection = 'single', rownames = FALSE)
+            df <- data.frame(n=users$nombre, e=users$edad, g=users$genero, f=users$fecha_registro, d=users$diagnostico, a=users$anotaciones)
+            DT::datatable(df, selection = 'single', rownames = FALSE,
+                options = list(order = list(3, 'asc')),
+                colnames = c(i18n$t("Nombre"), i18n$t("Edad"), i18n$t("Género"), i18n$t("Fecha de Registro"), i18n$t("Problema"), i18n$t("Anotaciones")))
         })
     }
 
@@ -83,11 +82,14 @@ patient_server <- function(input, output, session){
             shinyjs::hide("simulaciones_rep")
             shinyjs::hide("simulaciones_wimp")
             shinyjs::hide("patientSimulations")
+            shinyjs::hide("import-page")
+            shinyjs::hide("form-page")
+            shinyjs::hide("excel-page")
             # Obtén el ID del usuario de la fila seleccionada
             users <- user_data$users
-            date <- users[selected_row, "Registered"]
-            name <- users[selected_row, "Name"]
-            age <- as.integer(users[selected_row, "Age"])
+            date <- users[selected_row, 4]
+            name <- users[selected_row, 1]
+            age <- as.integer(users[selected_row, 2])
             con <- establishDBConnection()
             query <- sprintf("SELECT id from PACIENTE WHERE edad=%d and nombre='%s' and fecha_registro='%s'", age, name, date)
             selected_user_id <- as.integer(DBI::dbGetQuery(con, query))
@@ -101,41 +103,38 @@ patient_server <- function(input, output, session){
             shinyjs::show("patientSimulations")
             shinyjs::show("simulaciones_rep")
 
-            shinyjs::show("import-page")
-            shinyjs::show("form-page")
-            shinyjs::show("excel-page")
-
             cargar_fechas_wimpgrid()
             cargar_fechas()
-            message(paste("id del paciente: ", selected_user_id))            
+            message(paste("id del paciente: ", selected_user_id))     
+            message(paste("nombre: ", name))
+            session$userData$id_paciente <- selected_user_id       
             
         } else {
-                shinyjs::hide("simulationIndicatorRG")
-                shinyjs::hide("simulationIndicatorWG")
-                shinyjs::hide("patientIndicator")
+            shinyjs::hide("simulationIndicatorRG")
+            shinyjs::hide("simulationIndicatorWG")
+            shinyjs::hide("patientIndicator")
         }
     })
 
     cargar_fechas <- function(){
+        numero_aleatorio <- sample(1:1000, 1)
         con <- establishDBConnection()
-        query <- sprintf("SELECT distinct(fecha_registro) FROM repgrid_xlsx WHERE fk_paciente=%d", user_data$selected_user_id)
+        query <- sprintf("SELECT DISTINCT fecha_registro, comentarios FROM repgrid_xlsx WHERE fk_paciente=%d", user_data$selected_user_id)
         repgridDB <- DBI::dbGetQuery(con, query)
         DBI::dbDisconnect(con)
-        
         if(!is.null(repgridDB)){
             fecha_hora <- repgridDB$fecha_registro#as.POSIXct(repgridDB$fecha_registro, origin = "1970-01-01", tz = "Europe/Madrid")
             fechasRep <- format(fecha_hora, format = "%Y-%m-%d %H:%M:%S")
             repgrid_data_DB$fechas <- fechasRep
 
             delay(200, shinyjs::show("simulationIndicatorRG"))
-
-            df <- data.frame(Fechas = repgrid_data_DB$fechas)
+            df <- data.frame(Fechas = repgrid_data_DB$fechas, Anotaciones = repgridDB$comentarios)
             output$simulaciones_rep <- renderDT({
                 data_rep <- df %>%
                     mutate(
                         actionable = glue(
-                            '<button id="custom_btn_abrir" onclick="Shiny.onInputChange(\'button_id_abrir\', {row_number()})">Abrir</button>',
-                            '<button id="custom_btn_borrar" onclick="Shiny.onInputChange(\'button_id_borrar\', {row_number()})"></button>'
+                            '<button id="custom_btn_abrir" onclick="Shiny.onInputChange(\'button_id_abrir\', {row_number()+numero_aleatorio})">Abrir</button>',
+                            '<button id="custom_btn_borrar" onclick="Shiny.onInputChange(\'button_id_borrar\', {row_number()+numero_aleatorio})"></button>'
                         )
                     )
                 datatable(
@@ -148,13 +147,14 @@ patient_server <- function(input, output, session){
                         columnDefs = list(list(width = '125px', targets = ncol(data_rep) - 1 ))
                     ),
                     
-                    colnames = c(i18n$t("Fecha"), "")
+                    colnames = c(i18n$t("Fecha"), i18n$t("Anotaciones"), "")
                 )
             })
         }
     }
 
     cargar_fechas_wimpgrid <- function(){
+        numero_aleatorio <- sample(1:1000, 1)
         con <- establishDBConnection()
         query <- sprintf("SELECT DISTINCT wimpgrid_xlsx.fecha_registro, wimpgrid_params.comentarios 
                  FROM wimpgrid_xlsx
@@ -166,7 +166,7 @@ patient_server <- function(input, output, session){
         DBI::dbDisconnect(con)
         
         if(!is.null(wimpgridDB)){
-            fecha_hora <- wimpgridDB$fecha_registro#as.POSIXct(repgridDB$fecha_registro, origin = "1970-01-01", tz = "Europe/Madrid")
+            fecha_hora <- wimpgridDB$fecha_registro
             fechasWimp <- format(fecha_hora, format = "%Y-%m-%d %H:%M:%S")
             wimpgrid_data_DB$fechas <- fechasWimp
             anotaciones <- wimpgridDB$comentarios 
@@ -178,8 +178,8 @@ patient_server <- function(input, output, session){
                 data_wimp <- df %>%
                     mutate(
                         actionable = glue(
-                            '<button id="custom_btn_abrir" onclick="Shiny.onInputChange(\'button_id_abrir_w\', {row_number()})">Abrir</button>',
-                            '<button id="custom_btn_borrar" onclick="Shiny.onInputChange(\'button_id_borrar_w\', {row_number()})"></button>'
+                            '<button id="custom_btn_abrir" onclick="Shiny.onInputChange(\'button_id_abrir_w\', {row_number()+numero_aleatorio})">Abrir</button>',
+                            '<button id="custom_btn_borrar" onclick="Shiny.onInputChange(\'button_id_borrar_w\', {row_number()+numero_aleatorio})"></button>'
                         )
                     )
                 datatable(
@@ -222,6 +222,7 @@ patient_server <- function(input, output, session){
             id_paciente <- user_data$selected_user_id
             ruta_destino <- tempfile(fileext = ".xlsx")
             id <- decodificar_BD_excel('repgrid_xlsx', ruta_destino, id_paciente, session$userData$fecha_repgrid)
+            session$userData$id_repgrid <- id
             datos_repgrid <- OpenRepGrid::importExcel(ruta_destino)
             excel_repgrid <- read.xlsx(ruta_destino)
             file.remove(ruta_destino)
@@ -276,7 +277,6 @@ patient_server <- function(input, output, session){
 
     # gestion de las filas seleccionadas en la tabla de simulaciones wimpgrid
     abrir_wimpgrid <- function(){
-
         if(!is.null(wimpgrid_fecha_seleccionada())){
             id_paciente <- user_data$selected_user_id
             ruta_destino <- tempfile(fileext = ".xlsx")
@@ -324,10 +324,10 @@ patient_server <- function(input, output, session){
         nombrepaciente <- nombrePaciente()
         showModal(modalDialog(
             title = i18n$t("Confirmar borrado"),
-            sprintf("¿Está seguro de que quiere eliminar esta simulación de %s? Esto no se puede deshacer.", nombrepaciente),
+            sprintf(i18n$t("¿Está seguro de que quiere eliminar esta simulación de %s? Esto no se puede deshacer."), nombrepaciente),
             footer = tagList(
-            modalButton("Cancelar"),
-            actionButton("confirmarBorradoSimulacion", "Confirmar", class = "btn-danger")
+            modalButton(i18n$t("Cancelar")),
+            actionButton("confirmarBorradoSimulacion", i18n$t("Confirmar"), class = "btn-danger")
             )
         ))
     }
@@ -368,6 +368,7 @@ patient_server <- function(input, output, session){
     })
 
     observeEvent(input$button_id_abrir_w, {
+        message("entro en abrir wimp")
         abrir_wimpgrid()
     })
 
@@ -381,13 +382,16 @@ patient_server <- function(input, output, session){
 
     observeEvent(input$importarGridPaciente, {
         shinyjs::hide("patientSimulations")
+        shinyjs::show("import-page")
+        shinyjs::show("form-page")
+        shinyjs::show("excel-page")
         session$userData$id_paciente <- user_data$selected_user_id
-        message(session$userData$id_paciente)
         proxy <- dataTableProxy("user_table")
         proxy %>% selectRows(NULL)
         import_excel_server(input, output, session)
         form_server(input, output, session)
         runjs("window.location.href = '/#!/import';")
+        # es una opcion esto session$reload()
     })
 
     shinyjs::onevent("click", "patientIndicator", {
@@ -428,6 +432,7 @@ patient_server <- function(input, output, session){
             DBI::dbExecute(con, query)
             
             renderizarTabla()
+            shinyjs::hide("editForm")
             
             #cerrar el formulario al darle a editar si todo esta ok, en vez de vaciar todos los campos como en insertar, aqui no tiene sentido
         }
@@ -552,6 +557,7 @@ patient_server <- function(input, output, session){
             updateTextInput(session, "anotaciones", value = "")
 
             renderizarTabla()
+            shinyjs::hide("patientForm")
         }
         else{
             mensaje <- paste("El valor debe estar entre el rango 0 y 120.")

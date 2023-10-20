@@ -349,7 +349,30 @@ output$bert <- renderPlot({
  #observeEvent(input$guardarBD, { si lo dejamos así se ejecuta 3 veces y no es correcto
  # de esta manera con un onevent solo se hace una vez y es lo correcto
   shinyjs::onclick("guardarBD", {
-      if (!is.null(session$userData$datos_repgrid)) {
+    if (!is.null(session$userData$datos_repgrid)) {
+      con <- establishDBConnection()
+      comentarios <- DBI::dbGetQuery(con, sprintf("SELECT distinct(comentarios) FROM repgrid_xlsx where id=%d", session$userData$id_repgrid))
+      DBI::dbDisconnect(con)
+      coment = comentarios$comentarios
+      if(is.na(coment)){
+        coment <- ""
+      }
+      showModal(modalDialog(
+          title = i18n$t("Anotaciones"),
+          sprintf("¿Desea añadir algún comentario para la simulación de %s antes de guardarla?", nombrePaciente()),
+          textAreaInput("anotacionesSimulacion_rep", i18n$t("Anotaciones:"), coment),
+          footer = tagList(
+            modalButton("Cancelar"),
+            actionButton("confirmarGuardadoSimulacion_rep", i18n$t("Guardar simulación"), class = "btn-success")
+          )
+      ))
+    }
+  })
+
+  shinyjs::onclick("confirmarGuardadoSimulacion_rep", {
+    removeModal()
+    if (!is.null(session$userData$datos_repgrid)) {
+          anotaciones <- input$anotacionesSimulacion_rep
           con <- establishDBConnection()
           #gestionar los cambios y guardarlos directamente en la bd
           cambios <- cambios_reactive()
@@ -359,12 +382,12 @@ output$bert <- renderPlot({
             old_v <- as.character(changes[3]) #ajustamos los numeros a texto como esta en la bd
             new_v <- as.character(changes[4])
 
-
             query <- sprintf("UPDATE repgrid_xlsx SET valor='%s' WHERE fila = %d and columna = %d and fk_paciente = %d and fecha_registro = '%s'", 
                         new_v, x, y, session$userData$id_paciente, session$userData$fecha_repgrid)
             DBI::dbExecute(con, query)
-            
           }
+          query_coment <- sprintf("UPDATE repgrid_xlsx SET comentarios='%s' WHERE id=%d", anotaciones, session$userData$id_repgrid)
+          DBI::dbExecute(con, query_coment)
           showNotification(
               ui = i18n$t("Los datos se han guardado correctamente en la base de datos."),
               type = "message",
@@ -504,9 +527,31 @@ output$bert <- renderPlot({
 
   shinyjs::onclick("guardarComo", {
     if (!is.null(session$userData$datos_repgrid)) {
+      con <- establishDBConnection()
+      comentarios <- DBI::dbGetQuery(con, sprintf("SELECT distinct(comentarios) FROM repgrid_xlsx where id=%d", session$userData$id_repgrid))
+      DBI::dbDisconnect(con)
+      coment <- comentarios$comentarios
+      if(is.na(coment)){
+        coment <- ""
+      }
+      showModal(modalDialog(
+          title = i18n$t("Anotaciones"),
+          sprintf("¿Desea añadir algún comentario para la simulación de %s antes de guardarla?", nombrePaciente()),
+          textAreaInput("anotacionesGuardarComoSimulacion_rep", i18n$t("Anotaciones:"), coment),
+          footer = tagList(
+            modalButton("Cancelar"),
+            actionButton("confirmarGuardadoComoSimulacion_rep", i18n$t("Guardar simulación"), class = "btn-success")
+          )
+      ))
+    }
+  })
+
+  shinyjs::onclick("confirmarGuardadoComoSimulacion_rep", {
+    removeModal()
+    if (!is.null(session$userData$datos_repgrid)) {
         tabla_final <- tabla_manipulable()
         my_dataframe <-tabla_final
-
+        anotaciones <- input$anotacionesGuardarComoSimulacion_rep
         # Create a temporary file
         temp_file_rep <- tempfile(fileext = ".xlsx")
         on.exit(unlink(temp_file_rep))
@@ -518,6 +563,18 @@ output$bert <- renderPlot({
           file.remove(temp_file_rep)
           # Check if df_read is not NULL or empty
           fecha <- codificar_excel_BD(excel, "repgrid_xlsx", session$userData$id_paciente)
+          # consigo el id para actualizar los comentarios 
+          con <- establishDBConnection()
+          id <- DBI::dbGetQuery(con, sprintf("SELECT distinct(id) from repgrid_xlsx where fecha_registro='%s' and fk_paciente=%d", fecha, session$userData$id_paciente))
+          id <- as.integer(id)
+          
+          # le actualizo tambien los controles 
+          if(!is.null(id)){
+            query_wp <- sprintf("UPDATE repgrid_xlsx SET comentarios='%s' WHERE id=%d", anotaciones, id)
+            DBI::dbExecute(con, query_wp)
+          }
+          DBI::dbDisconnect(con)
+
           showNotification(
               ui = sprintf("Nueva simulación de %s guardada con éxito. Diríjase a la página de pacientes para visualizarla.", nombrePaciente()),
               type = "message",
@@ -528,7 +585,7 @@ output$bert <- renderPlot({
   })
 
 
-temporal <- NULL  # Define temporal en un alcance superior
+temporal <- NULL  # Defino temporal en un alcance superior
 output$exportar <- downloadHandler(
   filename = function() {
     fecha <- gsub(" ", "_", session$userData$fecha_repgrid)

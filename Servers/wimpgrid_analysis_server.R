@@ -362,28 +362,26 @@ output$titulo_wimpgrid <- renderText({
 })
 
 output$tabla_datos_wimpgrid <- renderRHandsontable({
-
   if (!is.null(session$userData$datos_wimpgrid)) {
-    
-
-    print("tabla_manipulable_w:")
-
-    print(tabla_manipulable_w())
-
- 
-
-    #indicess <- c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24)
-
     indicess <- seq(1, session$userData$num_col_wimpgrid - 1)
+    tabla <- tabla_manipulable_w()
+    nombres_columnas <- colnames(tabla)
+    min_val <- nombres_columnas[1]
+    max_val <- nombres_columnas[length(nombres_columnas)]
+    nombres <- nombres_columnas[4:length(nombres_columnas)-2]
+    nombres <- strsplit(nombres, "Yo.-.Totalmente.")
+    segundos_elementos <- sapply(nombres, function(x) x[2])
+    lista_formateada <- lapply(segundos_elementos, function(elemento) {
+      elemento <- gsub("\\.", " ", elemento)
+      paste("Yo totalmente", elemento, sep = "\n ")
+    })
+    res <- c(min_val, lista_formateada, "Yo Ideal", max_val)
+    
+  
 
-    #izq <- session$userData$constructos_izq
-    #der <- session$userData$constructos_der
-    #res <- paste(izq, der, sep="/\n")
-    #message(res)
-
-    hot_table <- rhandsontable(tabla_manipulable_w()) %>%
+    hot_table <- rhandsontable(tabla_manipulable_w(), colHeaders=res) %>%
         hot_table(highlightCol = TRUE, highlightRow = TRUE) %>%
-        hot_col(col = indicess, format = "3")
+        hot_col(col = indicess, format = "3", colWidths=120)
         
     hot_table
 
@@ -638,14 +636,13 @@ output$exportar_w <- downloadHandler(
           textAreaInput("anotacionesGuardarComoSimulacion", i18n$t("Anotaciones:"), value=as.character(comentarios$comentarios)),
           footer = tagList(
             modalButton("Cancelar"),
-            actionButton("confirmarGuardadoComoSimulacion", "Guardar simulación", class = "btn-success")
+            actionButton("confirmarGuardadoComoSimulacion", i18n$t("Guardar simulación"), class = "btn-success")
           )
       ))
     }
   })
 
   shinyjs::onclick("confirmarGuardadoComoSimulacion", {
-
     if (!is.null(session$userData$datos_wimpgrid)) {
         removeModal()
         tabla_final <- tabla_manipulable_w()
@@ -1031,11 +1028,11 @@ output$distance <- renderRHandsontable({
     izq <- session$userData$constructos_izq
     der <- session$userData$constructos_der
     res <- paste(izq, der, sep="/<br>")
-    colnames(INTe) <- res
-    rownames(INTe) <- res
+    #colnames(INTe) <- res
+    #rownames(INTe) <- res
     #data_frame <- data.frame(row_names = res, INTe)
 
-    rhandsontable(INTe,  colHeaderHeight = 100, rowHeaderWidth = 250) %>%
+    rhandsontable(INTe, colHeaders=res, rowHeaders=res) %>%
           hot_table(highlightCol = TRUE, highlightRow = TRUE, readOnly = TRUE) %>%
           hot_context_menu(allowRowEdit = FALSE, allowColEdit = FALSE) %>%
           hot_cols(colWidths = 130)
@@ -1313,6 +1310,8 @@ observeEvent(input$simdigraph_act_vector, {
     vv <- (hot_to_r(input$simdigraph_act_vector))
     if(ncol(vv) == max_v){
       df_V(vv)
+      df_Vpcsd(vv)
+      df_Vind(vv)
     }
 })
 
@@ -1347,6 +1346,8 @@ observeEvent(input$pcsdindices_act_vector, {
     vv <- (hot_to_r(input$pcsdindices_act_vector))
     if(ncol(vv) == max_v){
       df_Vind(vv)
+      df_V(vv)
+      df_Vpcsd(vv)
     }
 
 })
@@ -1451,6 +1452,8 @@ observeEvent(input$pcsd_act_vector, {
     vv <- (hot_to_r(input$pcsd_act_vector))
     if(ncol(vv) == max_v){
       df_Vpcsd(vv)
+      df_Vind(vv)
+      df_V(vv)
     }
 
 })
@@ -1632,8 +1635,6 @@ observeEvent(input$graph_selector_laboratorio, {
       con <- establishDBConnection()
       #gestionar los cambios y guardarlos directamente en la bd
       cambios <- cambios_reactive()
-      message(" leo cambios reactive ")
-      message(cambios)
       for(changes in cambios){
         x <- as.numeric(changes[1]) + 2 # ajustamos las coordenadas para la bd
         y <- as.numeric(changes[2]) + 1 # ajustamos ...
@@ -2008,14 +2009,14 @@ output$pscd_show <- renderPlotly({
         margin = m,
         xaxis = list(
           titlefont = list(size=20),
-          title = list(text = "Consecuencia", standoff = 30, size=35),
+          title = list(text = i18n$t("Consecuencia"), standoff = 30, size=35),
           tickvals = 1:ncol(matrix_data), 
           ticktext = constructos,
           tickangle = -45
           ),
         yaxis = list(
           titlefont = list(size=20),
-          title = list(text = "Causa", standoff = 30, size=35), # Ajusta el valor de standoff para separar más el título
+          title = list(text = i18n$t("Causa"), standoff = 30, size=35), # Ajusta el valor de standoff para separar más el título
           tickvals = 1:nrow(matrix_data),
           ticktext = constructos,
           tickangle = -45

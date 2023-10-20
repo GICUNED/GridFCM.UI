@@ -224,7 +224,7 @@ form_server <- function(input, output, session){
                 paste(i18n$t("¿En qué se diferencian tu YO ACTUAL y tu"), polo_derecho, "?")
             })
             output$pregunta_diferencia_2 <- renderText({
-                paste(i18n$t("Por el contrario, mi "), polo_derecho, i18n$t("  es:"))
+                paste(i18n$t("Por el contrario, mi "), polo_derecho, i18n$t(" es:"))
             })
         }
     )
@@ -423,6 +423,9 @@ form_server <- function(input, output, session){
                 )
                 
                 shinyjs::hide("ConfirmacionRepgrid")
+                shinyjs::hide("import-page")
+                shinyjs::hide("form-page")
+                shinyjs::hide("excel-page")
                 nombres(NULL)
                 constructos(NULL)
                 aleatorios(NULL)
@@ -479,6 +482,22 @@ form_server <- function(input, output, session){
     )
 
     # COMPROBAR DATOS PREVIOS ------------------------------------------------------
+
+    observe(
+        output$sim_rep_w <- renderDT(
+            datatable(data.frame(Fechas= fechas_repgrid()), 
+                selection = "single",
+                rownames = FALSE,
+                escape = FALSE,
+                options = list(
+                    order = list(0, 'asc'),
+                    searching = FALSE
+                ),
+                colnames = i18n$t("Simulaciones Repgrid")
+            )
+        ) 
+    )
+
     cargar_fechas <- function(){
         con <- establishDBConnection()
         query <- sprintf("SELECT distinct(fecha_registro) FROM repgrid_xlsx WHERE fk_paciente=%d", session$userData$id_paciente)
@@ -491,18 +510,6 @@ form_server <- function(input, output, session){
             
             df <- data.frame(Fechas = fechasRep)
             fechas_repgrid(fechasRep)
-            output$sim_rep_w <- renderDT(
-                datatable(df, 
-                    selection = "single",
-                    rownames = FALSE,
-                    escape = FALSE,
-                    options = list(
-                        order = list(0, 'asc'),
-                        searching = FALSE
-                    ),
-                    colnames = i18n$t("Simulaciones Repgrid")
-                )
-            ) 
         }
     }
 
@@ -517,6 +524,7 @@ form_server <- function(input, output, session){
         selected_row <- input$sim_rep_w_rows_selected
         fechas <- fechas_repgrid()
         fecha <- fechas[selected_row]
+        message(fecha)
         ruta_destino <- tempfile(fileext = ".xlsx")
         id <- decodificar_BD_excel('repgrid_xlsx', ruta_destino, session$userData$id_paciente, fecha)
         excel_repgrid <- read.xlsx(ruta_destino)
@@ -528,7 +536,7 @@ form_server <- function(input, output, session){
         constructos_w(res)
         # oculto cosas
         shinyjs::hide("ComprobarDatos_w")
-        shinyjs::hide("iniciar_nuevo_w")
+        #shinyjs::hide("iniciar_nuevo_w")
         shinyjs::hide("sim_rep_w")
         shinyjs::show("Constructos_w")
         
@@ -536,7 +544,7 @@ form_server <- function(input, output, session){
     
     shinyjs::onclick("iniciar_nuevo_w", {
         shinyjs::hide("ComprobarDatos_w")
-        shinyjs::hide("iniciar_nuevo_w")
+        #shinyjs::hide("iniciar_nuevo_w")
         shinyjs::hide("sim_rep_w")
         shinyjs::hide("n_aleatorio_w")
         shinyjs::hide("generar_aleatorio_w")
@@ -655,6 +663,17 @@ form_server <- function(input, output, session){
         shinyjs::show("Elementos_w")
     })
 
+    observe(
+        output$lista_nombres_w <- renderUI({
+            if (length(nombres_w()) > 2) {
+                menu_items <- lapply(nombres_w(), function(nombre) {
+                    menuItem(nombre, icon = icon("user"), tabName=nombre)
+                })
+                sidebarMenu(id="menu_elementos_w", menu_items)
+            } 
+        })
+    )
+
     observeEvent(input$guardarNombre_w, {
         if (nchar(input$nombrePaciente_w) > 2) {
             nombres <- c(nombres_w(), as.character(input$nombrePaciente_w))
@@ -672,15 +691,6 @@ form_server <- function(input, output, session){
             #reactiveVal entre parentesis sin parametros devuelve el valor del objeto
             
             updateTextInput(session, "nombrePaciente_w", value = "")
-
-            output$lista_nombres_w <- renderUI({
-                if (length(nombres) > 0) {
-                    menu_items <- lapply(nombres, function(nombre) {
-                        menuItem(nombre, icon = icon("user"), tabName=nombre)
-                    })
-                    sidebarMenu(id="menu_elementos_w", menu_items)
-                } 
-            })
         }
         
     })
@@ -702,12 +712,6 @@ form_server <- function(input, output, session){
             # Eliminar el nombre seleccionado
             nombres_lista <- nombres_lista[nombres_lista != nombre]
             nombres_w(nombres_lista)
-            output$lista_nombres_w <- renderUI({
-                menu_items <- lapply(nombres_w(), function(nombre) {
-                    menuItem(nombre, icon = icon("user"), tabName=nombre)
-                })
-                sidebarMenu(id="menu_elementos_w", menu_items)
-            })
         }
     })
 
@@ -767,13 +771,13 @@ form_server <- function(input, output, session){
             polo_derecho <- aleatorios_w()[[1]][[2]]
 
             output$pregunta_semejanza_w <- renderText({
-                paste("En qué se parecen tu YO ACTUAL y tu ", polo_derecho, "?")
+                paste(i18n$t("¿En qué se parecen tu YO ACTUAL y tu"), polo_derecho, "?")
             })
             output$pregunta_diferencia_w <- renderText({
-                paste("En qué se diferencian tu YO ACTUAL y tu ", polo_derecho, "?")
+                paste(i18n$t("¿En qué se diferencian tu YO ACTUAL y tu"), polo_derecho, "?")
             })
             output$pregunta_diferencia_2_w <- renderText({
-                paste("Por el contrario, mi ", polo_derecho, "  es:")
+                paste(i18n$t("Por el contrario, mi "), polo_derecho, i18n$t(" es:"))
             })
         }
     )
@@ -878,7 +882,7 @@ form_server <- function(input, output, session){
             h <- 1
         }
         else{
-            message("algo fue mal en valor_hipotetico_calculado")
+            message(i18n$t("algo fue mal en valor_hipotetico_calculado"))
         }
 
         return(h)
@@ -1109,6 +1113,9 @@ form_server <- function(input, output, session){
                 wimpgrid_analysis_server(input,output,session)
                 runjs("window.location.href = '/#!/wimpgrid';")
                 shinyjs::hide("ConfirmacionWimpgrid")
+                shinyjs::hide("import-page")
+                shinyjs::hide("form-page")
+                shinyjs::hide("excel-page")
                 nombres_w(NULL)
                 nombres_valoraciones_w(NULL)
                 nombre_seleccionado_w(NULL)
@@ -1121,6 +1128,7 @@ form_server <- function(input, output, session){
                 puntos_wimpgrid(NULL)
                 valoracion_actual(NULL)
                 valoracion_hipotetico(NULL)
+                fechas_repgrid(NULL)
             }  
         }
     })

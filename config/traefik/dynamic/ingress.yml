@@ -30,6 +30,12 @@ http:
       entryPoints: ["http"]
       middlewares: ["https-redirect"]
       service: "noop@internal"
+    keycloak:
+      rule: 'Host(`{{ env "DOMAIN" }}`) && PathPrefix(`/keycloak`)'
+      entryPoints: ["https"]
+      middlewares: ["slash-redirect", "security-headers", "keycloak-security-headers"]
+      service: "keycloak"
+      tls: { certResolver: '{{ env "TRAEFIK_TLS_RESOLVER" }}' }
     shiny:
       rule: 'Host(`{{ env "DOMAIN" }}`)'
       entryPoints: ["https"]
@@ -37,11 +43,16 @@ http:
       service: "shiny"
       tls: { certResolver: '{{ env "TRAEFIK_TLS_RESOLVER" }}' }
 
+
   middlewares:
     https-redirect:
       redirectScheme:
         scheme: "https"
         permanent: true
+    slash-redirect:
+      redirectRegex:
+        regex: '^https?:\/\/[^\/]+\/([^\/]+)$'
+        replacement: "/${1}/"
     security-headers:
       headers:
         stsSeconds: 31536000
@@ -62,12 +73,24 @@ http:
         customResponseHeaders:
           Server: ""
           X-Powered-By: ""
+    keycloak-security-headers:
+      headers:
+        contentSecurityPolicy: >-
+          default-src 'self';
+          script-src 'self' 'unsafe-inline' 'unsafe-eval';
+          style-src 'self' 'unsafe-inline';
+          img-src 'self' data: blob:;
 
   services:
     shiny:
       loadBalancer:
         servers:
           - url: "http://shiny-server:3838"
+    keycloak:
+      loadBalancer:
+        servers:
+          - url: "http://keycloak:7070"
+
 
 tcp:
 
