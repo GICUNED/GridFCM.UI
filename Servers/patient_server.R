@@ -251,7 +251,18 @@ patient_server <- function(input, output, session){
                 window.location.href = '/#!/repgrid';
                 }, 200)
                     ")
+
+                runjs("
+                $('#controls-panel-rg').removeClass('anim-fade-out');
+                $('#controls-panel-rg').addClass('anim-fade-in');
+
+                $('.graphics-rg').removeClass('mw-100');
+                $('.graphics-rg').removeClass('flex-bs-100');
+                ")
+
                 shinyjs::show("controls-panel-rg")
+    
+
             } 
         }
         proxy <- dataTableProxy("user_table")
@@ -313,6 +324,21 @@ patient_server <- function(input, output, session){
                 runjs("setTimeout(function () {
                 window.location.href = '/#!/wimpgrid';
                 }, 200)")
+
+                runjs("
+                $('#controls-panel-vis').removeClass('anim-fade-out');
+                $('#controls-panel-vis').addClass('anim-fade-in');
+
+                $('#controls-panel-lab').removeClass('anim-fade-out');
+                $('#controls-panel-lab').addClass('anim-fade-in');
+
+                $('.graphics-vis').removeClass('mw-100');
+                $('.graphics-vis').removeClass('flex-bs-100');
+
+                $('.graphics-lab').removeClass('mw-100');
+                $('.graphics-lab').removeClass('flex-bs-100');
+                ")
+            
                 shinyjs::show("controls-panel-vis")
                 shinyjs::show("controls-panel-lab")
             }   
