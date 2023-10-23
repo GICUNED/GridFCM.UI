@@ -22,8 +22,8 @@ library(shiny.i18n)
 library(visNetwork)
 library(dplyr)
 library(glue)
+library(httr)
 knitr::knit_hooks$set(webgl = hook_webgl)
-
 
 
 
@@ -101,6 +101,39 @@ theme <- create_theme(
   )
 )
 
+httr::set_config(config(ssl_verifypeer = 0L, ssl_verifyhost = 0L))
+ruta_app <- "https://gridfcm.localhost/"
+keycloak_client_id <- "gridfcm"
+keycloak_client_secret <- Sys.getenv("KEYCLOAK_CLIENT_SECRET")
+
+has_auth_code <- function(params) {
+  # params is a list object containing the parsed URL parameters. Return TRUE if
+  # based on these parameters, it looks like auth codes are present that we can
+  # use to get an access token. If not, it means we need to go through the OAuth
+  # flow.
+  
+  return(!is.null(params$code))
+}
+make_authorization_url <- function(req) {
+  # TODO: Implement for real
+  # 
+  # The req object is a Rook request. This is just an environment object that 
+  # gives you access to the request URL, HTTP headers, etc. The documentation 
+  # for this object is here:
+  # https://github.com/jeffreyhorner/Rook#the-environment
+  #
+  # Implement this function by returning the URL that we should redirect the
+  # user to in order to 
+  url_template <- "http://gridfcm.localhost/keycloak/realms/Gridfcm/protocol/openid-connect/auth?client_id=%s&redirect_uri=%s&response_type=code"
+  sprintf(url_template,
+    utils::URLencode(keycloak_client_id, reserved = TRUE, repeated = TRUE),
+    utils::URLencode(ruta_app, reserved = TRUE, repeated = TRUE)
+    #utils::URLencode(state, reserved = TRUE, repeated = TRUE),
+    #utils::URLencode(scope, reserved = TRUE, repeated = TRUE)
+  )
+}
+
+
 ui <- dashboardPage(
   title = "PsychLab UNED | GridFCM",
   freshTheme = theme,
@@ -109,7 +142,7 @@ ui <- dashboardPage(
     tags$head(tags$link(rel = "icon", type = "image/x-icon", href = 'favicon.png')),
     title = tags$a(href='https://www.uned.es/', target ="_blank", class = "logocontainer",
     tags$img(height='56.9',width='', class = "logoimg")),
-    div(id="user-page", class = "nav-item user-page user-page-btn" , menuItem("User", href = route_link("user_home"), icon = icon("house-user"), newTab = FALSE)),
+    div(id="user-page", class = "nav-item user-page user-page-btn" , menuItem("User", href = "https://gridfcm.localhost/keycloak/realms/Gridfcm/account/", icon = icon("house-user"), newTab = FALSE)),
     div(id="patientIndicator", class = "ml-auto patient-active-label", span(class = "icon-paciente"), htmlOutput("paciente_activo"))
   ),
 
@@ -204,12 +237,57 @@ ui <- dashboardPage(
   ),
 )
 
+uiFunc <- function(req) {
+  if (!has_auth_code(parseQueryString(req$QUERY_STRING))) {
+    authorization_url <- make_authorization_url(req)
+    return(tags$script(HTML(sprintf("location.replace(\"%s\");", authorization_url))))
+  } else {
+    # comprobar si ha verificado mirar como ...
+    ui
+  }
+}
+
 server <- function(input, output, session) {
+
+  params <- parseQueryString(isolate(session$clientData$url_search))
+  if (!has_auth_code(params)) {
+    return()
+  }
+  
+  code <- params$code
+  #state <- params$state
+  #session_state <- params$session_state
+  # etc.
+  
+  # TODO: Get the access token or whatever. If you do this synchronously here 
+  # then you never have to consider the case of the access token not being
+  # available.
+  
+  #access_token <- httr::something(...)
+  token_url <- "https://gridfcm.localhost/keycloak/realms/Gridfcm/protocol/openid-connect/token"
+  #headers = c(  
+   # `Content-Type` = 'application/x-www-form-urlencoded'
+  #)
+  params <- list(
+    client_id = keycloak_client_id,
+    client_secret = keycloak_client_secret,
+    redirect_uri = ruta_app,
+    code = code,
+    grant_type = "authorization_code"
+    #scope = scope,
+  )
+
+  resp <- httr::POST(url = token_url, add_headers("Content-Type" = "application/x-www-form-urlencoded"), body = params, encode="form")
+  message("hasta aqui va")
+  message(httr::content(resp, "text"))
+
+  message(paste("The code is", code))
+
+  token <- resp[[1]]
 
   i18n_r <- reactive({
     i18n
   })
-
 
   observeEvent(input$volver_a_inicio, {
     runjs("window.location.href = '/#!/';")
@@ -278,4 +356,4 @@ server <- function(input, output, session) {
   suggestion_server(input, output, session)
 }
 
-shinyApp(ui, server)
+shinyApp(uiFunc, server)
