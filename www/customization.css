@@ -215,7 +215,7 @@ li.nav-item::marker{
 
 .open-controls-btn{
 
-  height: 40px;
+  height: 2.5rem;
   overflow: hidden;
   cursor: pointer;
 
@@ -227,6 +227,7 @@ li.nav-item::marker{
   background-color: #e3e8ec;
   border-radius: .3rem;
   padding: .5rem;
+  margin-right: .4rem;
 }
 
 .open-controls-btn p{
@@ -463,7 +464,6 @@ li.nav-item::marker{
 :not(:root):fullscreen #laboratory,
 
 :not(:root):fullscreen #pscd_showw,
-:not(:root):fullscreen .plotly,
 
 :not(:root):fullscreen .shiny-plot-output,
 :not(:root):fullscreen #biplot3d_plot,
@@ -769,6 +769,11 @@ background-color: #454D55;
 .content{
   margin-top: 34.8px;
 }
+@media (max-width: 495px) {
+  .navbar::after {
+    display: none !important;
+  }
+}
 
 .navbar::after {
   content:"GridFCM";
@@ -976,7 +981,7 @@ background-color: #454D55;
 }
 
 .logoimg{
-  background: no-repeat center url('../LogoUNED-light.svg');
+  background: no-repeat left url('../LogoUNED-light.svg');
   background-size: cover;
   border-style: solid;
   border: 1px solid #dee2e6 !important;;
@@ -1225,7 +1230,8 @@ box-shadow: none !important;
     background-color: #23272A;
   }
   
-  .graphic-container{
+.graphic-container{
+  overflow: hidden;
   padding: .5rem 1rem !important;
   height: fit-content;
   
@@ -1539,7 +1545,9 @@ color: #8b0000;
 }
 
 #biplot2d_plot{
+  display: flex;
   max-width: 100%;
+  justify-content: center;
   margin: auto !important;
 }
 
@@ -1737,6 +1745,45 @@ color: #8b0000;
   cursor: grab !important;
 }
 
+.wg-diff .slider-animate-container{
+  position: relative;
+}
+
+.wg-diff .slider-animate-button{
+  display: flex;
+  gap: .3rem;
+  align-items: center;
+
+  position: absolute;
+  bottom: 3.7rem;
+  right: 0;
+
+  margin-top: 0;
+  padding: 0 .2rem ;
+  border-radius: .3rem;
+
+  background-color: #Fff;
+  opacity: .8 !important;
+  }
+
+.wg-diff .slider-animate-button span{
+  font-size: .6rem;
+}
+
+.wg-diff .slider-animate-button::after{
+  content:"Play";
+  font-size: .7rem;
+  font-weight: bolder;
+  text-align: left;
+}
+
+.wg-diff  .slider-animate-button.playing::after{
+  content:"Pause" !important;
+  font-size: .7rem;
+  font-weight: bolder;
+  text-align: left;
+}
+
 /*slider puntuacion formulario --------------------------------------------------------------------------------------------*/
 
 
@@ -1875,6 +1922,10 @@ color: #8b0000;
 
 .dark-mode a:not(.btn):hover{
   color: inherit;
+}
+
+#patientSimulations{
+  overflow: hidden;
 }
 
 #patientSimulations .tabbable{

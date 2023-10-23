@@ -18,7 +18,6 @@ function openFullscreen(elem) {
   }
 };
 
-
 $(document).ready(function() {
   // Encuentra todos los botones "enter_fs" y "exit_fs"
   const enterFsButtons = $("button[id^='enter_fs_']");
