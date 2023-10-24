@@ -28,7 +28,7 @@ knitr::knit_hooks$set(webgl = hook_webgl)
 
 
 source("global.R")
-#GRID
+# GRID
 source("R/GraphFunctions.R")
 source("R/HideFunctions.R")
 source("R/ImportFunctions.R")
@@ -64,7 +64,7 @@ source("Servers/form_server.R")
 source("Servers/patient_server.R")
 source("Servers/suggestion_server.R")
 
-#DB
+# DB
 source("DB/establish_con.R")
 source("DB/gestion_excel.R")
 
@@ -107,32 +107,18 @@ keycloak_client_id <- "gridfcm"
 keycloak_client_secret <- Sys.getenv("KEYCLOAK_CLIENT_SECRET")
 
 has_auth_code <- function(params) {
-  # params is a list object containing the parsed URL parameters. Return TRUE if
-  # based on these parameters, it looks like auth codes are present that we can
-  # use to get an access token. If not, it means we need to go through the OAuth
-  # flow.
-  
   return(!is.null(params$code))
 }
-make_authorization_url <- function(req) {
-  # TODO: Implement for real
-  # 
-  # The req object is a Rook request. This is just an environment object that 
-  # gives you access to the request URL, HTTP headers, etc. The documentation 
-  # for this object is here:
-  # https://github.com/jeffreyhorner/Rook#the-environment
-  #
-  # Implement this function by returning the URL that we should redirect the
-  # user to in order to 
-  url_template <- "http://gridfcm.localhost/keycloak/realms/Gridfcm/protocol/openid-connect/auth?client_id=%s&redirect_uri=%s&response_type=code"
+
+make_authorization_url <- function() {
+  url_template <- "http://gridfcm.localhost/keycloak/realms/Gridfcm/protocol/openid-connect/auth?client_id=%s&redirect_uri=%s&response_type=code&scope=openid"
   sprintf(url_template,
     utils::URLencode(keycloak_client_id, reserved = TRUE, repeated = TRUE),
     utils::URLencode(ruta_app, reserved = TRUE, repeated = TRUE)
-    #utils::URLencode(state, reserved = TRUE, repeated = TRUE),
-    #utils::URLencode(scope, reserved = TRUE, repeated = TRUE)
   )
 }
 
+link <- make_authorization_url()
 
 ui <- dashboardPage(
   title = "PsychLab UNED | GridFCM",
@@ -142,7 +128,7 @@ ui <- dashboardPage(
     tags$head(tags$link(rel = "icon", type = "image/x-icon", href = 'favicon.png')),
     title = tags$a(href='https://www.uned.es/', target ="_blank", class = "logocontainer",
     tags$img(height='56.9',width='', class = "logoimg")),
-    div(id="user-page", class = "nav-item user-page user-page-btn" , menuItem("User", href = "https://gridfcm.localhost/keycloak/realms/Gridfcm/account/", icon = icon("house-user"), newTab = FALSE)),
+    div(id="user-page", class = "nav-item user-page user-page-btn" , menuItem("User", href = link, icon = icon("house-user"), newTab = FALSE)),
     div(id="patientIndicator", class = "ml-auto patient-active-label", span(class = "icon-paciente"), htmlOutput("paciente_activo"))
   ),
 
@@ -159,7 +145,8 @@ ui <- dashboardPage(
         div(id = "wimpgrid-page", class = "nav-item wimpg-page", menuItem("WimpGrid", href = route_link("wimpgrid"), icon = icon("border-none"), newTab = FALSE)),
         div(id="suggestion-page", class = "nav-item suggestion-page", menuItem(i18n$t("Sugerencias"), href = route_link("suggestion"), icon = icon("comments"), newTab = FALSE)),
         #div(class = 'language-selector',selectInput('selected_language',i18n$t("Idioma"), choices = i18n$get_languages(),selected = i18n$get_translation_language())),
-        div(class = 'language-selector',radioGroupButtons('selected_language',i18n$t("Idioma"), choices = i18n$get_languages(), selected = i18n$get_translation_language(), width='100%', checkIcon = list()))
+        div(class = 'language-selector',radioGroupButtons('selected_language',i18n$t("Idioma"), choices = i18n$get_languages(), selected = i18n$get_translation_language(), width='100%', checkIcon = list())),
+        div(id = 'logout', actionButton('logout_btn',i18n$t("Cerrar sesión"), width='100%', status="danger"))
       )
     ),
 
@@ -237,53 +224,128 @@ ui <- dashboardPage(
   ),
 )
 
-uiFunc <- function(req) {
-  if (!has_auth_code(parseQueryString(req$QUERY_STRING))) {
-    authorization_url <- make_authorization_url(req)
-    return(tags$script(HTML(sprintf("location.replace(\"%s\");", authorization_url))))
-  } else {
-    # comprobar si ha verificado mirar como ...
-    ui
-  }
-}
-
 server <- function(input, output, session) {
+  message("entro en server")
+  sesion_activa <- reactiveVal(FALSE)
 
   params <- parseQueryString(isolate(session$clientData$url_search))
-  if (!has_auth_code(params)) {
-    return()
-  }
-  
-  code <- params$code
-  #state <- params$state
-  #session_state <- params$session_state
-  # etc.
-  
-  # TODO: Get the access token or whatever. If you do this synchronously here 
-  # then you never have to consider the case of the access token not being
-  # available.
-  
-  #access_token <- httr::something(...)
   token_url <- "https://gridfcm.localhost/keycloak/realms/Gridfcm/protocol/openid-connect/token"
-  #headers = c(  
-   # `Content-Type` = 'application/x-www-form-urlencoded'
-  #)
-  params <- list(
-    client_id = keycloak_client_id,
-    client_secret = keycloak_client_secret,
-    redirect_uri = ruta_app,
-    code = code,
-    grant_type = "authorization_code"
-    #scope = scope,
+  info_url <- "https://gridfcm.localhost/keycloak/realms/Gridfcm/protocol/openid-connect/userinfo"
+  con <- establishDBConnection()
+  tokendb <- DBI::dbGetQuery(con, sprintf("SELECT token, refresh_token FROM psicologo WHERE id=%d", 1)) # de momento
+  if (is.na(tokendb$token)) {
+    # limitar funciones
+    if(!has_auth_code(params)){
+      message("no ha iniciado sesion")
+    }
+    else{
+      # token y refresh token del usuario
+      message("entro en obtener tokens")
+      code <- params$code
+      params <- list(
+        client_id = keycloak_client_id,
+        client_secret = keycloak_client_secret,
+        redirect_uri = ruta_app,
+        code = code,
+        grant_type = "authorization_code"
+      )
+      resp <- httr::POST(url = token_url, add_headers("Content-Type" = "application/x-www-form-urlencoded"), body = params, encode="form")
+      respuesta <- (httr::content(resp, "text"))
+      token_data <- jsonlite::fromJSON(respuesta)
+      # Acceder al access_token
+      GLOBAL_TOKEN <- token_data$access_token
+      GLOBAL_REFRESH_TOKEN <- token_data$refresh_token
+      query <- sprintf("UPDATE PSICOLOGO SET token = '%s' WHERE id=%d", GLOBAL_TOKEN, 1) # de momento 1
+      DBI::dbExecute(con, query)
+      query2 <- sprintf("UPDATE PSICOLOGO SET refresh_token = '%s' WHERE id=%d", GLOBAL_REFRESH_TOKEN, 1) # de momento 1
+      DBI::dbExecute(con, query2)
+      message("Token obtenido e insertado en la bd")
+
+      # info general del usuario
+      
+      resp_info <- httr::GET(url = info_url, add_headers("Authorization" = paste("Bearer", GLOBAL_TOKEN, sep = " ")))
+      message("respuesta del get info user")
+      message(resp_info)
+      sesion_activa(TRUE)
+    }
+  }
+  else{
+    resp_info <- httr::GET(url = info_url, add_headers("Authorization" = paste("Bearer", tokendb$token, sep = " ")))
+    message("respuesta del get info user")
+    error <- httr::http_status(resp_info)
+    texto <- paste(error, collapse = " ")
+    palabras <- strsplit(texto, " ")[[1]]
+    # Seleccionar la última palabra
+    ultima_palabra <- palabras[length(palabras)]
+    if(ultima_palabra != "OK"){
+      message("caducado, intentando refrescar token")
+      params <- list(
+        client_id = keycloak_client_id,
+        client_secret = keycloak_client_secret,
+        redirect_uri = ruta_app,
+        refresh_token = tokendb$refresh_token,
+        scope = "openid",
+        grant_type = "refresh_token"
+      )
+      refresh_resp <- httr::POST(url = token_url, add_headers("Content-Type" = "application/x-www-form-urlencoded"), body = params, encode="form")
+      refresh_respuesta <- (httr::content(refresh_resp, "text"))
+      message("mensaje refresh token")
+      message(refresh_respuesta)
+      refresh_token_data <- jsonlite::fromJSON(refresh_respuesta, simplifyVector = FALSE)
+      # Acceder al access_token
+      if(!is.null(refresh_token_data$error)){
+        message("Imposible refrescar el token")
+        DBI::dbExecute(con, sprintf("update psicologo set token=NULL, refresh_token=NULL where id=%d", 1)) # de momento 1
+        sesion_activa(FALSE)
+        runjs("window.location.href = '/#!/';")
+      }
+      else{
+        r <- refresh_token_data$access_token
+        DBI::dbExecute(con, sprintf("update psicologo set token='%s' where id=%d", r, 1))
+      }
+      
+    }
+    if(ultima_palabra == "OK"){
+      message("token válido....")
+      sesion_activa(TRUE)
+      # token válido, gestionar permisos?
+    }
+  }
+  DBI::dbDisconnect(con)
+  
+  observe(
+    if(sesion_activa() == TRUE){
+      shinyjs::show("logout_btn")
+    }
+    else{
+      shinyjs::hide("logout_btn")
+    }
   )
+  
 
-  resp <- httr::POST(url = token_url, add_headers("Content-Type" = "application/x-www-form-urlencoded"), body = params, encode="form")
-  message("hasta aqui va")
-  message(httr::content(resp, "text"))
+  shinyjs::onclick("logout_btn", {
+    con <- establishDBConnection()
+    logout_url <- "https://gridfcm.localhost/keycloak/realms/Gridfcm/protocol/openid-connect/logout"
+    token <- DBI::dbGetQuery(con, sprintf("SELECT token FROM psicologo WHERE id=%d", 1)) # de momento 1
+    refresh_token <- DBI::dbGetQuery(con, sprintf("SELECT refresh_token FROM psicologo WHERE id=%d", 1)) # de momento 1
+    params <- list(
+      client_id = keycloak_client_id, 
+      refresh_token = refresh_token,
+      client_secret = keycloak_client_secret,
+      redirect_uri = ruta_app
+    )
 
-  message(paste("The code is", code))
+    resp <- httr::POST(url = logout_url, add_headers("Content-Type" = "application/x-www-form-urlencoded", "Authorization" = paste("Bearer", token, sep = " ")), 
+                      body = params, encode="form")
+    DBI::dbExecute(con, sprintf("update psicologo set token=NULL, refresh_token=NULL where id=%d", 1)) # de momento 1
+    runjs("window.location.href = '/#!/';")
+    DBI::dbDisconnect(con)
+  })
 
-  token <- resp[[1]]
+
+
+
+
 
   i18n_r <- reactive({
     i18n
@@ -356,4 +418,4 @@ server <- function(input, output, session) {
   suggestion_server(input, output, session)
 }
 
-shinyApp(uiFunc, server)
+shinyApp(ui, server)

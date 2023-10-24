@@ -2,7 +2,9 @@
 CREATE TABLE IF NOT EXISTS psicologo (
     id SERIAL PRIMARY KEY,
     nombre VARCHAR,
-    email VARCHAR
+    email VARCHAR,
+    token TEXT,
+    refresh_token TEXT
 );
 
 -- Crear tabla paciente si no existe
