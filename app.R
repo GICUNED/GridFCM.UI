@@ -111,10 +111,11 @@ has_auth_code <- function(params) {
 }
 
 make_authorization_url <- function() {
-  url_template <- "http://gridfcm.localhost/keycloak/realms/Gridfcm/protocol/openid-connect/auth?client_id=%s&redirect_uri=%s&response_type=code&scope=openid"
+  url_template <- "http://gridfcm.localhost/keycloak/realms/Gridfcm/protocol/openid-connect/auth?client_id=%s&redirect_uri=%s&response_type=code&scope=%s"
   sprintf(url_template,
     utils::URLencode(keycloak_client_id, reserved = TRUE, repeated = TRUE),
-    utils::URLencode(ruta_app, reserved = TRUE, repeated = TRUE)
+    utils::URLencode(ruta_app, reserved = TRUE, repeated = TRUE),
+    utils::URLencode("openid roles", reserved = TRUE, repeated = TRUE)
   )
 }
 
@@ -224,13 +225,42 @@ ui <- dashboardPage(
   ),
 )
 
+obtener_id_psicologo <- function(info){
+
+}
+
+crear_usuario <- function(info){
+  con <- establishDBConnection()
+  message(info)
+  info <- (httr::content(info, "text"))
+  info <- jsonlite::fromJSON(info)
+  
+  id <- info$sub
+  name <- info$name
+  if(is.null(name)){
+    name <- "default"
+  }
+  mail <- info$email
+  user <- info$preferred_username
+  id <- as.integer(DBI::dbGetQuery(con, sprintf("SELECT id FROM psicologo WHERE email='%s'", mail)))
+  if(is.na(id)){
+    message("entro en insert ")
+    query <- sprintf("INSERT INTO psicologo(nombre, username, email) VALUES ('%s', '%s', '%s')", name, user, mail)
+    DBI::dbExecute(con, query)
+    id <- as.integer(DBI::dbGetQuery(con, sprintf("SELECT id from psicologo where username='%s' and email='%s'", user, mail)))
+  }
+  DBI::dbDisconnect(con)
+
+  return(id)
+}
+
 server <- function(input, output, session) {
   message("entro en server")
   sesion_activa <- reactiveVal(FALSE)
-
   params <- parseQueryString(isolate(session$clientData$url_search))
   token_url <- "https://gridfcm.localhost/keycloak/realms/Gridfcm/protocol/openid-connect/token"
   info_url <- "https://gridfcm.localhost/keycloak/realms/Gridfcm/protocol/openid-connect/userinfo"
+  logout_url <- "https://gridfcm.localhost/keycloak/realms/Gridfcm/protocol/openid-connect/logout"
   con <- establishDBConnection()
   tokendb <- DBI::dbGetQuery(con, sprintf("SELECT token, refresh_token FROM psicologo WHERE id=%d", 1)) # de momento
   if (is.na(tokendb$token)) {
@@ -254,6 +284,7 @@ server <- function(input, output, session) {
       token_data <- jsonlite::fromJSON(respuesta)
       # Acceder al access_token
       GLOBAL_TOKEN <- token_data$access_token
+      message(respuesta)
       GLOBAL_REFRESH_TOKEN <- token_data$refresh_token
       query <- sprintf("UPDATE PSICOLOGO SET token = '%s' WHERE id=%d", GLOBAL_TOKEN, 1) # de momento 1
       DBI::dbExecute(con, query)
@@ -262,10 +293,9 @@ server <- function(input, output, session) {
       message("Token obtenido e insertado en la bd")
 
       # info general del usuario
-      
       resp_info <- httr::GET(url = info_url, add_headers("Authorization" = paste("Bearer", GLOBAL_TOKEN, sep = " ")))
-      message("respuesta del get info user")
-      message(resp_info)
+      id <- crear_usuario(resp_info)
+      session$userData$id_psicologo <- id
       sesion_activa(TRUE)
     }
   }
@@ -287,6 +317,7 @@ server <- function(input, output, session) {
         scope = "openid",
         grant_type = "refresh_token"
       )
+      
       refresh_resp <- httr::POST(url = token_url, add_headers("Content-Type" = "application/x-www-form-urlencoded"), body = params, encode="form")
       refresh_respuesta <- (httr::content(refresh_resp, "text"))
       message("mensaje refresh token")
@@ -297,11 +328,14 @@ server <- function(input, output, session) {
         message("Imposible refrescar el token")
         DBI::dbExecute(con, sprintf("update psicologo set token=NULL, refresh_token=NULL where id=%d", 1)) # de momento 1
         sesion_activa(FALSE)
+        #session$reload()
         runjs("window.location.href = '/#!/';")
       }
       else{
         r <- refresh_token_data$access_token
         DBI::dbExecute(con, sprintf("update psicologo set token='%s' where id=%d", r, 1))
+        message("token actualizado")
+        sesion_activa(TRUE)
       }
       
     }
@@ -325,7 +359,6 @@ server <- function(input, output, session) {
 
   shinyjs::onclick("logout_btn", {
     con <- establishDBConnection()
-    logout_url <- "https://gridfcm.localhost/keycloak/realms/Gridfcm/protocol/openid-connect/logout"
     token <- DBI::dbGetQuery(con, sprintf("SELECT token FROM psicologo WHERE id=%d", 1)) # de momento 1
     refresh_token <- DBI::dbGetQuery(con, sprintf("SELECT refresh_token FROM psicologo WHERE id=%d", 1)) # de momento 1
     params <- list(
@@ -338,6 +371,7 @@ server <- function(input, output, session) {
     resp <- httr::POST(url = logout_url, add_headers("Content-Type" = "application/x-www-form-urlencoded", "Authorization" = paste("Bearer", token, sep = " ")), 
                       body = params, encode="form")
     DBI::dbExecute(con, sprintf("update psicologo set token=NULL, refresh_token=NULL where id=%d", 1)) # de momento 1
+    #session$reload() # sobra con el reload o hay que hacer el redirect tambien?
     runjs("window.location.href = '/#!/';")
     DBI::dbDisconnect(con)
   })

@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS psicologo (
     id SERIAL PRIMARY KEY,
     nombre VARCHAR,
     email VARCHAR,
+    username VARCHAR,
     token TEXT,
     refresh_token TEXT
 );
