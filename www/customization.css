@@ -1954,7 +1954,7 @@ color: #8b0000;
 .user-page-btn{
 position: absolute;
 right: 80px;
-width: 86px;
+width: 220;
 border-radius: 1rem;
 padding: .2rem;
 overflow: hidden;
@@ -2653,3 +2653,8 @@ color: #fff !important;
   
   }
   */
+
+  .hidden-div {
+    display: none;
+  }
+  

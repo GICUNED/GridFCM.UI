@@ -75,18 +75,25 @@ tags$li(a(
   class = "item", href = route_link("user_home"), "User"
 )),
 tags$li(a(
+  class = "item", href = route_link("patient"), "Patient"
+)),
+tags$li(a(
   class = "item", href = route_link("import"), "Import"
 )),
 tags$li(a(
   class = "item", href = route_link("excel"), "Import excel"
 )),
 tags$li(a(
+  class = "item", href = route_link("form"), "Form"
+)),
+tags$li(a(
+  class = "item", href = route_link("suggestion"), "Suggestion"
+)),
+tags$li(a(
   class = "item", href = route_link("repgrid"), "Repgrid home"
 )),
 tags$li(a(
-  class = "item",
-  href = route_link("wimpgrid"),
-  "Wimpgrid analysis"
+  class = "item", href = route_link("wimpgrid"), "Wimpgrid analysis"
 )))
 
 
@@ -129,7 +136,7 @@ ui <- dashboardPage(
     tags$head(tags$link(rel = "icon", type = "image/x-icon", href = 'favicon.png')),
     title = tags$a(href='https://www.uned.es/', target ="_blank", class = "logocontainer",
     tags$img(height='56.9',width='', class = "logoimg")),
-    div(id="user-page", class = "nav-item user-page user-page-btn" , menuItem("User", href = link, icon = icon("house-user"), newTab = FALSE)),
+    div(id="user-page", class = "nav-item user-page user-page-btn" , menuItem(textOutput("user_name"), href = link, icon = icon("house-user"), newTab = FALSE)),
     div(id="patientIndicator", class = "ml-auto patient-active-label", span(class = "icon-paciente"), htmlOutput("paciente_activo"))
   ),
 
@@ -144,10 +151,10 @@ ui <- dashboardPage(
         div(id="form-page", class = "nav-item form-page submenu-item", menuItem(i18n$t("Formularios"), href = route_link("form"), icon = icon("rectangle-list"), newTab = FALSE)),
         div(id="repgrid-page", class = "nav-item repg-page", menuItem("RepGrid", href = route_link("repgrid"), icon = icon("magnifying-glass-chart"), newTab = FALSE)),
         div(id = "wimpgrid-page", class = "nav-item wimpg-page", menuItem("WimpGrid", href = route_link("wimpgrid"), icon = icon("border-none"), newTab = FALSE)),
-        div(id="suggestion-page", class = "nav-item suggestion-page", menuItem(i18n$t("Sugerencias"), href = route_link("suggestion"), icon = icon("comments"), newTab = FALSE)),
+        div(id="suggestion-page", class = "nav-item suggestion-page hidden-div", menuItem(i18n$t("Sugerencias"), href = route_link("suggestion"), icon = icon("comments"), newTab = FALSE)),
         #div(class = 'language-selector',selectInput('selected_language',i18n$t("Idioma"), choices = i18n$get_languages(),selected = i18n$get_translation_language())),
         div(class = 'language-selector',radioGroupButtons('selected_language',i18n$t("Idioma"), choices = i18n$get_languages(), selected = i18n$get_translation_language(), width='100%', checkIcon = list())),
-        div(id = 'logout', actionButton('logout_btn',i18n$t("Cerrar sesión"), width='100%', status="danger"))
+        actionButton('logout_btn',i18n$t("Cerrar sesión"), width='100%', status="danger", style="display: none;")
       )
     ),
 
@@ -229,14 +236,38 @@ obtener_id_psicologo <- function(info){
 
 }
 
+gestionar_rol <- function(roles){
+  # obtengo el maximo rol posible a nivel de funcionalidades
+  usuario_ilimitado <- FALSE
+  usuario_gratis <- FALSE
+  for(i in roles){
+    if(i == "usuario_ilimitado"){usuario_ilimitado <- TRUE}
+    if(i == "usuario_gratis"){usuario_gratis <- TRUE}
+  }
+  if(usuario_gratis || usuario_ilimitado){
+    shinyjs::show("suggestion-page")
+    if(usuario_gratis && !usuario_ilimitado){
+      return("usuario_gratis")
+    }
+    else{
+      if(usuario_ilimitado){
+        return("usuario_ilimitado")
+      }
+    }
+  }
+  else{
+    return("default-roles-gridfcm")
+  }
+}
+
 crear_usuario <- function(info){
   con <- establishDBConnection()
   message(info)
   info <- (httr::content(info, "text"))
   info <- jsonlite::fromJSON(info)
-  
-  id <- info$sub
   name <- info$name
+  rol <- gestionar_rol(info$roles)
+  message("rol:", rol)
   if(is.null(name)){
     name <- "default"
   }
@@ -255,14 +286,15 @@ crear_usuario <- function(info){
 }
 
 server <- function(input, output, session) {
+  user_name <- reactiveVal(NULL)
   message("entro en server")
-  sesion_activa <- reactiveVal(FALSE)
   params <- parseQueryString(isolate(session$clientData$url_search))
   token_url <- "https://gridfcm.localhost/keycloak/realms/Gridfcm/protocol/openid-connect/token"
   info_url <- "https://gridfcm.localhost/keycloak/realms/Gridfcm/protocol/openid-connect/userinfo"
   logout_url <- "https://gridfcm.localhost/keycloak/realms/Gridfcm/protocol/openid-connect/logout"
   con <- establishDBConnection()
-  tokendb <- DBI::dbGetQuery(con, sprintf("SELECT token, refresh_token FROM psicologo WHERE id=%d", 1)) # de momento
+  tokendb <- DBI::dbGetQuery(con, sprintf("SELECT nombre, token, refresh_token FROM psicologo WHERE id=%d", 1)) # de momento
+  message(tokendb$token)
   if (is.na(tokendb$token)) {
     # limitar funciones
     if(!has_auth_code(params)){
@@ -282,26 +314,34 @@ server <- function(input, output, session) {
       resp <- httr::POST(url = token_url, add_headers("Content-Type" = "application/x-www-form-urlencoded"), body = params, encode="form")
       respuesta <- (httr::content(resp, "text"))
       token_data <- jsonlite::fromJSON(respuesta)
-      # Acceder al access_token
-      GLOBAL_TOKEN <- token_data$access_token
-      message(respuesta)
-      GLOBAL_REFRESH_TOKEN <- token_data$refresh_token
-      query <- sprintf("UPDATE PSICOLOGO SET token = '%s' WHERE id=%d", GLOBAL_TOKEN, 1) # de momento 1
-      DBI::dbExecute(con, query)
-      query2 <- sprintf("UPDATE PSICOLOGO SET refresh_token = '%s' WHERE id=%d", GLOBAL_REFRESH_TOKEN, 1) # de momento 1
-      DBI::dbExecute(con, query2)
-      message("Token obtenido e insertado en la bd")
+      if(is.null(token_data$error)){
+        # Acceder al access_token
+        GLOBAL_TOKEN <- token_data$access_token
+        GLOBAL_REFRESH_TOKEN <- token_data$refresh_token
+        query <- sprintf("UPDATE PSICOLOGO SET token = '%s' WHERE id=%d", GLOBAL_TOKEN, 1) # de momento 1
+        DBI::dbExecute(con, query)
+        query2 <- sprintf("UPDATE PSICOLOGO SET refresh_token = '%s' WHERE id=%d", GLOBAL_REFRESH_TOKEN, 1) # de momento 1
+        DBI::dbExecute(con, query2)
+        message("Token obtenido e insertado en la bd")
 
-      # info general del usuario
-      resp_info <- httr::GET(url = info_url, add_headers("Authorization" = paste("Bearer", GLOBAL_TOKEN, sep = " ")))
-      id <- crear_usuario(resp_info)
-      session$userData$id_psicologo <- id
-      sesion_activa(TRUE)
+        # info general del usuario
+        resp_info <- httr::GET(url = info_url, add_headers("Authorization" = paste("Bearer", GLOBAL_TOKEN, sep = " ")))
+        id <- crear_usuario(resp_info)
+        session$userData$id_psicologo <- id
+        shinyjs::show("logout_btn")
+        user_name(tokendb$nombre)
+      }
+      else{
+        message(token_data$error)
+        user_name(NULL)
+      }
     }
   }
   else{
+    user_name(tokendb$nombre)
     resp_info <- httr::GET(url = info_url, add_headers("Authorization" = paste("Bearer", tokendb$token, sep = " ")))
     message("respuesta del get info user")
+    message(resp_info)
     error <- httr::http_status(resp_info)
     texto <- paste(error, collapse = " ")
     palabras <- strsplit(texto, " ")[[1]]
@@ -317,7 +357,6 @@ server <- function(input, output, session) {
         scope = "openid",
         grant_type = "refresh_token"
       )
-      
       refresh_resp <- httr::POST(url = token_url, add_headers("Content-Type" = "application/x-www-form-urlencoded"), body = params, encode="form")
       refresh_respuesta <- (httr::content(refresh_resp, "text"))
       message("mensaje refresh token")
@@ -327,35 +366,32 @@ server <- function(input, output, session) {
       if(!is.null(refresh_token_data$error)){
         message("Imposible refrescar el token")
         DBI::dbExecute(con, sprintf("update psicologo set token=NULL, refresh_token=NULL where id=%d", 1)) # de momento 1
-        sesion_activa(FALSE)
-        #session$reload()
+        shinyjs::hide("logout_btn")
+        user_name(NULL)
         runjs("window.location.href = '/#!/';")
+        session$reload()
       }
       else{
         r <- refresh_token_data$access_token
         DBI::dbExecute(con, sprintf("update psicologo set token='%s' where id=%d", r, 1))
         message("token actualizado")
-        sesion_activa(TRUE)
+        shinyjs::show("logout_btn")
       }
       
     }
     if(ultima_palabra == "OK"){
       message("token válido....")
-      sesion_activa(TRUE)
+      shinyjs::show("logout_btn")
       # token válido, gestionar permisos?
+      info <- (httr::content(resp_info, "text"))
+      info <- jsonlite::fromJSON(info)
+      rol <- gestionar_rol(info$roles)
+      message("rol> ", rol)
+      DBI::dbExecute(con, sprintf("update psicologo set rol='%s' where id=%d", rol, 1)) # de momento 1
     }
   }
   DBI::dbDisconnect(con)
-  
-  observe(
-    if(sesion_activa() == TRUE){
-      shinyjs::show("logout_btn")
-    }
-    else{
-      shinyjs::hide("logout_btn")
-    }
-  )
-  
+
 
   shinyjs::onclick("logout_btn", {
     con <- establishDBConnection()
@@ -370,14 +406,22 @@ server <- function(input, output, session) {
 
     resp <- httr::POST(url = logout_url, add_headers("Content-Type" = "application/x-www-form-urlencoded", "Authorization" = paste("Bearer", token, sep = " ")), 
                       body = params, encode="form")
+    message(resp)
     DBI::dbExecute(con, sprintf("update psicologo set token=NULL, refresh_token=NULL where id=%d", 1)) # de momento 1
-    #session$reload() # sobra con el reload o hay que hacer el redirect tambien?
+    user_name(NULL)
     runjs("window.location.href = '/#!/';")
+    session$reload()
     DBI::dbDisconnect(con)
   })
 
-
-
+  observe(
+    if(is.null(user_name())){
+      output$user_name <- renderText(i18n$t("Log in"))
+    }
+    else{
+      output$user_name <- renderText(user_name())
+    }
+  )
 
 
 

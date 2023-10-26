@@ -2,10 +2,11 @@
 CREATE TABLE IF NOT EXISTS psicologo (
     id SERIAL PRIMARY KEY,
     nombre VARCHAR,
-    email VARCHAR,
+    email VARCHAR UNIQUE,
     username VARCHAR,
     token TEXT,
-    refresh_token TEXT
+    refresh_token TEXT,
+    rol VARCHAR
 );
 
 -- Crear tabla paciente si no existe
@@ -95,4 +96,4 @@ CREATE TABLE IF NOT EXISTS sugerencias (
 
 -- Seeder de prueba
 INSERT INTO psicologo (nombre, email)
-VALUES ('Luis Ángel', 'la@uned.com');
+VALUES ('Psicólogo de prueba', 'demo@uned.com');

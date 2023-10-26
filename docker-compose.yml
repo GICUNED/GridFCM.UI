@@ -82,8 +82,8 @@ services:
     hostname: "keycloak"
     networks:
       - "gridfcm"
-    #volumes:
-    #  - { type: "bind", source: "./config/keycloak/realm.json", target: "/opt/keycloak/data/import/realm.json", read_only: true }
+    volumes:
+      - { type: "bind", source: "./config/keycloak/realm.json", target: "/opt/keycloak/data/import/realm.json", read_only: true }
     environment:
       DOMAIN_PRIMARY: "${DOMAIN:?}"
       KC_HTTP_ENABLED: "true"
@@ -98,7 +98,7 @@ services:
       KC_DB_PASSWORD: "${KEYCLOAK_POSTGRES_PASSWORD:?}"
       KEYCLOAK_ADMIN: "admin"
       KEYCLOAK_ADMIN_PASSWORD: "${KEYCLOAK_ADMIN_PASSWORD:?}"
-    command: ["start-dev"]
+    command: ["start-dev", "--import-realm"]
     healthcheck:
       test: ["CMD", "bash", "-euc", ">/dev/tcp/127.0.0.1/7070"]
       start_period: "5m"
