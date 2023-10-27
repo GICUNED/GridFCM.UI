@@ -386,12 +386,12 @@ server <- function(input, output, session) {
       info <- (httr::content(resp_info, "text"))
       info <- jsonlite::fromJSON(info)
       rol <- gestionar_rol(info$roles)
+      session$userData$rol <- rol
       message("rol> ", rol)
       DBI::dbExecute(con, sprintf("update psicologo set rol='%s' where id=%d", rol, 1)) # de momento 1
     }
   }
   DBI::dbDisconnect(con)
-
 
   shinyjs::onclick("logout_btn", {
     con <- establishDBConnection()
@@ -422,7 +422,6 @@ server <- function(input, output, session) {
       output$user_name <- renderText(user_name())
     }
   )
-
 
 
   i18n_r <- reactive({
@@ -497,3 +496,4 @@ server <- function(input, output, session) {
 }
 
 shinyApp(ui, server)
+

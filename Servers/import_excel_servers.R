@@ -1,5 +1,21 @@
 import_excel_server <- function(input, output, session) {
-  
+  rol <- session$userData$rol
+  con <- establishDBConnection()
+  query <- sprintf("SELECT COUNT(DISTINCT id) as num FROM wimpgrid_xlsx where fk_paciente = %d", session$userData$id_paciente) # de momento
+  num_wimp <- DBI::dbGetQuery(con, query)
+  query2 <- sprintf("SELECT COUNT(DISTINCT id) as num FROM repgrid_xlsx where fk_paciente = %d", session$userData$id_paciente) # de momento
+  num_rep <- DBI::dbGetQuery(con, query2)
+  DBI::dbDisconnect(con)
+  if(!is.null(rol) && rol == "usuario_gratis"){
+    shinyjs::disable("importar_formulario")
+    if(num_rep$num >= 1){
+      shinyjs::disable("importar_datos")
+    }
+    if(num_wimp$num >= 1){
+      shinyjs::disable("importar_datos_w")
+    }
+  }
+
   observeEvent(input$importar_datos, {
     id_paciente <- session$userData$id_paciente
     if(file.exists(input$archivo_repgrid$datapath)){

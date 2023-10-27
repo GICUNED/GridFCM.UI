@@ -1,4 +1,17 @@
 patient_server <- function(input, output, session){
+    rol <- session$userData$rol
+    con <- establishDBConnection()
+    query <- sprintf("SELECT COUNT(DISTINCT p.id) as num FROM paciente as p, psicologo_paciente as pp 
+                            WHERE pp.fk_paciente = p.id and pp.fk_psicologo = %d", 1) # de momento
+    num <- DBI::dbGetQuery(con, query)
+    DBI::dbDisconnect(con)
+    if(!is.null(rol) && rol == "usuario_gratis"){
+        if(num$num >= 1){
+            shinyjs::disable("addPatient")
+        }
+    }
+
+
     user_data <- reactiveValues(users = NULL, selected_user_id = NULL)
     repgrid_data_DB <- reactiveValues(fechas = NULL)
     wimpgrid_data_DB <- reactiveValues(fechas = NULL)
@@ -417,6 +430,7 @@ patient_server <- function(input, output, session){
         session$userData$id_paciente <- user_data$selected_user_id
         proxy <- dataTableProxy("user_table")
         proxy %>% selectRows(NULL)
+        session$userData$rol <- rol
         import_excel_server(input, output, session)
         form_server(input, output, session)
         runjs("window.location.href = '/#!/import';")
