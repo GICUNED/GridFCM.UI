@@ -24,7 +24,6 @@ library(visNetwork)
 library(dplyr)
 library(glue)
 
-
 knitr::knit_hooks$set(webgl = hook_webgl)
 
 source("global.R")
@@ -88,7 +87,6 @@ tags$li(a(
   "Wimpgrid analysis"
 )))
 
-
 theme <- create_theme(
   bs4dash_status(
     primary = "#095540",
@@ -99,6 +97,7 @@ theme <- create_theme(
     info = "#90214a"
   )
 )
+
 
 ui <- dashboardPage(
   title = "PsychLab UNED | GridFCM",
@@ -180,8 +179,6 @@ ui <- dashboardPage(
         )
       ))
     ),
-
-
 
     add_busy_spinner(
       spin = "double-bounce",

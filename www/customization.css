@@ -69,6 +69,12 @@ textarea{
   display: none !important;
 
 }
+
+.custom-margins-sm{
+  max-width: 600px;
+  margin: auto;
+}
+
 .custom-margins{
   max-width: 900px;
   margin: auto;
@@ -124,6 +130,15 @@ li.nav-item::marker{
   margin-left: 125px;
 
 }
+
+.bg-blurry{
+  background-color: #ffffffb7 !important;
+  backdrop-filter: blur(40px);
+}
+
+.dark-mode .bg-blurry{
+  background-color: #0d0d0db7 !important;
+}
 /*
 .shinybusy-overlay{
   background-color: #ffffff8a;
@@ -161,17 +176,40 @@ li.nav-item::marker{
 /*Botones no nativo ----------------------------------------------------------------------*/
 
 .btn-herramienta{
+
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   width: 10rem;
   height: 10rem;
 
   font-weight: 600 !important;
-  font-size: 1.4rem !important;
+  font-size: 1.2rem !important;
 }
 
 .btn-primary:focus{
   background-color: #005440;
   border-color: #00795d;
 }
+
+.btn{
+  border: solid 2px !important;
+  border-color: rgba(33, 33, 33, 0.262) !important;
+}
+
+.dark-mode .btn{
+  border-color: rgba(255, 255, 255, 0.369) !important;
+}
+
+.btn-tool, .radiobtn {
+  border: none !important;
+}
+
+.btn-tool, .radiobtn {
+  border: 1px solid;
+}
+
 
 .btn-primary{
   background-color: #005440;
@@ -1212,12 +1250,25 @@ box-shadow: none !important;
 
 }
 
-#welcome_box .card-body{
+#welcome_box{
+  background-color: #ffffffb7 !important;
+  backdrop-filter: blur(40px);
+}
 
+.dark-mode #welcome_box{
+  background-color: #0d0d0db7 !important;
+}
+
+#welcome_box .card-body{
   display: flex;
   justify-content: center;
   gap: .5rem;
-  
+}
+
+#ComprobarDatos_w .card-body{
+  display: flex;
+  justify-content: center;
+  gap: .5rem;
 }
 
 /*carousel-------------------------------------------------*/
@@ -1253,6 +1304,14 @@ box-shadow: none !important;
 {
   position: absolute;
   bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.slidecontent-2
+{
+  position: absolute;
+  bottom: 25%;
   left: 50%;
   transform: translateX(-50%);
 }
@@ -2685,7 +2744,10 @@ text-align: right;
   display: none !important; 
 }
 
-.patients-table tr, #simulaciones_wimp tr, #simulaciones_rep tr, #ComprobarDatos_w tr{
+.patients-table tr, 
+#simulaciones_wimp tr, 
+#simulaciones_rep tr, 
+#ComprobarDatos_w tr{
   cursor: pointer;
 }
 

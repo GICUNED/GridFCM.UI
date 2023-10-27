@@ -4,11 +4,11 @@
 
   shiny.i18n::usei18n(i18n),
 
-  fluidRow( class = ("flex-container-titles mt-2"),
+  fluidRow( class = ("flex-container-titles mt-2 custom-margins-sm"),
 
     imageOutput("psychlabmove", width = "fit-content", height = "100px"),
-    h1(i18n$t("PsychLab es la herramienta para la exploración psicológica avanzada"), class = "pagetitlecustom mb-4"),
-    p(i18n$t("Prueba la técnica de rejilla para obtener muestras homogéneas de análisis del mundo de significados"), class = "desccustom"),
+    h1(i18n$t("La herramienta de exploración psicológica avanzada"), class = "pagetitlecustom mb-4"),
+    p(i18n$t("Descubre de qué es capaz PsychLab. Prueba la técnica de rejilla para obtener muestras homogéneas de análisis del mundo de significados."), class = "desccustom"),
   ),
 
   fluidRow( class="mt-4", 
@@ -42,9 +42,9 @@
             src = "Images/head.jpg",
             height = 400
           ),
-          fluidRow(class = ("flex-container-xl mt-2 slidecontent bg-white rounded-lg p-4 pt-2 shadow"),
+          fluidRow(class = ("flex-container-xl mt-2 slidecontent-2 bg-blurry rounded-lg p-4 pt-2 shadow"),
               icon("flask"),
-              h2(i18n$t("Herramientas disponibles"), class = "pagetitlecustom mb-2"),
+              h3(i18n$t("Análisis de Rejilla"), class = "pagetitlecustom mb-2"),
             
             div(class = ("button-container mt-2"),
               actionButton("ingresar", status ="primary", class="btn-herramienta", i18n$t("RepGrid"), icon = icon("magnifying-glass-chart")),
