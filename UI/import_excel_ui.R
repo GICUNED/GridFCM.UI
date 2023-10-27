@@ -17,7 +17,8 @@ div(class = "custom-margins flex-container-xl",
        status = "success",
        collapsible = FALSE,
        fileInput("archivo_repgrid", i18n$t("Seleccionar archivo RepGrid (.xlsx)"), accept=".xlsx"),
-       column(12, class="d-flex justify-content-center mb-2 mt-2", actionButton("importar_datos", i18n$t("Importar Datos"), status = 'success', icon = icon("file-import")))
+       
+       column(12, class="d-flex justify-content-center mb-2 mt-2", actionButton("importar_datos", i18n$t("Importar Datos"), status = 'success',  icon = icon("file-import")))
       )),
 
       div(class="col-sm-6 p-0",
@@ -28,7 +29,7 @@ div(class = "custom-margins flex-container-xl",
        status = "warning",
        collapsible = FALSE,
        fileInput("archivo_wimpgrid", i18n$t("Seleccionar archivo WimpGrid (.xlsx)"), accept=".xlsx"),
-       column(12, class="d-flex justify-content-center mb-2 mt-2", actionButton("importar_datos_w", i18n$t("Importar Datos"), status = 'warning', icon = icon("file-import")))
+       column(12, class="d-flex justify-content-center mb-2 mt-2", actionButton("importar_datos_w", i18n$t("Importar Datos"), status = 'warning',  icon = icon("file-import")))
       )),
 
        # Enlaces a plantillas de xlsx y documentos de ayuda

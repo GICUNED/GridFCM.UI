@@ -2,7 +2,7 @@ repgrid_home_ui <- fluidPage(
   shiny.i18n::usei18n(i18n),
   shinyjs::useShinyjs(),
   
-  fluidRow( class = ("flex-container-titles mt-3"),
+  fluidRow( class = ("flex-container-titles mt-2"),
     h2(i18n$t("Inicio de RepGrid"), class = "pagetitlecustom  mt-2"),
     icon("circle-question", id = "tooltip-rg-home", class="tooltip-icon mb-4 ml-2"),
     div(id="context-rg-home", class="tooltip-container", icon("circle-xmark", id = "exit-rg-tooltip", class="exit-tooltip fa-solid"), p(i18n$t("Esta página te permite visualizar y manipular los datos importados de RepGrid y acceder a diferentes tipos de análisis."),  class = "desccustom-tooltip")),

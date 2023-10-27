@@ -3,6 +3,7 @@ library(shiny)
 library(shinyjs)
 library(shinyWidgets)
 library(shinydashboard)
+library(slickR)
 library(shinybusy)
 library(OpenRepGrid)
 library(toastui)
@@ -22,10 +23,9 @@ library(shiny.i18n)
 library(visNetwork)
 library(dplyr)
 library(glue)
+
+
 knitr::knit_hooks$set(webgl = hook_webgl)
-
-
-
 
 source("global.R")
 #GRID
@@ -49,8 +49,6 @@ source("UI/wimpgrid_analysis_ui.R")
 source("UI/form_ui.R")
 source("UI/patient_ui.R")
 source("UI/suggestion_ui.R")
-
-
 # SERVERS
 source("Servers/userHome_page_server.R")
 source("Servers/inicio_page_servers.R")
@@ -63,6 +61,7 @@ source("Servers/wimpgrid_analysis_server.R")
 source("Servers/form_server.R")
 source("Servers/patient_server.R")
 source("Servers/suggestion_server.R")
+
 
 #DB
 source("DB/establish_con.R")
@@ -112,6 +111,8 @@ ui <- dashboardPage(
     div(id="user-page", class = "nav-item user-page user-page-btn" , menuItem("User", href = route_link("user_home"), icon = icon("house-user"), newTab = FALSE)),
     div(id="patientIndicator", class = "ml-auto patient-active-label", span(class = "icon-paciente"), htmlOutput("paciente_activo"))
   ),
+  
+
 
 
   dashboardSidebar(
@@ -165,6 +166,7 @@ ui <- dashboardPage(
           class = "logoimg404"
         ),
 
+
         column(
           12,
           class = "d-flex mb-4 justify-content-center",
@@ -178,6 +180,8 @@ ui <- dashboardPage(
         )
       ))
     ),
+
+
 
     add_busy_spinner(
       spin = "double-bounce",

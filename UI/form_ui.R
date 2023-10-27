@@ -76,7 +76,7 @@ tabsetPanel(
 
                     # boton add constructos
                     column(12, class="d-flex justify-content-center mt-3", 
-                    actionButton("guardarConstructo", i18n$t("Añadir"), icon = icon("plus"), disabled=TRUE)
+                    actionButton("guardarConstructo", status = "success", i18n$t("Añadir"), icon = icon("plus"), disabled=TRUE)
                     )
                 ),
             ),
@@ -158,14 +158,15 @@ tabsetPanel(
             fluidRow(class = ("flex-container-titles mt-3"),
                 h2(i18n$t("Inicio formulario WimpGrid"), class = "wg pagetitlecustom"),
             ),
-            fluidRow(id="ComprobarDatos_w", class = "mt-4 custom-margins justify-content-center align-items-start",  
-                box( status="warning",
+            fluidRow(id="ComprobarDatos_w", class = "mt-2 justify-content-center align-items-start",  
+                box( 
+                    width= 6,
+                    status="warning",
                     collapsible = FALSE,
-                    title = i18n$t("Comprobación de datos previos"),
+                    title = i18n$t("Selecciona una opción"),
                     column(12, class="d-flex justify-content-center align-items-center",
-                        actionButton("comprobar_datos_previos_w", status ="warning", icon=icon("clock-rotate-left"), i18n$t("Comprobar datos previos")),
-                        tags$div(style = "margin-left: 10px;"),
-                        actionButton("iniciar_nuevo_w", status ="warning", i18n$t("Iniciar formulario nuevo"))
+                        actionButton("comprobar_datos_previos_w", class="mr-2", status ="warning", icon=icon("clock-rotate-left"), i18n$t("Comprobar datos previos")),
+                        actionButton("iniciar_nuevo_w", icon= icon("rectangle-list"), i18n$t("Iniciar formulario nuevo"))
                     ),
                     br(),
                     DTOutput("sim_rep_w")
@@ -174,7 +175,7 @@ tabsetPanel(
 
             column(12, class="mt-2 d-flex justify-content-center align-items-start",
                 box(id = "preguntasDiadas_w",
-                    width=5,
+                    width=6,
                     title = i18n$t("¿Desea añadir los constructos de forma manual o de forma aleatoria?"),
                     collapsible = FALSE,
                         column(12, class="d-flex justify-content-center",
@@ -212,8 +213,10 @@ tabsetPanel(
                         div(textInput("constructo_der_w", i18n$t("Polo derecho:"), "")),
 
                         # boton add constructos
-                        column(12, class="d-flex justify-content-center mt-3", 
-                        actionButton("guardarConstructo_w", i18n$t("Añadir"), icon = icon("plus"), disabled=TRUE)
+                        column(12, class="d-flex justify-content-center mt-3",
+                                actionButton("atras_constructos_w", class="mr-2", icon=icon("left-long"), i18n$t("Atrás")),
+
+                        actionButton("guardarConstructo_w", status = "success", i18n$t("Añadir"), icon = icon("plus"), disabled=TRUE)
                         )
                     ),
                 ),
@@ -233,7 +236,6 @@ tabsetPanel(
                             column(12, uiOutput("lista_constructos_w")),
                             column(12, class="d-flex justify-content-center mt-3",
                             
-                                actionButton("atras_constructos_w", class="mr-2", icon=icon("left-long"), i18n$t("Atrás")),
                                 actionButton("continuar_constructo_w",class="ml-auto", i18n$t("Continuar"), disabled=TRUE, status="success", icon = icon("arrow-right"))
                             )
                     ),
@@ -267,7 +269,11 @@ tabsetPanel(
                         collapsible = FALSE,
                         
                         textInput("nombrePaciente_w", i18n$t("Nombre:"), ""),
-                        column(12, class="d-flex justify-content-center mt-3", actionButton("guardarNombre_w", i18n$t("Añadir"), status = "primary", icon = icon("plus")))
+                        column(12, class="d-flex justify-content-center mt-3",
+                        actionButton("atras_elementos_w", class="mr-2", icon = icon("left-long"), i18n$t("Atrás")),
+                        actionButton("guardarNombre_w", i18n$t("Añadir"), status = "primary", icon = icon("plus")),
+                        )
+                        
                     )
                 ),
                 column(7, id = "listadoElementos_w",
@@ -284,7 +290,6 @@ tabsetPanel(
 
                             column(12, uiOutput("lista_nombres_w")),
                             column(12, class="d-flex justify-content-center mt-3", 
-                            actionButton("atras_elementos_w", class="mr-2", icon = icon("left-long"), i18n$t("Atrás")),
                             actionButton("continuar_elementos_w", class="ml-auto", i18n$t("Continuar"), status="success", icon = icon("arrow-right") ))
                     ),
                 ),

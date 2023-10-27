@@ -1,9 +1,11 @@
 repgrid_analysis_ui <- fluidPage( class="header-tab rg-diff",
     shiny.i18n::usei18n(i18n),
 
-  fluidRow( class = ("flex-container-xl"),
+  fluidRow( class = ("flex-container-titles mt-2"),
 
     h2(i18n$t("Análisis RepGrid"), class = "pagetitlecustom mt-2"),
+    icon("circle-question", id = "tooltip-rg-analysis", class="tooltip-icon mb-4 ml-2"),
+    div(id="context-rg-analysis", class="tooltip-container", icon("circle-xmark", id = "exit-rg-analysis-tooltip", class="exit-tooltip fa-solid"), p(i18n$t("Esta página te permite..."),  class = "desccustom-tooltip")),
   ),
 
   # Mostrar el gráfico seleccionado usando conditionalPanel

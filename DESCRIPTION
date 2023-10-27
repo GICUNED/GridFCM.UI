@@ -40,6 +40,7 @@ Imports:
     shinycssloaders (>= 1.0.0),
     shinybusy (>= 0.3.1),
     shinydashboard (>= 0.7.2),
+    slickR (>= 0.4.4),
     shinyjs (>= 2.1.0),
     shinyWidgets (>= 0.7.6),
     toastui (>= 0.3.0),
