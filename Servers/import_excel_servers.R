@@ -18,6 +18,7 @@ import_excel_server <- function(input, output, session) {
 
   observeEvent(input$importar_datos, {
     id_paciente <- session$userData$id_paciente
+
     if(file.exists(input$archivo_repgrid$datapath)){
       # Importar datos de RepGrid y WimpGrid utilizando las funciones importwimp() y OpenRepGrid::importExcel() si los archivos están presentes
       # llamada al metodo de codificar para luego meter en la bd y demás
@@ -74,6 +75,7 @@ import_excel_server <- function(input, output, session) {
         # Solo archivo RepGrid cargado, navegar a RepGrid Home
         repgrid_home_server(input,output,session)
         runjs("window.location.href = '/#!/repgrid';")
+
         shinyjs::hide("import-page")
         shinyjs::hide("form-page")
         shinyjs::hide("excel-page")
@@ -81,7 +83,6 @@ import_excel_server <- function(input, output, session) {
     }
       
   })
-  
 
   observeEvent(input$importar_datos_w, {
     id_paciente <- session$userData$id_paciente
@@ -145,7 +146,6 @@ import_excel_server <- function(input, output, session) {
     } 
   })
 
- 
 
   ### NEW ######################################################################################
   # Download handler function

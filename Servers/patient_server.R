@@ -135,6 +135,13 @@ patient_server <- function(input, output, session){
         }
     })
 
+    observeEvent(input$tabSimulaciones, {
+        runjs("
+            window.scrollTo(0, document.body.scrollHeight);
+        ")
+
+  })
+
     cargar_fechas <- function(){
         numero_aleatorio <- sample(1:1000, 1)
         con <- establishDBConnection()

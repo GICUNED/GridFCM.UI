@@ -3,6 +3,7 @@ library(shiny)
 library(shinyjs)
 library(shinyWidgets)
 library(shinydashboard)
+library(slickR)
 library(shinybusy)
 library(OpenRepGrid)
 library(toastui)
@@ -48,8 +49,6 @@ source("UI/wimpgrid_analysis_ui.R")
 source("UI/form_ui.R")
 source("UI/patient_ui.R")
 source("UI/suggestion_ui.R")
-
-
 # SERVERS
 source("Servers/userHome_page_server.R")
 source("Servers/inicio_page_servers.R")
@@ -63,7 +62,8 @@ source("Servers/form_server.R")
 source("Servers/patient_server.R")
 source("Servers/suggestion_server.R")
 
-# DB
+
+#DB
 source("DB/establish_con.R")
 source("DB/gestion_excel.R")
 
@@ -94,7 +94,6 @@ tags$li(a(
 tags$li(a(
   class = "item", href = route_link("wimpgrid"), "Wimpgrid analysis"
 )))
-
 
 theme <- create_theme(
   bs4dash_status(
@@ -138,6 +137,8 @@ ui <- dashboardPage(
     div(id="user-page", class = "nav-item user-page user-page-btn" , menuItem(textOutput("user_name"), href = link, icon = icon("house-user"), newTab = FALSE)),
     div(id="patientIndicator", class = "ml-auto patient-active-label", span(class = "icon-paciente"), htmlOutput("paciente_activo"))
   ),
+  
+
 
 
   dashboardSidebar(
@@ -191,6 +192,7 @@ ui <- dashboardPage(
           width = '',
           class = "logoimg404"
         ),
+
 
         column(
           12,

@@ -69,6 +69,12 @@ textarea{
   display: none !important;
 
 }
+
+.custom-margins-sm{
+  max-width: 600px;
+  margin: auto;
+}
+
 .custom-margins{
   max-width: 900px;
   margin: auto;
@@ -124,6 +130,15 @@ li.nav-item::marker{
   margin-left: 125px;
 
 }
+
+.bg-blurry{
+  background-color: #ffffffb7 !important;
+  backdrop-filter: blur(40px);
+}
+
+.dark-mode .bg-blurry{
+  background-color: #0d0d0db7 !important;
+}
 /*
 .shinybusy-overlay{
   background-color: #ffffff8a;
@@ -160,11 +175,41 @@ li.nav-item::marker{
 
 /*Botones no nativo ----------------------------------------------------------------------*/
 
+.btn-herramienta{
+
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 10rem;
+  height: 10rem;
+
+  font-weight: 600 !important;
+  font-size: 1.2rem !important;
+}
 
 .btn-primary:focus{
   background-color: #005440;
   border-color: #00795d;
 }
+
+.btn{
+  border: solid 2px !important;
+  border-color: rgba(33, 33, 33, 0.262) !important;
+}
+
+.dark-mode .btn{
+  border-color: rgba(255, 255, 255, 0.369) !important;
+}
+
+.btn-tool, .radiobtn {
+  border: none !important;
+}
+
+.btn-tool, .radiobtn {
+  border: 1px solid;
+}
+
 
 .btn-primary{
   background-color: #005440;
@@ -409,6 +454,17 @@ li.nav-item::marker{
   font-weight: 900;
 }
 
+
+/*Interactivo--------------------------------------------------------------------------*/
+
+#psychlabmove{
+  position: relative;
+}
+
+#psychlabmove img{
+  height: 100%;
+}
+
 /*Pantalla completa -----------------------------------------------------------------*/
 
 :not(:root):fullscreen::backdrop {
@@ -541,7 +597,7 @@ li.nav-item::marker{
   border-radius: .5rem;
   padding: 5px 10px;
   position: absolute;
-  right: 180px;
+  right: 140px;
   overflow: hidden;
   text-align: right;
   max-width: 200px;
@@ -1054,13 +1110,6 @@ background-color: #454D55;
   align-self: flex-start;
 }
 
-.button-container{
-  display: flex;
-  justify-content: end;
-  align-items: center;
-  gap: .5rem;
-}
-
 .border-divider{
   border-bottom: 1px solid #abafb4;
   margin-bottom: 1.2rem !important;
@@ -1073,38 +1122,6 @@ background-color: #454D55;
 
 .border-divider-l{
   border-left: 1px solid #abafb4;
-}
-
-.flex-container-sm{
-  display: flex;
-  flex-direction: row;
-  gap: .5rem;
-  justify-content: center;
-  align-items: center;
-}
-
-.row{
-  margin-left: auto !important;
-  margin-right: auto !important;
-}
-
-
-.dark-mode .download-container{
-  background-color: #454D55;
-}
-
-.download-container{
-  width: 48% !important;
-  border-radius: .6rem;
-  background-color: #F4F6F9;
-  padding: 1rem !important;
-  margin: 0 !important;
-}
-
-@media (max-width: 546px){
-  .download-container{
-    width: 100% !important;
-  }
 }
 
 .reducirfix{margin-bottom: -0.1px;}
@@ -1206,6 +1223,123 @@ box-shadow: none !important;
 
 
 /*Contenedores -----------------------------------------------------------------------------*/
+
+.button-container{
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  gap: .5rem;
+}
+
+.dark-mode .download-container{
+  background-color: #454D55;
+}
+
+.download-container{
+  width: 48% !important;
+  border-radius: .6rem;
+  background-color: #F4F6F9;
+  padding: 1rem !important;
+  margin: 0 !important;
+}
+
+@media (max-width: 546px){
+  .download-container{
+    width: 100% !important;
+  }
+
+}
+
+#welcome_box{
+  background-color: #ffffffb7 !important;
+  backdrop-filter: blur(40px);
+}
+
+.dark-mode #welcome_box{
+  background-color: #0d0d0db7 !important;
+}
+
+#welcome_box .card-body{
+  display: flex;
+  justify-content: center;
+  gap: .5rem;
+}
+
+#ComprobarDatos_w .card-body{
+  display: flex;
+  justify-content: center;
+  gap: .5rem;
+}
+
+/*carousel-------------------------------------------------*/
+.slick-slide{
+  color: inherit !important;
+}
+
+.slick-next::before {
+  display: inline-block;
+  width: 1rem;
+  text-align: center;
+  font-family: "Font Awesome 6 Free";
+  content: "\f061";
+  font-weight: 900;
+  margin-left: .6rem;
+}
+
+.slick-prev::before {
+  display: inline-block;
+  width: 1rem;
+  text-align: center;
+  font-family: "Font Awesome 6 Free";
+  content: "\f060";
+  font-weight: 900;
+  margin-right: .8rem;
+}
+
+.slidecontainer {
+  position: relative;
+}
+
+.slidecontent
+{
+  position: absolute;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.slidecontent-2
+{
+  position: absolute;
+  bottom: 25%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.slidetitle {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 30px;
+}
+.slidebutton {
+  position: relative;
+  margin-top: -15%;
+  color: #FFFEFB;
+}
+
+.flex-container-sm{
+  display: flex;
+  flex-direction: row;
+  gap: .5rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.row{
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
 
 
 .input-field-container{
@@ -1580,7 +1714,8 @@ color: #8b0000;
 
 /*inputs select --------------------------------------------------------------------------------------------*/
 
-.wg-diff .shiny-input-container:not(.shiny-input-container-inline), .rg-diff .shiny-input-container:not(.shiny-input-container-inline)  {
+.wg-diff .shiny-input-container:not(.shiny-input-container-inline),
+.rg-diff .shiny-input-container:not(.shiny-input-container-inline)  {
   width:  fit-content;
   min-width: 220px;
   max-width: 100%;
@@ -1597,7 +1732,8 @@ color: #8b0000;
 
 @media (min-width: 1417px){
 
-  .wg-diff .shiny-input-container:not(.shiny-input-container-inline), .rg-diff .shiny-input-container:not(.shiny-input-container-inline)  {
+  .wg-diff .shiny-input-container:not(.shiny-input-container-inline), 
+  .rg-diff .shiny-input-container:not(.shiny-input-container-inline)  {
     min-width: 200px;
     width: 100% !important;
   }
@@ -1992,7 +2128,7 @@ margin: auto;
 }
 
 .user-page-btn li a p{
-  margin: 0 !important;
+  display: none;
 }
 
 @media ( max-width: 1250px )
@@ -2480,7 +2616,7 @@ background-color: #fff !important;
 /*
 .dark-mode  .dataTables_length label{
   color: #fff !important;
-}
+
 
 .dark-mode .dataTables_length select{
   color: #313131 !important;
@@ -2500,15 +2636,20 @@ table.dataTable{
   font-weight: bold;
 }
 
+
 .patient-diff .odd td:nth-child(1),
 .patient-diff .even td:nth-child(1), 
 .patient-diff .odd td:nth-child(4),
-.patient-diff .even td:nth-child(4){
+.patient-diff .even td:nth-child(4),
+#ComprobarDatos_w .odd td:first-child,
+#ComprobarDatos_w .even td:first-child{
   font-weight: bold;
 }
 
 #simulaciones_rep table.dataTable.display > tbody > tr.selected:hover > *,
-#simulaciones_rep table.dataTable.display > tbody > tr.selected > * {
+#simulaciones_rep table.dataTable.display > tbody > tr.selected > * ,
+#ComprobarDatos_w table.dataTable.display > tbody > tr.selected:hover > *,
+#ComprobarDatos_w table.dataTable.display > tbody > tr.selected > * {
   box-shadow: inset 0 0 0 9999px #005440 !important;
 }
 
@@ -2536,8 +2677,8 @@ text-align: right;
 
 #simulaciones_wimp .dataTable tr th:nth-child(3).sorting::before,
 #simulaciones_wimp .dataTable tr th:nth-child(3).sorting::after,
-#simulaciones_rep .dataTable tr th:nth-child(2).sorting::before,
-#simulaciones_rep .dataTable tr th:nth-child(2).sorting::after{
+#simulaciones_rep .dataTable tr th:nth-child(3).sorting::before,
+#simulaciones_rep .dataTable tr th:nth-child(3).sorting::after{
 
   display: none;
 
@@ -2575,7 +2716,9 @@ text-align: right;
 .patient-diff .odd td:nth-child(4)::before,
 .patient-diff .even td:nth-child(4)::before,
 #patientSimulations .odd td:nth-child(1)::before,
-#patientSimulations .even td:nth-child(1)::before{
+#patientSimulations .even td:nth-child(1)::before,
+#ComprobarDatos_w .odd td:nth-child(1)::before,
+#ComprobarDatos_w .even td:nth-child(1)::before{
   display: inline-block;
   visibility: visible !important;
   width: 1rem;
@@ -2586,6 +2729,8 @@ text-align: right;
   font-weight: 900;
   margin-right: .2rem;
 }
+
+
 
 .patient-diff .odd td:nth-child(5), .patient-diff .even td:nth-child(5), .patient-diff .odd td:nth-child(6), .patient-diff .even td:nth-child(6){
   line-break: auto;
@@ -2600,7 +2745,10 @@ text-align: right;
   display: none !important; 
 }
 
-.patients-table tr, #simulaciones_wimp tr, #simulaciones_rep tr{
+.patients-table tr, 
+#simulaciones_wimp tr, 
+#simulaciones_rep tr, 
+#ComprobarDatos_w tr{
   cursor: pointer;
 }
 

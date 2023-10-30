@@ -1,4 +1,9 @@
 repgrid_analisis_server <- function(input, output, session) {
+  
+  shinyjs::hide("context-rg-analysis")
+
+  onevent("click", "tooltip-rg-analysis", shinyjs::show("context-rg-analysis"))
+  onevent("click", "exit-rg-analysis-tooltip", shinyjs::hide("context-rg-analysis"))
 
   observeEvent(input$importar_page_r, {
     # Navega a la página de creación de un nuevo análisis de rejilla
