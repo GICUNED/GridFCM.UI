@@ -1,15 +1,7 @@
 patient_server <- function(input, output, session){
     rol <- session$userData$rol
     con <- establishDBConnection()
-    query <- sprintf("SELECT COUNT(DISTINCT p.id) as num FROM paciente as p, psicologo_paciente as pp 
-                            WHERE pp.fk_paciente = p.id and pp.fk_psicologo = %d", 1) # de momento
-    num <- DBI::dbGetQuery(con, query)
-    DBI::dbDisconnect(con)
-    if(!is.null(rol) && rol == "usuario_gratis"){
-        if(num$num >= 1){
-            shinyjs::disable("addPatient")
-        }
-    }
+    
 
 
     user_data <- reactiveValues(users = NULL, selected_user_id = NULL)
@@ -29,6 +21,7 @@ patient_server <- function(input, output, session){
     shinyjs::hide("excel-page")
 
     renderizarTabla <- function(){
+        
         output$user_table <- renderDT({
             con <- establishDBConnection()
             query <- sprintf("SELECT p.nombre, p.edad, p.genero, p.fecha_registro, p.diagnostico, p.anotaciones FROM paciente as p, psicologo_paciente as pp WHERE pp.fk_paciente = p.id and pp.fk_psicologo = %d", 1) # de momento
@@ -47,6 +40,19 @@ patient_server <- function(input, output, session){
                 options = list(order = list(3, 'asc')),
                 colnames = c(i18n$t("Nombre"), i18n$t("Edad"), i18n$t("Género"), i18n$t("Fecha de Registro"), i18n$t("Problema"), i18n$t("Anotaciones")))
         })
+        con <- establishDBConnection()
+        query <- sprintf("SELECT COUNT(DISTINCT p.id) as num FROM paciente as p, psicologo_paciente as pp 
+                            WHERE pp.fk_paciente = p.id and pp.fk_psicologo = %d", 1) # de momento
+        num <- DBI::dbGetQuery(con, query)
+        DBI::dbDisconnect(con)
+        if(!is.null(rol) && rol == "usuario_gratis"){
+            if(num$num >= 2){
+                shinyjs::disable("addPatient")
+            }
+            else{
+                shinyjs::enable("addPatient")
+            }
+        }
     }
 
 

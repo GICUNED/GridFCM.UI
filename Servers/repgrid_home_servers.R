@@ -1,4 +1,9 @@
 repgrid_home_server <- function(input, output, session) {
+  rol <- session$userData$rol
+  if(!is.null(rol) && rol == "usuario_gratis"){
+    shinyjs::disable("guardarComo")
+  }
+
   #hide and show tooltips
   shinyjs::hide("context-rg-home")
 
