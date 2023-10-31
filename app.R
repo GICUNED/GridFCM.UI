@@ -112,6 +112,9 @@ httr::set_config(config(ssl_verifypeer = 0L, ssl_verifyhost = 0L))
 ruta_app <- "https://gridfcm.localhost/"
 keycloak_client_id <- "gridfcm"
 keycloak_client_secret <- Sys.getenv("KEYCLOAK_CLIENT_SECRET")
+token_url <- "https://gridfcm.localhost/keycloak/realms/Gridfcm/protocol/openid-connect/token"
+info_url <- "https://gridfcm.localhost/keycloak/realms/Gridfcm/protocol/openid-connect/userinfo"
+logout_url <- "https://gridfcm.localhost/keycloak/realms/Gridfcm/protocol/openid-connect/logout"
 
 has_auth_code <- function(params) {
   return(!is.null(params$code))
@@ -290,17 +293,44 @@ crear_usuario <- function(info){
   return(id)
 }
 
+
 server <- function(input, output, session) {
   user_name <- reactiveVal(NULL)
+  setear_cookie <- reactiveVal(NULL)
+  psicologo <- reactiveVal(NULL)
+
   message("entro en server")
   params <- parseQueryString(isolate(session$clientData$url_search))
-  token_url <- "https://gridfcm.localhost/keycloak/realms/Gridfcm/protocol/openid-connect/token"
-  info_url <- "https://gridfcm.localhost/keycloak/realms/Gridfcm/protocol/openid-connect/userinfo"
-  logout_url <- "https://gridfcm.localhost/keycloak/realms/Gridfcm/protocol/openid-connect/logout"
+
+  observeEvent(get_cookie("token_cookie"), {
+    message("obtengo la cookie:")
+    token <- get_cookie("token_cookie")
+    con <- establishDBConnection()
+    usuario <- DBI::dbGetQuery(con, sprintf("SELECT nombre, id, token, refresh_token FROM psicologo WHERE token='%s'", token)) # de momento
+    message(usuario$nombre, ", id: ", usuario$id)
+    psicologo(usuario)
+    DBI::dbDisconnect(con)
+  })
+
+  observe(
+    if(!is.null(setear_cookie())){
+      if(setear_cookie() == TRUE){
+        set_cookie(
+          cookie_name = "token_cookie",
+          cookie_value = GLOBAL_TOKEN
+        )
+      }
+      else{
+        set_cookie(
+          cookie_name = "token_cookie",
+          cookie_value = NULL
+        )
+      }
+    }
+  )
+
   con <- establishDBConnection()
-  tokendb <- DBI::dbGetQuery(con, sprintf("SELECT nombre, token, refresh_token FROM psicologo WHERE id=%d", 1)) # de momento
-  message(tokendb$token)
-  if (is.na(tokendb$token)) {
+  if (is.null(psicologo())) {
     # limitar funciones
     if(!has_auth_code(params)){
       message("no ha iniciado sesion")
@@ -322,19 +352,22 @@ server <- function(input, output, session) {
       if(is.null(token_data$error)){
         # Acceder al access_token
         GLOBAL_TOKEN <- token_data$access_token
+        setear_cookie(TRUE)
         GLOBAL_REFRESH_TOKEN <- token_data$refresh_token
-        query <- sprintf("UPDATE PSICOLOGO SET token = '%s' WHERE id=%d", GLOBAL_TOKEN, 1) # de momento 1
-        DBI::dbExecute(con, query)
-        query2 <- sprintf("UPDATE PSICOLOGO SET refresh_token = '%s' WHERE id=%d", GLOBAL_REFRESH_TOKEN, 1) # de momento 1
-        DBI::dbExecute(con, query2)
-        message("Token obtenido e insertado en la bd")
-
         # info general del usuario
         resp_info <- httr::GET(url = info_url, add_headers("Authorization" = paste("Bearer", GLOBAL_TOKEN, sep = " ")))
         id <- crear_usuario(resp_info)
         session$userData$id_psicologo <- id
+
+        query <- sprintf("UPDATE PSICOLOGO SET token = '%s' WHERE id=%d", GLOBAL_TOKEN, id) # de momento 1
+        DBI::dbExecute(con, query)
+        query2 <- sprintf("UPDATE PSICOLOGO SET refresh_token = '%s' WHERE id=%d", GLOBAL_REFRESH_TOKEN, id) # de momento 1
+        DBI::dbExecute(con, query2)
+        message("Token obtenido e insertado en la bd")
+
+        
         shinyjs::show("logout_btn")
-        user_name(tokendb$nombre)
+        #user_name(user$nombre)
       }
       else{
         message(token_data$error)
@@ -343,8 +376,9 @@ server <- function(input, output, session) {
     }
   }
   else{
-    user_name(tokendb$nombre)
-    resp_info <- httr::GET(url = info_url, add_headers("Authorization" = paste("Bearer", tokendb$token, sep = " ")))
+    user <- psicologo()
+    user_name(user$nombre)
+    resp_info <- httr::GET(url = info_url, add_headers("Authorization" = paste("Bearer", user$token, sep = " ")))
     message("respuesta del get info user")
     message(resp_info)
     error <- httr::http_status(resp_info)
@@ -358,7 +392,7 @@ server <- function(input, output, session) {
         client_id = keycloak_client_id,
         client_secret = keycloak_client_secret,
         redirect_uri = ruta_app,
-        refresh_token = tokendb$refresh_token,
+        refresh_token = user$refresh_token,
         scope = "openid",
         grant_type = "refresh_token"
       )
@@ -370,7 +404,8 @@ server <- function(input, output, session) {
       # Acceder al access_token
       if(!is.null(refresh_token_data$error)){
         message("Imposible refrescar el token")
-        DBI::dbExecute(con, sprintf("update psicologo set token=NULL, refresh_token=NULL where id=%d", 1)) # de momento 1
+        DBI::dbExecute(con, sprintf("update psicologo set token=NULL, refresh_token=NULL where id=%d", user$id)) # de momento 1
+        setear_cookie(FALSE)
         shinyjs::hide("logout_btn")
         user_name(NULL)
         runjs("window.location.href = '/#!/';")
@@ -378,7 +413,7 @@ server <- function(input, output, session) {
       }
       else{
         r <- refresh_token_data$access_token
-        DBI::dbExecute(con, sprintf("update psicologo set token='%s' where id=%d", r, 1))
+        DBI::dbExecute(con, sprintf("update psicologo set token='%s' where id=%d", r, user$id))
         message("token actualizado")
         shinyjs::show("logout_btn")
       }
@@ -393,26 +428,27 @@ server <- function(input, output, session) {
       rol <- gestionar_rol(info$roles)
       session$userData$rol <- rol
       message("rol> ", rol)
-      DBI::dbExecute(con, sprintf("update psicologo set rol='%s' where id=%d", rol, 1)) # de momento 1
+      DBI::dbExecute(con, sprintf("update psicologo set rol='%s' where id=%d", rol, user$id)) # de momento 1
     }
   }
   DBI::dbDisconnect(con)
 
   shinyjs::onclick("logout_btn", {
+    user <- psicologo()
     con <- establishDBConnection()
-    token <- DBI::dbGetQuery(con, sprintf("SELECT token FROM psicologo WHERE id=%d", 1)) # de momento 1
-    refresh_token <- DBI::dbGetQuery(con, sprintf("SELECT refresh_token FROM psicologo WHERE id=%d", 1)) # de momento 1
+    token <- DBI::dbGetQuery(con, sprintf("SELECT token FROM psicologo WHERE id=%d", user$id)) # de momento 1
+    refresh_token <- DBI::dbGetQuery(con, sprintf("SELECT refresh_token FROM psicologo WHERE id=%d", user$id)) # de momento 1
     params <- list(
       client_id = keycloak_client_id, 
       refresh_token = refresh_token,
       client_secret = keycloak_client_secret,
       redirect_uri = ruta_app
     )
-
+    setear_cookie(FALSE)
     resp <- httr::POST(url = logout_url, add_headers("Content-Type" = "application/x-www-form-urlencoded", "Authorization" = paste("Bearer", token, sep = " ")), 
                       body = params, encode="form")
     message(resp)
-    DBI::dbExecute(con, sprintf("update psicologo set token=NULL, refresh_token=NULL where id=%d", 1)) # de momento 1
+    DBI::dbExecute(con, sprintf("update psicologo set token=NULL, refresh_token=NULL where id=%d", user$id)) # de momento 1
     user_name(NULL)
     runjs("window.location.href = '/#!/';")
     session$reload()
