@@ -24,6 +24,7 @@ library(visNetwork)
 library(dplyr)
 library(glue)
 library(httr)
+library(cookies)
 knitr::knit_hooks$set(webgl = hook_webgl)
 
 
@@ -127,108 +128,110 @@ make_authorization_url <- function() {
 
 link <- make_authorization_url()
 
-ui <- dashboardPage(
-  title = "PsychLab UNED | GridFCM",
-  freshTheme = theme,
-  dashboardHeader(
-    tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "customization.css")),
-    tags$head(tags$link(rel = "icon", type = "image/x-icon", href = 'favicon.png')),
-    title = tags$a(href='https://www.uned.es/', target ="_blank", class = "logocontainer",
-    tags$img(height='56.9',width='', class = "logoimg")),
-    div(id="user-page", class = "nav-item user-page user-page-btn" , menuItem(textOutput("user_name"), href = link, icon = icon("house-user"), newTab = FALSE)),
-    div(id="patientIndicator", class = "ml-auto patient-active-label", span(class = "icon-paciente"), htmlOutput("paciente_activo"))
-  ),
-
-  dashboardSidebar(
-    sidebarMenu(
-        id = "sidebar_principal",
-        div(id="incio-page", class = "nav-item incio-page", menuItem(i18n$t("Inicio"), href = route_link("/"), icon = icon("home"), newTab = FALSE)),
-        div(id="patient-page", class = "nav-item patient-page hidden-div", menuItem(i18n$t("Pacientes"), href = route_link("patient"), icon = icon("users"), newTab = FALSE)),
-        div(id="import-page", class = "nav-item import-page", menuItem(i18n$t("Importar"), href = route_link("import"), icon = icon("file-arrow-up"), newTab = FALSE)),
-        div(id="excel-page", class = "nav-item excel-page submenu-item", menuItem(i18n$t("Ficheros"), href = route_link("excel"), icon = icon("file-excel"), newTab = FALSE)),
-        div(id="form-page", class = "nav-item form-page submenu-item", menuItem(i18n$t("Formularios"), href = route_link("form"), icon = icon("rectangle-list"), newTab = FALSE)),
-        div(id="repgrid-page", class = "nav-item repg-page hidden-div", menuItem("RepGrid", href = route_link("repgrid"), icon = icon("magnifying-glass-chart"), newTab = FALSE)),
-        div(id = "wimpgrid-page", class = "nav-item wimpg-page hidden-div", menuItem("WimpGrid", href = route_link("wimpgrid"), icon = icon("border-none"), newTab = FALSE)),
-        div(id="suggestion-page", class = "nav-item suggestion-page hidden-div", menuItem(i18n$t("Sugerencias"), href = route_link("suggestion"), icon = icon("comments"), newTab = FALSE)),
-        #div(class = 'language-selector',selectInput('selected_language',i18n$t("Idioma"), choices = i18n$get_languages(),selected = i18n$get_translation_language())),
-        div(class = 'language-selector',radioGroupButtons('selected_language',i18n$t("Idioma"), choices = i18n$get_languages(), selected = i18n$get_translation_language(), width='100%', checkIcon = list())),
-        actionButton('logout_btn',i18n$t("Cerrar sesión"), width='100%', status="danger", style="display: none;")
-      )
+ui <- add_cookie_handlers(
+  dashboardPage(
+    title = "PsychLab UNED | GridFCM",
+    freshTheme = theme,
+    dashboardHeader(
+      tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "customization.css")),
+      tags$head(tags$link(rel = "icon", type = "image/x-icon", href = 'favicon.png')),
+      title = tags$a(href='https://www.uned.es/', target ="_blank", class = "logocontainer",
+      tags$img(height='56.9',width='', class = "logoimg")),
+      div(id="user-page", class = "nav-item user-page user-page-btn" , menuItem(textOutput("user_name"), href = link, icon = icon("house-user"), newTab = FALSE)),
+      div(id="patientIndicator", class = "ml-auto patient-active-label", span(class = "icon-paciente"), htmlOutput("paciente_activo"))
     ),
 
-
-  dashboardBody(
-    usei18n(translator = i18n),
-    tags$script(src = "activescript.js"),
-    useShinyjs(),
-
-    router_ui(
-      default = 
-      route(path = "/",
-            ui = inicio_ui),
-      route(path = "import",
-            ui = import_ui),
-      route(path = "patient",
-            ui = patient_ui),
-      route(path = "excel",
-            ui = import_excel_ui),
-      route(path = "form",
-            ui = form_ui), 
-      route(path = "repgrid",
-            ui = repgrid_ui),
-      route(path = "wimpgrid",
-            ui = wimpgrid_analysis_ui),
-      route(path = "suggestion",
-            ui = suggestion_ui),
-
-      page_404 = page404(shiny::tags$div(
-        h1("Error 404", class = "pagetitlecustom"),
-        h3("Página no encontrada.", class = "pagesubtitlecustom", status = 'danger'),
-        img(
-          src = 'LogoUNED_error404.svg',
-          height = '300',
-          width = '',
-          class = "logoimg404"
-        ),
-
-
-        column(
-          12,
-          class = "d-flex mb-4 justify-content-center",
-          actionButton(
-            "volver_a_inicio",
-            "Volver a Inicio",
-            status = 'danger',
-            icon = icon("arrow-left"),
-            class = "mt-3"
-          )
+    dashboardSidebar(
+      sidebarMenu(
+          id = "sidebar_principal",
+          div(id="incio-page", class = "nav-item incio-page", menuItem(i18n$t("Inicio"), href = route_link("/"), icon = icon("home"), newTab = FALSE)),
+          div(id="patient-page", class = "nav-item patient-page hidden-div", menuItem(i18n$t("Pacientes"), href = route_link("patient"), icon = icon("users"), newTab = FALSE)),
+          div(id="import-page", class = "nav-item import-page", menuItem(i18n$t("Importar"), href = route_link("import"), icon = icon("file-arrow-up"), newTab = FALSE)),
+          div(id="excel-page", class = "nav-item excel-page submenu-item", menuItem(i18n$t("Ficheros"), href = route_link("excel"), icon = icon("file-excel"), newTab = FALSE)),
+          div(id="form-page", class = "nav-item form-page submenu-item", menuItem(i18n$t("Formularios"), href = route_link("form"), icon = icon("rectangle-list"), newTab = FALSE)),
+          div(id="repgrid-page", class = "nav-item repg-page hidden-div", menuItem("RepGrid", href = route_link("repgrid"), icon = icon("magnifying-glass-chart"), newTab = FALSE)),
+          div(id = "wimpgrid-page", class = "nav-item wimpg-page hidden-div", menuItem("WimpGrid", href = route_link("wimpgrid"), icon = icon("border-none"), newTab = FALSE)),
+          div(id="suggestion-page", class = "nav-item suggestion-page hidden-div", menuItem(i18n$t("Sugerencias"), href = route_link("suggestion"), icon = icon("comments"), newTab = FALSE)),
+          #div(class = 'language-selector',selectInput('selected_language',i18n$t("Idioma"), choices = i18n$get_languages(),selected = i18n$get_translation_language())),
+          div(class = 'language-selector',radioGroupButtons('selected_language',i18n$t("Idioma"), choices = i18n$get_languages(), selected = i18n$get_translation_language(), width='100%', checkIcon = list())),
+          actionButton('logout_btn',i18n$t("Cerrar sesión"), width='100%', status="danger", style="display: none;")
         )
-      ))
-    ),
+      ),
 
-    add_busy_spinner(
-      spin = "double-bounce",
-      color = "#13906d",
-      timeout = 100,
-      position = "top-left",
-      onstart = TRUE,
-      margins = c(8, 10),
-      height = "40px",
-      width = "40px"
+
+    dashboardBody(
+      usei18n(translator = i18n),
+      tags$script(src = "activescript.js"),
+      useShinyjs(),
+
+      router_ui(
+        default = 
+        route(path = "/",
+              ui = inicio_ui),
+        route(path = "import",
+              ui = import_ui),
+        route(path = "patient",
+              ui = patient_ui),
+        route(path = "excel",
+              ui = import_excel_ui),
+        route(path = "form",
+              ui = form_ui), 
+        route(path = "repgrid",
+              ui = repgrid_ui),
+        route(path = "wimpgrid",
+              ui = wimpgrid_analysis_ui),
+        route(path = "suggestion",
+              ui = suggestion_ui),
+
+        page_404 = page404(shiny::tags$div(
+          h1("Error 404", class = "pagetitlecustom"),
+          h3("Página no encontrada.", class = "pagesubtitlecustom", status = 'danger'),
+          img(
+            src = 'LogoUNED_error404.svg',
+            height = '300',
+            width = '',
+            class = "logoimg404"
+          ),
+
+
+          column(
+            12,
+            class = "d-flex mb-4 justify-content-center",
+            actionButton(
+              "volver_a_inicio",
+              "Volver a Inicio",
+              status = 'danger',
+              icon = icon("arrow-left"),
+              class = "mt-3"
+            )
+          )
+        ))
+      ),
+
+      add_busy_spinner(
+        spin = "double-bounce",
+        color = "#13906d",
+        timeout = 100,
+        position = "top-left",
+        onstart = TRUE,
+        margins = c(8, 10),
+        height = "40px",
+        width = "40px"
+      )
+
+      #add_busy_spinner(
+        #spin = "fading-circle",
+        #color = "#13906d",
+        #timeout = 100,
+        #position = "full-page",
+        #onstart = TRUE,
+        #margins = c(8, 10),
+        #height = "50px",
+        #width = "50px"
+      #)
+
     )
-
-     #add_busy_spinner(
-      #spin = "fading-circle",
-      #color = "#13906d",
-      #timeout = 100,
-      #position = "full-page",
-      #onstart = TRUE,
-      #margins = c(8, 10),
-      #height = "50px",
-      #width = "50px"
-    #)
-
-  ),
+  )
 )
 
 obtener_id_psicologo <- function(info){
@@ -483,13 +486,14 @@ server <- function(input, output, session) {
 
 
 
+
   router_server()
   inicio_server(input, output, session)
   userHome_server(input, output, session)
   import_server(input, output, session)
   #import_excel_server(input, output, session)
   form_server(input, output, session)
-  #patient_server(input, output, session)
+  patient_server(input, output, session)
   repgrid_server(input, output, session)
   repgrid_home_server(input, output, session)
   repgrid_analisis_server(input, output, session)

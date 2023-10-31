@@ -1,6 +1,6 @@
 patient_server <- function(input, output, session){
     rol <- session$userData$rol
-    #id_psicologo <- session$userData$id_psicologo
+    id_psicologo <- session$userData$id_psicologo
     if(!is.null(rol)){
         if(rol == "usuario_demo"){
             shinyjs::disable("addPatient")
@@ -40,7 +40,7 @@ patient_server <- function(input, output, session){
         output$user_table <- renderDT({
             con <- establishDBConnection()
             query <- sprintf("SELECT p.nombre, p.edad, p.genero, p.fecha_registro, p.diagnostico, p.anotaciones FROM paciente as p, psicologo_paciente as pp 
-                                WHERE pp.fk_paciente = p.id and pp.fk_psicologo = %d", 1) # de momento
+                                WHERE pp.fk_paciente = p.id and pp.fk_psicologo = %d", id_psicologo) # de momento
             users <- DBI::dbGetQuery(con, query)
             DBI::dbDisconnect(con)
             # Convertir género en factor
@@ -68,7 +68,9 @@ patient_server <- function(input, output, session){
         }
     })
 
-    renderizarTabla()
+    if(!is.null(id_psicologo)){
+        renderizarTabla()
+    }
     
     observeEvent(input$addPatient, {
         shinyjs::show("patientForm")

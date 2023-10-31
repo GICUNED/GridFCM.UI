@@ -45,7 +45,8 @@ Imports:
     shinyWidgets (>= 0.7.6),
     toastui (>= 0.3.0),
     visNetwork (>= 2.1.2),
-    writexl (>= 1.4.2)
+    writexl (>= 1.4.2),
+    cookies (>= 0.2.2)
 
     
 
