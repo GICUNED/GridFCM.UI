@@ -7,12 +7,14 @@ import_excel_server <- function(input, output, session) {
   num_rep <- DBI::dbGetQuery(con, query2)
   DBI::dbDisconnect(con)
   if(!is.null(rol) && rol == "usuario_gratis"){
-    shinyjs::disable("importar_formulario")
     if(num_rep$num >= 1){
       shinyjs::disable("importar_datos")
     }
     if(num_wimp$num >= 1){
       shinyjs::disable("importar_datos_w")
+    }
+    if((num_rep$num + num_wimp$num) >= 2){
+      shinyjs::disable("importar_formulario")
     }
   }
 
@@ -72,6 +74,12 @@ import_excel_server <- function(input, output, session) {
       system(paste0("rm ",input$archivo_repgrid$datapath))
       file.remove(ruta_destino_rep)
       if (!is.null(datos_repgrid)) {
+        # si se ha importado bien y es usuario demo lo borro de la bd
+        if(rol == "usuario_demo"){
+          con <- establishDBConnection()
+          DBI::dbExecute(con, sprintf("DELETE FROM repgrid_xlsx where fk_paciente = %d", id_paciente))
+          DBI::dbDisconnect(con)
+        }
         # Solo archivo RepGrid cargado, navegar a RepGrid Home
         repgrid_home_server(input,output,session)
         runjs("window.location.href = '/#!/repgrid';")
@@ -135,6 +143,11 @@ import_excel_server <- function(input, output, session) {
       system(paste0("rm ",input$archivo_wimpgrid$datapath))
       file.remove(ruta_destino_wimp)
       if (!is.null(datos_wimpgrid)) {
+        if(rol == "usuario_demo"){
+          con <- establishDBConnection()
+          DBI::dbExecute(con, sprintf("DELETE FROM wimpgrid_xlsx where fk_paciente = %d", id_paciente))
+          DBI::dbDisconnect(con)
+        }
         # Solo archivo WimpGrid cargado, navegar a WimpGrid Home
         wimpgrid_analysis_server(input,output,session)
         runjs("window.location.href = '/#!/wimpgrid';")

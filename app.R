@@ -27,6 +27,7 @@ library(httr)
 knitr::knit_hooks$set(webgl = hook_webgl)
 
 
+
 source("global.R")
 # GRID
 source("R/GraphFunctions.R")
@@ -137,20 +138,17 @@ ui <- dashboardPage(
     div(id="user-page", class = "nav-item user-page user-page-btn" , menuItem(textOutput("user_name"), href = link, icon = icon("house-user"), newTab = FALSE)),
     div(id="patientIndicator", class = "ml-auto patient-active-label", span(class = "icon-paciente"), htmlOutput("paciente_activo"))
   ),
-  
-
-
 
   dashboardSidebar(
     sidebarMenu(
         id = "sidebar_principal",
         div(id="incio-page", class = "nav-item incio-page", menuItem(i18n$t("Inicio"), href = route_link("/"), icon = icon("home"), newTab = FALSE)),
-        div(id="patient-page", class = "nav-item patient-page", menuItem(i18n$t("Pacientes"), href = route_link("patient"), icon = icon("users"), newTab = FALSE)),
+        div(id="patient-page", class = "nav-item patient-page hidden-div", menuItem(i18n$t("Pacientes"), href = route_link("patient"), icon = icon("users"), newTab = FALSE)),
         div(id="import-page", class = "nav-item import-page", menuItem(i18n$t("Importar"), href = route_link("import"), icon = icon("file-arrow-up"), newTab = FALSE)),
         div(id="excel-page", class = "nav-item excel-page submenu-item", menuItem(i18n$t("Ficheros"), href = route_link("excel"), icon = icon("file-excel"), newTab = FALSE)),
         div(id="form-page", class = "nav-item form-page submenu-item", menuItem(i18n$t("Formularios"), href = route_link("form"), icon = icon("rectangle-list"), newTab = FALSE)),
-        div(id="repgrid-page", class = "nav-item repg-page", menuItem("RepGrid", href = route_link("repgrid"), icon = icon("magnifying-glass-chart"), newTab = FALSE)),
-        div(id = "wimpgrid-page", class = "nav-item wimpg-page", menuItem("WimpGrid", href = route_link("wimpgrid"), icon = icon("border-none"), newTab = FALSE)),
+        div(id="repgrid-page", class = "nav-item repg-page hidden-div", menuItem("RepGrid", href = route_link("repgrid"), icon = icon("magnifying-glass-chart"), newTab = FALSE)),
+        div(id = "wimpgrid-page", class = "nav-item wimpg-page hidden-div", menuItem("WimpGrid", href = route_link("wimpgrid"), icon = icon("border-none"), newTab = FALSE)),
         div(id="suggestion-page", class = "nav-item suggestion-page hidden-div", menuItem(i18n$t("Sugerencias"), href = route_link("suggestion"), icon = icon("comments"), newTab = FALSE)),
         #div(class = 'language-selector',selectInput('selected_language',i18n$t("Idioma"), choices = i18n$get_languages(),selected = i18n$get_translation_language())),
         div(class = 'language-selector',radioGroupButtons('selected_language',i18n$t("Idioma"), choices = i18n$get_languages(), selected = i18n$get_translation_language(), width='100%', checkIcon = list())),
@@ -247,6 +245,10 @@ gestionar_rol <- function(roles){
   }
   if(usuario_gratis || usuario_ilimitado){
     shinyjs::show("suggestion-page")
+    shinyjs::show("patient-page")
+    shinyjs::show("repgrid-page")
+    shinyjs::show("wimpgrid-page")
+    shinyjs::hide("welcome_box")
     if(usuario_gratis && !usuario_ilimitado){
       return("usuario_gratis")
     }
@@ -263,7 +265,6 @@ gestionar_rol <- function(roles){
 
 crear_usuario <- function(info){
   con <- establishDBConnection()
-  message(info)
   info <- (httr::content(info, "text"))
   info <- jsonlite::fromJSON(info)
   name <- info$name
@@ -424,7 +425,6 @@ server <- function(input, output, session) {
     }
   )
 
-
   i18n_r <- reactive({
     i18n
   })
@@ -482,13 +482,14 @@ server <- function(input, output, session) {
   })
 
 
+
   router_server()
   inicio_server(input, output, session)
   userHome_server(input, output, session)
   import_server(input, output, session)
   #import_excel_server(input, output, session)
   form_server(input, output, session)
-  patient_server(input, output, session)
+  #patient_server(input, output, session)
   repgrid_server(input, output, session)
   repgrid_home_server(input, output, session)
   repgrid_analisis_server(input, output, session)

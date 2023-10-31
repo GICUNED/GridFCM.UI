@@ -1,7 +1,7 @@
   
-  inicio_ui <- fluidPage(class ="custom-margins",
+inicio_ui <- fluidPage(class ="custom-margins",
 
-
+  useShinyjs(),
   shiny.i18n::usei18n(i18n),
 
   fluidRow( class = ("flex-container-titles mt-2 custom-margins-sm"),

@@ -1,9 +1,25 @@
 patient_server <- function(input, output, session){
     rol <- session$userData$rol
-    con <- establishDBConnection()
+    #id_psicologo <- session$userData$id_psicologo
+    if(!is.null(rol)){
+        if(rol == "usuario_demo"){
+            shinyjs::disable("addPatient")
+        }
+        if(rol == "usuario_gratis"){
+            con <- establishDBConnection()
+            query <- sprintf("SELECT COUNT(DISTINCT p.id) as num FROM paciente as p, psicologo_paciente as pp 
+                                WHERE pp.fk_paciente = p.id and pp.fk_psicologo = %d", 1) # de momento
+            num <- DBI::dbGetQuery(con, query)
+            DBI::dbDisconnect(con)
+            if(num$num >= 2){
+                shinyjs::disable("addPatient")
+            }
+            else{
+                shinyjs::enable("addPatient")
+            }
+        }
+    }
     
-
-
     user_data <- reactiveValues(users = NULL, selected_user_id = NULL)
     repgrid_data_DB <- reactiveValues(fechas = NULL)
     wimpgrid_data_DB <- reactiveValues(fechas = NULL)
@@ -21,10 +37,10 @@ patient_server <- function(input, output, session){
     shinyjs::hide("excel-page")
 
     renderizarTabla <- function(){
-        
         output$user_table <- renderDT({
             con <- establishDBConnection()
-            query <- sprintf("SELECT p.nombre, p.edad, p.genero, p.fecha_registro, p.diagnostico, p.anotaciones FROM paciente as p, psicologo_paciente as pp WHERE pp.fk_paciente = p.id and pp.fk_psicologo = %d", 1) # de momento
+            query <- sprintf("SELECT p.nombre, p.edad, p.genero, p.fecha_registro, p.diagnostico, p.anotaciones FROM paciente as p, psicologo_paciente as pp 
+                                WHERE pp.fk_paciente = p.id and pp.fk_psicologo = %d", 1) # de momento
             users <- DBI::dbGetQuery(con, query)
             DBI::dbDisconnect(con)
             # Convertir género en factor
@@ -33,26 +49,12 @@ patient_server <- function(input, output, session){
             # Convertir fecha_registro a POSIXct y formatear
             fecha_hora <- as.POSIXct(users$fecha_registro, origin = "1970-01-01")
             users$fecha_registro <- format(fecha_hora, format = "%Y-%m-%d %H:%M:%S")
-            
             user_data$users <- users # variable reactiva
             df <- data.frame(n=users$nombre, e=users$edad, g=users$genero, f=users$fecha_registro, d=users$diagnostico, a=users$anotaciones)
             DT::datatable(df, selection = 'single', rownames = FALSE,
                 options = list(order = list(3, 'asc')),
                 colnames = c(i18n$t("Nombre"), i18n$t("Edad"), i18n$t("Género"), i18n$t("Fecha de Registro"), i18n$t("Problema"), i18n$t("Anotaciones")))
         })
-        con <- establishDBConnection()
-        query <- sprintf("SELECT COUNT(DISTINCT p.id) as num FROM paciente as p, psicologo_paciente as pp 
-                            WHERE pp.fk_paciente = p.id and pp.fk_psicologo = %d", 1) # de momento
-        num <- DBI::dbGetQuery(con, query)
-        DBI::dbDisconnect(con)
-        if(!is.null(rol) && rol == "usuario_gratis"){
-            if(num$num >= 2){
-                shinyjs::disable("addPatient")
-            }
-            else{
-                shinyjs::enable("addPatient")
-            }
-        }
     }
 
 
@@ -90,12 +92,15 @@ patient_server <- function(input, output, session){
         selected_row <- input$user_table_rows_selected
     
         if (!is.null(selected_row)) {
-            shinyjs::enable("borrarPaciente")
-            shinyjs::enable("simulacionesDisponibles")
-            shinyjs::enable("editarPaciente")
+            if(rol != "usuario_demo"){
+                shinyjs::enable("borrarPaciente")
+                shinyjs::enable("simulacionesDisponibles")
+                shinyjs::enable("editarPaciente")
+                shinyjs::show("simulaciones_wimp")
+                shinyjs::show("patientSimulations")
+                shinyjs::show("simulaciones_rep")
+            }
             shinyjs::enable("importarGridPaciente")
-            #shinyjs::disable("borrarSimulacion")
-
             #ocultar simulaciones por si se habían desplegado
             delay(200, shinyjs::show("patientIndicator"))
             shinyjs::hide("simulaciones_rep")
@@ -113,20 +118,15 @@ patient_server <- function(input, output, session){
             query <- sprintf("SELECT id from PACIENTE WHERE edad=%d and nombre='%s' and fecha_registro='%s'", age, name, date)
             selected_user_id <- as.integer(DBI::dbGetQuery(con, query))
             user_data$selected_user_id <- selected_user_id # reactiva
-            
             pacientename <- DBI::dbGetQuery(con, sprintf("SELECT nombre from paciente WHERE id = %d", user_data$selected_user_id))
             nombrePaciente(pacientename)
             DBI::dbDisconnect(con)
-            
-            shinyjs::show("simulaciones_wimp")
-            shinyjs::show("patientSimulations")
-            shinyjs::show("simulaciones_rep")
 
             cargar_fechas_wimpgrid()
             cargar_fechas()
             message(paste("id del paciente: ", selected_user_id))     
             message(paste("nombre: ", name))
-            session$userData$id_paciente <- selected_user_id       
+            session$userData$id_paciente <- selected_user_id   
             
         } else {
             shinyjs::hide("simulationIndicatorRG")
@@ -140,7 +140,7 @@ patient_server <- function(input, output, session){
             window.scrollTo(0, document.body.scrollHeight);
         ")
 
-  })
+    })
 
     cargar_fechas <- function(){
         numero_aleatorio <- sample(1:1000, 1)
@@ -152,7 +152,6 @@ patient_server <- function(input, output, session){
             fecha_hora <- repgridDB$fecha_registro#as.POSIXct(repgridDB$fecha_registro, origin = "1970-01-01", tz = "Europe/Madrid")
             fechasRep <- format(fecha_hora, format = "%Y-%m-%d %H:%M:%S")
             repgrid_data_DB$fechas <- fechasRep
-
             delay(200, shinyjs::show("simulationIndicatorRG"))
             df <- data.frame(Fechas = repgrid_data_DB$fechas, Anotaciones = repgridDB$comentarios)
             output$simulaciones_rep <- renderDT({
@@ -580,7 +579,7 @@ patient_server <- function(input, output, session){
         
     })
 
-    observeEvent(input$guardarAddPatient,  {
+    shinyjs::onclick("guardarAddPatient",  {
         con <- establishDBConnection()
         nombre <- input$nombre
         edad <- input$edad

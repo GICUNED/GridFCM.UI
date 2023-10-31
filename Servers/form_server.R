@@ -1,4 +1,5 @@
 form_server <- function(input, output, session){
+    rol <- session$userData$rol
     shinyjs::hide("listadoElementos")
     shinyjs::hide("Constructos")
     shinyjs::hide("preguntasDiadas")
@@ -412,6 +413,11 @@ form_server <- function(input, output, session){
             session$userData$datos_repgrid <- datos_repgrid
             file.remove(ruta_destino_rep)
             if (!is.null(datos_repgrid)) {
+                if(rol == "usuario_demo"){
+                    con <- establishDBConnection()
+                    DBI::dbExecute(con, sprintf("DELETE FROM repgrid_xlsx where fk_paciente = %d", id_paciente))
+                    DBI::dbDisconnect(con)
+                }
                 try <- tryCatch(
                     {
                         repgrid_home_server(input,output,session)
@@ -1109,6 +1115,11 @@ form_server <- function(input, output, session){
             
             file.remove(ruta_destino_wimp)
             if (!is.null(datos_wimpgrid)) {
+                if(rol == "usuario_demo"){
+                    con <- establishDBConnection()
+                    DBI::dbExecute(con, sprintf("DELETE FROM wimpgrid_xlsx where fk_paciente = %d", id_paciente))
+                    DBI::dbDisconnect(con)
+                }
                 # Solo archivo WimpGrid cargado, navegar a WimpGrid Home
                 wimpgrid_analysis_server(input,output,session)
                 runjs("window.location.href = '/#!/wimpgrid';")

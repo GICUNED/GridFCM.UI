@@ -1,8 +1,14 @@
 wimpgrid_analysis_server <- function(input, output, session) {
 
   rol <- session$userData$rol
-  if(!is.null(rol) && rol == "usuario_gratis"){
-    shinyjs::disable("guardarComo_w")
+  if(!is.null(rol)){
+    if(rol == "usuario_gratis"){
+      shinyjs::disable("guardarComo_w")
+    }
+    if(rol == "usuario_demo"){
+      shinyjs::disable("guardarComo_w")
+      shinyjs::disable("guardarBD_w")
+    }
   }
 
 observeEvent(input$graph_selector_visualizacion, {

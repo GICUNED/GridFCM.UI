@@ -94,6 +94,21 @@ CREATE TABLE IF NOT EXISTS sugerencias (
 
 
 
--- Seeder de prueba
-INSERT INTO psicologo (nombre, email)
-VALUES ('Psicólogo de prueba', 'demo@uned.com');
+-- Seeder para el psicologo de pruebas para el usuario demo
+INSERT INTO psicologo (nombre, email, username, rol)
+VALUES ('Caso de prueba', 'prueba@uned.com', 'prueba', 'usuario_demo');
+
+-- Insertar el paciente en la tabla "paciente" con la fecha de registro específica
+WITH paciente_insert AS (
+  INSERT INTO paciente (nombre, edad, genero, fecha_registro)
+  VALUES ('Caso de prueba', 40, 'Sin definir', '2023-10-30 09:41:55')
+  RETURNING id
+)
+
+-- Insertar la relación en la tabla intermedia "psicologo_paciente" usando el "id" del psicólogo
+INSERT INTO psicologo_paciente (fk_psicologo, fk_paciente)
+SELECT p.id, pi.id
+FROM psicologo AS p
+CROSS JOIN paciente_insert AS pi
+WHERE p.email = 'prueba@uned.com' and p.username = 'prueba';
+
