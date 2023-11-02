@@ -332,17 +332,22 @@ server <- function(input, output, session) {
   observeEvent(get_cookie("token_cookie"), {
     message("obtengo la cookie:")
     token <- get_cookie("token_cookie")
-    con <- establishDBConnection()
-    usuario <- DBI::dbGetQuery(con, sprintf("SELECT nombre, id, token, refresh_token FROM psicologo WHERE token='%s'", token)) # de momento
-    message(usuario$nombre, ", id: ", usuario$id)
-    psicologo(usuario)
-    DBI::dbDisconnect(con)
+    if(token != "null"){
+      con <- establishDBConnection()
+      usuario <- DBI::dbGetQuery(con, sprintf("SELECT nombre, id, token, refresh_token FROM psicologo WHERE token='%s'", token)) # de momento
+      message(usuario$nombre, ", id: ", usuario$id)
+      psicologo(usuario)
+      DBI::dbDisconnect(con)
+    }
+    else{
+      psicologo(NULL)
+    }
   })
 
   observe({
-    p <- psicologo()
+    user <- psicologo()
     con <- establishDBConnection()
-    if(is.null(p)) {
+    if(is.null(user)) {
       # limitar funciones
       if(!has_auth_code(params)){
         message("no ha iniciado sesion")
@@ -360,7 +365,7 @@ server <- function(input, output, session) {
           resp_info <- httr::GET(url = info_url, add_headers("Authorization" = paste("Bearer", GLOBAL_TOKEN, sep = " ")))
           id <- crear_usuario(resp_info)
           session$userData$id_psicologo <- id
-
+          patient_server(input, output, session)
           query <- sprintf("UPDATE PSICOLOGO SET token = '%s' WHERE id=%d", GLOBAL_TOKEN, id) # de momento 1
           DBI::dbExecute(con, query)
           query2 <- sprintf("UPDATE PSICOLOGO SET refresh_token = '%s' WHERE id=%d", GLOBAL_REFRESH_TOKEN, id) # de momento 1
@@ -376,7 +381,6 @@ server <- function(input, output, session) {
       }
     }
     else{
-      user <- psicologo()
       user_name(user$nombre)
       resp_info <- httr::GET(url = info_url, add_headers("Authorization" = paste("Bearer", user$token, sep = " ")))
       message("respuesta del get info user")
@@ -419,6 +423,8 @@ server <- function(input, output, session) {
         info <- jsonlite::fromJSON(info)
         rol <- gestionar_rol(info$roles)
         session$userData$rol <- rol
+        session$userData$id_psicologo <- user$id
+        patient_server(input, output, session)
         message("rol> ", rol)
         DBI::dbExecute(con, sprintf("update psicologo set rol='%s' where id=%d", rol, user$id)) # de momento 1
       }
@@ -426,7 +432,7 @@ server <- function(input, output, session) {
     DBI::dbDisconnect(con)
   })
 
-  shinyjs::onclick("logout_btn", {
+  observeEvent(input$logout_btn, {
     user <- psicologo()
     con <- establishDBConnection()
     token <- DBI::dbGetQuery(con, sprintf("SELECT token FROM psicologo WHERE id=%d", user$id)) # de momento 1
@@ -437,12 +443,13 @@ server <- function(input, output, session) {
       client_secret = keycloak_client_secret,
       redirect_uri = ruta_app
     )
-    set_cookie(cookie_name = "token_cookie", cookie_value = "null")
     resp <- httr::POST(url = logout_url, add_headers("Content-Type" = "application/x-www-form-urlencoded", "Authorization" = paste("Bearer", token, sep = " ")), 
                       body = params, encode="form")
     message(resp)
     DBI::dbExecute(con, sprintf("update psicologo set token=NULL, refresh_token=NULL where id=%d", user$id)) # de momento 1
     user_name(NULL)
+    set_cookie(cookie_name = "token_cookie", cookie_value = "null")
+    psicologo(NULL)
     runjs("window.location.href = '/#!/';")
     session$reload()
     DBI::dbDisconnect(con)

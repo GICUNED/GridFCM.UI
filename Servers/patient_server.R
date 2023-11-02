@@ -8,7 +8,7 @@ patient_server <- function(input, output, session){
         if(rol == "usuario_gratis"){
             con <- establishDBConnection()
             query <- sprintf("SELECT COUNT(DISTINCT p.id) as num FROM paciente as p, psicologo_paciente as pp 
-                                WHERE pp.fk_paciente = p.id and pp.fk_psicologo = %d", 1) # de momento
+                                WHERE pp.fk_paciente = p.id and pp.fk_psicologo = %d", id_psicologo) # de momento
             num <- DBI::dbGetQuery(con, query)
             DBI::dbDisconnect(con)
             if(num$num >= 2){
@@ -589,7 +589,7 @@ patient_server <- function(input, output, session){
         diagnostico <- input$diagnostico
         anotaciones <- input$anotaciones
         fecha_registro <- format(Sys.time(), format = "%Y-%m-%d %H:%M:%S", tz = "Europe/Madrid")
-        fk_psicologo <- 1 # de momento 
+        fk_psicologo <- id_psicologo # de momento 
         
         if (is.numeric(edad) && edad >= 0 && edad <= 120) {
             # Insertar los datos en la base de datos
