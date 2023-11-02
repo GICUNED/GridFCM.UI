@@ -293,10 +293,37 @@ crear_usuario <- function(info){
   return(id)
 }
 
+obtener_token <- function(params){
+  code <- params$code
+  params <- list(
+    client_id = keycloak_client_id,
+    client_secret = keycloak_client_secret,
+    redirect_uri = ruta_app,
+    code = code,
+    grant_type = "authorization_code"
+  )
+  resp <- httr::POST(url = token_url, add_headers("Content-Type" = "application/x-www-form-urlencoded"), body = params, encode="form")
+  respuesta <- (httr::content(resp, "text"))
+  token_data <- jsonlite::fromJSON(respuesta)
+  return(token_data)
+}
+
+obtener_token_refrescado <- function(refresh){
+  params <- list(
+    client_id = keycloak_client_id,
+    client_secret = keycloak_client_secret,
+    redirect_uri = ruta_app,
+    refresh_token = refresh,
+    scope = "openid",
+    grant_type = "refresh_token"
+  )
+  refresh_resp <- httr::POST(url = token_url, add_headers("Content-Type" = "application/x-www-form-urlencoded"), body = params, encode="form")
+  refresh_respuesta <- (httr::content(refresh_resp, "text"))
+  return(refresh_resp)
+}
 
 server <- function(input, output, session) {
   user_name <- reactiveVal(NULL)
-  setear_cookie <- reactiveVal(NULL)
   psicologo <- reactiveVal(NULL)
 
   message("entro en server")
@@ -312,126 +339,92 @@ server <- function(input, output, session) {
     DBI::dbDisconnect(con)
   })
 
-  observe(
-    if(!is.null(setear_cookie())){
-      if(setear_cookie() == TRUE){
-        set_cookie(
-          cookie_name = "token_cookie",
-          cookie_value = GLOBAL_TOKEN
-        )
+  observe({
+    p <- psicologo()
+    con <- establishDBConnection()
+    if(is.null(p)) {
+      # limitar funciones
+      if(!has_auth_code(params)){
+        message("no ha iniciado sesion")
       }
       else{
-        set_cookie(
-          cookie_name = "token_cookie",
-          cookie_value = NULL
-        )
-      }
-    }
-  )
+        # token y refresh token del usuario
+        message("entro en obtener tokens")
+        token_data <- obtener_token(params)
+        if(is.null(token_data$error)){
+          # Acceder al access_token
+          GLOBAL_TOKEN <- token_data$access_token
+          set_cookie(cookie_name = "token_cookie", cookie_value = GLOBAL_TOKEN)
+          GLOBAL_REFRESH_TOKEN <- token_data$refresh_token
+          # info general del usuario
+          resp_info <- httr::GET(url = info_url, add_headers("Authorization" = paste("Bearer", GLOBAL_TOKEN, sep = " ")))
+          id <- crear_usuario(resp_info)
+          session$userData$id_psicologo <- id
 
-  con <- establishDBConnection()
-  if (is.null(psicologo())) {
-    # limitar funciones
-    if(!has_auth_code(params)){
-      message("no ha iniciado sesion")
+          query <- sprintf("UPDATE PSICOLOGO SET token = '%s' WHERE id=%d", GLOBAL_TOKEN, id) # de momento 1
+          DBI::dbExecute(con, query)
+          query2 <- sprintf("UPDATE PSICOLOGO SET refresh_token = '%s' WHERE id=%d", GLOBAL_REFRESH_TOKEN, id) # de momento 1
+          DBI::dbExecute(con, query2)
+          message("Token obtenido e insertado en la bd")
+          shinyjs::show("logout_btn")
+          #user_name(user$nombre)
+        }
+        else{
+          message(token_data$error)
+          user_name(NULL)
+        }
+      }
     }
     else{
-      # token y refresh token del usuario
-      message("entro en obtener tokens")
-      code <- params$code
-      params <- list(
-        client_id = keycloak_client_id,
-        client_secret = keycloak_client_secret,
-        redirect_uri = ruta_app,
-        code = code,
-        grant_type = "authorization_code"
-      )
-      resp <- httr::POST(url = token_url, add_headers("Content-Type" = "application/x-www-form-urlencoded"), body = params, encode="form")
-      respuesta <- (httr::content(resp, "text"))
-      token_data <- jsonlite::fromJSON(respuesta)
-      if(is.null(token_data$error)){
+      user <- psicologo()
+      user_name(user$nombre)
+      resp_info <- httr::GET(url = info_url, add_headers("Authorization" = paste("Bearer", user$token, sep = " ")))
+      message("respuesta del get info user")
+      message(resp_info)
+      error <- httr::http_status(resp_info)
+      texto <- paste(error, collapse = " ")
+      palabras <- strsplit(texto, " ")[[1]]
+      # Seleccionar la última palabra
+      ultima_palabra <- palabras[length(palabras)]
+      if(ultima_palabra != "OK"){
+        message("caducado, intentando refrescar token")
+        refresh_respuesta <- obtener_token_refrescado(user$refresh_token)
+        message("mensaje refresh token")
+        message(refresh_respuesta)
+        refresh_token_data <- jsonlite::fromJSON(refresh_respuesta, simplifyVector = FALSE)
         # Acceder al access_token
-        GLOBAL_TOKEN <- token_data$access_token
-        setear_cookie(TRUE)
-        GLOBAL_REFRESH_TOKEN <- token_data$refresh_token
-        # info general del usuario
-        resp_info <- httr::GET(url = info_url, add_headers("Authorization" = paste("Bearer", GLOBAL_TOKEN, sep = " ")))
-        id <- crear_usuario(resp_info)
-        session$userData$id_psicologo <- id
-
-        query <- sprintf("UPDATE PSICOLOGO SET token = '%s' WHERE id=%d", GLOBAL_TOKEN, id) # de momento 1
-        DBI::dbExecute(con, query)
-        query2 <- sprintf("UPDATE PSICOLOGO SET refresh_token = '%s' WHERE id=%d", GLOBAL_REFRESH_TOKEN, id) # de momento 1
-        DBI::dbExecute(con, query2)
-        message("Token obtenido e insertado en la bd")
-
+        if(!is.null(refresh_token_data$error)){
+          message("Imposible refrescar el token")
+          DBI::dbExecute(con, sprintf("update psicologo set token=NULL, refresh_token=NULL where id=%d", user$id)) # de momento 1
+          set_cookie(cookie_name = "token_cookie", cookie_value = "null")
+          shinyjs::hide("logout_btn")
+          user_name(NULL)
+          runjs("window.location.href = '/#!/';")
+          session$reload()
+        }
+        else{
+          r <- refresh_token_data$access_token
+          set_cookie(cookie_name = "token_cookie", cookie_value = GLOBAL_TOKEN)
+          DBI::dbExecute(con, sprintf("update psicologo set token='%s' where id=%d", r, user$id))
+          message("token actualizado")
+          shinyjs::show("logout_btn")
+        }
         
+      }
+      if(ultima_palabra == "OK"){
+        message("token válido....")
         shinyjs::show("logout_btn")
-        #user_name(user$nombre)
-      }
-      else{
-        message(token_data$error)
-        user_name(NULL)
+        # token válido, gestionar permisos?
+        info <- (httr::content(resp_info, "text"))
+        info <- jsonlite::fromJSON(info)
+        rol <- gestionar_rol(info$roles)
+        session$userData$rol <- rol
+        message("rol> ", rol)
+        DBI::dbExecute(con, sprintf("update psicologo set rol='%s' where id=%d", rol, user$id)) # de momento 1
       }
     }
-  }
-  else{
-    user <- psicologo()
-    user_name(user$nombre)
-    resp_info <- httr::GET(url = info_url, add_headers("Authorization" = paste("Bearer", user$token, sep = " ")))
-    message("respuesta del get info user")
-    message(resp_info)
-    error <- httr::http_status(resp_info)
-    texto <- paste(error, collapse = " ")
-    palabras <- strsplit(texto, " ")[[1]]
-    # Seleccionar la última palabra
-    ultima_palabra <- palabras[length(palabras)]
-    if(ultima_palabra != "OK"){
-      message("caducado, intentando refrescar token")
-      params <- list(
-        client_id = keycloak_client_id,
-        client_secret = keycloak_client_secret,
-        redirect_uri = ruta_app,
-        refresh_token = user$refresh_token,
-        scope = "openid",
-        grant_type = "refresh_token"
-      )
-      refresh_resp <- httr::POST(url = token_url, add_headers("Content-Type" = "application/x-www-form-urlencoded"), body = params, encode="form")
-      refresh_respuesta <- (httr::content(refresh_resp, "text"))
-      message("mensaje refresh token")
-      message(refresh_respuesta)
-      refresh_token_data <- jsonlite::fromJSON(refresh_respuesta, simplifyVector = FALSE)
-      # Acceder al access_token
-      if(!is.null(refresh_token_data$error)){
-        message("Imposible refrescar el token")
-        DBI::dbExecute(con, sprintf("update psicologo set token=NULL, refresh_token=NULL where id=%d", user$id)) # de momento 1
-        setear_cookie(FALSE)
-        shinyjs::hide("logout_btn")
-        user_name(NULL)
-        runjs("window.location.href = '/#!/';")
-        session$reload()
-      }
-      else{
-        r <- refresh_token_data$access_token
-        DBI::dbExecute(con, sprintf("update psicologo set token='%s' where id=%d", r, user$id))
-        message("token actualizado")
-        shinyjs::show("logout_btn")
-      }
-      
-    }
-    if(ultima_palabra == "OK"){
-      message("token válido....")
-      shinyjs::show("logout_btn")
-      # token válido, gestionar permisos?
-      info <- (httr::content(resp_info, "text"))
-      info <- jsonlite::fromJSON(info)
-      rol <- gestionar_rol(info$roles)
-      session$userData$rol <- rol
-      message("rol> ", rol)
-      DBI::dbExecute(con, sprintf("update psicologo set rol='%s' where id=%d", rol, user$id)) # de momento 1
-    }
-  }
-  DBI::dbDisconnect(con)
+    DBI::dbDisconnect(con)
+  })
 
   shinyjs::onclick("logout_btn", {
     user <- psicologo()
@@ -444,7 +437,7 @@ server <- function(input, output, session) {
       client_secret = keycloak_client_secret,
       redirect_uri = ruta_app
     )
-    setear_cookie(FALSE)
+    set_cookie(cookie_name = "token_cookie", cookie_value = "null")
     resp <- httr::POST(url = logout_url, add_headers("Content-Type" = "application/x-www-form-urlencoded", "Authorization" = paste("Bearer", token, sep = " ")), 
                       body = params, encode="form")
     message(resp)
@@ -529,7 +522,7 @@ server <- function(input, output, session) {
   import_server(input, output, session)
   #import_excel_server(input, output, session)
   form_server(input, output, session)
-  patient_server(input, output, session)
+  #patient_server(input, output, session)
   repgrid_server(input, output, session)
   repgrid_home_server(input, output, session)
   repgrid_analisis_server(input, output, session)
@@ -538,4 +531,3 @@ server <- function(input, output, session) {
 }
 
 shinyApp(ui, server)
-

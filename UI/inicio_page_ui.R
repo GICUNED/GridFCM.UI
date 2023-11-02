@@ -1,5 +1,6 @@
   
-inicio_ui <- fluidPage(class ="custom-margins",
+inicio_ui <- add_cookie_handlers(
+fluidPage(class ="custom-margins",
 
   useShinyjs(),
   shiny.i18n::usei18n(i18n),
@@ -62,4 +63,5 @@ inicio_ui <- fluidPage(class ="custom-margins",
         )
       )) + settings(autoplay = TRUE, autoplaySpeed = 1000, pauseOnHover=TRUE, dots = TRUE)          
   )
+)
 )
