@@ -414,6 +414,7 @@ form_server <- function(input, output, session){
             file.remove(ruta_destino_rep)
             if (!is.null(datos_repgrid)) {
                 if(rol == "usuario_demo"){
+                    message("borrando de la bd la rejilla pq es usuario demo")
                     con <- establishDBConnection()
                     DBI::dbExecute(con, sprintf("DELETE FROM repgrid_xlsx where fk_paciente = %d", id_paciente))
                     DBI::dbDisconnect(con)
@@ -1116,6 +1117,7 @@ form_server <- function(input, output, session){
             file.remove(ruta_destino_wimp)
             if (!is.null(datos_wimpgrid)) {
                 if(rol == "usuario_demo"){
+                    message("borrando de la bd la rejilla pq es usuario demo")
                     con <- establishDBConnection()
                     DBI::dbExecute(con, sprintf("DELETE FROM wimpgrid_xlsx where fk_paciente = %d", id_paciente))
                     DBI::dbDisconnect(con)

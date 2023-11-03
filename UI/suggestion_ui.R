@@ -7,18 +7,22 @@ suggestion_ui <- fluidPage(class="custom-margins",
 
    
 
-    fluidRow(class="mt-2 justify-content-center align-items-start",
+    fluidRow(id="sugerencias_usuarios", class="mt-2 justify-content-center align-items-start",
 
-      column(7,
-        box(title = i18n$t("Buzón"),
-            icon = icon("envelopes-bulk"),
-            status = "success",
-            width = 12,
-            textAreaInput("sugerencia", i18n$t("Escriba su sugerencia aquí"),  rows = 5),
-            # Botón de enviar
-            column(12, class=" d-flex justify-content-center", actionButton("send_suggestion", class = "mt-2", status="success", icon=icon("paper-plane"), i18n$t("Enviar"), disable= TRUE))
-            
-        ))
+        column(7,
+            box(title = i18n$t("Buzón"),
+                icon = icon("envelopes-bulk"),
+                status = "success",
+                width = 12,
+                textAreaInput("sugerencia", i18n$t("Escriba su sugerencia aquí"),  rows = 5),
+                # Botón de enviar
+                column(12, class=" d-flex justify-content-center", actionButton("send_suggestion", class = "mt-2", status="success", icon=icon("paper-plane"), i18n$t("Enviar"), disable= TRUE))
+                
+            )
+        )
+    ),
+    fluidRow(id="sugerencias_admin",
+        DTOutput("tabla_sugerencias")
     )
 )
     

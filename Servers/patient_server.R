@@ -5,19 +5,6 @@ patient_server <- function(input, output, session){
         if(rol == "usuario_demo"){
             shinyjs::disable("addPatient")
         }
-        if(rol == "usuario_gratis"){
-            con <- establishDBConnection()
-            query <- sprintf("SELECT COUNT(DISTINCT p.id) as num FROM paciente as p, psicologo_paciente as pp 
-                                WHERE pp.fk_paciente = p.id and pp.fk_psicologo = %d", id_psicologo) # de momento
-            num <- DBI::dbGetQuery(con, query)
-            DBI::dbDisconnect(con)
-            if(num$num >= 2){
-                shinyjs::disable("addPatient")
-            }
-            else{
-                shinyjs::enable("addPatient")
-            }
-        }
     }
     
     user_data <- reactiveValues(users = NULL, selected_user_id = NULL)
@@ -40,7 +27,7 @@ patient_server <- function(input, output, session){
         output$user_table <- renderDT({
             con <- establishDBConnection()
             query <- sprintf("SELECT p.nombre, p.edad, p.genero, p.fecha_registro, p.diagnostico, p.anotaciones FROM paciente as p, psicologo_paciente as pp 
-                                WHERE pp.fk_paciente = p.id and pp.fk_psicologo = %d", id_psicologo) # de momento
+                                WHERE pp.fk_paciente = p.id and pp.fk_psicologo = %d", session$userData$id_psicologo) # de momento
             users <- DBI::dbGetQuery(con, query)
             DBI::dbDisconnect(con)
             # Convertir género en factor
@@ -55,6 +42,22 @@ patient_server <- function(input, output, session){
                 options = list(order = list(3, 'asc')),
                 colnames = c(i18n$t("Nombre"), i18n$t("Edad"), i18n$t("Género"), i18n$t("Fecha de Registro"), i18n$t("Problema"), i18n$t("Anotaciones")))
         })
+
+        if(!is.null(rol)){
+            if(rol == "usuario_gratis"){
+                con <- establishDBConnection()
+                query <- sprintf("SELECT COUNT(DISTINCT p.id) as num FROM paciente as p, psicologo_paciente as pp 
+                                    WHERE pp.fk_paciente = p.id and pp.fk_psicologo = %d", id_psicologo) # de momento
+                num <- DBI::dbGetQuery(con, query)
+                DBI::dbDisconnect(con)
+                if(num$num >= 2){
+                    shinyjs::disable("addPatient")
+                }
+                else{
+                    shinyjs::enable("addPatient")
+                }
+            }
+        }
     }
 
 
@@ -94,14 +97,6 @@ patient_server <- function(input, output, session){
         selected_row <- input$user_table_rows_selected
     
         if (!is.null(selected_row)) {
-            if(rol != "usuario_demo"){
-                shinyjs::enable("borrarPaciente")
-                shinyjs::enable("simulacionesDisponibles")
-                shinyjs::enable("editarPaciente")
-                shinyjs::show("simulaciones_wimp")
-                shinyjs::show("patientSimulations")
-                shinyjs::show("simulaciones_rep")
-            }
             shinyjs::enable("importarGridPaciente")
             #ocultar simulaciones por si se habían desplegado
             delay(200, shinyjs::show("patientIndicator"))
@@ -123,6 +118,14 @@ patient_server <- function(input, output, session){
             pacientename <- DBI::dbGetQuery(con, sprintf("SELECT nombre from paciente WHERE id = %d", user_data$selected_user_id))
             nombrePaciente(pacientename)
             DBI::dbDisconnect(con)
+            if(rol != "usuario_demo"){
+                shinyjs::enable("borrarPaciente")
+                shinyjs::enable("simulacionesDisponibles")
+                shinyjs::enable("editarPaciente")
+                shinyjs::show("simulaciones_wimp")
+                shinyjs::show("patientSimulations")
+                shinyjs::show("simulaciones_rep")
+            }
 
             cargar_fechas_wimpgrid()
             cargar_fechas()
@@ -589,7 +592,7 @@ patient_server <- function(input, output, session){
         diagnostico <- input$diagnostico
         anotaciones <- input$anotaciones
         fecha_registro <- format(Sys.time(), format = "%Y-%m-%d %H:%M:%S", tz = "Europe/Madrid")
-        fk_psicologo <- id_psicologo # de momento 
+        fk_psicologo <- session$userData$id_psicologo # de momento 
         
         if (is.numeric(edad) && edad >= 0 && edad <= 120) {
             # Insertar los datos en la base de datos
@@ -600,7 +603,7 @@ patient_server <- function(input, output, session){
             query_id_paciente <- sprintf("SELECT id FROM paciente WHERE nombre = '%s' and anotaciones = '%s' and fecha_registro = '%s'", nombre, anotaciones, fecha_registro)
             id_paciente <- DBI::dbGetQuery(con, query_id_paciente)
             id_paciente <- as.integer(id_paciente)
-            id_psicologo <- 1 # de momento
+            id_psicologo <- session$userData$id_psicologo # de momento
 
             query2 <- sprintf("INSERT INTO psicologo_paciente (fk_psicologo, fk_paciente) VALUES (%d, %d)", id_psicologo, id_paciente)
             DBI::dbExecute(con, query2)

@@ -1,11 +1,37 @@
 suggestion_server <- function(input, output, session){
+    rol <- session$userData$rol
+    if(!is.null(rol)){
+        if(rol == "usuario_administrador"){
+            shinyjs::hide("sugerencias_usuarios")
+            shinyjs::show("sugerencias_admin")
+        }
+        else{
+            shinyjs::hide("sugerencias_admin")
+            shinyjs::show("sugerencias_usuarios")
+        }
+    }
+
+    output$tabla_sugerencias <- renderDT({
+        con <- establishDBConnection()
+        query <- sprintf("SELECT s.sugerencia as sugerencia, s.fecha as fecha, p.nombre as nombre, p.rol, p.email as email FROM sugerencias as s, psicologo as p 
+                            where s.fk_psicologo = p.id")
+        users <- DBI::dbGetQuery(con, query)
+        DBI::dbDisconnect(con)
+        # Convertir fecha_registro a POSIXct y formatear
+        fecha_hora <- as.POSIXct(users$fecha, origin = "1970-01-01")
+        users$fecha <- format(fecha_hora, format = "%Y-%m-%d %H:%M:%S")
+        df <- data.frame(n=users$sugerencia, e=users$fecha, g=users$nombre, d=users$rol, f=users$email)
+        DT::datatable(df, selection = 'single', rownames = FALSE,
+            options = list(order = list(1, 'asc')),
+            colnames = c(i18n$t("Sugerencia"), i18n$t("Fecha"), i18n$t("Enviada por"), "Rol", i18n$t("Correo")))
+    })
 
     suggestion_to_db <- function(sugerencia) {
         con <- establishDBConnection()
 
         # Obtener la fecha actual en formato legible
         fecha_actual <- format(Sys.time(), format = "%Y-%m-%d %H:%M:%S", tz = "Europe/Madrid")
-        fk_psicologo <- 1 # de momento
+        fk_psicologo <- session$userData$id_psicologo
 
         # Crear la consulta SQL utilizando sprintf
         query <- sprintf(

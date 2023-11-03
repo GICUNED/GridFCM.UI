@@ -129,6 +129,7 @@ make_authorization_url <- function() {
   )
 }
 
+
 link <- make_authorization_url()
 
 ui <- add_cookie_handlers(
@@ -221,53 +222,39 @@ ui <- add_cookie_handlers(
         height = "40px",
         width = "40px"
       )
-
-      #add_busy_spinner(
-        #spin = "fading-circle",
-        #color = "#13906d",
-        #timeout = 100,
-        #position = "full-page",
-        #onstart = TRUE,
-        #margins = c(8, 10),
-        #height = "50px",
-        #width = "50px"
-      #)
-
     )
   )
 )
-
-obtener_id_psicologo <- function(info){
-
-}
 
 gestionar_rol <- function(roles){
   # obtengo el maximo rol posible a nivel de funcionalidades
   usuario_ilimitado <- FALSE
   usuario_gratis <- FALSE
+  usuario_admin <- FALSE
   for(i in roles){
     if(i == "usuario_ilimitado"){usuario_ilimitado <- TRUE}
     if(i == "usuario_gratis"){usuario_gratis <- TRUE}
+    if(i == "usuario_administrador"){usuario_admin <- TRUE}
   }
-  if(usuario_gratis || usuario_ilimitado){
+  if(usuario_gratis || usuario_ilimitado || usuario_admin){
     shinyjs::show("suggestion-page")
     shinyjs::show("patient-page")
     shinyjs::show("repgrid-page")
     shinyjs::show("wimpgrid-page")
     shinyjs::hide("welcome_box")
-    if(usuario_gratis && !usuario_ilimitado){
+    if (usuario_admin) {
+      return("usuario_administrador")
+    } else if (usuario_gratis && !usuario_ilimitado) {
       return("usuario_gratis")
-    }
-    else{
-      if(usuario_ilimitado){
-        return("usuario_ilimitado")
-      }
-    }
+    } else if (usuario_ilimitado) {
+      return("usuario_ilimitado")
+    } 
   }
   else{
     return("default-roles-gridfcm")
   }
 }
+
 
 crear_usuario <- function(info){
   con <- establishDBConnection()
@@ -319,7 +306,7 @@ obtener_token_refrescado <- function(refresh){
   )
   refresh_resp <- httr::POST(url = token_url, add_headers("Content-Type" = "application/x-www-form-urlencoded"), body = params, encode="form")
   refresh_respuesta <- (httr::content(refresh_resp, "text"))
-  return(refresh_resp)
+  return(refresh_respuesta)
 }
 
 server <- function(input, output, session) {
@@ -366,13 +353,14 @@ server <- function(input, output, session) {
           id <- crear_usuario(resp_info)
           session$userData$id_psicologo <- id
           patient_server(input, output, session)
+          suggestion_server(input, output, session)
           query <- sprintf("UPDATE PSICOLOGO SET token = '%s' WHERE id=%d", GLOBAL_TOKEN, id) # de momento 1
           DBI::dbExecute(con, query)
           query2 <- sprintf("UPDATE PSICOLOGO SET refresh_token = '%s' WHERE id=%d", GLOBAL_REFRESH_TOKEN, id) # de momento 1
           DBI::dbExecute(con, query2)
           message("Token obtenido e insertado en la bd")
           shinyjs::show("logout_btn")
-          #user_name(user$nombre)
+          user_name(user$nombre)
         }
         else{
           message(token_data$error)
@@ -425,6 +413,7 @@ server <- function(input, output, session) {
         session$userData$rol <- rol
         session$userData$id_psicologo <- user$id
         patient_server(input, output, session)
+        suggestion_server(input, output, session)
         message("rol> ", rol)
         DBI::dbExecute(con, sprintf("update psicologo set rol='%s' where id=%d", rol, user$id)) # de momento 1
       }
@@ -435,10 +424,10 @@ server <- function(input, output, session) {
   observeEvent(input$logout_btn, {
     user <- psicologo()
     con <- establishDBConnection()
-    token <- DBI::dbGetQuery(con, sprintf("SELECT token FROM psicologo WHERE id=%d", user$id)) # de momento 1
-    refresh_token <- DBI::dbGetQuery(con, sprintf("SELECT refresh_token FROM psicologo WHERE id=%d", user$id)) # de momento 1
+    token <- DBI::dbGetQuery(con, sprintf("SELECT token FROM psicologo WHERE id=%d", user$id)) 
+    refresh_token <- DBI::dbGetQuery(con, sprintf("SELECT refresh_token FROM psicologo WHERE id=%d", user$id)) 
     params <- list(
-      client_id = keycloak_client_id, 
+      client_id = keycloak_client_id,
       refresh_token = refresh_token,
       client_secret = keycloak_client_secret,
       redirect_uri = ruta_app
@@ -534,7 +523,7 @@ server <- function(input, output, session) {
   repgrid_home_server(input, output, session)
   repgrid_analisis_server(input, output, session)
   wimpgrid_analysis_server(input, output, session)
-  suggestion_server(input, output, session)
+  #suggestion_server(input, output, session)
 }
 
 shinyApp(ui, server)

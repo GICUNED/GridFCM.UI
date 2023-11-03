@@ -597,7 +597,7 @@ li.nav-item::marker{
   border-radius: .5rem;
   padding: 5px 10px;
   position: absolute;
-  right: 140px;
+  right: 250px;
   overflow: hidden;
   text-align: right;
   max-width: 200px;
@@ -2090,7 +2090,7 @@ color: #8b0000;
 .user-page-btn{
 position: absolute;
 right: 80px;
-width: 200px;
+width: 150px;
 border-radius: 1rem;
 padding: .2rem;
 overflow: hidden;
