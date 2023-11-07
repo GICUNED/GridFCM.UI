@@ -1,6 +1,8 @@
 {
   "id" : "d995d904-fd15-4ac1-8e14-d6859e4b28c8",
   "realm" : "Gridfcm",
+  "displayName" : "",
+  "displayNameHtml" : "",
   "notBefore" : 0,
   "defaultSignatureAlgorithm" : "RS256",
   "revokeRefreshToken" : false,
@@ -78,6 +80,14 @@
       "id" : "c70eddee-5dd0-49ed-8a02-20eeff11d751",
       "name" : "usuario_ilimitado",
       "description" : "acceso a todas las funcionalidades",
+      "composite" : false,
+      "clientRole" : false,
+      "containerId" : "d995d904-fd15-4ac1-8e14-d6859e4b28c8",
+      "attributes" : { }
+    }, {
+      "id" : "4501708b-31f9-4211-a981-84e2f9405779",
+      "name" : "usuario_administrador",
+      "description" : "",
       "composite" : false,
       "clientRole" : false,
       "containerId" : "d995d904-fd15-4ac1-8e14-d6859e4b28c8",
@@ -389,6 +399,73 @@
   "webAuthnPolicyPasswordlessAvoidSameAuthenticatorRegister" : false,
   "webAuthnPolicyPasswordlessAcceptableAaguids" : [ ],
   "users" : [ {
+    "id" : "4e171ebb-5b91-469a-b089-69cacda7d1cc",
+    "createdTimestamp" : 1699004908066,
+    "username" : "admin",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : false,
+    "firstName" : "Admin",
+    "lastName" : "",
+    "email" : "admin@uned.es",
+    "credentials" : [ {
+      "id" : "bf877fc0-484b-4a6e-85cb-8729da00e0b9",
+      "type" : "password",
+      "userLabel" : "My password",
+      "createdDate" : 1699004918817,
+      "secretData" : "{\"value\":\"CCd36YCOpqDWk1/EMmRScxzqxcL2uclbLCyLnbt+DQM=\",\"salt\":\"Nnra4IqHAD+KaAC0ARbKLA==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-gridfcm", "usuario_administrador" ],
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "fc3ce10b-9737-4f9c-8308-7d1d50b37088",
+    "createdTimestamp" : 1698999706816,
+    "username" : "alberto",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : false,
+    "firstName" : "Alberto",
+    "lastName" : "Carros",
+    "email" : "alberto@uned.es",
+    "credentials" : [ {
+      "id" : "ec7d5952-0c19-4d03-9f51-8dbb65dccab3",
+      "type" : "password",
+      "createdDate" : 1698999707081,
+      "secretData" : "{\"value\":\"/yPKZO7KkhZth6H2xWrbAJGU37Jv89kdu9oOQdZok2w=\",\"salt\":\"svTIa84q8md7JjUjRdJtRw==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-gridfcm" ],
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "bc586968-60d5-4ffd-b8a7-ae8b1ec32723",
+    "createdTimestamp" : 1699352991362,
+    "username" : "alejandro",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : false,
+    "firstName" : "Alejandro",
+    "lastName" : "UNED",
+    "email" : "sanfeliciano.alejandro@gmail.com",
+    "credentials" : [ {
+      "id" : "d153551c-9a7b-4c8e-9d9d-1effd79e24dc",
+      "type" : "password",
+      "createdDate" : 1699352991417,
+      "secretData" : "{\"value\":\"2QYtaJLqU0EFd+8yExLT/MlSD0beynlS0OykAn7utug=\",\"salt\":\"bEEXUgp0Ja9iCINBcKoMxA==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-gridfcm" ],
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
     "id" : "47ac1426-9f72-4fb1-be58-1edcafbf4a23",
     "createdTimestamp" : 1698745932517,
     "username" : "juan",
@@ -411,27 +488,48 @@
     "notBefore" : 1698745969,
     "groups" : [ ]
   }, {
-    "id" : "d2c0966d-cf8c-47f4-af17-5bf937bccb94",
-    "createdTimestamp" : 1698318850658,
+    "id" : "1209d1cd-b3aa-4a2e-889d-94ce5432c2bd",
+    "createdTimestamp" : 1699352822696,
+    "username" : "luis",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : false,
+    "firstName" : "Luis Ángel",
+    "lastName" : "UNED",
+    "email" : "lasaul@psi.uned.es",
+    "credentials" : [ {
+      "id" : "312a0683-e5f1-4a11-8af9-3bf30b5ce353",
+      "type" : "password",
+      "createdDate" : 1699352822772,
+      "secretData" : "{\"value\":\"v5Uz2cD2hOF7333FkfuqsUdzhg0F89k3ggyVDxDzWXY=\",\"salt\":\"x6lCTL1WztNnkraU4gfOpQ==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-gridfcm" ],
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "d663651a-9389-4af2-88a1-167b7c76a681",
+    "createdTimestamp" : 1699008368749,
     "username" : "pepe",
     "enabled" : true,
     "totp" : false,
     "emailVerified" : false,
-    "firstName" : "Pepon",
-    "lastName" : "",
-    "email" : "pepe@pepito.com",
+    "firstName" : "Pepe",
+    "lastName" : "pepon",
+    "email" : "pepe@uned.es",
     "credentials" : [ {
-      "id" : "8a951c6f-4e0e-4131-bc67-b1530a409365",
+      "id" : "222d23c6-d10b-4f65-a5b8-f8d12e0063fb",
       "type" : "password",
-      "userLabel" : "My password",
-      "createdDate" : 1698318857731,
-      "secretData" : "{\"value\":\"7Y5LxlqxskMpFaCs9czgj8Vm81Ftt9NoMQd6PhY9TIo=\",\"salt\":\"AUVG3l7hzGVcu00feVXDeA==\",\"additionalParameters\":{}}",
+      "createdDate" : 1699008368807,
+      "secretData" : "{\"value\":\"WMbbeBqAJNLNTDsxq+SocJTK9W93UW2e7Mpek5LVMLU=\",\"salt\":\"iIfXNk9joT5RtGreJsWToQ==\",\"additionalParameters\":{}}",
       "credentialData" : "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
     } ],
     "disableableCredentialTypes" : [ ],
     "requiredActions" : [ ],
     "realmRoles" : [ "default-roles-gridfcm", "usuario_ilimitado" ],
-    "notBefore" : 1698748960,
+    "notBefore" : 1699011327,
     "groups" : [ ]
   }, {
     "id" : "906d6437-8af2-45f7-8d27-e25b00fc24fb",
@@ -454,7 +552,7 @@
     "enabled" : true,
     "totp" : false,
     "emailVerified" : false,
-    "firstName" : "",
+    "firstName" : "Simon",
     "lastName" : "",
     "email" : "simonpedro.kaufmann@stratebi.com",
     "credentials" : [ {
@@ -467,8 +565,8 @@
     } ],
     "disableableCredentialTypes" : [ ],
     "requiredActions" : [ ],
-    "realmRoles" : [ "default-roles-gridfcm", "usuario_gratis" ],
-    "notBefore" : 1698748790,
+    "realmRoles" : [ "default-roles-gridfcm", "usuario_gratis", "usuario_ilimitado" ],
+    "notBefore" : 1698927092,
     "groups" : [ ]
   } ],
   "scopeMappings" : [ {
@@ -1264,7 +1362,7 @@
       "subType" : "authenticated",
       "subComponents" : { },
       "config" : {
-        "allowed-protocol-mapper-types" : [ "oidc-address-mapper", "oidc-usermodel-property-mapper", "saml-role-list-mapper", "oidc-sha256-pairwise-sub-mapper", "oidc-usermodel-attribute-mapper", "saml-user-property-mapper", "saml-user-attribute-mapper", "oidc-full-name-mapper" ]
+        "allowed-protocol-mapper-types" : [ "oidc-sha256-pairwise-sub-mapper", "oidc-usermodel-attribute-mapper", "saml-user-attribute-mapper", "oidc-address-mapper", "saml-user-property-mapper", "saml-role-list-mapper", "oidc-usermodel-property-mapper", "oidc-full-name-mapper" ]
       }
     }, {
       "id" : "bcb548ad-74ee-4798-8a01-2b9cb1480804",
@@ -1291,7 +1389,7 @@
       "subType" : "anonymous",
       "subComponents" : { },
       "config" : {
-        "allowed-protocol-mapper-types" : [ "saml-user-property-mapper", "saml-user-attribute-mapper", "oidc-sha256-pairwise-sub-mapper", "oidc-usermodel-attribute-mapper", "oidc-full-name-mapper", "oidc-address-mapper", "saml-role-list-mapper", "oidc-usermodel-property-mapper" ]
+        "allowed-protocol-mapper-types" : [ "saml-user-property-mapper", "saml-user-attribute-mapper", "oidc-sha256-pairwise-sub-mapper", "saml-role-list-mapper", "oidc-usermodel-attribute-mapper", "oidc-address-mapper", "oidc-usermodel-property-mapper", "oidc-full-name-mapper" ]
       }
     }, {
       "id" : "e1e1585a-9e07-4010-8bc8-2f97ec337950",
@@ -1968,6 +2066,8 @@
     "actionTokenGeneratedByUserLifespan-idp-verify-account-via-email" : "",
     "parRequestUriLifespan" : "60",
     "clientSessionMaxLifespan" : "0",
+    "frontendUrl" : "",
+    "acr.loa.map" : "{}",
     "shortVerificationUri" : ""
   },
   "keycloakVersion" : "21.1.2",
