@@ -29,6 +29,7 @@ knitr::knit_hooks$set(webgl = hook_webgl)
 
 
 
+
 source("global.R")
 # GRID
 source("R/GraphFunctions.R")
@@ -254,7 +255,6 @@ gestionar_rol <- function(roles){
     return("default-roles-gridfcm")
   }
 }
-
 
 crear_usuario <- function(info){
   con <- establishDBConnection()
@@ -512,12 +512,13 @@ server <- function(input, output, session) {
 
 
 
+
   router_server()
   inicio_server(input, output, session)
   userHome_server(input, output, session)
   import_server(input, output, session)
   #import_excel_server(input, output, session)
-  form_server(input, output, session)
+  #form_server(input, output, session)
   #patient_server(input, output, session)
   repgrid_server(input, output, session)
   repgrid_home_server(input, output, session)
@@ -527,3 +528,5 @@ server <- function(input, output, session) {
 }
 
 shinyApp(ui, server)
+
+

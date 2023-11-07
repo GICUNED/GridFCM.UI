@@ -419,15 +419,8 @@ form_server <- function(input, output, session){
                     DBI::dbExecute(con, sprintf("DELETE FROM repgrid_xlsx where fk_paciente = %d", id_paciente))
                     DBI::dbDisconnect(con)
                 }
-                try <- tryCatch(
-                    {
-                        repgrid_home_server(input,output,session)
-                        runjs("window.location.href = '/#!/repgrid';")
-                    },
-                    error = function(e){
-                        message("Se ha producido un error: ", conditionMessage(e), "\n")
-                    }
-                )
+                repgrid_home_server(input,output,session)
+                runjs("window.location.href = '/#!/repgrid';")
                 
                 shinyjs::hide("ConfirmacionRepgrid")
                 shinyjs::hide("import-page")
@@ -478,6 +471,10 @@ form_server <- function(input, output, session){
     valoracion_ideal <- reactiveVal(list())
     valoracion_hipotetico <- reactiveVal(list())
     fechas_repgrid <- reactiveVal(list())
+    ideal_repgrid <- reactiveVal(NULL)
+    actual_repgrid <- reactiveVal(NULL)
+    iterador_constructos <- reactiveVal(1)
+    
 
     observe(
         output$lista_constructos_w <- renderUI({
@@ -541,6 +538,11 @@ form_server <- function(input, output, session){
         constructos_der <- excel_repgrid[1:nrow(excel_repgrid), ncol(excel_repgrid)]
         res <- paste(constructos_izq, constructos_der, sep=" - ")
         constructos_w(res)
+        # saco el yo-ideal y yo-actual
+        actual <- excel_repgrid[1:nrow(excel_repgrid), 2]
+        ideal <- excel_repgrid[1:nrow(excel_repgrid), ncol(excel_repgrid)-1]
+        actual_repgrid(actual)
+        ideal_repgrid(ideal)
         # oculto cosas
         shinyjs::hide("ComprobarDatos_w")
         #shinyjs::hide("iniciar_nuevo_w")
@@ -603,7 +605,11 @@ form_server <- function(input, output, session){
             }
             updateTextInput(session, "constructo_izq_w", value="")
             updateTextInput(session, "constructo_der_w", value="")
-            
+            # si vengo de comprobar datos de una repgrid pero añado un constructo se petará por tanto vuelvo a pedir todo
+            if(!is.null(actual_repgrid()) || !is.null(ideal_repgrid())){
+                actual_repgrid(NULL)
+                ideal_repgrid(NULL)
+            }
         }
     })
 
@@ -638,13 +644,28 @@ form_server <- function(input, output, session){
 
     shinyjs::onclick("continuar_constructo_w", {
         shinyjs::hide("Constructos_w")
-        shinyjs::show("ValoracionesWimpgrid")
-        constructos_puntuables_w(constructos_w())
+        # si viene de comprobar datos previos repgrid ya tengo los "YO's"
+        if(is.null(actual_repgrid()) && is.null(ideal_repgrid())){
+            shinyjs::show("ValoracionesWimpgrid")
+            valoracion_actual(NULL)
+            valoracion_ideal(NULL)
+            valoracion_hipotetico(NULL)
+        }
+        else{
+            shinyjs::show("preguntasDiadas_w")
+            shinyjs::show("puntuaciones_w")
+            valoracion_actual(actual_repgrid())
+            valoracion_ideal(ideal_repgrid())
+            for(i in 1:length(valoracion_actual())){
+                h <- valor_hipotetico_calculado(valoracion_actual()[i], valoracion_ideal()[i])
+                valoracion_hipotetico(c(valoracion_hipotetico(), h))
+            }
+            message("val hip")
+            message(valoracion_hipotetico())
 
+        }
         elementos_evaluables_w(nombres_valoraciones_w())
-        valoracion_actual(NULL)
-        valoracion_ideal(NULL)
-        valoracion_hipotetico(NULL)
+        constructos_puntuables_w(constructos_w())
         updateSliderInput(session, "valora", value=0)
     })  
 
@@ -954,7 +975,6 @@ form_server <- function(input, output, session){
         constructos_puntuables_w(constructos_w())
         elementos_puntuables_w(generar_elementos_wimpgrid(constructos_w()))
         puntos_wimpgrid(NULL)
-        #actuales <- rep(valoracion_actual(), each = length(constructos_puntuables_w()))
     })
 
     observe(
@@ -972,24 +992,33 @@ form_server <- function(input, output, session){
             constructos_separados <- strsplit(constructos_puntuables_w(), " - ")
             polo_izq <- sapply(constructos_separados, function(x) x[1])
             polo_der <- sapply(constructos_separados, function(x) x[2])
-
             constructos <- c()
+
+            # eso es un poco chapuza pero, iterando sobre esto, evito mostrar el constructo ya evaluado (diagonal)
+            iterador <- as.integer(iterador_constructos())
             for(j in 1:num_constructos){
                 actual <- valoracion_actual()[j]
-                constructos[[j]] <- fluidRow(
-                    column(12, class="d-flex justify-content-between gap-1",
-                        polo_izq[j],
-                        textOutput(""),
-                        polo_der[j]
-                    ),
-                    column(12, 
-                        sliderInput(
-                            paste("slider_", j),
-                            label = " ",
-                            min = -1, max = 1, value = actual, step = 0.01, ticks = FALSE
+                if(j == iterador){
+                    constructos[[j]] <- NULL
+                }
+                else{
+                    message(j)
+                    constructos[[j]] <- fluidRow(
+                        column(12, class="d-flex justify-content-between gap-1",
+                            polo_izq[j],
+                            textOutput(""),
+                            polo_der[j]
+                        ),
+                        column(12, 
+                            sliderInput(
+                                paste("slider_", j),
+                                label = " ",
+                                min = -1, max = 1, value = actual, step = 0.01, ticks = FALSE
+                            )
                         )
                     )
-                )
+                }
+                
             }
             constructos
         })
@@ -1007,9 +1036,16 @@ form_server <- function(input, output, session){
 
     shinyjs::onclick("siguiente_puntuacion_w", {
         slider_names <- list()
+        # iterador para poner el yo actual en la diagonal de la wimpgrid
+        iterador <- iterador_constructos()
         for(i in 1:length(constructos_w())){
-            slider <- paste("slider_", i)
-            puntos_wimpgrid(c(puntos_wimpgrid(), input[[slider]]))
+            if(iterador == i){
+                puntos_wimpgrid(c(puntos_wimpgrid(), valoracion_actual()[i]))
+            }
+            else{
+                slider <- paste("slider_", i)
+                puntos_wimpgrid(c(puntos_wimpgrid(), input[[slider]]))
+            }
         }
         if(length(elementos_puntuables_w()) > 0){
             elementos_puntuables_w(elementos_puntuables_w()[-1])
@@ -1018,6 +1054,7 @@ form_server <- function(input, output, session){
             shinyjs::hide("PuntuacionesWimpgrid")
             shinyjs::show("ConfirmacionWimpgrid")
         }
+        iterador_constructos(iterador_constructos()+1)
     })
 
     shinyjs::onclick("atras_puntuaciones_w", {
@@ -1069,17 +1106,6 @@ form_server <- function(input, output, session){
         return(nombre)
     }
 
-    #output$crearWimpgrid <- downloadHandler(
-     #   filename = function() {
-     #       "wimp.xlsx"
-     #   },
-     #   content = function(file) {
-     #       ruta_excel <- generar_excel_w()
-
-           # file.copy(ruta_excel, file)
-        #}
-    #)
-
     shinyjs::onclick("crearWimpgrid", {
         ruta_excel <- generar_excel_w()
         id_paciente <- session$userData$id_paciente
@@ -1129,6 +1155,8 @@ form_server <- function(input, output, session){
                 shinyjs::hide("import-page")
                 shinyjs::hide("form-page")
                 shinyjs::hide("excel-page")
+                shinyjs::hide("Constructos_w")
+                shinyjs::show("ComprobarDatos_w")
                 nombres_w(NULL)
                 nombres_valoraciones_w(NULL)
                 nombre_seleccionado_w(NULL)
