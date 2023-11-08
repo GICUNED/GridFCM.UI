@@ -65,9 +65,23 @@ textarea{
   max-height: 240px;
 }
 
+.sidebar nav,
+.sidebar nav ul{
+  overflow: hidden;
+}
+
+.nav-functions-container{
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+ul.navbar-nav{
+  margin-left: 0 !important;
+}
+
 .navbar-nav .custom-control:first-child{
   display: none !important;
-
 }
 
 .custom-margins-sm{
@@ -139,10 +153,26 @@ li.nav-item::marker{
 .dark-mode .bg-blurry{
   background-color: #0d0d0db7 !important;
 }
+
+.hollow-dots-spinner .dot{
+  background-color: #0f6e53;
+  margin: .1rem;
+}
+
+.hollow-dots-spinner{
+  margin: auto;
+  width: 60px;
+}
+
+.shinybusy{
+  margin-left: 1rem;
+  top: 20px !important;
+}
+
 /*
 .shinybusy-overlay{
+  right: 0 !important;
   background-color: #ffffff8a;
-  backdrop-filter: blur(10px);
 }*/
 
 /*transition animations*/
@@ -596,11 +626,9 @@ li.nav-item::marker{
   background-color: #F4F6F9;
   border-radius: .5rem;
   padding: 5px 10px;
-  position: absolute;
-  right: 250px;
   overflow: hidden;
   text-align: right;
-  max-width: 200px;
+  max-width: 150px;
   max-height: 34px;
 }
 .dark-mode .patient-active-label{
@@ -627,7 +655,14 @@ background-color: #454D55;
   text-overflow: ellipsis !important; 
 }
 
+
+#paciente_activo{
+  overflow: hidden;
+  width: 100%;
+  }
+
 .patient-active-name{
+  width: 100%;
   display: inline-block;
   white-space: nowrap;
   text-align: left;
@@ -831,17 +866,9 @@ background-color: #454D55;
   }
 }
 
-.navbar::after {
-  content:"GridFCM";
-  display: block;
-  position: absolute;
-  font-size: 24px;
-  left: 60px;
-  font-weight: bolder;
-  text-align: left;
-}
-
 .main-header{
+  display: inline-flex;
+  gap: .4rem;
   transition: all .3s ease-in-out !important;
   z-index: 199 !important;
 }
@@ -988,12 +1015,12 @@ background-color: #454D55;
   }
 
   .sidebar-mini.sidebar-collapse .nav-sidebar .language-selector .form-group{
-    visibility: hidden;
+    display: none;
     opacity: 0;
   }
 
   .sidebar-mini.sidebar-collapse .main-sidebar:hover .language-selector .form-group{
-    visibility: inherit !important;
+    display: inherit !important;
     opacity: 100;
   }
 
@@ -1046,7 +1073,7 @@ background-color: #454D55;
 }
 
 .dark-mode .logoimg{
-  background: no-repeat center url('../LogoUNED-dark.svg');
+  background: no-repeat left url('../LogoUNED-dark.svg');
   background-size: cover;
 
   border-top: 1px solid #343a40 !important;;
@@ -1066,6 +1093,11 @@ background-color: #454D55;
 
 /*Botones de acción o descarga --------------------------------------------------------*/
 
+.logout-btn{
+
+  margin: 1rem 0 0 0 !important;
+
+}
 
 .repgrid-btn:hover{
   background-color: #cbecde !important;
@@ -1127,7 +1159,6 @@ background-color: #454D55;
 .reducirfix{margin-bottom: -0.1px;}
 
 /*Botones de listas -----------------------------------------------------------------------------*/
-
 
 #lista_nombres, #lista_constructos,
 #lista_nombres_w, #lista_constructos_w{
@@ -1267,6 +1298,7 @@ box-shadow: none !important;
 
 #ComprobarDatos_w .card-body{
   display: flex;
+  flex-direction: column;
   justify-content: center;
   gap: .5rem;
 }
@@ -2088,20 +2120,39 @@ color: #8b0000;
 }
 
 .user-page-btn{
-position: absolute;
-right: 80px;
-width: 150px;
-border-radius: 1rem;
-padding: .2rem;
-overflow: hidden;
+  width: min-content;
+  max-width: 200px;
+  overflow: hidden;
+  height: 40px;
+
+  border-radius: .4rem;
+  padding: 0;
+}
+
+.user-page-btn .nav-link{
+  overflow: hidden;
+  width: 100%;
 }
 
 .user-page-btn li a{
   display: flex;
+  overflow: hidden;
   gap: .3rem;
   align-items: center;
-  justify-content: center;
+  justify-content: start;
 
+}
+
+#user_name{
+  height: 100%;
+  overflow: hidden;
+  line-height: 1rem;
+  line-break: auto;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  display: flex;
+  align-items: center;
 }
 
 .user-page-btn li a.active, .user-page-btn li a.active:hover{
@@ -2208,6 +2259,11 @@ margin: auto;
   background-color: #dfb639 !important;
   box-shadow: 0 0 3px #ffc107;
 }
+
+.dark-mode .simulation-tab .nav-link{
+  color: #fff !important;
+}
+
 
 .mix-diff.header-tab .nav-item:last-child .nav-link,
 .mix-diff .nav-item:last-child .nav-link{
@@ -2613,15 +2669,15 @@ background-color: #fff !important;
 .dataTables_length select{
   background-color: #fff !important;
 }
-/*
+
 .dark-mode  .dataTables_length label{
   color: #fff !important;
-
+}
 
 .dark-mode .dataTables_length select{
   color: #313131 !important;
 }
-*/
+
 table.dataTable.no-footer{
   border-bottom: 2px solid #dee2e6 !important;
 }
@@ -2770,39 +2826,37 @@ text-align: right;
 .tabbable{
   width: 100%;
 }
-/*
-.dark-mode .dataTables_wrapper .dataTables_paginate .paginate_button{
-  color: #fff !important;
-}
 
-.dark-mode .dataTables_wrapper .dataTables_paginate .paginate_button.previous.disabled, .dark-mode .dataTables_wrapper .dataTables_paginate .paginate_button.next.disabled{
-  color: #c8c8c8 !important;
-}
-*/
 table.dataTable.display > tbody > tr.selected:hover > *, table.dataTable.display > tbody > tr.selected > * {
 
   box-shadow: inset 0 0 0 9999px #13906d !important
 }
 
 .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover{
-
 color: #fff !important;
-
 }
 
 .paginate_button{
   padding: 0rem .4rem !important;
 }
 
-/*
-.dark-mode  .dataTables_wrapper .dataTables_paginate .paginate_button.current{
-
+.dark-mode .dataTables_filter label,
+.dark-mode .dataTable,
+.dark-mode .dataTables_info,
+.dark-mode .dataTables_wrapper .dataTables_paginate .paginate_button.current,
+.dark-mode .dataTables_wrapper .dataTables_paginate .paginate_button{
   color: #fff !important;
-  
-  }
-  */
+}
 
-  .hidden-div {
+.dark-mode .handsontable td{
+  background-color: #343a40;
+}
+
+.dark-mode .dataTables_wrapper .dataTables_paginate .paginate_button.previous.disabled, .dark-mode .dataTables_wrapper .dataTables_paginate .paginate_button.next.disabled{
+  color: #c8c8c8 !important;
+}
+
+.hidden-div {
     display: none;
   }
   

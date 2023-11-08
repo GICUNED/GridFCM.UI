@@ -134,6 +134,7 @@ make_authorization_url <- function() {
 link <- make_authorization_url()
 
 ui <- add_cookie_handlers(
+
   dashboardPage(
     title = "PsychLab UNED | GridFCM",
     freshTheme = theme,
@@ -142,8 +143,10 @@ ui <- add_cookie_handlers(
       tags$head(tags$link(rel = "icon", type = "image/x-icon", href = 'favicon.png')),
       title = tags$a(href='https://www.uned.es/', target ="_blank", class = "logocontainer",
       tags$img(height='56.9',width='', class = "logoimg")),
-      div(id="user-page", class = "nav-item user-page user-page-btn" , menuItem(textOutput("user_name"), href = link, icon = icon("house-user"), newTab = FALSE)),
-      div(id="patientIndicator", class = "ml-auto patient-active-label", span(class = "icon-paciente"), htmlOutput("paciente_activo"))
+      div( class ="ml-auto nav-functions-container",
+        div(id="patientIndicator", class = "patient-active-label", span(class = "icon-paciente"), htmlOutput("paciente_activo")),
+        div(id="user-page", class = "nav-item user-page user-page-btn" , menuItem(textOutput("user_name"), href = link, icon = icon("house-user"), newTab = FALSE)),
+      )
     ),
 
     dashboardSidebar(
@@ -159,7 +162,8 @@ ui <- add_cookie_handlers(
           div(id="suggestion-page", class = "nav-item suggestion-page hidden-div", menuItem(i18n$t("Sugerencias"), href = route_link("suggestion"), icon = icon("comments"), newTab = FALSE)),
           #div(class = 'language-selector',selectInput('selected_language',i18n$t("Idioma"), choices = i18n$get_languages(),selected = i18n$get_translation_language())),
           div(class = 'language-selector',radioGroupButtons('selected_language',i18n$t("Idioma"), choices = i18n$get_languages(), selected = i18n$get_translation_language(), width='100%', checkIcon = list())),
-          actionButton('logout_btn',i18n$t("Cerrar sesión"), width='100%', status="danger", style="display: none;")
+          
+          actionButton('logout_btn',i18n$t("Cerrar sesión"), icon = icon("right-from-bracket"), status="danger", class="logout-btn", style="display: none;")
         )
       ),
 
@@ -213,16 +217,16 @@ ui <- add_cookie_handlers(
         ))
       ),
 
+
       add_busy_spinner(
-        spin = "double-bounce",
-        color = "#13906d",
-        timeout = 100,
+        spin = "hollow-dots",
+        color = "#72af9e",
+        timeout = 10,
         position = "top-left",
         onstart = TRUE,
-        margins = c(8, 10),
-        height = "40px",
-        width = "40px"
+        margins = c(10, 10),
       )
+
     )
   )
 )
@@ -310,6 +314,7 @@ obtener_token_refrescado <- function(refresh){
 }
 
 server <- function(input, output, session) {
+  
   user_name <- reactiveVal(NULL)
   psicologo <- reactiveVal(NULL)
 
