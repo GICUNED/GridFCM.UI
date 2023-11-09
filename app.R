@@ -29,7 +29,6 @@ knitr::knit_hooks$set(webgl = hook_webgl)
 
 
 
-
 source("global.R")
 # GRID
 source("R/GraphFunctions.R")
@@ -129,7 +128,6 @@ make_authorization_url <- function() {
     utils::URLencode("openid roles", reserved = TRUE, repeated = TRUE)
   )
 }
-
 
 link <- make_authorization_url()
 
@@ -443,6 +441,7 @@ server <- function(input, output, session) {
     session$reload()
     DBI::dbDisconnect(con)
   })
+
 
   observe(
     if(is.null(user_name())){
