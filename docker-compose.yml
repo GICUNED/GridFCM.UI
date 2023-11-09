@@ -71,6 +71,7 @@ services:
       DB_USER: "${DB_USER:-gridfcm}"
       DB_PASSWORD: "${DB_PASSWORD:?}"
       KEYCLOAK_CLIENT_SECRET: "${KEYCLOAK_CLIENT_SECRET:?}"
+      DOMAIN: "${DOMAIN:?}"
     depends_on:
       postgres:
         condition: "service_healthy"

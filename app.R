@@ -109,20 +109,25 @@ theme <- create_theme(
 )
 
 httr::set_config(config(ssl_verifypeer = 0L, ssl_verifyhost = 0L))
-ruta_app <- "https://gridfcm.localhost/"
+domain <- Sys.getenv("DOMAIN")
+ruta_app <- sprintf("https://%s/", domain)
 keycloak_client_id <- "gridfcm"
 keycloak_client_secret <- Sys.getenv("KEYCLOAK_CLIENT_SECRET")
-token_url <- "https://gridfcm.localhost/keycloak/realms/Gridfcm/protocol/openid-connect/token"
-info_url <- "https://gridfcm.localhost/keycloak/realms/Gridfcm/protocol/openid-connect/userinfo"
-logout_url <- "https://gridfcm.localhost/keycloak/realms/Gridfcm/protocol/openid-connect/logout"
+# Replace "gridfcm.localhost" with "domain" in all URLs
+token_url <- sprintf("https://%s/keycloak/realms/Gridfcm/protocol/openid-connect/token", domain)
+info_url <- sprintf("https://%s/keycloak/realms/Gridfcm/protocol/openid-connect/userinfo", domain)
+logout_url <- sprintf("https://%s/keycloak/realms/Gridfcm/protocol/openid-connect/logout", domain)
+
+
 
 has_auth_code <- function(params) {
   return(!is.null(params$code))
 }
 
 make_authorization_url <- function() {
-  url_template <- "http://gridfcm.localhost/keycloak/realms/Gridfcm/protocol/openid-connect/auth?client_id=%s&redirect_uri=%s&response_type=code&scope=%s"
+  url_template <- "http://%s/keycloak/realms/Gridfcm/protocol/openid-connect/auth?client_id=%s&redirect_uri=%s&response_type=code&scope=%s"
   sprintf(url_template,
+    domain,
     utils::URLencode(keycloak_client_id, reserved = TRUE, repeated = TRUE),
     utils::URLencode(ruta_app, reserved = TRUE, repeated = TRUE),
     utils::URLencode("openid roles", reserved = TRUE, repeated = TRUE)
