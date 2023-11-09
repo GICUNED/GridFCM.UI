@@ -9,6 +9,12 @@ CREATE TABLE IF NOT EXISTS psicologo (
     rol VARCHAR
 );
 
+-- Tabla para almacenar los usuarios demo para luego enviar publi
+CREATE TABLE IF NOT EXISTS usuario_demo (
+  id serial PRIMARY KEY,
+  email varchar(75) NOT NULL
+);
+
 -- Crear tabla paciente si no existe
 CREATE TABLE IF NOT EXISTS paciente (
     id SERIAL PRIMARY KEY,
