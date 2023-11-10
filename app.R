@@ -344,7 +344,8 @@ server <- function(input, output, session) {
   observe({
     user <- psicologo()
     con <- establishDBConnection()
-    if(is.null(user)) {
+    # importante el or este por si inicia la misma sesion desde otro navegador o dispositivo
+    if(is.null(user) || length(user$id) == 0) { 
       # limitar funciones
       if(!has_auth_code(params)){
         message("no ha iniciado sesion")
@@ -384,6 +385,7 @@ server <- function(input, output, session) {
       message("respuesta del get info user")
       message(resp_info)
       error <- httr::http_status(resp_info)
+      message("status ", error)
       texto <- paste(error, collapse = " ")
       palabras <- strsplit(texto, " ")[[1]]
       # Seleccionar la última palabra
@@ -397,7 +399,7 @@ server <- function(input, output, session) {
         # Acceder al access_token
         if(!is.null(refresh_token_data$error)){
           message("Imposible refrescar el token")
-          DBI::dbExecute(con, sprintf("update psicologo set token=NULL, refresh_token=NULL where id=%d", user$id)) # de momento 1
+          DBI::dbExecute(con, sprintf("update psicologo set token=NULL, refresh_token=NULL where id=%d", user$id))
           set_cookie(cookie_name = "token_cookie", cookie_value = "null")
           shinyjs::hide("logout_btn")
           user_name(NULL)
