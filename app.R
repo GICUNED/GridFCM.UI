@@ -29,7 +29,6 @@ knitr::knit_hooks$set(webgl = hook_webgl)
 
 
 
-
 source("global.R")
 # GRID1
 source("R/GraphFunctions.R")
@@ -110,30 +109,37 @@ theme <- create_theme(
 )
 
 httr::set_config(config(ssl_verifypeer = 0L, ssl_verifyhost = 0L))
-ruta_app <- "https://gridfcm.localhost/"
+domain <- Sys.getenv("DOMAIN")
+message("domain")
+message(domain)
+ruta_app <- sprintf("https://%s/", domain)
 keycloak_client_id <- "gridfcm"
 keycloak_client_secret <- Sys.getenv("KEYCLOAK_CLIENT_SECRET")
-token_url <- "https://gridfcm.localhost/keycloak/realms/Gridfcm/protocol/openid-connect/token"
-info_url <- "https://gridfcm.localhost/keycloak/realms/Gridfcm/protocol/openid-connect/userinfo"
-logout_url <- "https://gridfcm.localhost/keycloak/realms/Gridfcm/protocol/openid-connect/logout"
+# Replace "gridfcm.localhost" with "domain" in all URLs
+token_url <- sprintf("https://%s/keycloak/realms/Gridfcm/protocol/openid-connect/token", domain)
+info_url <- sprintf("https://%s/keycloak/realms/Gridfcm/protocol/openid-connect/userinfo", domain)
+logout_url <- sprintf("https://%s/keycloak/realms/Gridfcm/protocol/openid-connect/logout", domain)
+
+
 
 has_auth_code <- function(params) {
   return(!is.null(params$code))
 }
 
 make_authorization_url <- function() {
-  url_template <- "http://gridfcm.localhost/keycloak/realms/Gridfcm/protocol/openid-connect/auth?client_id=%s&redirect_uri=%s&response_type=code&scope=%s"
+  url_template <- "http://%s/keycloak/realms/Gridfcm/protocol/openid-connect/auth?client_id=%s&redirect_uri=%s&response_type=code&scope=%s"
   sprintf(url_template,
+    domain,
     utils::URLencode(keycloak_client_id, reserved = TRUE, repeated = TRUE),
     utils::URLencode(ruta_app, reserved = TRUE, repeated = TRUE),
     utils::URLencode("openid roles", reserved = TRUE, repeated = TRUE)
   )
 }
 
-
 link <- make_authorization_url()
 
 ui <- add_cookie_handlers(
+
   dashboardPage(
     title = "PsychLab UNED | GridFCM",
     freshTheme = theme,
@@ -142,8 +148,10 @@ ui <- add_cookie_handlers(
       tags$head(tags$link(rel = "icon", type = "image/x-icon", href = 'favicon.png')),
       title = tags$a(href='https://www.uned.es/', target ="_blank", class = "logocontainer",
       tags$img(height='56.9',width='', class = "logoimg")),
-      div(id="user-page", class = "nav-item user-page user-page-btn" , menuItem(textOutput("user_name"), href = link, icon = icon("house-user"), newTab = FALSE)),
-      div(id="patientIndicator", class = "ml-auto patient-active-label", span(class = "icon-paciente"), htmlOutput("paciente_activo"))
+      div( class ="ml-auto nav-functions-container",
+        div(id="patientIndicator", class = "patient-active-label", span(class = "icon-paciente"), htmlOutput("paciente_activo")),
+        div(id="user-page", class = "nav-item user-page user-page-btn" , menuItem(textOutput("user_name"), href = link, icon = icon("house-user"), newTab = FALSE)),
+      )
     ),
 
     dashboardSidebar(
@@ -159,7 +167,8 @@ ui <- add_cookie_handlers(
           div(id="suggestion-page", class = "nav-item suggestion-page hidden-div", menuItem(i18n$t("Sugerencias"), href = route_link("suggestion"), icon = icon("comments"), newTab = FALSE)),
           #div(class = 'language-selector',selectInput('selected_language',i18n$t("Idioma"), choices = i18n$get_languages(),selected = i18n$get_translation_language())),
           div(class = 'language-selector',radioGroupButtons('selected_language',i18n$t("Idioma"), choices = i18n$get_languages(), selected = i18n$get_translation_language(), width='100%', checkIcon = list())),
-          actionButton('logout_btn',i18n$t("Cerrar sesión"), width='100%', status="danger", style="display: none;")
+          
+          actionButton('logout_btn',i18n$t("Cerrar sesión"), icon = icon("right-from-bracket"), status="danger", class="logout-btn", style="display: none;")
         )
       ),
 
@@ -213,16 +222,16 @@ ui <- add_cookie_handlers(
         ))
       ),
 
+
       add_busy_spinner(
-        spin = "double-bounce",
-        color = "#13906d",
-        timeout = 100,
+        spin = "hollow-dots",
+        color = "#72af9e",
+        timeout = 10,
         position = "top-left",
         onstart = TRUE,
-        margins = c(8, 10),
-        height = "40px",
-        width = "40px"
+        margins = c(10, 10),
       )
+
     )
   )
 )
@@ -310,6 +319,7 @@ obtener_token_refrescado <- function(refresh){
 }
 
 server <- function(input, output, session) {
+  
   user_name <- reactiveVal(NULL)
   psicologo <- reactiveVal(NULL)
 
@@ -443,6 +453,7 @@ server <- function(input, output, session) {
     session$reload()
     DBI::dbDisconnect(con)
   })
+
 
   observe(
     if(is.null(user_name())){

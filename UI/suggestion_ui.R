@@ -4,9 +4,6 @@ suggestion_ui <- fluidPage(class="custom-margins",
     fluidRow(class = "flex-container-titles",
                 h2(i18n$t("Sugerencias"), class = "rg pagetitlecustom mt-2"),
     ),
-
-   
-
     fluidRow(id="sugerencias_usuarios", class="mt-2 justify-content-center align-items-start",
 
         column(7,
@@ -23,8 +20,17 @@ suggestion_ui <- fluidPage(class="custom-margins",
     ),
     fluidRow(id="sugerencias_admin",
         DTOutput("tabla_sugerencias")
+    ),
+    br(),
+    br(),
+    fluidRow(
+        id="usuarios_demo",
+            div(
+                h2("Usuarios demo"),
+                DTOutput("tabla_usuario_demo")
+            )
+        )
     )
-)
     
 
               

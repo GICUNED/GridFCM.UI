@@ -4,10 +4,12 @@ suggestion_server <- function(input, output, session){
         if(rol == "usuario_administrador"){
             shinyjs::hide("sugerencias_usuarios")
             shinyjs::show("sugerencias_admin")
+            shinyjs::show("usuarios_demo")
         }
         else{
             shinyjs::hide("sugerencias_admin")
             shinyjs::show("sugerencias_usuarios")
+            shinyjs::hide("usuarios_demo")
         }
     }
 
@@ -24,6 +26,13 @@ suggestion_server <- function(input, output, session){
         DT::datatable(df, selection = 'single', rownames = FALSE,
             options = list(order = list(1, 'asc')),
             colnames = c(i18n$t("Sugerencia"), i18n$t("Fecha"), i18n$t("Enviada por"), "Rol", i18n$t("Correo")))
+    })
+
+    output$tabla_usuario_demo <- renderDT({
+        con <- establishDBConnection()
+        users <- DBI::dbGetQuery(con, "SELECT DISTINCT email FROM usuario_demo")
+        DBI::dbDisconnect(con)
+        DT::datatable(users)
     })
 
     suggestion_to_db <- function(sugerencia) {
