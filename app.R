@@ -29,6 +29,8 @@ knitr::knit_hooks$set(webgl = hook_webgl)
 
 
 
+
+
 source("global.R")
 # GRID1
 source("R/GraphFunctions.R")
@@ -51,6 +53,8 @@ source("UI/wimpgrid_analysis_ui.R")
 source("UI/form_ui.R")
 source("UI/patient_ui.R")
 source("UI/suggestion_ui.R")
+source("UI/user_page_ui.R")
+source("UI/plan_subscription_ui.R")
 # SERVERS
 source("Servers/userHome_page_server.R")
 source("Servers/inicio_page_servers.R")
@@ -63,6 +67,8 @@ source("Servers/wimpgrid_analysis_server.R")
 source("Servers/form_server.R")
 source("Servers/patient_server.R")
 source("Servers/suggestion_server.R")
+source("Servers/user_page_server.R")
+source("Servers/plan_subscription_server.R")
 
 
 #DB
@@ -95,7 +101,11 @@ tags$li(a(
 )),
 tags$li(a(
   class = "item", href = route_link("wimpgrid"), "Wimpgrid analysis"
-)))
+)),
+tags$li(a(
+  class = "item", href = route_link("plan"), "Planes"
+))
+)
 
 theme <- create_theme(
   bs4dash_status(
@@ -126,17 +136,17 @@ has_auth_code <- function(params) {
   return(!is.null(params$code))
 }
 
-make_authorization_url <- function() {
-  url_template <- "http://%s/keycloak/realms/Gridfcm/protocol/openid-connect/auth?client_id=%s&redirect_uri=%s&response_type=code&scope=%s"
-  sprintf(url_template,
-    domain,
-    utils::URLencode(keycloak_client_id, reserved = TRUE, repeated = TRUE),
-    utils::URLencode(ruta_app, reserved = TRUE, repeated = TRUE),
-    utils::URLencode("openid roles", reserved = TRUE, repeated = TRUE)
-  )
-}
+# make_authorization_url <- function() {
+#   url_template <- "http://%s/keycloak/realms/Gridfcm/protocol/openid-connect/auth?client_id=%s&redirect_uri=%s&response_type=code&scope=%s"
+#   sprintf(url_template,
+#     domain,
+#     utils::URLencode(keycloak_client_id, reserved = TRUE, repeated = TRUE),
+#     utils::URLencode(ruta_app, reserved = TRUE, repeated = TRUE),
+#     utils::URLencode("openid roles", reserved = TRUE, repeated = TRUE)
+#   )
+# }
 
-link <- make_authorization_url()
+# link <- make_authorization_url()
 
 ui <- add_cookie_handlers(
 
@@ -150,7 +160,8 @@ ui <- add_cookie_handlers(
       tags$img(height='56.9',width='', class = "logoimg")),
       div( class ="ml-auto nav-functions-container",
         div(id="patientIndicator", class = "patient-active-label", span(class = "icon-paciente"), htmlOutput("paciente_activo")),
-        div(id="user-page", class = "nav-item user-page user-page-btn" , menuItem(textOutput("user_name"), href = link, icon = icon("house-user"), newTab = FALSE)),
+        uiOutput("user_div")
+        # div(id="profile", class = "nav-item user-page user-page-btn" , menuItem(textOutput("user_name"), href = route_link("user"), icon = icon("house-user"), newTab = FALSE)),
       )
     ),
 
@@ -165,6 +176,7 @@ ui <- add_cookie_handlers(
           div(id="repgrid-page", class = "nav-item repg-page hidden-div", menuItem("RepGrid", href = route_link("repgrid"), icon = icon("magnifying-glass-chart"), newTab = FALSE)),
           div(id = "wimpgrid-page", class = "nav-item wimpg-page hidden-div", menuItem("WimpGrid", href = route_link("wimpgrid"), icon = icon("border-none"), newTab = FALSE)),
           div(id="suggestion-page", class = "nav-item suggestion-page hidden-div", menuItem(i18n$t("Sugerencias"), href = route_link("suggestion"), icon = icon("comments"), newTab = FALSE)),
+          div(id="plan-page", class = "nav-item plan-page hidden-div", menuItem(i18n$t("Planes de Suscripción"), href = route_link("plan"), icon = icon("comments"), newTab = FALSE)),
           #div(class = 'language-selector',selectInput('selected_language',i18n$t("Idioma"), choices = i18n$get_languages(),selected = i18n$get_translation_language())),
           div(class = 'language-selector',radioGroupButtons('selected_language',i18n$t("Idioma"), choices = i18n$get_languages(), selected = i18n$get_translation_language(), width='100%', checkIcon = list())),
           
@@ -196,6 +208,10 @@ ui <- add_cookie_handlers(
               ui = wimpgrid_analysis_ui),
         route(path = "suggestion",
               ui = suggestion_ui),
+        route(path = "user",
+              ui = user_page_ui),
+        route(path = "plan",
+              ui = plan_subscription_ui),
 
         page_404 = page404(shiny::tags$div(
           h1("Error 404", class = "pagetitlecustom"),
@@ -251,6 +267,8 @@ gestionar_rol <- function(roles){
     shinyjs::show("patient-page")
     shinyjs::show("repgrid-page")
     shinyjs::show("wimpgrid-page")
+    shinyjs::show("plan-page")
+    
     shinyjs::hide("welcome_box")
     if (usuario_admin) {
       return("usuario_administrador")
@@ -364,6 +382,8 @@ server <- function(input, output, session) {
           session$userData$id_psicologo <- id
           patient_server(input, output, session)
           suggestion_server(input, output, session)
+          user_page_server(input, output, session)
+          plan_subscription_server(input, output, session)
           query <- sprintf("UPDATE PSICOLOGO SET token = '%s' WHERE id=%d", GLOBAL_TOKEN, id) # de momento 1
           DBI::dbExecute(con, query)
           query2 <- sprintf("UPDATE PSICOLOGO SET refresh_token = '%s' WHERE id=%d", GLOBAL_REFRESH_TOKEN, id) # de momento 1
@@ -424,6 +444,8 @@ server <- function(input, output, session) {
         session$userData$id_psicologo <- user$id
         patient_server(input, output, session)
         suggestion_server(input, output, session)
+        user_page_server(input, output, session)
+        plan_subscription_server(input, output, session)
         message("rol> ", rol)
         DBI::dbExecute(con, sprintf("update psicologo set rol='%s' where id=%d", rol, user$id)) # de momento 1
       }
@@ -455,14 +477,35 @@ server <- function(input, output, session) {
   })
 
 
+  make_authorization_url <- function() {
+    url_template <- "http://%s/keycloak/realms/Gridfcm/protocol/openid-connect/auth?client_id=%s&redirect_uri=%s&response_type=code&scope=%s"
+    sprintf(url_template,
+      domain,
+      utils::URLencode(keycloak_client_id, reserved = TRUE, repeated = TRUE),
+      utils::URLencode(ruta_app, reserved = TRUE, repeated = TRUE),
+      utils::URLencode("openid roles", reserved = TRUE, repeated = TRUE)
+    )
+  }
+
+  link <- make_authorization_url()
+  
   observe(
     if(is.null(user_name())){
       output$user_name <- renderText(i18n$t("Log in"))
+      output$user_div <- renderUI({
+        div(id="profile", class = "nav-item user-page user-page-btn" , menuItem(textOutput("user_name"), href = link, icon = icon("house-user"), newTab = FALSE))
+      })
     }
     else{
+      message(user_name())
       output$user_name <- renderText(user_name())
+      output$user_div <- renderUI({
+        div(id="profile", class = "nav-item user-page user-page-btn" , menuItem(textOutput("user_name"), href = route_link("user"), icon = icon("house-user"), newTab = FALSE))
+      })
     }
   )
+
+
 
   i18n_r <- reactive({
     i18n
@@ -536,6 +579,7 @@ server <- function(input, output, session) {
   repgrid_analisis_server(input, output, session)
   wimpgrid_analysis_server(input, output, session)
   #suggestion_server(input, output, session)
+  #user_page_server(input, output, session)
 }
 
 shinyApp(ui, server)
