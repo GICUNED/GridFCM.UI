@@ -322,6 +322,10 @@ form_server <- function(input, output, session){
             renderizar_puntos()
         }
     )
+
+    observeEvent(input$reiniciar_puntuaciones, {
+        renderizar_puntos()
+    })
                 
     shinyjs::onclick("siguiente_puntuacion", {
         slider_names <- list()
@@ -660,9 +664,6 @@ form_server <- function(input, output, session){
                 h <- valor_hipotetico_calculado(valoracion_actual()[i], valoracion_ideal()[i])
                 valoracion_hipotetico(c(valoracion_hipotetico(), h))
             }
-            message("val hip")
-            message(valoracion_hipotetico())
-
         }
         elementos_evaluables_w(nombres_valoraciones_w())
         constructos_puntuables_w(constructos_w())
@@ -1002,7 +1003,6 @@ form_server <- function(input, output, session){
                     constructos[[j]] <- NULL
                 }
                 else{
-                    message(j)
                     constructos[[j]] <- fluidRow(
                         column(12, class="d-flex justify-content-between gap-1",
                             polo_izq[j],
@@ -1033,6 +1033,10 @@ form_server <- function(input, output, session){
             renderizar_puntos_w()
         }
     )
+
+    observeEvent(input$reiniciar_puntuaciones_w, {
+        renderizar_puntos_w()
+    })
 
     shinyjs::onclick("siguiente_puntuacion_w", {
         slider_names <- list()

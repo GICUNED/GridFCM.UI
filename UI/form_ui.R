@@ -134,7 +134,8 @@ tabsetPanel(
                 uiOutput("pagina_puntuaciones"),
 
                 column(12, class="d-flex justify-content-center mt-3",
-                    actionButton("atras_puntuaciones", class="mr-2",icon=icon("left-long"), i18n$t("Atrás")),
+                    actionButton("atras_puntuaciones", class="mr-2", icon=icon("left-long"), i18n$t("Atrás")),
+                    actionButton("reiniciar_puntuaciones", i18n$t("Reiniciar")),
                     actionButton("siguiente_puntuacion", status="success", class="ml-auto", i18n$t("Siguiente"), icon = icon("arrow-right"))
                 )
             ),
@@ -327,6 +328,7 @@ tabsetPanel(
 
                     column(12, class="d-flex justify-content-center mt-3",
                         actionButton("atras_puntuaciones_w", class="mr-2",icon=icon("left-long"), i18n$t("Atrás")),
+                        actionButton("reiniciar_puntuaciones_w", i18n$t("Reiniciar")),
                         actionButton("siguiente_puntuacion_w",  status="warning", class="ml-auto", i18n$t("Siguiente"), icon = icon("arrow-right"))
                     )
                 ),
