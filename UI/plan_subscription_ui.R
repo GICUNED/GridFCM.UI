@@ -30,7 +30,7 @@ plan_subscription_ui <- fluidPage(class="custom-margins",
 
     column(id="panel-gestion-licencias", width = 12,
         fluidRow(class = "flex-container-titles",
-            h2(i18n$t("Gestión de Licencias (aparecerá si el usuario es de tipo administrador de organizaciones)"), class = "rg pagetitlecustom mt-2"),
+            h2(i18n$t("Gestión de Licencias (aparecerá si el usuario es de tipo administrador de organizaciones. Falta gestion roles cuando se revoca acceso)"), class = "rg pagetitlecustom mt-2"),
         ),
         h6(i18n$t("Suscripcion: Select de las suscripciones que tiene el usuario")),
         column(12, class = "patients-table p-3 bg-white rounded-lg",
@@ -53,9 +53,44 @@ plan_subscription_ui <- fluidPage(class="custom-margins",
             shinycssloaders::withSpinner(DTOutput("licencias_table"), type = 4, color = "#022a0c", size = 0.6)
         ),
 
+        #Formulario para añadir participante
+        shinyjs::hidden(
+            fluidRow(id = "participantForm",
+                div(class = "patient-backdrop"),
+                div(class="patient-form-container",
+                    div(class = "flex-container-resp-col",
+                        div(class = "card-title border-divider-sm",
+                        icon("circle-xmark", id = "new-participant-cancel", class = "fa-solid exit-patients"), 
+                        span(i18n$t("Nuevo participante")),
+                        ),
+                        div(id="primer_paso", class = "flex-container-resp-col",
+                            textInput("email", i18n$t("Email:")),
+                            textOutput("email_text"),
+                            # actionButton("continue", i18n$t("Continuar"), status = 'success', disabled=TRUE, icon = icon("save"))
+                            actionButton("guardarAddParticipant", i18n$t("Añadir"), status = 'success', disabled=TRUE, icon = icon("save"))
+                        ),
+                        div(id="segundo_paso", class = "flex-container-resp-col hidden-div",
+                            actionButton("confirmAddParticipant", i18n$t("Confirmar"), status = 'success', disabled=TRUE, icon = icon("save"))
+                        ),
+                        # div(id="segundo_paso", class = "flex-container-resp-col hidden-div",
+                        #     textInput("nombre", i18n$t("Nombre:")),
+                        #     textInput("apellido", i18n$t("Apellido:")),
+                        #     textInput("nombre_usuario", i18n$t("Nombre de Usuario:")),
+                        #     # textInput("password", i18n$t("Contraseña:")),
+                        #     # textInput("confirm_password", i18n$t("Confirmar contraseña:")),
+                        # ),
+                        # div(id="confirmar", class = "flex-container-resp-col hidden-div",
+                        #     actionButton("guardarAddParticipant", i18n$t("Añadir"), status = 'success', disabled=TRUE, icon = icon("save"))
+                        # ),
+                        
+                    )
+                ),
+            )
+        ),
+        
     ),
     
-    )
+)
     
 
               

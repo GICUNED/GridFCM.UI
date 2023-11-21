@@ -118,6 +118,7 @@ theme <- create_theme(
   )
 )
 
+
 httr::set_config(config(ssl_verifypeer = 0L, ssl_verifyhost = 0L))
 domain <- Sys.getenv("DOMAIN")
 message("domain")
@@ -257,12 +258,14 @@ gestionar_rol <- function(roles){
   usuario_ilimitado <- FALSE
   usuario_gratis <- FALSE
   usuario_admin <- FALSE
+  usuario_coordinador_organizacion <- FALSE
   for(i in roles){
     if(i == "usuario_ilimitado"){usuario_ilimitado <- TRUE}
     if(i == "usuario_gratis"){usuario_gratis <- TRUE}
     if(i == "usuario_administrador"){usuario_admin <- TRUE}
+    if(i == "usuario_coordinador_organizacion"){usuario_coordinador_organizacion <- TRUE}
   }
-  if(usuario_gratis || usuario_ilimitado || usuario_admin){
+  if(usuario_gratis || usuario_ilimitado || usuario_admin || usuario_coordinador_organizacion){
     shinyjs::show("suggestion-page")
     shinyjs::show("patient-page")
     shinyjs::show("repgrid-page")
@@ -272,16 +275,19 @@ gestionar_rol <- function(roles){
     shinyjs::hide("welcome_box")
     if (usuario_admin) {
       return("usuario_administrador")
-    } else if (usuario_gratis && !usuario_ilimitado) {
+    } else if (usuario_gratis && !usuario_ilimitado && !usuario_coordinador_organizacion) {
       return("usuario_gratis")
-    } else if (usuario_ilimitado) {
+    } else if (usuario_ilimitado && !usuario_coordinador_organizacion) {
       return("usuario_ilimitado")
-    } 
+    }else if(usuario_coordinador_organizacion) {
+      return("usuario_coordinador_organizacion")
+    }
   }
   else{
     return("default-roles-gridfcm")
   }
 }
+
 
 crear_usuario <- function(info){
   con <- establishDBConnection()
@@ -306,6 +312,8 @@ crear_usuario <- function(info){
 
   return(id)
 }
+
+
 
 obtener_token <- function(params){
   code <- params$code
@@ -335,6 +343,8 @@ obtener_token_refrescado <- function(refresh){
   refresh_respuesta <- (httr::content(refresh_resp, "text"))
   return(refresh_respuesta)
 }
+
+
 
 server <- function(input, output, session) {
   
@@ -375,6 +385,7 @@ server <- function(input, output, session) {
         if(is.null(token_data$error)){
           # Acceder al access_token
           GLOBAL_TOKEN <- token_data$access_token
+          # session$global_token <- GLOBAL_TOKEN
           set_cookie(cookie_name = "token_cookie", cookie_value = GLOBAL_TOKEN)
           GLOBAL_REFRESH_TOKEN <- token_data$refresh_token
           # info general del usuario
@@ -428,6 +439,8 @@ server <- function(input, output, session) {
         }
         else{
           r <- refresh_token_data$access_token
+          message(paste("añado ", user$token))
+          session$userData$user_token <- r
           set_cookie(cookie_name = "token_cookie", cookie_value = GLOBAL_TOKEN)
           DBI::dbExecute(con, sprintf("update psicologo set token='%s' where id=%d", r, user$id))
           message("token actualizado")
@@ -455,6 +468,8 @@ server <- function(input, output, session) {
     DBI::dbDisconnect(con)
   })
 
+
+
   observeEvent(input$logout_btn, {
     user <- psicologo()
     con <- establishDBConnection()
@@ -477,7 +492,7 @@ server <- function(input, output, session) {
     session$reload()
     DBI::dbDisconnect(con)
   })
-
+  
 
   make_authorization_url <- function() {
     url_template <- "http://%s/keycloak/realms/Gridfcm/protocol/openid-connect/auth?client_id=%s&redirect_uri=%s&response_type=code&scope=%s"
