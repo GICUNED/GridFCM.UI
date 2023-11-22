@@ -888,7 +888,24 @@
     {
       "es": "Cerrar sesión",
       "en": "Log Out"
+    },
+    {
+      "es": "Ha habido un problema al procesar la rejilla. Revise el formato de la plantilla.",
+      "en": "There was an error while processing your template. Please, revise template format."
+    },
+    {
+      "es": "Perfil",
+      "en": "Profile"
+    },
+    {
+      "es": "Ir a Licencias",
+      "en": "Go to Licenses"
+    },
+    {
+      "es": "Gestión de Suscripción",
+      "en": "Subscription Plans"
     }
+    
     
     
     

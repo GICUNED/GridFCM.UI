@@ -24,10 +24,32 @@ patient_server <- function(input, output, session){
     shinyjs::hide("excel-page")
 
     renderizarTabla <- function(){
+        # if rol gratis entonces limitamos el output de la query a 2
+        limit_output <- FALSE
+        if(!is.null(rol)){
+            if(rol == "usuario_gratis"){
+                con <- establishDBConnection()
+                query <- sprintf("SELECT COUNT(DISTINCT p.id) as num FROM paciente as p, psicologo_paciente as pp 
+                                    WHERE pp.fk_paciente = p.id and pp.fk_psicologo = %d", id_psicologo) # de momento
+                num <- DBI::dbGetQuery(con, query)
+                DBI::dbDisconnect(con)
+                if(num$num >= 2){
+                    shinyjs::disable("addPatient")
+                }
+                else{
+                    shinyjs::enable("addPatient")
+                }
+                limit_output <- TRUE
+            }
+        }
+
         output$user_table <- renderDT({
             con <- establishDBConnection()
             query <- sprintf("SELECT p.nombre, p.edad, p.genero, p.fecha_registro, p.diagnostico, p.anotaciones FROM paciente as p, psicologo_paciente as pp 
                                 WHERE pp.fk_paciente = p.id and pp.fk_psicologo = %d", session$userData$id_psicologo) # de momento
+            if(limit_output){
+                query = paste(query, " LIMIT 2")
+            }
             users <- DBI::dbGetQuery(con, query)
             DBI::dbDisconnect(con)
             # Convertir género en factor
@@ -43,23 +65,9 @@ patient_server <- function(input, output, session){
                 colnames = c(i18n$t("Nombre"), i18n$t("Edad"), i18n$t("Género"), i18n$t("Fecha de Registro"), i18n$t("Problema"), i18n$t("Anotaciones")))
         })
 
-        if(!is.null(rol)){
-            if(rol == "usuario_gratis"){
-                con <- establishDBConnection()
-                query <- sprintf("SELECT COUNT(DISTINCT p.id) as num FROM paciente as p, psicologo_paciente as pp 
-                                    WHERE pp.fk_paciente = p.id and pp.fk_psicologo = %d", id_psicologo) # de momento
-                num <- DBI::dbGetQuery(con, query)
-                DBI::dbDisconnect(con)
-                if(num$num >= 2){
-                    shinyjs::disable("addPatient")
-                }
-                else{
-                    shinyjs::enable("addPatient")
-                }
-            }
-        }
+        
     }
-
+    
 
     # si se borran todos los pacientes...
     observe({
@@ -248,53 +256,66 @@ patient_server <- function(input, output, session){
 
     # gestion de las filas seleccionadas en la tabla de simulaciones repgrid
     abrir_repgrid <- function(){
-        if(!is.null(repgrid_fecha_seleccionada())){
-            id_paciente <- user_data$selected_user_id
-            ruta_destino <- tempfile(fileext = ".xlsx")
-            id <- decodificar_BD_excel('repgrid_xlsx', ruta_destino, id_paciente, session$userData$fecha_repgrid)
-            session$userData$id_repgrid <- id
-            datos_repgrid <- OpenRepGrid::importExcel(ruta_destino)
-            excel_repgrid <- read.xlsx(ruta_destino)
-            file.remove(ruta_destino)
-            #convertir nums a formato numerico y no texto como estaba importado
-            columnas_a_convertir <- 2:(ncol(excel_repgrid) - 1)
-            # Utiliza lapply para aplicar la conversión a las columnas seleccionadas
-            excel_repgrid[, columnas_a_convertir] <- lapply(excel_repgrid[, columnas_a_convertir], as.numeric)
-            #constructos
-            constructos_izq <- excel_repgrid[1:nrow(excel_repgrid), 1]
-            constructos_der <- excel_repgrid[1:nrow(excel_repgrid), ncol(excel_repgrid)]
-            session$userData$constructos_izq_rep <- constructos_izq
-            session$userData$constructos_der_rep <- constructos_der
-            session$userData$datos_to_table <- excel_repgrid
-            num_columnas <- ncol(session$userData$datos_to_table)
-            session$userData$num_col_repgrid <- num_columnas
-            num_rows <- nrow(session$userData$datos_to_table)
-            session$userData$num_row_repgrid <- num_rows
-            session$userData$datos_repgrid <- datos_repgrid
-            #repgrid_fecha_seleccionada(NULL)
-            if (!is.null(datos_repgrid)) {
-                # Solo archivo RepGrid cargado, navegar a RepGrid Home
-                session$userData$id_paciente <- user_data$selected_user_id
-                repgrid_home_server(input,output,session)
-                runjs("
-                setTimeout(function () {
-                window.location.href = '/#!/repgrid';
-                }, 200)
+        tryCatch({
+            if(!is.null(repgrid_fecha_seleccionada())){
+                id_paciente <- user_data$selected_user_id
+                ruta_destino <- tempfile(fileext = ".xlsx")
+                id <- decodificar_BD_excel('repgrid_xlsx', ruta_destino, id_paciente, session$userData$fecha_repgrid)
+                session$userData$id_repgrid <- id
+                datos_repgrid <- OpenRepGrid::importExcel(ruta_destino)
+                excel_repgrid <- read.xlsx(ruta_destino)
+                file.remove(ruta_destino)
+                #convertir nums a formato numerico y no texto como estaba importado
+                columnas_a_convertir <- 2:(ncol(excel_repgrid) - 1)
+                # Utiliza lapply para aplicar la conversión a las columnas seleccionadas
+                excel_repgrid[, columnas_a_convertir] <- lapply(excel_repgrid[, columnas_a_convertir], as.numeric)
+                #constructos
+                constructos_izq <- excel_repgrid[1:nrow(excel_repgrid), 1]
+                constructos_der <- excel_repgrid[1:nrow(excel_repgrid), ncol(excel_repgrid)]
+                session$userData$constructos_izq_rep <- constructos_izq
+                session$userData$constructos_der_rep <- constructos_der
+                session$userData$datos_to_table <- excel_repgrid
+                num_columnas <- ncol(session$userData$datos_to_table)
+                session$userData$num_col_repgrid <- num_columnas
+                num_rows <- nrow(session$userData$datos_to_table)
+                session$userData$num_row_repgrid <- num_rows
+                session$userData$datos_repgrid <- datos_repgrid
+                #repgrid_fecha_seleccionada(NULL)
+                if (!is.null(datos_repgrid)) {
+                    # Solo archivo RepGrid cargado, navegar a RepGrid Home
+                    session$userData$id_paciente <- user_data$selected_user_id
+                    repgrid_home_server(input,output,session)
+                    runjs("
+                    setTimeout(function () {
+                    window.location.href = '/#!/repgrid';
+                    }, 200)
+                        ")
+
+                    runjs("
+                    $('#controls-panel-rg').removeClass('anim-fade-out');
+                    $('#controls-panel-rg').addClass('anim-fade-in');
+
+                    $('.graphics-rg').removeClass('mw-100');
+                    $('.graphics-rg').removeClass('flex-bs-100');
                     ")
 
-                runjs("
-                $('#controls-panel-rg').removeClass('anim-fade-out');
-                $('#controls-panel-rg').addClass('anim-fade-in');
+                    shinyjs::show("controls-panel-rg")
+        
 
-                $('.graphics-rg').removeClass('mw-100');
-                $('.graphics-rg').removeClass('flex-bs-100');
-                ")
-
-                shinyjs::show("controls-panel-rg")
-    
-
-            } 
-        }
+                } 
+            }
+        },
+        error = function(e) {
+            # runjs("window.location.href = '/#!/repgrid';")
+            message(paste("error: ", e))
+            showModal(modalDialog(
+                title = i18n$t("Esta simulación se guardó con errores. Bórrela y vuélvela a crear."),
+                footer = tagList(
+                    modalButton("OK"),
+                )
+            ))
+        })
+        
         proxy <- dataTableProxy("user_table")
         proxy %>% selectRows(NULL)
         shinyjs::hide("patientSimulations")
@@ -319,60 +340,72 @@ patient_server <- function(input, output, session){
 
     # gestion de las filas seleccionadas en la tabla de simulaciones wimpgrid
     abrir_wimpgrid <- function(){
-        if(!is.null(wimpgrid_fecha_seleccionada())){
-            id_paciente <- user_data$selected_user_id
-            ruta_destino <- tempfile(fileext = ".xlsx")
-            id <- decodificar_BD_excel('wimpgrid_xlsx', ruta_destino, id_paciente, session$userData$fecha_wimpgrid)
-            session$userData$id_wimpgrid <- id
-            datos_wimpgrid <- importwimp(ruta_destino)
-            excel_wimp <- read.xlsx(ruta_destino)
-            file.remove(ruta_destino)
-            # convertir los numeros tipo string a tipo numerico
-            columnas_a_convertir <- 2:(ncol(excel_wimp) - 1)
-            # Utiliza lapply para aplicar la conversión a las columnas seleccionadas
-            excel_wimp[, columnas_a_convertir] <- lapply(excel_wimp[, columnas_a_convertir], as.numeric)
+        tryCatch({
+            if(!is.null(wimpgrid_fecha_seleccionada())){
+                id_paciente <- user_data$selected_user_id
+                ruta_destino <- tempfile(fileext = ".xlsx")
+                id <- decodificar_BD_excel('wimpgrid_xlsx', ruta_destino, id_paciente, session$userData$fecha_wimpgrid)
+                session$userData$id_wimpgrid <- id
+                datos_wimpgrid <- importwimp(ruta_destino)
+                excel_wimp <- read.xlsx(ruta_destino)
+                file.remove(ruta_destino)
+                # convertir los numeros tipo string a tipo numerico
+                columnas_a_convertir <- 2:(ncol(excel_wimp) - 1)
+                # Utiliza lapply para aplicar la conversión a las columnas seleccionadas
+                excel_wimp[, columnas_a_convertir] <- lapply(excel_wimp[, columnas_a_convertir], as.numeric)
 
-            #constructos
-            constructos_izq <- excel_wimp[1:nrow(excel_wimp), 1]
-            constructos_der <- excel_wimp[1:nrow(excel_wimp), ncol(excel_wimp)]
-            session$userData$constructos_izq <- constructos_izq
-            session$userData$constructos_der <- constructos_der
+                #constructos
+                constructos_izq <- excel_wimp[1:nrow(excel_wimp), 1]
+                constructos_der <- excel_wimp[1:nrow(excel_wimp), ncol(excel_wimp)]
+                session$userData$constructos_izq <- constructos_izq
+                session$userData$constructos_der <- constructos_der
 
-            session$userData$datos_to_table_w <- excel_wimp
-            num_columnas <- ncol(session$userData$datos_to_table_w)
-            session$userData$num_col_wimpgrid <- num_columnas
-            num_rows <- nrow(session$userData$datos_to_table_w)
-            session$userData$num_row_wimpgrid <- num_rows
-            # Almacenar los objetos importados en el entorno de la sesión para su uso posterior
-            #session$userData$datos_repgrid <- datos_repgrid
-            session$userData$datos_wimpgrid <- datos_wimpgrid
-            #wimpgrid_fecha_seleccionada(NULL)
+                session$userData$datos_to_table_w <- excel_wimp
+                num_columnas <- ncol(session$userData$datos_to_table_w)
+                session$userData$num_col_wimpgrid <- num_columnas
+                num_rows <- nrow(session$userData$datos_to_table_w)
+                session$userData$num_row_wimpgrid <- num_rows
+                # Almacenar los objetos importados en el entorno de la sesión para su uso posterior
+                #session$userData$datos_repgrid <- datos_repgrid
+                session$userData$datos_wimpgrid <- datos_wimpgrid
+                #wimpgrid_fecha_seleccionada(NULL)
 
-            if (!is.null(datos_wimpgrid)) {
-                session$userData$id_paciente <- user_data$selected_user_id
-                wimpgrid_analysis_server(input,output,session)
-                runjs("setTimeout(function () {
-                window.location.href = '/#!/wimpgrid';
-                }, 200)")
+                if (!is.null(datos_wimpgrid)) {
+                    session$userData$id_paciente <- user_data$selected_user_id
+                    wimpgrid_analysis_server(input,output,session)
+                    runjs("setTimeout(function () {
+                    window.location.href = '/#!/wimpgrid';
+                    }, 200)")
 
-                runjs("
-                $('#controls-panel-vis').removeClass('anim-fade-out');
-                $('#controls-panel-vis').addClass('anim-fade-in');
+                    runjs("
+                    $('#controls-panel-vis').removeClass('anim-fade-out');
+                    $('#controls-panel-vis').addClass('anim-fade-in');
 
-                $('#controls-panel-lab').removeClass('anim-fade-out');
-                $('#controls-panel-lab').addClass('anim-fade-in');
+                    $('#controls-panel-lab').removeClass('anim-fade-out');
+                    $('#controls-panel-lab').addClass('anim-fade-in');
 
-                $('.graphics-vis').removeClass('mw-100');
-                $('.graphics-vis').removeClass('flex-bs-100');
+                    $('.graphics-vis').removeClass('mw-100');
+                    $('.graphics-vis').removeClass('flex-bs-100');
 
-                $('.graphics-lab').removeClass('mw-100');
-                $('.graphics-lab').removeClass('flex-bs-100');
-                ")
-            
-                shinyjs::show("controls-panel-vis")
-                shinyjs::show("controls-panel-lab")
-            }   
-        }
+                    $('.graphics-lab').removeClass('mw-100');
+                    $('.graphics-lab').removeClass('flex-bs-100');
+                    ")
+                
+                    shinyjs::show("controls-panel-vis")
+                    shinyjs::show("controls-panel-lab")
+                }   
+            }
+        },
+        error = function(e) {
+            # runjs("window.location.href = '/#!/repgrid';")
+            message(paste("error: ", e))
+            showModal(modalDialog(
+                title = i18n$t("Esta simulación se guardó con errores. Bórrela y vuélvela a crear."),
+                footer = tagList(
+                    modalButton("OK"),
+                )
+            ))
+        })
         proxy <- dataTableProxy("user_table")
         proxy %>% selectRows(NULL)
         shinyjs::hide("patientSimulations")

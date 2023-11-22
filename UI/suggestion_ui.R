@@ -23,14 +23,25 @@ suggestion_ui <- fluidPage(class="custom-margins",
     ),
     br(),
     br(),
-    fluidRow(
+    # fluidRow( class="mb-2 button-container",
+    #     div(class = "flex-container-mini",
+    #         downloadButton("exportar_usuarios", status ="primary", i18n$t("Exportar"))
+    #     )
+    # ),
+    column(
         id="usuarios_demo",
+        width = 12,
+        div(class = "flex-container-mini",
+            downloadButton("exportar_usuarios", status ="primary", i18n$t("Exportar"))
+        ),
+        fluidRow(
             div(
                 h2("Usuarios demo"),
                 DTOutput("tabla_usuario_demo")
             )
         )
     )
+)
     
 
               
