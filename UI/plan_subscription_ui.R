@@ -7,21 +7,30 @@ plan_subscription_ui <- fluidPage(class="custom-margins",
     br(),
     br(),
     fluidRow(id="panel-compra",
-        column(id="panel-compra-individual", width=4, offset = 0, style='padding:0px;',
-            h4(i18n$t("Sucripción individual")),
-            h6(i18n$t("Anual")),
-            h6(i18n$t("Precio: 20€")),
-            a(i18n$t("Comprar"), href=""),
-        ),
-        column(width = 4, offset = 0, style='padding:0px;'),
-        column(id="panel-compra-organizacion", width=4, offset = 0, style='padding:0px;',
-            h4(i18n$t("Sucripción organizacional")),
-            h6(i18n$t("Anual")),
-            h6(i18n$t("Precio: Desde 40€ (2 licencias)")),
-            a(i18n$t("Comprar"), href=""),
-        ),
+        # column(id="panel-compra-individual", width=4, offset = 0, style='padding:0px;',
+        #     h4(i18n$t("Sucripción individual")),
+        #     h6(i18n$t("Anual")),
+        #     h6(i18n$t("Precio: 20€")),
+        #     a(i18n$t("Comprar"), href=""),
+        # ),
+        # column(width = 4, offset = 0, style='padding:0px;'),
+        # column(id="panel-compra-organizacion", width=4, offset = 0, style='padding:0px;',
+        #     h4(i18n$t("Sucripción organizacional")),
+        #     h6(i18n$t("Anual")),
+        #     h6(i18n$t("Precio: Desde 40€ (2 licencias)")),
+        #     a(i18n$t("Comprar"), href=""),
+        # ),
+        column(width = 12, offset = 0, style='padding:0px;',
+            HTML('
+                <script async src="https://js.stripe.com/v3/pricing-table.js"></script>
+                <stripe-pricing-table pricing-table-id="prctbl_1OFEcSD433GyTQY7rr9L0vMw"
+                publishable-key="pk_test_51OCzu7D433GyTQY7aUUS8o9ct9NxRovmwwbMaYaoMmPhzMcIiny9TxTEgTilsAN7xPtfmQBcQ6RFYgstJNH1iTTm00LCx4sEUv">
+                </stripe-pricing-table>
+        ')
+       ),
         
     ),
+    
     br(),
     br(),
 
@@ -30,7 +39,7 @@ plan_subscription_ui <- fluidPage(class="custom-margins",
 
     column(id="panel-gestion-licencias", width = 12,
         fluidRow(class = "flex-container-titles",
-            h2(i18n$t("Gestión de Licencias (aparecerá si el usuario es de tipo administrador de organizaciones. Falta gestion roles cuando se revoca acceso)"), class = "rg pagetitlecustom mt-2"),
+            h2(i18n$t("Gestión de Licencias"), class = "rg pagetitlecustom mt-2"),
         ),
         h6(i18n$t("Suscripcion: Select de las suscripciones que tiene el usuario")),
         column(12, class = "patients-table p-3 bg-white rounded-lg",

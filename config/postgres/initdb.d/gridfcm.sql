@@ -106,6 +106,7 @@ CREATE TABLE IF NOT EXISTS suscripcion (
     licencias_disponibles INTEGER,
     organizacion BOOLEAN,
     activa BOOLEAN,
+    id_stripe_suscripcion VARCHAR(50),
     fk_psicologo INT REFERENCES psicologo(id)
 );
 

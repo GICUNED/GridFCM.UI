@@ -33,7 +33,6 @@ plan_subscription_server <- function(input, output, session){
 
         resp <- httr::GET(url = user_url, add_headers("Authorization" = paste("Bearer", admin_token, sep = " ")))
         user_data <- (httr::content(resp, "text"))
-        message(user_data)
         if(!is.null(user_data) && user_data != ""){
             user_data <- jsonlite::fromJSON(user_data)
             if(is.null(user_data$error)){
@@ -54,9 +53,13 @@ plan_subscription_server <- function(input, output, session){
     # cuando creemos los roles, si el usuario no tiene rol de coordinador de org
     # le ocultamos la tabla
     if(!is.null(rol)){
-        # if(rol != "usuario_administrador_org"){
-        #     shinyjs::hide("panel-gestion-licencias")
-        # }
+        if(rol != "usuario_coordinador_organizacion" && rol != "usuario_administrador"){
+            shinyjs::hide("panel-gestion-licencias")
+        }else{
+            shinyjs::show("panel-gestion-licencias")
+        }
+    }else{
+        shinyjs::hide("panel-gestion-licencias")
     }
     
     # reactive variables
@@ -159,8 +162,6 @@ plan_subscription_server <- function(input, output, session){
             
             subscription_data$selected_subscription_id <- subscription_id # reactiva
             # subscriptionID(subscription_id)
-            message("selected row subscription data")
-            message(subscription_data$selected_subscription_id)
             if(rol != "usuario_demo"){
             #     shinyjs::enable("borrarPaciente")
             #     shinyjs::enable("simulacionesDisponibles")
@@ -181,7 +182,6 @@ plan_subscription_server <- function(input, output, session){
             # shinyjs::hide("simulationIndicatorWG")
             # shinyjs::hide("patientIndicator")
 
-            message("")
         }
     })
 
@@ -193,11 +193,8 @@ plan_subscription_server <- function(input, output, session){
         output$licencias_table <- renderDT({
             numero_aleatorio <- sample(1:1000, 1)
             con <- establishDBConnection()
-            message("selected row subscription data inside cargar")
-            message(subscription_data$selected_subscription_id)
             query <- sprintf("SELECT p.id,p.nombre, p.email, p.username FROM LICENCIA l INNER JOIN PSICOLOGO p on p.id=l.fk_psicologo WHERE fk_suscripcion=%d", subscription_data$selected_subscription_id)
             licenciasDB <- DBI::dbGetQuery(con, query)
-            message(licenciasDB)
             DBI::dbDisconnect(con)
             if(!is.null(licenciasDB)){
                 licencias_data$psicologos <- licenciasDB$id
@@ -230,24 +227,23 @@ plan_subscription_server <- function(input, output, session){
         if (!is.null(selected_row)) {
             # hacer consulta para obtener el txt de repgrid aqui con la fecha seleccionada
             licencia_psicologo_id_seleccionada = licencias_data$psicologos[selected_row]
-            message(paste("licencia_psicolog_id seleccionada: ", licencia_psicologo_id_seleccionada))
             # session$userData$fecha_repgrid <- fecha
             licencias_data$selected_licencia_psicologo_id = licencia_psicologo_id_seleccionada
         }
     })
 
 
-    revocarAcceso <- function(){
-        showModal(modalDialog(
-            title = i18n$t("Confirmar Acción"),
-            sprintf(i18n$t("¿Está seguro de que quiere quitar de la suscripción %d la licencia al usuario %s. La licencia quedará disponible de nuevo y se podrá reasignar a otro usuario."), subscription_data$selected_subscription_id,licencias_data$selected_licencia_psicologo_id),
-            easyClose = TRUE,
-            footer = tagList(
-                modalButton(i18n$t("Cancelar")),
-                actionButton("confirmarRevocarAcceso", i18n$t("Confirmar"), class = "btn-danger")
-            )
-        ))
-    }
+    # revocarAcceso <- function(){
+    #     showModal(modalDialog(
+    #         title = i18n$t("Confirmar Acción"),
+    #         sprintf(i18n$t("¿Está seguro de que quiere quitar de la suscripción %d la licencia al usuario %s. La licencia quedará disponible de nuevo y se podrá reasignar a otro usuario."), subscription_data$selected_subscription_id,licencias_data$selected_licencia_psicologo_id),
+    #         easyClose = TRUE,
+    #         footer = tagList(
+    #             modalButton(i18n$t("Cancelar")),
+    #             actionButton("confirmarRevocarAcceso", i18n$t("Confirmar"), class = "btn-danger")
+    #         )
+    #     ))
+    # }
 
 
 
@@ -258,8 +254,10 @@ plan_subscription_server <- function(input, output, session){
         ## esto es el id del psicologo que se ha seleccionado en la tabla licencias
         id_licencia_psicologo <- licencias_data$selected_licencia_psicologo_id
         id_suscripcion <- subscription_data$selected_subscription_id
-        message(id_suscripcion)
-        if (!is.null(id_psicologo) && !is.null(id_suscripcion)) {
+
+
+        
+        if (!is.null(id_psicologo) && !is.null(id_suscripcion) && !is.null(id_licencia_psicologo)) {
             # check si el psicologo administrador se está intentando quitar a si mismo la licencia (no es posible)
             if(id_psicologo == id_licencia_psicologo){
                 showModal(modalDialog(
@@ -294,7 +292,6 @@ plan_subscription_server <- function(input, output, session){
                 }
 
                 licencias_disponibles <- as.integer(licencias_contratadas - licencias_usadas)
-                message(licencias_disponibles)
 
                 query <- sprintf("UPDATE SUSCRIPCION set licencias_disponibles=%d where id = %d", licencias_disponibles, id_suscripcion)
                 DBI::dbExecute(con, query)
@@ -310,7 +307,6 @@ plan_subscription_server <- function(input, output, session){
                 proxy <- dataTableProxy("subscription_table")
                 if (!is.null(selected_row)) {
                     proxy %>% selectRows(selected_row)
-                    message("entro proxy")
                 }
 
                 cargar_licencias()
@@ -327,8 +323,6 @@ plan_subscription_server <- function(input, output, session){
                 }else{
                     email_licencia_psicologo <- NULL
                 }
-                message("email licencia psicologo")
-                message(email_licencia_psicologo)
 
                 DBI::dbDisconnect(con)
                 if(!is.null(email_licencia_psicologo) && email_licencia_psicologo!=""){
@@ -345,11 +339,8 @@ plan_subscription_server <- function(input, output, session){
                         id = c(rol_ilimitado$id),name = c(rol_ilimitado$name)
                     )
                     request_body_json <- toJSON(request_body, auto_unbox = TRUE)
-                    message(request_body_json)
                     resp <- httr::DELETE(url = rol_url, add_headers("Content-Type" = "application/json","Authorization" = paste("Bearer", admin_token, sep = " ")), body = request_body_json, encode="json")
-                    message("respuesta")
                     roles <- (httr::content(resp, "text"))
-                    message(roles)
                     if(!is.null(roles) && roles != ""){
                         roles <- jsonlite::fromJSON(roles)
                         if(is.null(roles$error)){
@@ -367,7 +358,15 @@ plan_subscription_server <- function(input, output, session){
     })
 
     observeEvent(input$button_id_revocar_acceso, {
-        revocarAcceso()
+        showModal(modalDialog(
+            title = i18n$t("Confirmar Acción"),
+            sprintf(i18n$t("¿Está seguro de que quiere quitar de la suscripción %d la licencia al usuario %s. La licencia quedará disponible de nuevo y se podrá reasignar a otro usuario."), subscription_data$selected_subscription_id,licencias_data$selected_licencia_psicologo_id),
+            fade = TRUE,
+            footer = tagList(
+                modalButton(i18n$t("Cancelar")),
+                actionButton("confirmarRevocarAcceso", i18n$t("Confirmar"), class = "btn-danger")
+            )
+        ))
     })
 
 
@@ -451,15 +450,15 @@ plan_subscription_server <- function(input, output, session){
         }
     })
 
-    observeEvent(get_cookie("token_cookie"), {
-        message("obtengo la cookie:")
-        token_res <- get_cookie("token_cookie")
-        if(token_res != "null"){
-            message(token_res)
-            token(token_res)
-        }
+    # observeEvent(get_cookie("token_cookie"), {
+    #     message("obtengo la cookie:")
+    #     token_res <- get_cookie("token_cookie")
+    #     if(token_res != "null"){
+    #         message(token_res)
+    #         token(token_res)
+    #     }
 
-    })
+    # })
 
 
     shinyjs::onclick("confirmAddParticipant",  {
@@ -510,11 +509,8 @@ plan_subscription_server <- function(input, output, session){
             shinyjs::disable("confirmAddParticipant")
 
             selected_row_add <- input$subscription_table_rows_selected
-            message(paste("bef sel row: ", input$subscription_table_rows_selected))
             renderizarTabla()
-            message(paste("aft sel row: ", input$subscription_table_rows_selected))
             # select the subscription again
-            message(paste("selected row: ", selected_row_add))
             proxy_add <- dataTableProxy("subscription_table")
             if (!is.null(selected_row_add)) {
                 proxy_add %>% selectRows(selected_row_add)
@@ -550,7 +546,6 @@ plan_subscription_server <- function(input, output, session){
                 )
                 request_body_json <- toJSON(request_body, auto_unbox = TRUE)
                 resp <- httr::POST(url = rol_url, add_headers("Content-Type" = "application/json","Authorization" = paste("Bearer", admin_token, sep = " ")), body = request_body_json, encode="json")
-                message("respuesta")
                 roles <- (httr::content(resp, "text"))
                 if(!is.null(roles) && roles != ""){
                     roles <- jsonlite::fromJSON(roles)

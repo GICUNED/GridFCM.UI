@@ -16,7 +16,7 @@ user_page_ui <- fluidPage(class="custom-margins",
     textOutput("fechas_suscripcion"),
     br(),
     # meter redireccion a pagina licencias
-    div(id="redirect-licencias", menuItem(i18n$t("Ir a Planes de Suscripción"), href = route_link("plan"), newTab = FALSE)),
+    div(id="redirect-licencias", menuItem(i18n$t("Ir a Gestión de Suscripción"), href = route_link("plan"), newTab = FALSE)),
     )
     
 
