@@ -322,6 +322,10 @@ form_server <- function(input, output, session){
             renderizar_puntos()
         }
     )
+
+    observeEvent(input$reiniciar_puntuaciones, {
+        renderizar_puntos()
+    })
                 
     shinyjs::onclick("siguiente_puntuacion", {
         slider_names <- list()
@@ -539,6 +543,13 @@ form_server <- function(input, output, session){
         }
     })  
 
+    reescalar <- function(vector, min_valor, max_valor) {
+        resultado <- (vector - (max_valor + min_valor) / 2) / ((max_valor - min_valor) / 2)
+        redondeado <- lapply(resultado, function(x) round(x, 2))
+        
+        return(redondeado)
+    }
+
     observeEvent(input$sim_rep_w_rows_selected, {
         selected_row <- input$sim_rep_w_rows_selected
         fechas <- fechas_repgrid()
@@ -548,6 +559,19 @@ form_server <- function(input, output, session){
         id <- decodificar_BD_excel('repgrid_xlsx', ruta_destino, session$userData$id_paciente, fecha)
         excel_repgrid <- read.xlsx(ruta_destino)
         file.remove(ruta_destino)
+        # convierto a numero las puntuaciones
+        columnas_a_convertir <- 2:(ncol(excel_repgrid) - 1)
+        # Utiliza lapply para aplicar la conversión a las columnas seleccionadas
+        excel_repgrid[, columnas_a_convertir] <- lapply(excel_repgrid[, columnas_a_convertir], as.numeric)
+        message(excel_repgrid)
+        # min y max
+        min <- as.numeric(names(excel_repgrid)[1])
+        max <- as.numeric(names(excel_repgrid)[dim(excel_repgrid)[1] + 3])
+        message("min, max: ", min, " ", max)
+        # Utiliza lapply para aplicar la conversión a las columnas seleccionadas
+        
+        excel_repgrid[, columnas_a_convertir] <- unlist(lapply(excel_repgrid[, columnas_a_convertir], function(x) reescalar(x, min=min, max=max)))
+        message(excel_repgrid)
         # saco los constructos
         constructos_izq <- excel_repgrid[1:nrow(excel_repgrid), 1]
         constructos_der <- excel_repgrid[1:nrow(excel_repgrid), ncol(excel_repgrid)]
@@ -675,9 +699,6 @@ form_server <- function(input, output, session){
                 h <- valor_hipotetico_calculado(valoracion_actual()[i], valoracion_ideal()[i])
                 valoracion_hipotetico(c(valoracion_hipotetico(), h))
             }
-            message("val hip")
-            message(valoracion_hipotetico())
-
         }
         elementos_evaluables_w(nombres_valoraciones_w())
         constructos_puntuables_w(constructos_w())
@@ -1008,7 +1029,7 @@ form_server <- function(input, output, session){
             polo_izq <- sapply(constructos_separados, function(x) x[1])
             polo_der <- sapply(constructos_separados, function(x) x[2])
             constructos <- c()
-
+            message(polo_izq, " ", polo_der)
             # eso es un poco chapuza pero, iterando sobre esto, evito mostrar el constructo ya evaluado (diagonal)
             iterador <- as.integer(iterador_constructos())
             for(j in 1:num_constructos){
@@ -1017,7 +1038,6 @@ form_server <- function(input, output, session){
                     constructos[[j]] <- NULL
                 }
                 else{
-                    message(j)
                     constructos[[j]] <- fluidRow(
                         column(12, class="d-flex justify-content-between gap-1",
                             polo_izq[j],
@@ -1048,6 +1068,10 @@ form_server <- function(input, output, session){
             renderizar_puntos_w()
         }
     )
+
+    observeEvent(input$reiniciar_puntuaciones_w, {
+        renderizar_puntos_w()
+    })
 
     shinyjs::onclick("siguiente_puntuacion_w", {
         slider_names <- list()
