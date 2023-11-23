@@ -317,7 +317,8 @@ observeEvent(input$tabla_datos_repgrid, {
       xi <- changes[[1]][[1]]
       yi <- changes[[1]][[2]]
       old_v <- changes[[1]][[3]]
-
+      # vuelvo a poner el ultimo valor y luego elimino su instancia de la variable reactiva
+      cambios_reactive(head(cambios_reactive(), -1))
       tabla_original <- hot_to_r(input$tabla_datos_repgrid) 
       tabla_original[xi+1, yi+1] <- old_v
       tabla_manipulable(tabla_original)
@@ -364,7 +365,7 @@ output$bert <- renderPlot({
       con <- establishDBConnection()
       comentarios <- DBI::dbGetQuery(con, sprintf("SELECT distinct(comentarios) FROM repgrid_xlsx where id=%d", session$userData$id_repgrid))
       DBI::dbDisconnect(con)
-      coment = comentarios$comentarios
+      coment <- comentarios$comentarios
       if(is.na(coment)){
         coment <- ""
       }
