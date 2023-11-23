@@ -12,7 +12,7 @@ success_payment_ui <- fluidPage(class="custom-margins",
     br(),
     # meter redireccion a pagina licencias
     fluidRow(id="redirectLicencias", class = "flex-container-titles",
-        div(class = "nav-item suggestion-page", menuItem(i18n$t("Ir a Gestión de Suscripción"), href = route_link("plan"), newTab = FALSE))
+        div(class = "nav-item payments-page", menuItem(i18n$t("Ir a Gestión de Suscripción"), href = route_link("plan"), newTab = FALSE))
     ),
     
 )

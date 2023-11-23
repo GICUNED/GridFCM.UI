@@ -24,9 +24,19 @@ user_page_server <- function(input, output, session){
     if(length(datos$activa) > 0){ #no funciona con !is.null(datos$activa)
         # Hay una suscripcion o mas para el usuario, comprobar si esta activa
         if(TRUE %in% datos$activa){
-            output$suscripcion_activa <- renderText({
-                paste("Suscripciones de Organización Activadas: ", length(datos[datos$activa,c("activa")]))
-            })
+            if(!is.null(rol)){
+                if(rol != "usuario_coordinador_organizacion" && rol != "usuario_administrador"){
+                    output$suscripcion_activa <- renderText({
+                        paste("Suscripciones Activadas: ", length(datos[datos$activa,c("activa")]))
+                    })
+                }else{
+                    output$suscripcion_activa <- renderText({
+                        paste("Suscripciones de Organización Activadas: ", length(datos[datos$activa,c("activa")]))
+                    })
+                }
+            }
+            
+            
 
             datos_activos = datos[datos$activa,]
             fechas_text <- ""

@@ -85,6 +85,7 @@ services:
       - "gridfcm"
     volumes:
       - { type: "bind", source: "./config/keycloak/realm.json", target: "/opt/keycloak/data/import/realm.json", read_only: true }
+      - "./config/keycloak/themes:/opt/keycloak/themes"
     environment:
       DOMAIN_PRIMARY: "${DOMAIN:?}"
       KC_HTTP_ENABLED: "true"

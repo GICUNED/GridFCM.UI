@@ -29,8 +29,6 @@ knitr::knit_hooks$set(webgl = hook_webgl)
 
 
 
-
-
 source("global.R")
 # GRID1
 source("R/GraphFunctions.R")
@@ -73,6 +71,7 @@ source("Servers/plan_subscription_server.R")
 source("Servers/success_payment_server.R")
 
 
+
 #DB
 source("DB/establish_con.R")
 source("DB/gestion_excel.R")
@@ -106,7 +105,11 @@ tags$li(a(
 )),
 tags$li(a(
   class = "item", href = route_link("plan"), "Planes"
-))
+)),
+tags$li(a(
+  class = "item", href = route_link("payment"), "Pagos"
+)),
+
 )
 
 theme <- create_theme(
@@ -134,7 +137,6 @@ info_url <- sprintf("https://%s/keycloak/realms/Gridfcm/protocol/openid-connect/
 logout_url <- sprintf("https://%s/keycloak/realms/Gridfcm/protocol/openid-connect/logout", domain)
 
 
-
 has_auth_code <- function(params) {
   return(!is.null(params$code))
 }
@@ -150,7 +152,6 @@ has_auth_code <- function(params) {
 # }
 
 # link <- make_authorization_url()
-
 
 
 ui <- add_cookie_handlers(
@@ -266,6 +267,7 @@ ui <- add_cookie_handlers(
 )
 
 
+
 gestionar_rol <- function(roles){
   # obtengo el maximo rol posible a nivel de funcionalidades
   usuario_ilimitado <- FALSE
@@ -300,6 +302,7 @@ gestionar_rol <- function(roles){
     return("default-roles-gridfcm")
   }
 }
+
 
 crear_usuario <- function(info){
   con <- establishDBConnection()
@@ -376,6 +379,7 @@ server <- function(input, output, session) {
       psicologo(NULL)
     }
   })
+
 
   observe({
     user <- psicologo()
@@ -477,9 +481,6 @@ server <- function(input, output, session) {
     }
     DBI::dbDisconnect(con)
   })
-
-
-
 
   observeEvent(input$logout_btn, {
     user <- psicologo()
@@ -591,7 +592,6 @@ server <- function(input, output, session) {
                       choices = i18n_r()$t(c("Análisis Bidimensional",
                               "Análisis Tridimensional","Análisis por Conglomerados","Índices Cognitivos","Dilemas")))
   })
-
 
 
 
