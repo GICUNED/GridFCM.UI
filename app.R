@@ -181,18 +181,11 @@ ui <- add_cookie_handlers(
           div(id="repgrid-page", class = "nav-item repg-page hidden-div", menuItem("RepGrid", href = route_link("repgrid"), icon = icon("magnifying-glass-chart"), newTab = FALSE)),
           div(id = "wimpgrid-page", class = "nav-item wimpg-page hidden-div", menuItem("WimpGrid", href = route_link("wimpgrid"), icon = icon("border-none"), newTab = FALSE)),
           div(id="suggestion-page", class = "nav-item suggestion-page hidden-div", menuItem(i18n$t("Sugerencias"), href = route_link("suggestion"), icon = icon("comments"), newTab = FALSE)),
-          div(id="plan-page", class = "nav-item plan-page hidden-div", menuItem(i18n$t("Gestión de Suscripción"), href = route_link("plan"), icon = icon("comments"), newTab = FALSE)),
+          div(id="plan-page", class = "nav-item plan-page hidden-div", menuItem(i18n$t("Gestión de Suscripción"), href = route_link("plan"), icon = icon("address-card"), newTab = FALSE)),
           #div(class = 'language-selector',selectInput('selected_language',i18n$t("Idioma"), choices = i18n$get_languages(),selected = i18n$get_translation_language())),
           div(class = 'language-selector',radioGroupButtons('selected_language',i18n$t("Idioma"), choices = i18n$get_languages(), selected = i18n$get_translation_language(), width='100%', checkIcon = list())),
           
-          actionButton('logout_btn',i18n$t("Cerrar sesión"), icon = icon("right-from-bracket"), status="danger", class="logout-btn", style="display: none;"),
-
-          div(class= "financing-info flex-container-mini",
-            strong(i18n$t("Financiado por")),
-            div(class="financingimg"),
-            p(i18n$t("Convocatoria de ayudas a la investigación 2022, Ignacio H. de Larramendi"))
-
-          )
+          actionButton('logout_btn',i18n$t("Cerrar sesión"), icon = icon("right-from-bracket"), status="danger", class="logout-btn", style="display: none;")
         )
       ),
 
@@ -237,7 +230,6 @@ ui <- add_cookie_handlers(
             class = "logoimg404"
           ),
 
-
           column(
             12,
             class = "d-flex mb-4 justify-content-center",
@@ -252,7 +244,6 @@ ui <- add_cookie_handlers(
         ))
       ),
 
-
       add_busy_spinner(
         spin = "hollow-dots",
         color = "#72af9e",
@@ -260,8 +251,16 @@ ui <- add_cookie_handlers(
         position = "top-left",
         onstart = TRUE,
         margins = c(10, 10),
-      )
+      ),
 
+       tags$footer(class="footer-psychlabuned", 
+       
+         div(class= "financing-info flex-container-mini",
+            strong(i18n$t("Financiado por")),
+            div(class="financingimg"),
+            p(i18n$t("Convocatoria de ayudas a la investigación 2022, Ignacio H. de Larramendi"))
+          )
+      )
     )
   )
 )
@@ -302,8 +301,6 @@ gestionar_rol <- function(roles){
   }
 }
 
-
-
 crear_usuario <- function(info){
   con <- establishDBConnection()
   info <- (httr::content(info, "text"))
@@ -327,8 +324,6 @@ crear_usuario <- function(info){
 
   return(id)
 }
-
-
 
 obtener_token <- function(params){
   code <- params$code
@@ -521,6 +516,7 @@ server <- function(input, output, session) {
   }
 
   link <- make_authorization_url()
+  
   
   observe(
     if(is.null(user_name())){

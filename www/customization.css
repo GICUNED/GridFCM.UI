@@ -62,7 +62,8 @@ textarea#sugerencia{
 }
 
 textarea{
-  max-height: 240px;
+  max-height: 150px;
+  min-height: 50px;
 }
 
 #text{
@@ -116,9 +117,6 @@ li.nav-item::marker{
   color: #fff;
 }
 
-.content{
-  margin-inline: 22px;
-}
 
 .hidden{
   display: none !important;
@@ -741,7 +739,7 @@ background-color: #454D55;
 
 .content-wrapper{
   min-height: 100vh !important;
-  padding-block: 22px;
+  padding-top: 22px;
 
   position: relative;
 
@@ -863,7 +861,7 @@ background-color: #454D55;
 }
 
 .content{
-  margin-top: 34.8px;
+  margin: 34.8px 22px 200px 22px;
 }
 @media (max-width: 495px) {
   .navbar::after {
@@ -885,8 +883,20 @@ background-color: #454D55;
   content: "\f29a";
   font-weight: 900;
 }
+/*modals--------------------------------------------------------------------*/
 
-/*sidebar*/
+.modal-title{
+  font-weight: bold;
+}
+
+.modal-body .form-group{
+  padding: 7.5px;
+  width: 100%;
+}
+
+
+
+/*sidebar--------------------------------------------------------------------*/
 
 .language-selector .form-group div .selectize-control .selectize-dropdown{
   height: fit-content;
@@ -1117,18 +1127,33 @@ background-color: #454D55;
   width: 100%;
   overflow: hidden;
   word-break: break-all;
+
+  color: #0A0A0A;
+}
+
+.financing-info p{
+  color: #393939;
+
 }
 
 .financing-info p, .financing-info strong{
   text-align: center;
   font-size: .8rem;
   width: 100%;
+  margin: 0;
 }
 
 .financing-info span{
   display: inline-block;
-  width: 100%;
-  
+  width: 100%; 
+}
+
+.dark-mode .financing-info{
+  color: white;
+}
+
+.dark-mode .financing-info p{
+  color: #cacaca;
 }
 
 /*Botones de acción o descarga --------------------------------------------------------*/
@@ -1343,6 +1368,21 @@ box-shadow: none !important;
   gap: .5rem;
 }
 
+
+.footer-psychlabuned{
+  position: absolute;
+  bottom:0;
+  left: 0;
+  width:100%;
+  color: white;
+  background-color: white;
+  z-index: 1000;
+}
+
+.dark-mode .footer-psychlabuned{
+  background-color: #343a40;
+}
+
 /*carousel-------------------------------------------------*/
 .slick-slide{
   color: inherit !important;
@@ -1461,7 +1501,7 @@ box-shadow: none !important;
   
     box-shadow: 0 0 1px rgba(0,0,0,0.125),
   }
-
+  
   
 @media (max-width: 1417px){
   .input-graphic-container{
@@ -1494,13 +1534,17 @@ box-shadow: none !important;
 
   padding: .5rem 1.2rem 1.2rem !important;
   margin: auto;
-  width: 300px !important;
+  width: 25rem !important;
  
 
   position: absolute;
-  z-index: 103;
+  z-index: 9999;
   top: 15%;
-  left: calc(50% - 150px);
+  left: calc(50% - 12.5rem);
+}
+
+.patient-form-container .shiny-input-container:not(.shiny-input-container-inline) {
+  width: 100% !important;
 }
 
 .dark-mode .patient-form-container{
@@ -1590,7 +1634,7 @@ box-shadow: none !important;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: .5rem;
+  gap: .2rem;
   margin-top: auto;
 }
 

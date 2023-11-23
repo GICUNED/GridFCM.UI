@@ -55,7 +55,7 @@ function navButtons(){
 
   if (window.location.href.indexOf("/") > -1) {
     
-    $('.nav-pills, #user-page')
+    $('.nav-pills, #profile')
         .find('.nav-link')
         .removeClass('active');
 
@@ -72,7 +72,7 @@ function navButtons(){
       .find('.nav-link')
       .removeClass('active');
 
-    $('#user-page')
+    $('#profile')
       .find('.nav-link')
       .addClass('active');
   };
@@ -81,7 +81,7 @@ function navButtons(){
 
   if (window.location.href.indexOf("/patient") > -1) {
     
-    $('.nav-pills, #user-page')
+    $('.nav-pills, #profile')
       .find('.nav-link')
       .removeClass('active');
 
@@ -101,7 +101,7 @@ function navButtons(){
   //botón de Import
   if (window.location.href.indexOf("/import") > -1) {
     
-     $('.nav-pills, #user-page')
+     $('.nav-pills, #profile')
       .find('.nav-link')
       .removeClass('active');
 
@@ -117,7 +117,7 @@ function navButtons(){
    //botón de Files
    if (window.location.href.indexOf("/excel") > -1) {
     
-     $('.nav-pills, #user-page')
+     $('.nav-pills, #profile')
       .find('.nav-link')
       .removeClass('active');
 
@@ -133,7 +133,7 @@ function navButtons(){
    //botón de Form
    if (window.location.href.indexOf("/form") > -1) {
     
-     $('.nav-pills, #user-page')
+     $('.nav-pills, #profile')
       .find('.nav-link')
       .removeClass('active');
 
@@ -149,7 +149,7 @@ function navButtons(){
    //botón de RepGrid
    if (window.location.href.indexOf("/repgrid") > -1) {
     
-     $('.nav-pills, #user-page')
+     $('.nav-pills, #profile')
       .find('.nav-link')
       .removeClass('active');
 
@@ -161,7 +161,7 @@ function navButtons(){
    //botón de WimpGrid
    if (window.location.href.indexOf("/wimpgrid") > -1) {
     
-     $('.nav-pills, #user-page')
+     $('.nav-pills, #profile')
       .find('.nav-link')
       .removeClass('active');
 
@@ -173,7 +173,7 @@ function navButtons(){
   //botón de WimpGrid
   if (window.location.href.indexOf("/suggestion") > -1) {
     
-    $('.nav-pills, #user-page')
+    $('.nav-pills, #profile')
      .find('.nav-link')
      .removeClass('active');
 
@@ -184,11 +184,22 @@ function navButtons(){
 
  if (window.location.href.indexOf("/plan") > -1) {
     
-  $('.nav-pills, #user-page')
+  $('.nav-pills, #profile')
    .find('.nav-link')
    .removeClass('active');
 
  $('#plan-page')
+   .find('.nav-link')
+   .addClass('active');
+};
+
+if (window.location.href.indexOf("/user") > -1) {
+    
+  $('.nav-pills')
+   .find('.nav-link')
+   .removeClass('active');
+
+ $('#profile')
    .find('.nav-link')
    .addClass('active');
 };

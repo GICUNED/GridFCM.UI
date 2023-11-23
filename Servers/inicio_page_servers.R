@@ -29,59 +29,59 @@ inicio_server <- function(input, output, session) {
     showModal(modalDialog(
           title = i18n$t("Acceso modo invitado"),
           textInput("email_invitado", i18n$t("Introduzca su e-mail"), value=""),
-          br(),
           box(
+            icon = icon("book"),
             width = 12,
             collapsed = TRUE,
-            title = "Aviso legal",
+            title = i18n$t("Aviso legal"),
             div(
               id = "aviso_legal",
               # Título
-              h2(
+              h3(strong(
                 "Aviso Legal - Uso del Correo Electrónico para Fines Comerciales"
-              ),
+              )),
               # Párrafo introductorio
               p(
                 "Este Aviso Legal regula el uso de su dirección de correo electrónico proporcionada al acceder y utilizar la aplicación web (en adelante, 'la Aplicación') propiedad de UNED (en adelante, 'el Titular'). Por favor, lea atentamente este aviso antes de continuar utilizando la Aplicación."
               ),
               # Párrafos de contenido
-              p(
+              strong(
                 "Consentimiento"
               ),
               p(
                 "Al utilizar la Aplicación, usted acepta y consiente expresamente que su dirección de correo electrónico proporcionada será utilizada por el Titular con fines comerciales. Esto implica que el Titular podrá enviarle comunicaciones, información de productos, promociones y otras comunicaciones comerciales relacionadas con sus servicios y productos a la dirección de correo electrónico proporcionada."
               ),
-              p(
+              strong(
                 "Obligación de Proporcionar el Correo Electrónico"
               ),
               p(
                 "El Titular requiere que proporcione su dirección de correo electrónico como condición necesaria para acceder y utilizar la Aplicación. Sin la provisión de esta información, no se le permitirá acceder a la Aplicación."
               ),
-              p(
+              strong(
                 "Derecho a Retirar el Consentimiento"
               ),
               p(
                 "Usted tiene el derecho de retirar su consentimiento en cualquier momento. Puede hacerlo siguiendo las instrucciones proporcionadas en las comunicaciones comerciales que reciba o poniéndose en contacto con el Titular utilizando los datos de contacto proporcionados en la Aplicación."
               ),
-              p(
+              strong(
                 "Uso Responsable del Correo Electrónico"
               ),
               p(
                 "El Titular se compromete a utilizar su dirección de correo electrónico de acuerdo con la legislación vigente en materia de protección de datos y privacidad. Su dirección de correo electrónico no será compartida con terceros sin su consentimiento previo."
               ),
-              p(
+              strong(
                 "Seguridad de Datos"
               ),
               p(
                 "El Titular toma medidas de seguridad razonables para proteger la información proporcionada, incluyendo su dirección de correo electrónico. Sin embargo, no se puede garantizar la seguridad absoluta en la transmisión de datos por Internet. Usted reconoce y acepta que la transmisión de datos por Internet siempre conlleva riesgos."
               ),
-              p(
+              strong(
                 "Modificaciones del Aviso Legal"
               ),
               p(
                 "El Titular se reserva el derecho de modificar este Aviso Legal en cualquier momento. Las modificaciones entrarán en vigor inmediatamente después de su publicación en la Aplicación. Se le notificará cualquier cambio importante en la forma en que se utiliza su dirección de correo electrónico."
               ),
-              p(
+              strong(
                 "Contacto"
               ),
               p(
@@ -96,7 +96,7 @@ inicio_server <- function(input, output, session) {
           fade = TRUE,
           footer = tagList(
             modalButton("Cancelar"),
-            actionButton("entrar_invitado", i18n$t("Aceptar condiciones"), class = "btn-success")
+            actionButton("entrar_invitado", i18n$t("Aceptar condiciones"), status= "success", class = "btn-success")
           )
       ))
   })
