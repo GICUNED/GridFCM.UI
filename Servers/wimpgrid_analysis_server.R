@@ -457,29 +457,21 @@ observeEvent(input$tabla_datos_wimpgrid, {
     cambios_reactive(cambios_actualizados)
 
     if(!val) {
-
       xi <- changes[[1]][[1]]
-
       yi <- changes[[1]][[2]]
-
       old_v <- changes[[1]][[3]]
+      # vuelvo a poner el ultimo valor y luego elimino su instancia de la variable reactiva
+      cambios_reactive(head(cambios_reactive(), -1))
       tabla_original <- hot_to_r(input$tabla_datos_wimpgrid)
-
       tabla_original[xi+1, yi+1] <- old_v
-
       tabla_manipulable_w(tabla_original)
-
       output$tabla_datos_wimpgrid <- renderRHandsontable({
         rhandsontable(tabla_original) %>%
           hot_table(highlightCol = TRUE, highlightRow = TRUE) %>%
           hot_col(col = seq(1, session$userData$num_col_wimpgrid - 1), format = "3")
       })
- 
-
     } else if (!is.null(session$userData$datos_wimpgrid)) {
-
       tabla_manipulable_w(hot_to_r(input$tabla_datos_wimpgrid))
-
     }
 
   }

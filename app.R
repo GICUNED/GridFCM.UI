@@ -30,7 +30,6 @@ knitr::knit_hooks$set(webgl = hook_webgl)
 
 
 
-
 source("global.R")
 # GRID1
 source("R/GraphFunctions.R")
