@@ -10,6 +10,8 @@ plan_subscription_server <- function(input, output, session){
     rol_ilimitado <- '{"id": "c70eddee-5dd0-49ed-8a02-20eeff11d751","name": "usuario_ilimitado"}'
     rol_ilimitado <- jsonlite::fromJSON(rol_ilimitado)
     
+    # el usuario podría darle a comprar, asi que inicializamos el server
+    # success_payment_server(input, output, session)
 
     # funcion que devuelve el token para acceder a la api de admin
     obtener_token_admin_api <- function(params){

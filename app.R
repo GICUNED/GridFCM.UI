@@ -29,7 +29,6 @@ knitr::knit_hooks$set(webgl = hook_webgl)
 
 
 
-
 source("global.R")
 # GRID1
 source("R/GraphFunctions.R")
@@ -104,9 +103,13 @@ tags$li(a(
 tags$li(a(
   class = "item", href = route_link("wimpgrid"), "Wimpgrid analysis"
 )),
-# tags$li(a(
-#   class = "item", href = route_link("plan"), "Planes"
-# ))
+tags$li(a(
+  class = "item", href = route_link("plan"), "Planes"
+)),
+tags$li(a(
+  class = "item", href = route_link("payment"), "Pagos"
+)),
+
 )
 
 theme <- create_theme(
@@ -132,7 +135,6 @@ keycloak_client_secret <- Sys.getenv("KEYCLOAK_CLIENT_SECRET")
 token_url <- sprintf("https://%s/keycloak/realms/Gridfcm/protocol/openid-connect/token", domain)
 info_url <- sprintf("https://%s/keycloak/realms/Gridfcm/protocol/openid-connect/userinfo", domain)
 logout_url <- sprintf("https://%s/keycloak/realms/Gridfcm/protocol/openid-connect/logout", domain)
-
 
 
 has_auth_code <- function(params) {
@@ -296,7 +298,6 @@ gestionar_rol <- function(roles){
 }
 
 
-
 crear_usuario <- function(info){
   con <- establishDBConnection()
   info <- (httr::content(info, "text"))
@@ -374,6 +375,7 @@ server <- function(input, output, session) {
       psicologo(NULL)
     }
   })
+
 
   observe({
     user <- psicologo()
@@ -585,7 +587,6 @@ server <- function(input, output, session) {
                       choices = i18n_r()$t(c("Análisis Bidimensional",
                               "Análisis Tridimensional","Análisis por Conglomerados","Índices Cognitivos","Dilemas")))
   })
-
 
 
 
