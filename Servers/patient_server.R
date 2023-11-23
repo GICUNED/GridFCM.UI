@@ -83,9 +83,13 @@ patient_server <- function(input, output, session){
         renderizarTabla()
     }
     
-    observeEvent(input$addPatient, {
+    shinyjs::onclick("addPatient",  {
         shinyjs::show("patientForm")
     })
+    # observeEvent(input$addPatient, {
+    #     message("presiono boton")
+    #     shinyjs::show("patientForm")
+    # })
 
     runjs("
         $('#addPatient').on('click', function (){

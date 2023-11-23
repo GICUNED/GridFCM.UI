@@ -58,9 +58,10 @@ plan_subscription_server <- function(input, output, session){
         }else{
             shinyjs::show("panel-gestion-licencias")
         }
-    }else{
-        shinyjs::hide("panel-gestion-licencias")
     }
+    # else{
+    #     shinyjs::hide("panel-gestion-licencias")
+    # }
     
     # reactive variables
     subscription_data <- reactiveValues(subscriptions = NULL, selected_subscription_id = NULL)
@@ -109,9 +110,13 @@ plan_subscription_server <- function(input, output, session){
     }
 
     # boton añadir participante
-    observeEvent(input$darLicencia, {
+    shinyjs::onclick("darLicencia",  {
         shinyjs::show("participantForm")
     })
+    # observeEvent(input$darLicencia, {
+    #     shinyjs::show("participantForm")
+        
+    # })
 
     runjs("
         $('#darLicencia').on('click', function (){
@@ -145,7 +150,7 @@ plan_subscription_server <- function(input, output, session){
     # gestion de las filas seleccionadas en la tabla suscripciones
     observeEvent(input$subscription_table_rows_selected, {
         selected_row <- input$subscription_table_rows_selected
-    
+        message(input$subscription_table_rows_selected)
         if (!is.null(selected_row)) {
             shinyjs::enable("darLicencia")
             # #ocultar simulaciones por si se habían desplegado
@@ -169,6 +174,9 @@ plan_subscription_server <- function(input, output, session){
             #     shinyjs::show("simulaciones_wimp")
                 shinyjs::show("gestion-licencias")
                 shinyjs::show("licencias_table")
+            }else{
+                shinyjs::hide("gestion-licencias")
+                shinyjs::hide("licencias_table")
             }
 
             cargar_licencias()
@@ -178,6 +186,9 @@ plan_subscription_server <- function(input, output, session){
             
         } else {
             shinyjs::disable("darLicencia")
+            shinyjs::hide("licencias_table")
+            # shinyjs::hide("simulaciones_wimp")
+            shinyjs::hide("gestion-licencias")
             # shinyjs::hide("simulationIndicatorRG")
             # shinyjs::hide("simulationIndicatorWG")
             # shinyjs::hide("patientIndicator")
@@ -189,6 +200,38 @@ plan_subscription_server <- function(input, output, session){
         paste(icon = icon("universal-access"), "Sucripción ", subscription_data$selected_subscription_id)
     })
 
+    # cargar_licencias <- function(){
+    #     output$licencias_table <- renderDT({
+    #         numero_aleatorio <- sample(1:1000, 1)
+    #         con <- establishDBConnection()
+    #         query <- sprintf("SELECT p.id,p.nombre, p.email, p.username FROM LICENCIA l INNER JOIN PSICOLOGO p on p.id=l.fk_psicologo WHERE fk_suscripcion=%d", subscription_data$selected_subscription_id)
+    #         licenciasDB <- DBI::dbGetQuery(con, query)
+    #         DBI::dbDisconnect(con)
+    #         if(!is.null(licenciasDB)){
+    #             licencias_data$psicologos <- licenciasDB$id
+    #             df <- data.frame(Nombre = licenciasDB$nombre, Email = licenciasDB$email, Usuario=licenciasDB$username)
+    #             data_rep <- df %>%
+    #                 mutate(
+    #                     actionable = glue(
+    #                         '<button id="revocar_acceso_modal" onclick="Shiny.onInputChange(\'button_id_revocar_acceso\', {row_number()+numero_aleatorio})">Revocar Acceso</button>',
+    #                     )
+    #                 )
+    #             DT::datatable(
+    #                 data_rep,
+    #                 selection = "single",
+    #                 rownames = FALSE,
+    #                 escape = FALSE,
+    #                 options = list(
+    #                     order = list(0, 'asc'),
+    #                     columnDefs = list(list(width = '125px', targets = ncol(data_rep) - 1 ))
+    #                 ),
+                    
+    #                 colnames = c(i18n$t("Nombre"), i18n$t("Email"), i18n$t("Usuario"), "")
+    #             )
+    #         }
+    #     })
+    # }
+
     cargar_licencias <- function(){
         output$licencias_table <- renderDT({
             numero_aleatorio <- sample(1:1000, 1)
@@ -199,20 +242,34 @@ plan_subscription_server <- function(input, output, session){
             if(!is.null(licenciasDB)){
                 licencias_data$psicologos <- licenciasDB$id
                 df <- data.frame(Nombre = licenciasDB$nombre, Email = licenciasDB$email, Usuario=licenciasDB$username)
-                data_rep <- df %>%
-                    mutate(
-                        actionable = glue(
-                            '<button id="custom_btn_abrir" onclick="Shiny.onInputChange(\'button_id_revocar_acceso\', {row_number()+numero_aleatorio})">Revocar Acceso</button>',
-                        )
-                    )
+
+                custom_button_revocar_accesso <- function(tbl){
+                    function(i){
+                        sprintf(
+                        '<button id="revocar_acceso_modal_%s_%d" type="button" onclick="%s">Revocar Accesso</button>', 
+                        tbl, i, "Shiny.setInputValue('button_id_revocar_acceso', this.id, {priority: 'event'});")
+                    }
+                }
+
+                data_df <- cbind(df, 
+                            button = sapply(1:nrow(df), custom_button_revocar_accesso("tbl1")), 
+                            stringsAsFactors = FALSE)
+
+
+                # data_rep <- df %>%
+                #     mutate(
+                #         actionable = glue(
+                #             '<button id="revocar_acceso_modal" onclick="Shiny.onInputChange(\'button_id_revocar_acceso\', {row_number()+numero_aleatorio})">Revocar Acceso</button>',
+                #         )
+                #     )
                 DT::datatable(
-                    data_rep,
+                    data_df,
                     selection = "single",
                     rownames = FALSE,
                     escape = FALSE,
                     options = list(
                         order = list(0, 'asc'),
-                        columnDefs = list(list(width = '125px', targets = ncol(data_rep) - 1 ))
+                        columnDefs = list(list(width = '125px', targets = ncol(data_df) - 1 ))
                     ),
                     
                     colnames = c(i18n$t("Nombre"), i18n$t("Email"), i18n$t("Usuario"), "")
@@ -246,6 +303,9 @@ plan_subscription_server <- function(input, output, session){
     # }
 
 
+    # shinyjs::onclick("confirmarRevocarAcceso",  {
+    #     shinyjs::show("participantForm")
+    # })
 
     observeEvent(input$confirmarRevocarAcceso, {
         removeModal()  # Cierra la ventana modal de confirmación
@@ -357,11 +417,23 @@ plan_subscription_server <- function(input, output, session){
         }
     })
 
-    observeEvent(input$button_id_revocar_acceso, {
+    # shinyjs::onclick("button_id_revocar_acceso",  {
+    #     message("entro a mostrar modal")
+    #     shinyshowModal(modalDialog(
+    #         title = i18n$t("Confirmar Acción"),
+    #         sprintf(i18n$t("¿Está seguro de que quiere quitar de la suscripción %d la licencia al usuario %s. La licencia quedará disponible de nuevo y se podrá reasignar a otro usuario."), subscription_data$selected_subscription_id,licencias_data$selected_licencia_psicologo_id),
+    #         fade = TRUE,
+    #         footer = tagList(
+    #             modalButton(i18n$t("Cancelar")),
+    #             actionButton("confirmarRevocarAcceso", i18n$t("Confirmar"), class = "btn-danger")
+    #         )
+    #     ))
+    # })
+    observeEvent(input[["button_id_revocar_acceso"]], {
+        message("entro a mostrar modal")
         showModal(modalDialog(
             title = i18n$t("Confirmar Acción"),
             sprintf(i18n$t("¿Está seguro de que quiere quitar de la suscripción %d la licencia al usuario %s. La licencia quedará disponible de nuevo y se podrá reasignar a otro usuario."), subscription_data$selected_subscription_id,licencias_data$selected_licencia_psicologo_id),
-            fade = TRUE,
             footer = tagList(
                 modalButton(i18n$t("Cancelar")),
                 actionButton("confirmarRevocarAcceso", i18n$t("Confirmar"), class = "btn-danger")
@@ -370,8 +442,8 @@ plan_subscription_server <- function(input, output, session){
     })
 
 
-    observeEvent(input$email, {
-        if(input$email != ""){
+    observeEvent(input$email_participant, {
+        if(input$email_participant != ""){
             shinyjs::enable("guardarAddParticipant")
         }
         else{
@@ -384,26 +456,26 @@ plan_subscription_server <- function(input, output, session){
         isValidEmail <- function(x) {
             grepl("\\<[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}\\>", as.character(x), ignore.case=TRUE)
         }
-        if(isValidEmail(input$email)){
+        if(isValidEmail(input$email_participant)){
             # correo valido
             # aqui checkeamos si el email existe en la bd
             con <- establishDBConnection()
-            id <- as.integer(DBI::dbGetQuery(con, sprintf("SELECT id FROM psicologo WHERE email='%s'", input$email)))
+            id <- as.integer(DBI::dbGetQuery(con, sprintf("SELECT id FROM psicologo WHERE email='%s'", input$email_participant)))
             if(!is.na(id)){
                 # comprobar si el usuario ya tiene licencia activa
                 ## para esto, primero vemos si tiene alguna licencia
-                query <- sprintf("select l.id from licencia l inner join psicologo p on l.fk_psicologo = p.id where p.email='%s'", input$email)
+                query <- sprintf("select l.id from licencia l inner join psicologo p on l.fk_psicologo = p.id where p.email='%s'", input$email_participant)
                 datos <- DBI::dbGetQuery(con, query)
                 if(length(datos$id) == 0){
                     # no tiene licencia, comprobar si tiene una suscripcion individual
-                    query <- sprintf("select s.id from suscripcion s inner join psicologo p on s.fk_psicologo = p.id where p.email='%s'", input$email)
+                    query <- sprintf("select s.id from suscripcion s inner join psicologo p on s.fk_psicologo = p.id where p.email='%s'", input$email_participant)
                     datos <- DBI::dbGetQuery(con, query)
                     if(length(datos$id) == 0){
                         # no tiene suscripcion
                         output$email_text <- renderText({
                             "Un usuario ya está registrado con este email. Confirma la adjudicación de la licencia a dicho usuario."
                         })
-                        shinyjs::disable("email")
+                        shinyjs::disable("email_participant")
                         shinyjs::hide("guardarAddParticipant")
                         shinyjs::show("segundo_paso")
                         shinyjs::enable("confirmAddParticipant")
@@ -412,7 +484,7 @@ plan_subscription_server <- function(input, output, session){
                         output$email_text <- renderText({
                             "Este usuario ya tiene una suscripción."
                         })
-                        shinyjs::enable("email")
+                        shinyjs::enable("email_participant")
                         shinyjs::show("guardarAddParticipant")
                         shinyjs::hide("segundo_paso")
                         shinyjs::disable("confirmAddParticipant")
@@ -422,7 +494,7 @@ plan_subscription_server <- function(input, output, session){
                     output$email_text <- renderText({
                         "Este usuario ya tiene una licencia activa."
                     })
-                    shinyjs::enable("email")
+                    shinyjs::enable("email_participant")
                     shinyjs::show("guardarAddParticipant")
                     shinyjs::hide("segundo_paso")
                     shinyjs::disable("confirmAddParticipant")
@@ -432,7 +504,7 @@ plan_subscription_server <- function(input, output, session){
                 output$email_text <- renderText({
                     "El email introducido no está asociado a ningún usuario registrado. Por favor, registre al usuario en la web antes de asignarle la licencia."
                 })
-                shinyjs::enable("email")
+                shinyjs::enable("email_participant")
                 shinyjs::show("guardarAddParticipant")
                 shinyjs::hide("segundo_paso")
                 shinyjs::disable("confirmAddParticipant")
@@ -443,7 +515,7 @@ plan_subscription_server <- function(input, output, session){
             output$email_text <- renderText({
                 "El email introducido no es valido. Introduzca un email correcto, i.e: user@example.com"
             })
-            shinyjs::enable("email")
+            shinyjs::enable("email_participant")
             shinyjs::show("guardarAddParticipant")
             shinyjs::hide("segundo_paso")
             shinyjs::disable("confirmAddParticipant")
@@ -466,7 +538,7 @@ plan_subscription_server <- function(input, output, session){
         # aqui tenemos que añadir a la tabla licencias al usuario en cuestion
         con <- establishDBConnection()
         # obtenemos el id del psicologo mediante el email proporcionado
-        query <- sprintf("select id from psicologo where email='%s'", input$email)
+        query <- sprintf("select id from psicologo where email='%s'", input$email_participant)
         datos <- DBI::dbGetQuery(con, query)
         if(length(datos$id)==0){
             # problema, porque ha clickado en añadir sin que esté registrado, no deberia pasar 
@@ -499,11 +571,11 @@ plan_subscription_server <- function(input, output, session){
             # cerramos el formulario
             delay(100, shinyjs::hide("participantForm"))
             # Vaciar los campos del formulario
-            updateTextInput(session, "email", value = "")
+            updateTextInput(session, "email_participant", value = "")
             output$email_text <- renderText({
                 ""
             })
-            shinyjs::enable("email")
+            shinyjs::enable("email_participant")
             shinyjs::show("guardarAddParticipant")
             shinyjs::hide("segundo_paso")
             shinyjs::disable("confirmAddParticipant")
@@ -530,7 +602,7 @@ plan_subscription_server <- function(input, output, session){
             admin_token <- obtener_token_admin_api()
 
             ## ahora necesitamos el user id del usuario al que añadir el rol ilimitado
-            user_id <- obtener_user_id(input$email, admin_token)
+            user_id <- obtener_user_id(input$email_participant, admin_token)
             
             ## ahora añadimos el rol ilimitado a keycloak
             if(!is.null(user_id)){
@@ -568,12 +640,12 @@ plan_subscription_server <- function(input, output, session){
     shinyjs::onevent("click", "new-participant-cancel", {
         delay(100, shinyjs::hide("participantForm"))
         # Vaciar los campos del formulario
-        updateTextInput(session, "email", value = "")
+        updateTextInput(session, "email_participant", value = "")
 
         output$email_text <- renderText({
             ""
         })
-        shinyjs::enable("email")
+        shinyjs::enable("email_participant")
         shinyjs::show("guardarAddParticipant")
         shinyjs::hide("segundo_paso")
         shinyjs::disable("confirmAddParticipant")

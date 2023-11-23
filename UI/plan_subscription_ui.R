@@ -73,29 +73,20 @@ plan_subscription_ui <- fluidPage(class="custom-margins",
                         span(i18n$t("Nuevo participante")),
                         ),
                         div(id="primer_paso", class = "flex-container-resp-col",
-                            textInput("email", i18n$t("Email:")),
+                            textInput("email_participant", i18n$t("Email:")),
                             textOutput("email_text"),
                             # actionButton("continue", i18n$t("Continuar"), status = 'success', disabled=TRUE, icon = icon("save"))
                             actionButton("guardarAddParticipant", i18n$t("Añadir"), status = 'success', disabled=TRUE, icon = icon("save"))
                         ),
                         div(id="segundo_paso", class = "flex-container-resp-col hidden-div",
                             actionButton("confirmAddParticipant", i18n$t("Confirmar"), status = 'success', disabled=TRUE, icon = icon("save"))
-                        ),
-                        # div(id="segundo_paso", class = "flex-container-resp-col hidden-div",
-                        #     textInput("nombre", i18n$t("Nombre:")),
-                        #     textInput("apellido", i18n$t("Apellido:")),
-                        #     textInput("nombre_usuario", i18n$t("Nombre de Usuario:")),
-                        #     # textInput("password", i18n$t("Contraseña:")),
-                        #     # textInput("confirm_password", i18n$t("Confirmar contraseña:")),
-                        # ),
-                        # div(id="confirmar", class = "flex-container-resp-col hidden-div",
-                        #     actionButton("guardarAddParticipant", i18n$t("Añadir"), status = 'success', disabled=TRUE, icon = icon("save"))
-                        # ),
+                        )
                         
                     )
                 ),
             )
-        ),
+        )
+        
         
     ),
     

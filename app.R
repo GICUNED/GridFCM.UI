@@ -29,9 +29,6 @@ knitr::knit_hooks$set(webgl = hook_webgl)
 
 
 
-
-
-
 source("global.R")
 # GRID1
 source("R/GraphFunctions.R")
@@ -74,6 +71,7 @@ source("Servers/plan_subscription_server.R")
 source("Servers/success_payment_server.R")
 
 
+
 #DB
 source("DB/establish_con.R")
 source("DB/gestion_excel.R")
@@ -105,9 +103,9 @@ tags$li(a(
 tags$li(a(
   class = "item", href = route_link("wimpgrid"), "Wimpgrid analysis"
 )),
-tags$li(a(
-  class = "item", href = route_link("plan"), "Planes"
-))
+# tags$li(a(
+#   class = "item", href = route_link("plan"), "Planes"
+# ))
 )
 
 theme <- create_theme(
@@ -151,7 +149,6 @@ has_auth_code <- function(params) {
 # }
 
 # link <- make_authorization_url()
-
 
 
 ui <- add_cookie_handlers(
@@ -259,6 +256,7 @@ ui <- add_cookie_handlers(
     )
   )
 )
+
 
 
 gestionar_rol <- function(roles){
@@ -476,9 +474,6 @@ server <- function(input, output, session) {
     }
     DBI::dbDisconnect(con)
   })
-
-
-
 
   observeEvent(input$logout_btn, {
     user <- psicologo()
