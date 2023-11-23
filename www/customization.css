@@ -65,9 +65,14 @@ textarea{
   max-height: 240px;
 }
 
+#text{
+  word-break: break-all;
+}
+
 .sidebar nav,
 .sidebar nav ul{
   overflow: hidden;
+
 }
 
 .nav-functions-container{
@@ -1069,7 +1074,9 @@ background-color: #454D55;
   border-style: solid;
   border: 1px solid #dee2e6 !important;;
   border-top: 1px solid white !important;
-  border-left: 1px solid white !important;;
+  border-left: 1px solid white !important;
+  width: 100%;
+  object-fit: cover;
 }
 
 .dark-mode .logoimg{
@@ -1080,15 +1087,48 @@ background-color: #454D55;
   border-left: 1px solid #343a40 !important;;
 }
 
-.logoimg{
-  width: 100%;
-  object-fit: cover;
-}
-
 .logoimg404{
   width: 100%;
   margin-block: 2rem;
   object-fit: contain;
+}
+
+.financingimg{
+  background: no-repeat center url('../LogoMAPFRE_light.svg');
+  background-size: contain;
+  height: 60px;
+  border: none;
+  width: 100%;
+  object-fit: cover;
+}
+
+.dark-mode .financingimg{
+  background: no-repeat center url('../LogoMAPFRE_dark.svg');
+  background-size: contain;
+  height: 60px;
+  border: none;
+  width: 100%;
+  object-fit: cover;
+}
+
+
+.financing-info{
+  padding: 1rem;
+  width: 100%;
+  overflow: hidden;
+  word-break: break-all;
+}
+
+.financing-info p, .financing-info strong{
+  text-align: center;
+  font-size: .8rem;
+  width: 100%;
+}
+
+.financing-info span{
+  display: inline-block;
+  width: 100%;
+  
 }
 
 /*Botones de acción o descarga --------------------------------------------------------*/

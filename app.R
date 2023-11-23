@@ -168,7 +168,14 @@ ui <- add_cookie_handlers(
           #div(class = 'language-selector',selectInput('selected_language',i18n$t("Idioma"), choices = i18n$get_languages(),selected = i18n$get_translation_language())),
           div(class = 'language-selector',radioGroupButtons('selected_language',i18n$t("Idioma"), choices = i18n$get_languages(), selected = i18n$get_translation_language(), width='100%', checkIcon = list())),
           
-          actionButton('logout_btn',i18n$t("Cerrar sesión"), icon = icon("right-from-bracket"), status="danger", class="logout-btn", style="display: none;")
+          actionButton('logout_btn',i18n$t("Cerrar sesión"), icon = icon("right-from-bracket"), status="danger", class="logout-btn", style="display: none;"),
+
+          div(class= "financing-info flex-container-mini",
+            strong(i18n$t("Financiado por")),
+            div(class="financingimg"),
+            p(i18n$t("Convocatoria de ayudas a la investigación 2022, Ignacio H. de Larramendi"))
+
+          )
         )
       ),
 
