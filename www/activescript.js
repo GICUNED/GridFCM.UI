@@ -182,4 +182,15 @@ function navButtons(){
      .addClass('active');
  };
 
+ if (window.location.href.indexOf("/plan") > -1) {
+    
+  $('.nav-pills, #user-page')
+   .find('.nav-link')
+   .removeClass('active');
+
+ $('#plan-page')
+   .find('.nav-link')
+   .addClass('active');
+};
+
 }

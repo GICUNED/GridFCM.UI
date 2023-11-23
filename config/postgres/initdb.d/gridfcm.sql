@@ -98,6 +98,23 @@ CREATE TABLE IF NOT EXISTS sugerencias (
     fecha timestamp
 );
 
+CREATE TABLE IF NOT EXISTS suscripcion (
+    id SERIAL PRIMARY KEY,
+    fecha_inicio TIMESTAMP,
+    fecha_fin TIMESTAMP,
+    licencias_contratadas INTEGER,
+    licencias_disponibles INTEGER,
+    organizacion BOOLEAN,
+    activa BOOLEAN,
+    id_stripe_suscripcion VARCHAR(50),
+    fk_psicologo INT REFERENCES psicologo(id)
+);
+
+CREATE TABLE IF NOT EXISTS licencia (
+    id SERIAL PRIMARY KEY,
+    fk_psicologo INT REFERENCES psicologo(id),
+    fk_suscripcion INT REFERENCES suscripcion(id)
+);
 
 
 -- Seeder para el psicologo de pruebas para el usuario demo
@@ -117,4 +134,3 @@ SELECT p.id, pi.id
 FROM psicologo AS p
 CROSS JOIN paciente_insert AS pi
 WHERE p.email = 'prueba@uned.com' and p.username = 'prueba';
-
