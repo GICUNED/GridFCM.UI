@@ -426,7 +426,11 @@ form_server <- function(input, output, session){
                         DBI::dbDisconnect(con)
                     }
                     repgrid_home_server(input,output,session)
-                    runjs("window.location.href = '/#!/repgrid';")
+                    runjs("
+                    setTimeout(function () {
+                        window.location.href = '/#!/repgrid';
+                    }, 100);
+                    ")
                     
                     shinyjs::hide("ConfirmacionRepgrid")
                     shinyjs::hide("import-page")
@@ -1190,7 +1194,12 @@ form_server <- function(input, output, session){
                     }
                     # Solo archivo WimpGrid cargado, navegar a WimpGrid Home
                     wimpgrid_analysis_server(input,output,session)
-                    runjs("window.location.href = '/#!/wimpgrid';")
+                    
+                    runjs("
+                    setTimeout(function () {
+                        window.location.href = '/#!/wimpgrid';
+                    }, 100);")
+
                     shinyjs::hide("ConfirmacionWimpgrid")
                     shinyjs::hide("import-page")
                     shinyjs::hide("form-page")

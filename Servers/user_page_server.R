@@ -1,4 +1,5 @@
 user_page_server <- function(input, output, session){
+
     rol <- session$userData$rol
     id_psicologo <- session$userData$id_psicologo
 
@@ -11,6 +12,10 @@ user_page_server <- function(input, output, session){
         paste(user_name,"")
     })
 
+    observeEvent(input$admin_btn,
+    runjs("window.open('/keycloak/admin/master/console/#/Gridfcm', '_blank' );")
+    )
+
     con <- establishDBConnection()
     query <- sprintf("SELECT fecha_inicio, fecha_fin, activa from SUSCRIPCION WHERE fk_psicologo=%d", id_psicologo)
     datos <- DBI::dbGetQuery(con, query)
@@ -21,6 +26,21 @@ user_page_server <- function(input, output, session){
     activa <- datos$activa
     datos <- data.frame(fecha_inicio, fecha_fin, activa)
 
+    observeEvent(input$redirect_licencias, {
+        # Navigates to the "Form" page when the specified input is clicked
+        runjs("window.location.href = '/#!/plan';")
+    })
+
+    if(!is.null(rol)){
+        if(rol == "usuario_administrador"){
+            shinyjs::show("admin_btn")
+        }
+
+        else{
+            shinyjs::hide("admin_btn")
+        }
+    }
+
     if(length(datos$activa) > 0){ #no funciona con !is.null(datos$activa)
         # Hay una suscripcion o mas para el usuario, comprobar si esta activa
         if(TRUE %in% datos$activa){
@@ -29,6 +49,7 @@ user_page_server <- function(input, output, session){
                     output$suscripcion_activa <- renderText({
                         paste("Suscripciones Activadas: ", length(datos[datos$activa,c("activa")]))
                     })
+                    shinyjs::show("admin_btn")
                 }else{
                     output$suscripcion_activa <- renderText({
                         paste("Suscripciones de Organización Activadas: ", length(datos[datos$activa,c("activa")]))

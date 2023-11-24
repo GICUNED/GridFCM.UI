@@ -154,7 +154,10 @@ patient_server <- function(input, output, session){
 
     observeEvent(input$tabSimulaciones, {
         runjs("
-            window.scrollTo(0, document.body.scrollHeight);
+        $('#patientSimulations')[0].scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+        });
         ")
 
     })
@@ -192,6 +195,14 @@ patient_server <- function(input, output, session){
                     colnames = c(i18n$t("Fecha"), i18n$t("Anotaciones"), "")
                 )
             })
+
+            runjs("
+                $('#patientSimulations')[0].scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+                ")
+            
         }
     }
 
@@ -235,8 +246,14 @@ patient_server <- function(input, output, session){
                     ),
                     colnames = c(i18n$t("Fecha"), i18n$t("Anotaciones"), "")
                 )
-            },
-            )
+            })
+
+            runjs("
+                $('#patientSimulations')[0].scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+                ")
         }
     }
 
@@ -289,11 +306,13 @@ patient_server <- function(input, output, session){
                     # Solo archivo RepGrid cargado, navegar a RepGrid Home
                     session$userData$id_paciente <- user_data$selected_user_id
                     repgrid_home_server(input,output,session)
+
                     runjs("
                     setTimeout(function () {
-                    window.location.href = '/#!/repgrid';
-                    }, 200)
-                        ")
+                        window.location.href = '/#!/repgrid';
+                        window.scrollTo(0,0);
+                    }, 200);
+                    ")
 
                     runjs("
                     $('#controls-panel-rg').removeClass('anim-fade-out');
@@ -379,7 +398,10 @@ patient_server <- function(input, output, session){
                     wimpgrid_analysis_server(input,output,session)
                     runjs("setTimeout(function () {
                     window.location.href = '/#!/wimpgrid';
-                    }, 200)")
+                    window.scrollTo(0,0);
+                    }, 200);
+
+                    ")
 
                     runjs("
                     $('#controls-panel-vis').removeClass('anim-fade-out');
@@ -487,7 +509,13 @@ patient_server <- function(input, output, session){
         session$userData$rol <- rol
         import_excel_server(input, output, session)
         form_server(input, output, session)
-        runjs("window.location.href = '/#!/import';")
+        
+         runjs("
+            setTimeout(function () {
+                window.location.href = '/#!/import';
+                window.scrollTo(0,0);
+            }, 10);
+        ")
         # es una opcion esto session$reload()
     })
 

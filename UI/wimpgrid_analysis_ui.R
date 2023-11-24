@@ -7,6 +7,8 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
 
 
   tabsetPanel(
+
+    id = "tabs_wimp",
     
   tabPanel(i18n$t("Datos"), id = "tab_data_w", icon = icon("table"),
 

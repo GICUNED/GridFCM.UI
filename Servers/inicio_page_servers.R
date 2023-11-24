@@ -4,6 +4,7 @@ inicio_server <- function(input, output, session) {
   keycloak_client_id <- "gridfcm"
   domain <- Sys.getenv("DOMAIN")
   ruta_app <- sprintf("https://%s/", domain)
+  
   make_authorization_url <- function() {
     
     url_template <- "http://%s/keycloak/realms/Gridfcm/protocol/openid-connect/auth?client_id=%s&redirect_uri=%s&response_type=code&scope=%s"

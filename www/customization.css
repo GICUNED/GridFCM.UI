@@ -208,6 +208,10 @@ li.nav-item::marker{
 
 /*Botones no nativo ----------------------------------------------------------------------*/
 
+.logout-btn{
+  width: 100%;
+}
+
 .btn-herramienta{
 
   display: flex !important;
@@ -235,12 +239,8 @@ li.nav-item::marker{
   border-color: rgba(255, 255, 255, 0.369) !important;
 }
 
-.btn-tool, .radiobtn {
+.btn-tool {
   border: none !important;
-}
-
-.btn-tool, .radiobtn {
-  border: 1px solid;
 }
 
 
@@ -333,6 +333,7 @@ li.nav-item::marker{
   font-size: 1.33rem;
 }
 
+
 .radiobtn.active, .radiobtn.active:hover{
   font-weight: 700;
   background-color: #ffffff !important;
@@ -344,7 +345,7 @@ li.nav-item::marker{
 
 .radiobtn{
   background-color: #F4F6F9 !important;
-  border: none;
+  border: .5px solid #b4bec4  !important;
 }
 
 #selected_language div div:nth-child(1) .radiobtn::before{
@@ -388,6 +389,7 @@ li.nav-item::marker{
 
 .dark-mode .radiobtn{
   background-color: #343A40 !important;
+  border: .5px solid #a0a6aa !important;
 }
 
 .language-selector{
@@ -591,7 +593,6 @@ li.nav-item::marker{
 #patientSimulations, #patientIndicator, #simulationIndicator{
   animation: fade-in 200ms forwards;
 }
-
 
 #patientSimulations{
   display: flex;
@@ -861,7 +862,7 @@ background-color: #454D55;
 }
 
 .content{
-  margin: 34.8px 22px 200px 22px;
+  margin: 34.8px 22px 0 22px;
 }
 @media (max-width: 495px) {
   .navbar::after {
@@ -1005,6 +1006,18 @@ background-color: #454D55;
 
 @media (min-width: 992px){
 
+  .sidebar-mini.sidebar-collapse .logout-btn span{
+    visibility: hidden;
+  }
+
+  .sidebar-mini.sidebar-collapse .logout-btn i{
+    margin-left: .5rem;
+  }
+
+  .sidebar-mini.sidebar-collapse .main-sidebar:hover .logout-btn span{
+    visibility:  visible;
+  }
+
   .sidebar-mini.sidebar-collapse .nav-sidebar .language-selector{
 
     height: 58px !important;
@@ -1127,7 +1140,6 @@ background-color: #454D55;
   width: 100%;
   overflow: hidden;
   word-break: break-all;
-
   color: #0A0A0A;
 }
 
@@ -1225,11 +1237,16 @@ background-color: #454D55;
 
 /*Botones de listas -----------------------------------------------------------------------------*/
 
+listadoConstructos_w
+
+
 #lista_nombres, #lista_constructos,
 #lista_nombres_w, #lista_constructos_w{
   background-color:#F4F6F9;
   padding: .5rem;
   border-radius: .5rem;
+
+  color: #6c757d !important;
 }
 
 .dark-mode #lista_nombres,
@@ -1239,6 +1256,9 @@ background-color: #454D55;
 .dark-mode #lista_constructos_w{
   background-color:#454D55;
   padding: .5rem;
+
+  color: white !important;
+
 }
 
 #lista_nombres .nav-item .nav-link.active,
@@ -1257,7 +1277,9 @@ background-color: #454D55;
 }
 
 #lista_nombres .nav-item .nav-link:not(.active):hover,
-#lista_constructos .nav-item .nav-link:not(.active):hover,
+#lista_constructos .nav-item .nav-link:not(.active):hover{
+  color: #6c757d;  
+}
 
 .dark-mode #lista_nombres_w .nav-item .nav-link:not(.active):hover,
 .dark-mode #lista_constructos_w  .nav-item .nav-link:not(.active):hover{
@@ -1316,7 +1338,11 @@ box-shadow: none !important;
   margin-top: 1rem;
 
 }
+/*Planes y Precios -----------------------------------------------------------------------------*/
 
+.PricingTable{
+  font-family: 'Titillium Web', sans-serif;
+}
 
 /*Contenedores -----------------------------------------------------------------------------*/
 
@@ -1374,6 +1400,8 @@ box-shadow: none !important;
   bottom:0;
   left: 0;
   width:100%;
+  margin-bottom: -136px;
+  height: 136px;
   color: white;
   background-color: white;
   z-index: 1000;
@@ -1381,63 +1409,6 @@ box-shadow: none !important;
 
 .dark-mode .footer-psychlabuned{
   background-color: #343a40;
-}
-
-/*carousel-------------------------------------------------*/
-.slick-slide{
-  color: inherit !important;
-}
-
-.slick-next::before {
-  display: inline-block;
-  width: 1rem;
-  text-align: center;
-  font-family: "Font Awesome 6 Free";
-  content: "\f061";
-  font-weight: 900;
-  margin-left: .6rem;
-}
-
-.slick-prev::before {
-  display: inline-block;
-  width: 1rem;
-  text-align: center;
-  font-family: "Font Awesome 6 Free";
-  content: "\f060";
-  font-weight: 900;
-  margin-right: .8rem;
-}
-
-.slidecontainer {
-  position: relative;
-}
-
-.slidecontent
-{
-  position: absolute;
-  bottom: 1.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.slidecontent-2
-{
-  position: absolute;
-  bottom: 25%;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.slidetitle {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 30px;
-}
-.slidebutton {
-  position: relative;
-  margin-top: -15%;
-  color: #FFFEFB;
 }
 
 .flex-container-sm{
@@ -1687,6 +1658,119 @@ box-shadow: none !important;
 
 .dark-mode .flex-container{
   border-color: #56606a;
+}
+
+/*user license-------------------------------------------------*/
+
+.user-container{
+  display: flex;
+  background-color: #dfe2df;
+  padding: 1rem;
+  border-radius: 1rem;
+  max-width: 550px;
+}
+
+.dark-mode .user-container{
+  background-color: #2b3034;
+}
+
+.user-details{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: .4rem;
+  align-items: center;
+  margin: .5rem 0;
+  justify-content: left;
+}
+
+.user-details h3{
+  margin: 0;
+  font-weight: bold;
+}
+
+.user-details i{
+  font-size: 2rem;
+  color: #637367;
+}
+
+.dark-mode .user-details i{
+  color: #beddc6;
+}
+
+.user-license{
+  display: flex;
+  gap: .4rem;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: left;
+  margin: 1rem .5rem .5rem .5rem;
+  justify-content: left;
+}
+
+#suscripcion_activa{
+  color: #454D55;
+}
+
+#redirect_licencias{
+  height: 40px;
+}
+
+/*carousel-------------------------------------------------*/
+.slick-slide{
+  color: inherit !important;
+}
+
+.slick-next::before {
+  display: inline-block;
+  width: 1rem;
+  text-align: center;
+  font-family: "Font Awesome 6 Free";
+  content: "\f061";
+  font-weight: 900;
+  margin-left: .6rem;
+}
+
+.slick-prev::before {
+  display: inline-block;
+  width: 1rem;
+  text-align: center;
+  font-family: "Font Awesome 6 Free";
+  content: "\f060";
+  font-weight: 900;
+  margin-right: .8rem;
+}
+
+.slidecontainer {
+  position: relative;
+}
+
+.slidecontent
+{
+  position: absolute;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.slidecontent-2
+{
+  position: absolute;
+  bottom: 25%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.slidetitle {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 30px;
+}
+.slidebutton {
+  position: relative;
+  margin-top: -15%;
+  color: #FFFEFB;
 }
 
 /*Mensajes de error ---------------------------------------------------------------*/

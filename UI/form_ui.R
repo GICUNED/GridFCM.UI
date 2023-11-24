@@ -135,7 +135,7 @@ tabsetPanel(
 
                 column(12, class="d-flex justify-content-center mt-3",
                     actionButton("atras_puntuaciones", class="mr-2", icon=icon("left-long"), i18n$t("Atrás")),
-                    actionButton("reiniciar_puntuaciones", i18n$t("Reiniciar")),
+                    actionButton("reiniciar_puntuaciones", status="warning", class="mr-1", icon=icon("arrow-rotate-left"), i18n$t("Reiniciar")),
                     actionButton("siguiente_puntuacion", status="success", class="ml-auto", i18n$t("Siguiente"), icon = icon("arrow-right"))
                 )
             ),
@@ -256,7 +256,7 @@ tabsetPanel(
                     
                     column(12, class="d-flex justify-content-center mt-3",
                         actionButton("atras_evaluaciones_w", class="mr-2",icon=icon("left-long"), i18n$t("Atrás")),
-                        actionButton("siguiente_evaluacion_w",class="ml-auto", status="warning", i18n$t("Siguiente"), icon = icon("arrow-right"))
+                        actionButton("siguiente_evaluacion_w",class="ml-auto", status="success", i18n$t("Siguiente"), icon = icon("arrow-right"))
                     )
                 )
             ),
@@ -314,7 +314,7 @@ tabsetPanel(
                     
                     column(12, class="d-flex justify-content-center mt-3",
                         actionButton("atras_constructos_aleatorios_w", class="mr-2", icon=icon("left-long"), i18n$t("Atrás")),
-                        actionButton("siguiente_constructo_w", status="warning", class="ml-auto", i18n$t("Siguiente"), icon = icon("arrow-right"), disabled=TRUE)
+                        actionButton("siguiente_constructo_w", status="success", class="ml-auto", i18n$t("Siguiente"), icon = icon("arrow-right"), disabled=TRUE)
                     )
                 ),
             ),
@@ -328,8 +328,8 @@ tabsetPanel(
 
                     column(12, class="d-flex justify-content-center mt-3",
                         actionButton("atras_puntuaciones_w", class="mr-2",icon=icon("left-long"), i18n$t("Atrás")),
-                        actionButton("reiniciar_puntuaciones_w", i18n$t("Reiniciar")),
-                        actionButton("siguiente_puntuacion_w",  status="warning", class="ml-auto", i18n$t("Siguiente"), icon = icon("arrow-right"))
+                        actionButton("reiniciar_puntuaciones_w", status="warning", class="mr-1", icon=icon("arrow-rotate-left"), i18n$t("Reiniciar")),
+                        actionButton("siguiente_puntuacion_w",  status="success", class="ml-auto", i18n$t("Siguiente"), icon = icon("arrow-right"))
                     )
                 ),
             ),

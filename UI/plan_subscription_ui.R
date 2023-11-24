@@ -4,8 +4,6 @@ plan_subscription_ui <- fluidPage(class="custom-margins",
     fluidRow(class = "flex-container-titles",
         h2(i18n$t("Planes de Suscripción"), class = "rg pagetitlecustom mt-2"),
     ),
-    br(),
-    br(),
     fluidRow(id="panel-compra",
         # column(id="panel-compra-individual", width=4, offset = 0, style='padding:0px;',
         #     h4(i18n$t("Sucripción individual")),
@@ -20,7 +18,7 @@ plan_subscription_ui <- fluidPage(class="custom-margins",
         #     h6(i18n$t("Precio: Desde 40€ (2 licencias)")),
         #     a(i18n$t("Comprar"), href=""),
         # ),
-        column(width = 12, offset = 0, style='padding:0px;',
+        column(12, offset = 0, class="mt-2 mb-2", style='padding:0px;',
             HTML('
                 <script async src="https://js.stripe.com/v3/pricing-table.js"></script>
                 <stripe-pricing-table pricing-table-id="prctbl_1OFEcSD433GyTQY7rr9L0vMw"
@@ -30,19 +28,14 @@ plan_subscription_ui <- fluidPage(class="custom-margins",
        ),
         
     ),
-    
-    br(),
-    br(),
-
-    hr(),
 
 
-    column(id="panel-gestion-licencias", width = 12,
+    column(12, id="panel-gestion-licencias", class="mt-4 mb-2",
         fluidRow(class = "flex-container-titles",
             h2(i18n$t("Gestión de Licencias"), class = "rg pagetitlecustom mt-2"),
         ),
         h6(i18n$t("Suscripcion: Select de las suscripciones que tiene el usuario")),
-        column(12, class = "patients-table p-3 bg-white rounded-lg",
+        column(12, class = "patients-table p-3 bg-white rounded-lg mt-2",
             shinycssloaders::withSpinner(DTOutput("subscription_table"), type = 4, color = "#022a0c", size = 0.6),
             div(class = "button-container mt-2 justify-content-center",    
                 actionButton("darLicencia", i18n$t("Añadir Participante"), disabled=TRUE, icon = icon("plus"), status="success"),
