@@ -1712,6 +1712,10 @@ box-shadow: none !important;
   color: #454D55;
 }
 
+.dark-mode #suscripcion_activa{
+  color: #a7adb4;
+}
+
 #redirect_licencias{
   height: 40px;
 }

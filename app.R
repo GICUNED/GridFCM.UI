@@ -220,7 +220,6 @@ ui <- add_cookie_handlers(
         route(path = "payment",
               ui = success_payment_ui),
 
-
         page_404 = page404(shiny::tags$div(
           h1("Error 404", class = "pagetitlecustom"),
           h3("Página no encontrada.", class = "pagesubtitlecustom", status = 'danger'),
