@@ -28,6 +28,7 @@ library(cookies)
 knitr::knit_hooks$set(webgl = hook_webgl)
 
 
+
 source("global.R")
 # GRID1
 source("R/GraphFunctions.R")
@@ -181,7 +182,7 @@ ui <- add_cookie_handlers(
           div(id="repgrid-page", class = "nav-item repg-page hidden-div", menuItem("RepGrid", href = route_link("repgrid"), icon = icon("magnifying-glass-chart"), newTab = FALSE)),
           div(id = "wimpgrid-page", class = "nav-item wimpg-page hidden-div", menuItem("WimpGrid", href = route_link("wimpgrid"), icon = icon("border-none"), newTab = FALSE)),
           div(id="suggestion-page", class = "nav-item suggestion-page hidden-div", menuItem(i18n$t("Sugerencias"), href = route_link("suggestion"), icon = icon("comments"), newTab = FALSE)),
-          div(id="plan-page", class = "nav-item plan-page hidden-div", menuItem(i18n$t("Plan de Suscripción"), href = route_link("plan"), icon = icon("address-card"), newTab = FALSE)),
+          div(id="plan-page", class = "nav-item plan-page hidden-div", menuItem(i18n$t("Gestión de Suscripción"), href = route_link("plan"), icon = icon("address-card"), newTab = FALSE)),
           #div(class = 'language-selector',selectInput('selected_language',i18n$t("Idioma"), choices = i18n$get_languages(),selected = i18n$get_translation_language())),
           div(class = 'language-selector',radioGroupButtons('selected_language',i18n$t("Idioma"), choices = i18n$get_languages(), selected = i18n$get_translation_language(), width='100%', checkIcon = list())),
           
@@ -407,7 +408,7 @@ server <- function(input, output, session) {
           suggestion_server(input, output, session)
           user_page_server(input, output, session)
           plan_subscription_server(input, output, session)
-          success_payment_server(input, output, session)
+          # success_payment_server(input, output, session)
           query <- sprintf("UPDATE PSICOLOGO SET token = '%s' WHERE id=%d", GLOBAL_TOKEN, id) # de momento 1
           DBI::dbExecute(con, query)
           query2 <- sprintf("UPDATE PSICOLOGO SET refresh_token = '%s' WHERE id=%d", GLOBAL_REFRESH_TOKEN, id) # de momento 1
@@ -473,13 +474,15 @@ server <- function(input, output, session) {
         suggestion_server(input, output, session)
         user_page_server(input, output, session)
         plan_subscription_server(input, output, session)
-        success_payment_server(input, output, session)
+        # success_payment_server(input, output, session)
         message("rol> ", rol)
         DBI::dbExecute(con, sprintf("update psicologo set rol='%s' where id=%d", rol, user$id)) # de momento 1
       }
     }
     DBI::dbDisconnect(con)
   })
+
+
 
 
   observeEvent(input$logout_btn, {
