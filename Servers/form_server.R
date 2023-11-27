@@ -603,6 +603,8 @@ form_server <- function(input, output, session){
         #shinyjs::hide("iniciar_nuevo_w")
         shinyjs::hide("sim_rep_w")
         shinyjs::show("Constructos_w")
+        proxy <- dataTableProxy("sim_rep_w")
+        proxy %>% selectRows(NULL)
         
     })
     
