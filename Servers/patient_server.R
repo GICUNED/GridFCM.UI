@@ -341,7 +341,7 @@ patient_server <- function(input, output, session){
         
         proxy <- dataTableProxy("user_table")
         proxy %>% selectRows(NULL)
-        shinyjs::hide("patientSimulations")
+        #shinyjs::hide("patientSimulations")
     }
     
     observeEvent(input$simulaciones_wimp_rows_selected, {
@@ -434,7 +434,7 @@ patient_server <- function(input, output, session){
         })
         proxy <- dataTableProxy("user_table")
         proxy %>% selectRows(NULL)
-        shinyjs::hide("patientSimulations")
+        #shinyjs::hide("patientSimulations")
         
     }
 

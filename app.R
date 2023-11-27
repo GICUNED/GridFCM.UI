@@ -151,8 +151,6 @@ has_auth_code <- function(params) {
 # }
 
 # link <- make_authorization_url()
-
-
 ui <- add_cookie_handlers(
 
   dashboardPage(
@@ -357,6 +355,8 @@ obtener_token_refrescado <- function(refresh){
 }
 
 server <- function(input, output, session) {
+
+  
   
   user_name <- reactiveVal(NULL)
   psicologo <- reactiveVal(NULL)
