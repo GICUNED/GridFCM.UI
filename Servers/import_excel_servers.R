@@ -60,6 +60,7 @@ import_excel_server <- function(input, output, session) {
           read.xlsx(ruta_destino_rep)
         }
 
+
         # aqui voy a comprobar si estoy importando el excel exportado con los numeros como strings
         columnas_a_convertir <- 2:(ncol(excel_repgrid) - 1)
         # Utiliza lapply para aplicar la conversión a las columnas seleccionadas
@@ -101,6 +102,10 @@ import_excel_server <- function(input, output, session) {
         }
         },
         error = function(e) {
+          con <- establishDBConnection()
+          DBI::dbExecute(con, sprintf("DELETE FROM repgrid_xlsx where id = %d", id))
+          DBI::dbDisconnect(con)
+          
           showModal(modalDialog(
                 title = i18n$t("Ha habido un problema al procesar la rejilla. Revise el formato de la plantilla."),
                 footer = tagList(
@@ -108,6 +113,7 @@ import_excel_server <- function(input, output, session) {
                 )
             ))
         }
+        
         # warning = function(w) {
         #   message(paste("warning:", w))
         # }, 
@@ -198,6 +204,10 @@ import_excel_server <- function(input, output, session) {
           }
         },
         error = function(e) {
+          con <- establishDBConnection()
+          DBI::dbExecute(con, sprintf("DELETE FROM wimpgrid_xlsx where id = %d", id))
+          DBI::dbDisconnect(con)
+
           showModal(modalDialog(
                 title = i18n$t("Ha habido un problema al procesar la rejilla. Revise el formato de la plantilla."),
                 footer = tagList(
