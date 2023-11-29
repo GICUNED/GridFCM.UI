@@ -273,10 +273,12 @@ output$tabla_datos_repgrid <- renderRHandsontable({
     indicess <- seq(1, session$userData$num_col_repgrid - 1)
 
 
-    rhandsontable(tabla_manipulable(), rowHeaders = NULL) %>%
+    rhandsontable(tabla_manipulable(), rowHeaders = NULL, useTypes=TRUE) %>%
+       
       hot_table(highlightCol = TRUE, highlightRow = TRUE, stretchH="all") %>%
       hot_cols(fixedColumnsLeft = 1) %>%
-      hot_col(col = indicess, format = "1")
+      hot_col(col = indicess)%>%
+      hot_context_menu(allowRowEdit=FALSE, allowColEdit=FALSE)
 
   }
 })
@@ -324,9 +326,11 @@ observeEvent(input$tabla_datos_repgrid, {
       tabla_manipulable(tabla_original)
 
       output$tabla_datos_repgrid <- renderRHandsontable({
-        rhandsontable(tabla_original) %>%
+        rhandsontable(tabla_original, rowHeaders=NULL) %>%
           hot_table(highlightCol = TRUE, highlightRow = TRUE, stretchH="all") %>%
-          hot_col(col = seq(1, session$userData$num_col_repgrid - 1), format = "3")
+          hot_cols(fixedColumnsLeft = 1) %>%
+          hot_col(col = seq(1, session$userData$num_col_repgrid - 1))%>%
+          hot_context_menu(allowRowEdit=FALSE, allowColEdit=FALSE)
       })
 
     } else if (!is.null(session$userData$datos_repgrid)) {

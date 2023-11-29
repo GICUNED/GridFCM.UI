@@ -8,7 +8,6 @@ form_server <- function(input, output, session){
     shinyjs::hide("PuntuacionesRepgrid")
     shinyjs::hide("ConfirmacionRepgrid")
     shinyjs::show("Elementos")
-
     nombres <- reactiveVal(list("Yo - Actual", "Yo - Ideal"))
     nombre_seleccionado <- reactiveVal(NULL)
     constructos <- reactiveVal(NULL)
@@ -99,6 +98,19 @@ form_server <- function(input, output, session){
     shinyjs::onclick("atras_preguntas_diada", {
         shinyjs::hide("preguntasDiadas")
         shinyjs::show("Elementos")
+        nombres_w(NULL)
+        nombres_valoraciones_w(NULL)
+        nombre_seleccionado_w(NULL)
+        constructos_w(NULL)
+        constructo_seleccionado_w(NULL)
+        aleatorios_w(NULL)
+        elementos_evaluables_w(NULL)
+        elementos_puntuables_w(NULL)
+        constructos_puntuables_w(NULL)
+        puntos_wimpgrid(NULL)
+        valoracion_actual(NULL)
+        valoracion_hipotetico(NULL)
+        fechas_repgrid(NULL)
     })
 
 
@@ -567,10 +579,10 @@ form_server <- function(input, output, session){
         columnas_a_convertir <- 2:(ncol(excel_repgrid) - 1)
         # Utiliza lapply para aplicar la conversión a las columnas seleccionadas
         excel_repgrid[, columnas_a_convertir] <- lapply(excel_repgrid[, columnas_a_convertir], as.numeric)
-        message(excel_repgrid)
-        # min y max
-        min <- as.numeric(names(excel_repgrid)[1])
-        max <- as.numeric(names(excel_repgrid)[dim(excel_repgrid)[1] + 3])
+
+        nombres_columnas <- colnames(excel_repgrid)
+        min <- as.numeric(nombres_columnas[1])
+        max <- as.numeric(nombres_columnas[length(nombres_columnas)])
         message("min, max: ", min, " ", max)
         # Utiliza lapply para aplicar la conversión a las columnas seleccionadas
         
@@ -591,6 +603,8 @@ form_server <- function(input, output, session){
         #shinyjs::hide("iniciar_nuevo_w")
         shinyjs::hide("sim_rep_w")
         shinyjs::show("Constructos_w")
+        proxy <- dataTableProxy("sim_rep_w")
+        proxy %>% selectRows(NULL)
         
     })
     
