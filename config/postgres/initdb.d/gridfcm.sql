@@ -6,7 +6,8 @@ CREATE TABLE IF NOT EXISTS psicologo (
     username VARCHAR,
     token TEXT,
     refresh_token TEXT,
-    rol VARCHAR
+    rol VARCHAR,
+    colectivo VARCHAR
 );
 
 -- Tabla para almacenar los usuarios demo para luego enviar publi
@@ -107,6 +108,7 @@ CREATE TABLE IF NOT EXISTS suscripcion (
     organizacion BOOLEAN,
     activa BOOLEAN,
     id_stripe_suscripcion VARCHAR(50),
+    tipo_suscripcion varchar(10) default 'auto',
     fk_psicologo INT REFERENCES psicologo(id)
 );
 

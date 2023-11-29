@@ -7,6 +7,17 @@ plan_subscription_server <- function(input, output, session){
 
     rol <- session$userData$rol
     id_psicologo <- session$userData$id_psicologo
+    email_user <- session$userData$email_user
+    
+    output$pricing_table <- renderUI({
+        HTML(sprintf('
+            <script async data-parameter_1="%s" src="pricing-table.js"></script>
+            <stripe-pricing-table pricing-table-id="prctbl_1OFEcSD433GyTQY7rr9L0vMw"
+            publishable-key="pk_test_51OCzu7D433GyTQY7aUUS8o9ct9NxRovmwwbMaYaoMmPhzMcIiny9TxTEgTilsAN7xPtfmQBcQ6RFYgstJNH1iTTm00LCx4sEUv">
+            </stripe-pricing-table>
+        ', email_user))
+    })
+
 
     domain <- Sys.getenv("DOMAIN")
     keycloak_client_id <- "gridfcm"
@@ -71,7 +82,7 @@ plan_subscription_server <- function(input, output, session){
         output$subscription_table <- renderDT({
             con <- establishDBConnection()
             query <- sprintf("SELECT id, fecha_inicio, fecha_fin, licencias_contratadas, licencias_disponibles FROM SUSCRIPCION
-                                WHERE fk_psicologo=%d AND activa", id_psicologo)
+                                WHERE fk_psicologo=%d AND activa AND organizacion", id_psicologo)
             subscriptions <- DBI::dbGetQuery(con, query)
             DBI::dbDisconnect(con)
             

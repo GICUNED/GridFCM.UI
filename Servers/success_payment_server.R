@@ -66,7 +66,7 @@ success_payment_server <- function(input, output, session, new_rol_from_payments
             message("estoy en payments")
             checkout_url <- sprintf("https://api.stripe.com/v1/checkout/sessions/%s", checkout_session_id())
             
-            stripe_sk = "sk_test_51OCzu7D433GyTQY7PIQIkrxd4P55QifviMxCKdw5s3hGOkwcEjfcZTa0IR045IOuB3UlW5uwnRaGhKQpfCunCOQX00idxiGF9l"
+            stripe_sk = Sys.getenv("STRIPE_SK")
             resp <- httr::GET(url = checkout_url, add_headers("Authorization" = paste("Bearer", stripe_sk, sep = " ")))
             checkout_session <- (httr::content(resp, "text"))
             checkout_session <- jsonlite::fromJSON(checkout_session)
@@ -273,6 +273,7 @@ success_payment_server <- function(input, output, session, new_rol_from_payments
                                     # delay(100, shinyjs::show("redirectLicencias"))
 
                                 }
+                                
 
                             }
                             if(rol == "usuario_coordinador_organizacion" || rol == "usuario_administrador"){

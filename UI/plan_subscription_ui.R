@@ -19,12 +19,7 @@ plan_subscription_ui <- fluidPage(class="custom-margins",
         #     a(i18n$t("Comprar"), href=""),
         # ),
         column(12, offset = 0, class="mt-2 mb-2", style='padding:0px;',
-            HTML('
-                <script async src="https://js.stripe.com/v3/pricing-table.js"></script>
-                <stripe-pricing-table pricing-table-id="prctbl_1OFEcSD433GyTQY7rr9L0vMw"
-                publishable-key="pk_test_51OCzu7D433GyTQY7aUUS8o9ct9NxRovmwwbMaYaoMmPhzMcIiny9TxTEgTilsAN7xPtfmQBcQ6RFYgstJNH1iTTm00LCx4sEUv">
-                </stripe-pricing-table>
-        ')
+            uiOutput("pricing_table")
        ),
         
     ),
