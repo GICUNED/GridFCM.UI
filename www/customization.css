@@ -21,6 +21,26 @@
   }
  }
 
+.modal-dialog{
+  z-index: 9999;
+  margin-top: 6rem !important;
+
+}
+
+ .home-iframe{
+  height: 100vh;
+  width: 100%;
+  border: none;
+ }
+
+ .home-margins{
+  top: 56px;
+  left: 0;
+  padding: 0 !important;
+  position: absolute;
+  z-index: 1000;
+ }
+
  @media only screen and (min-width: 1367px) {
   body{
     /*zoom: 125%;*/
@@ -210,6 +230,10 @@ li.nav-item::marker{
 
 .logout-btn{
   width: 100%;
+}
+
+#invitado{
+  border: none !important;
 }
 
 .btn-herramienta{
@@ -680,7 +704,7 @@ background-color: #454D55;
 .tooltip-container{
   position: absolute;
   display: flex;
-  z-index: 200;
+  z-index: 9997;
   background-color: white;
   border-radius: .8rem;
   padding: 1rem 1rem 1rem 1.5rem;
@@ -874,7 +898,7 @@ background-color: #454D55;
   display: inline-flex;
   gap: .4rem;
   transition: all .3s ease-in-out !important;
-  z-index: 199 !important;
+  z-index: 9998 !important;
 }
 
 .icon-paciente::before{
@@ -1404,7 +1428,6 @@ box-shadow: none !important;
   height: 136px;
   color: white;
   background-color: white;
-  z-index: 1000;
 }
 
 .dark-mode .footer-psychlabuned{
@@ -2296,9 +2319,13 @@ color: #8b0000;
   max-width: 200px;
   overflow: hidden;
   height: 40px;
-
+  background-color: #e9f4f1 !important;
   border-radius: .4rem;
   padding: 0;
+}
+
+.dark-mode .user-page-btn{
+  background-color: #3f474e !important;
 }
 
 .user-page-btn .nav-link{
@@ -2341,7 +2368,7 @@ color: #8b0000;
 
 
 .user-page-btn li a:hover{
-  background-color: rgba(35, 35, 35, 0.2) !important;
+  background-color: #0d513e1c !important;
 }
 
 
@@ -2457,7 +2484,7 @@ margin: auto;
   display: flex;
   justify-content: center;
   position: fixed;
-  z-index: 200;
+  z-index: 9998;
   top: 9px;
 
   transition: left .3s ease-in-out;
