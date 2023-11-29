@@ -385,12 +385,11 @@ output$tabla_datos_wimpgrid <- renderRHandsontable({
       paste("Yo totalmente", elemento, sep = "\n ")
     })
     res <- c(min_val, lista_formateada, "Yo Ideal", max_val)
-    
-  
 
-    hot_table <- rhandsontable(tabla_manipulable_w(), colHeaders=res) %>%
+    hot_table <- rhandsontable(tabla_manipulable_w(), colHeaders=res, rowHeaders=NULL) %>%
         hot_table(highlightCol = TRUE, highlightRow = TRUE) %>%
-        hot_col(col = indicess, format = "3", colWidths=120)
+        hot_col(col = indicess, colWidths=120) %>%
+        hot_context_menu(allowRowEdit=FALSE, allowColEdit=FALSE)
         
     hot_table
 
@@ -465,10 +464,23 @@ observeEvent(input$tabla_datos_wimpgrid, {
       tabla_original <- hot_to_r(input$tabla_datos_wimpgrid)
       tabla_original[xi+1, yi+1] <- old_v
       tabla_manipulable_w(tabla_original)
+
+      nombres_columnas <- colnames(tabla_manipulable_w())
+      min_val <- nombres_columnas[1]
+      max_val <- nombres_columnas[length(nombres_columnas)]
+      nombres <- nombres_columnas[4:length(nombres_columnas)-2]
+      nombres <- strsplit(nombres, "Yo.-.Totalmente.")
+      segundos_elementos <- sapply(nombres, function(x) x[2])
+      lista_formateada <- lapply(segundos_elementos, function(elemento) {
+        elemento <- gsub("\\.", " ", elemento)
+        paste("Yo totalmente", elemento, sep = "\n ")
+      })
+      res <- c(min_val, lista_formateada, "Yo Ideal", max_val)
       output$tabla_datos_wimpgrid <- renderRHandsontable({
-        rhandsontable(tabla_original) %>%
+        rhandsontable(tabla_original, colHeaders=res, rowHeaders=NULL) %>%
           hot_table(highlightCol = TRUE, highlightRow = TRUE) %>%
-          hot_col(col = seq(1, session$userData$num_col_wimpgrid - 1), format = "3")
+          hot_col(col = seq(1, session$userData$num_col_wimpgrid - 1), colWidths=120) %>%
+          hot_context_menu(allowRowEdit=FALSE, allowColEdit=FALSE)
       })
     } else if (!is.null(session$userData$datos_wimpgrid)) {
       tabla_manipulable_w(hot_to_r(input$tabla_datos_wimpgrid))

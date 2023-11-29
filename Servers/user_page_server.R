@@ -13,7 +13,7 @@ user_page_server <- function(input, output, session){
     })
 
     observeEvent(input$admin_btn,
-    runjs("window.open('/keycloak/admin/master/console/#/Gridfcm', '_blank' );")
+    runjs("window.open('/keycloak/admin/Gridfcm/console/', '_blank' );")
     )
 
     con <- establishDBConnection()
