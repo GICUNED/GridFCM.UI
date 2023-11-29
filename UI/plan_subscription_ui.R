@@ -19,12 +19,7 @@ plan_subscription_ui <- fluidPage(class="custom-margins",
         #     a(i18n$t("Comprar"), href=""),
         # ),
         column(12, offset = 0, class="mt-2 mb-2", style='padding:0px;',
-            HTML('
-                <script async src="https://js.stripe.com/v3/pricing-table.js"></script>
-                <stripe-pricing-table pricing-table-id="prctbl_1OFEcSD433GyTQY7rr9L0vMw"
-                publishable-key="pk_test_51OCzu7D433GyTQY7aUUS8o9ct9NxRovmwwbMaYaoMmPhzMcIiny9TxTEgTilsAN7xPtfmQBcQ6RFYgstJNH1iTTm00LCx4sEUv">
-                </stripe-pricing-table>
-        ')
+            uiOutput("pricing_table")
        ),
         
     ),
@@ -34,7 +29,6 @@ plan_subscription_ui <- fluidPage(class="custom-margins",
         fluidRow(class = "flex-container-titles",
             h2(i18n$t("Gestión de Licencias"), class = "rg pagetitlecustom mt-2"),
         ),
-        h6(i18n$t("Suscripcion: Select de las suscripciones que tiene el usuario")),
         column(12, class = "patients-table p-3 bg-white rounded-lg mt-2",
             shinycssloaders::withSpinner(DTOutput("subscription_table"), type = 4, color = "#022a0c", size = 0.6),
             div(class = "button-container mt-2 justify-content-center",    
@@ -43,7 +37,6 @@ plan_subscription_ui <- fluidPage(class="custom-margins",
         ),
         br(),
         br(),
-        h6(i18n$t("Aqui ira una tabla con los usuarios a los que se ha dado licencia.")),
         column(12, id = "gestion-licencias", class = "p-3 mt-4 bg-white rounded-lg mix-diff simulation-tab",
 
             # Boton para editar la simulacion repgrid

@@ -28,6 +28,11 @@ library(cookies)
 knitr::knit_hooks$set(webgl = hook_webgl)
 
 
+
+
+
+
+
 source("global.R")
 # GRID1
 source("R/GraphFunctions.R")
@@ -76,6 +81,9 @@ source("Servers/success_payment_server.R")
 #DB
 source("DB/establish_con.R")
 source("DB/gestion_excel.R")
+# source("DB/sync_stripe_db.R")
+
+
 
 menu <- tags$ul(tags$li(a(
   class = "item", href = route_link(""), "Inicio"
@@ -181,7 +189,7 @@ ui <- add_cookie_handlers(
           div(id="repgrid-page", class = "nav-item repg-page hidden-div", menuItem("RepGrid", href = route_link("repgrid"), icon = icon("magnifying-glass-chart"), newTab = FALSE)),
           div(id = "wimpgrid-page", class = "nav-item wimpg-page hidden-div", menuItem("WimpGrid", href = route_link("wimpgrid"), icon = icon("border-none"), newTab = FALSE)),
           div(id="suggestion-page", class = "nav-item suggestion-page hidden-div", menuItem(i18n$t("Sugerencias"), href = route_link("suggestion"), icon = icon("comments"), newTab = FALSE)),
-          div(id="plan-page", class = "nav-item plan-page hidden-div", menuItem(i18n$t("Plan de Suscripción"), href = route_link("plan"), icon = icon("address-card"), newTab = FALSE)),
+          div(id="plan-page", class = "nav-item plan-page hidden-div", menuItem(i18n$t("Gestión de Suscripción"), href = route_link("plan"), icon = icon("address-card"), newTab = FALSE)),
           #div(class = 'language-selector',selectInput('selected_language',i18n$t("Idioma"), choices = i18n$get_languages(),selected = i18n$get_translation_language())),
           div(class = 'language-selector',radioGroupButtons('selected_language',i18n$t("Idioma"), choices = i18n$get_languages(), selected = i18n$get_translation_language(), width='100%', checkIcon = list())),
           
@@ -404,13 +412,23 @@ server <- function(input, output, session) {
           # info general del usuario
           resp_info <- httr::GET(url = info_url, add_headers("Authorization" = paste("Bearer", GLOBAL_TOKEN, sep = " ")))
           id <- crear_usuario(resp_info)
+          info_for_email <- (httr::content(resp_info, "text"))
+          info_for_email <- jsonlite::fromJSON(info_for_email)
+          if(!is.null(info_for_email$email) && info_for_email$email!= ""){
+            session$userData$email_user <- info_for_email$email
+          }
+
+          # llamar a la funcion de refrescar con stripe (si entra aqui, despues deberia entrar a ultima palabra no?) (quiza solo hay que meterla alli)
+          ## asi podemos ver si el rol coincide con la suscripcion que se tenga
+          ## y metemos el rol actualizado en la variable session
+          
           session$userData$id_psicologo <- id
           patient_server(input, output, session)
           suggestion_server(input, output, session)
           user_page_server(input, output, session)
           plan_subscription_server(input, output, session)
-          success_payment_server(input, output, session)
-          query <- sprintf("UPDATE PSICOLOGO SET token = '%s' WHERE id=%d", GLOBAL_TOKEN, id) # de momento 1
+          # success_payment_server(input, output, session)
+          query <- sprintf("UPDATE PSICOLOGO SET token = '%s' WHERE id=%d", GLOBAL_TOKEN, id) # de momento 1 
           DBI::dbExecute(con, query)
           query2 <- sprintf("UPDATE PSICOLOGO SET refresh_token = '%s' WHERE id=%d", GLOBAL_REFRESH_TOKEN, id) # de momento 1
           DBI::dbExecute(con, query2)
@@ -469,13 +487,25 @@ server <- function(input, output, session) {
         info <- (httr::content(resp_info, "text"))
         info <- jsonlite::fromJSON(info)
         rol <- gestionar_rol(info$roles)
+        
+        if(!is.null(info$email) && info$email!= ""){
+          session$userData$email_user <- info$email
+          # llamar a la funcion de refrescar con stripe
+          ## asi podemos ver si el rol coincide con la suscripcion que se tenga
+          ## y metemos el rol actualizado en la variable session
+          # syncStripeDB(info$email, user$id, rol, con)
+        }
+
         session$userData$rol <- rol
         session$userData$id_psicologo <- user$id
+        
+
         patient_server(input, output, session)
         suggestion_server(input, output, session)
         user_page_server(input, output, session)
         plan_subscription_server(input, output, session)
-        success_payment_server(input, output, session)
+        # success_payment_server(input, output, session)
+        
         message("rol> ", rol)
         DBI::dbExecute(con, sprintf("update psicologo set rol='%s' where id=%d", rol, user$id)) # de momento 1
       }
@@ -483,6 +513,10 @@ server <- function(input, output, session) {
     DBI::dbDisconnect(con)
   })
 
+
+  observe({
+    message(paste("email from user", session$userData$email_user))
+  })
 
   observeEvent(input$logout_btn, {
     user <- psicologo()
