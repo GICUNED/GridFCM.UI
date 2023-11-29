@@ -31,7 +31,6 @@ knitr::knit_hooks$set(webgl = hook_webgl)
 
 
 
-
 source("global.R")
 # GRID1
 source("R/GraphFunctions.R")
@@ -82,7 +81,7 @@ source("Servers/success_payment_server.R")
 #DB
 source("DB/establish_con.R")
 source("DB/gestion_excel.R")
-# source("DB/sync_stripe_db.R")
+source("DB/sync_stripe_db.R")
 
 
 
@@ -615,7 +614,7 @@ observeEvent(input$invitado, {
           # llamar a la funcion de refrescar con stripe
           ## asi podemos ver si el rol coincide con la suscripcion que se tenga
           ## y metemos el rol actualizado en la variable session
-          # syncStripeDB(info$email, user$id, rol, con)
+          syncStripeDB(info$email, user$id, rol, con)
         }
 
         session$userData$rol <- rol

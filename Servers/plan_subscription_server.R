@@ -276,20 +276,32 @@ plan_subscription_server <- function(input, output, session){
             if(!is.null(licenciasDB)){
                 licencias_data$psicologos <- licenciasDB$id
                 df <- data.frame(Nombre = licenciasDB$nombre, Email = licenciasDB$email, Usuario=licenciasDB$username)
-
+                message("entro licencias")
+                message(df)
+                message(nrow(df))
                 custom_button_revocar_accesso <- function(tbl){
                     function(i){
-                        sprintf(
-                        '<button id="revocar_acceso_modal_%s_%d" type="button" onclick="%s">Revocar Accesso</button>', 
-                        tbl, i, "Shiny.setInputValue('button_id_revocar_acceso', this.id, {priority: 'event'});")
+                        if(i==0){
+                            NULL
+                        }else {
+                           sprintf(
+                            '<button id="revocar_acceso_modal_%s_%d" type="button" onclick="%s">Revocar Accesso</button>', 
+                            tbl, i, "Shiny.setInputValue('button_id_revocar_acceso', this.id, {priority: 'event'});")
+                        }
+                        
                     }
                 }
-
+                
+                if(nrow(df)==0){
+                    button_rows = 0
+                }else{
+                    button_rows = 1:nrow(df)
+                }
                 data_df <- cbind(df, 
-                            button = sapply(1:nrow(df), custom_button_revocar_accesso("tbl1")), 
+                            button = sapply(button_rows, custom_button_revocar_accesso("tbl1")), 
                             stringsAsFactors = FALSE)
 
-
+                message(data_df)
                 # data_rep <- df %>%
                 #     mutate(
                 #         actionable = glue(
