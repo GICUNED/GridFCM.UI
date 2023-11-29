@@ -12,7 +12,7 @@ plan_subscription_server <- function(input, output, session){
     output$pricing_table <- renderUI({
         HTML(sprintf('
             <script async data-parameter_1="%s" src="pricing-table.js"></script>
-            <stripe-pricing-table pricing-table-id="prctbl_1OFEcSD433GyTQY7rr9L0vMw"
+            <stripe-pricing-table pricing-table-id="prctbl_1OHnUHD433GyTQY7egh3gUEc"
             publishable-key="pk_test_51OCzu7D433GyTQY7aUUS8o9ct9NxRovmwwbMaYaoMmPhzMcIiny9TxTEgTilsAN7xPtfmQBcQ6RFYgstJNH1iTTm00LCx4sEUv">
             </stripe-pricing-table>
         ', email_user))
