@@ -1,8 +1,23 @@
 plan_subscription_server <- function(input, output, session){
+    # reactive variable to refresh suscriptions table from payments
+    new_rol_from_payments <- reactiveVal("")
+
+    # el usuario podría darle a comprar, asi que inicializamos el server
+    success_payment_server(input, output, session, new_rol_from_payments)
+
     rol <- session$userData$rol
     id_psicologo <- session$userData$id_psicologo
+    email_user <- session$userData$email_user
+    
+    output$pricing_table <- renderUI({
+        HTML(sprintf('
+            <script async data-parameter_1="%s" src="pricing-table.js"></script>
+            <stripe-pricing-table pricing-table-id="prctbl_1OHnUHD433GyTQY7egh3gUEc"
+            publishable-key="pk_test_51OCzu7D433GyTQY7aUUS8o9ct9NxRovmwwbMaYaoMmPhzMcIiny9TxTEgTilsAN7xPtfmQBcQ6RFYgstJNH1iTTm00LCx4sEUv">
+            </stripe-pricing-table>
+        ', email_user))
+    })
 
-    token <- reactiveVal(NULL)
 
     domain <- Sys.getenv("DOMAIN")
     keycloak_client_id <- "gridfcm"
@@ -10,8 +25,7 @@ plan_subscription_server <- function(input, output, session){
     rol_ilimitado <- '{"id": "c70eddee-5dd0-49ed-8a02-20eeff11d751","name": "usuario_ilimitado"}'
     rol_ilimitado <- jsonlite::fromJSON(rol_ilimitado)
     
-    # el usuario podría darle a comprar, asi que inicializamos el server
-    # success_payment_server(input, output, session)
+    
 
     # funcion que devuelve el token para acceder a la api de admin
     obtener_token_admin_api <- function(params){
@@ -52,15 +66,7 @@ plan_subscription_server <- function(input, output, session){
     
 
 
-    # cuando creemos los roles, si el usuario no tiene rol de coordinador de org
-    # le ocultamos la tabla
-    if(!is.null(rol)){
-        if(rol != "usuario_coordinador_organizacion" && rol != "usuario_administrador"){
-            shinyjs::hide("panel-gestion-licencias")
-        }else{
-            shinyjs::show("panel-gestion-licencias")
-        }
-    }
+    
     # else{
     #     shinyjs::hide("panel-gestion-licencias")
     # }
@@ -76,7 +82,7 @@ plan_subscription_server <- function(input, output, session){
         output$subscription_table <- renderDT({
             con <- establishDBConnection()
             query <- sprintf("SELECT id, fecha_inicio, fecha_fin, licencias_contratadas, licencias_disponibles FROM SUSCRIPCION
-                                WHERE fk_psicologo=%d AND activa", id_psicologo)
+                                WHERE fk_psicologo=%d AND activa AND organizacion", id_psicologo)
             subscriptions <- DBI::dbGetQuery(con, query)
             DBI::dbDisconnect(con)
             
@@ -110,6 +116,32 @@ plan_subscription_server <- function(input, output, session){
         #     }
         # }
     }
+
+    if(!is.null(rol)){
+        if(rol != "usuario_coordinador_organizacion" && rol != "usuario_administrador"){
+            shinyjs::hide("panel-gestion-licencias")
+        }else{
+            shinyjs::show("panel-gestion-licencias")
+        }
+    }
+
+    # observe({
+    #     # message(new_rol_from_payments())
+    #     # if(new_rol_from_payments() != ""){
+    #     #     session$userData$rol <- new_rol_from_payments()
+    #     #     rol <- new_rol_from_payments()
+    #     # }
+    #     if(!is.null(rol)){
+    #         if(rol != "usuario_coordinador_organizacion" && rol != "usuario_administrador"){
+    #             shinyjs::hide("panel-gestion-licencias")
+    #         }else{
+    #             shinyjs::show("panel-gestion-licencias")
+    #         }
+    #     }
+    #     message(paste("nuevo rol es: ", rol))
+    #     renderizarTabla()
+
+    # })
 
     # boton añadir participante
     shinyjs::onclick("darLicencia",  {

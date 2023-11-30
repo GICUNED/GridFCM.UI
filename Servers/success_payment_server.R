@@ -1,4 +1,4 @@
-success_payment_server <- function(input, output, session){
+success_payment_server <- function(input, output, session, new_rol_from_payments){
     rol <- session$userData$rol
     id_psicologo <- session$userData$id_psicologo
 
@@ -66,7 +66,7 @@ success_payment_server <- function(input, output, session){
             message("estoy en payments")
             checkout_url <- sprintf("https://api.stripe.com/v1/checkout/sessions/%s", checkout_session_id())
             
-            stripe_sk = "sk_test_51OCzu7D433GyTQY7PIQIkrxd4P55QifviMxCKdw5s3hGOkwcEjfcZTa0IR045IOuB3UlW5uwnRaGhKQpfCunCOQX00idxiGF9l"
+            stripe_sk = Sys.getenv("STRIPE_SK")
             resp <- httr::GET(url = checkout_url, add_headers("Authorization" = paste("Bearer", stripe_sk, sep = " ")))
             checkout_session <- (httr::content(resp, "text"))
             checkout_session <- jsonlite::fromJSON(checkout_session)
@@ -81,7 +81,6 @@ success_payment_server <- function(input, output, session){
                 }
 
                 fecha_pago <- as.POSIXct(checkout_session$created, format="%H:%M:%S")
-                message(fecha_pago)
 
                 if(pago_correcto){
                     ## primero de todo obtenemos el invoice y llamamos a la api de stripe para obtener informacion del invoice
@@ -95,7 +94,6 @@ success_payment_server <- function(input, output, session){
                         subscription_id <- invoice$subscription
                         subscription_url = sprintf("https://api.stripe.com/v1/subscriptions/%s", subscription_id)
                         resp <- httr::GET(url = subscription_url, add_headers("Authorization" = paste("Bearer", stripe_sk, sep = " ")))
-                        message(resp)
                         subscription_data <- (httr::content(resp, "text"))
                         subscription_data <- jsonlite::fromJSON(subscription_data)
 
@@ -118,11 +116,6 @@ success_payment_server <- function(input, output, session){
                         }
 
 
-                        message(fecha_inicio)
-                        message(fecha_fin)
-                        message(cantidad)
-                        message(status)
-
                         
                         ## checkear si ya tenemos metida la suscripcion en la base de datos, usando el subscription_id
                         con <- establishDBConnection()
@@ -130,7 +123,6 @@ success_payment_server <- function(input, output, session){
                         query <- sprintf("SELECT id, activa from SUSCRIPCION WHERE id_stripe_suscripcion = '%s'", subscription_id)
                         datos <- DBI::dbGetQuery(con, query)
 
-                        message(datos)
                         if(length(datos$id)==0){
                             ## no está metida, asi que la metemos, junto a licencia si se da el caso. tambien damos permisos ilimitado/coordinador_organizacion al usuario
                             message("no esta metida")
@@ -192,6 +184,11 @@ success_payment_server <- function(input, output, session){
                                     }
                                 }
 
+                                # needed to reload session so that new rol is captured
+                                session$reload()
+
+                                
+
                             }else{
                                 # no hace falta meter mas a SUSCRIPCION, habrá solamente un registro en SUSCRIPCION para los usuarios que obtengan el plan individual
                                 # ponemos rol ilimitado al usuario en PSICOLOGO
@@ -215,13 +212,20 @@ success_payment_server <- function(input, output, session){
                                         }
                                     }
                                 }
+                                # needed to reload session so that new rol is captured
+                                session$reload()
+
 
                             }
-                            
+
+                            # output$confirmacionPago <- renderText({
+                            #     sprintf("Suscripción activada. Pago realizado correctamente con fecha: %s", fecha_pago )
+                            # })
+                            # delay(100, shinyjs::show("redirectLicencias"))
+
                             output$confirmacionPago <- renderText({
-                                sprintf("Suscripción activada. Pago realizado correctamente con fecha: %s", fecha_pago )
+                                sprintf("Refrescando página ...")
                             })
-                            shinyjs::show("redirectLicencias")
 
 
                         }else{
@@ -232,7 +236,22 @@ success_payment_server <- function(input, output, session){
                                 output$confirmacionPago <- renderText({
                                     sprintf("Suscripción activa. Pago realizado correctamente con fecha: %s", fecha_pago )
                                 })
-                                shinyjs::show("redirectLicencias")
+                                # if(rol == "usuario_coordinador_organizacion"){
+                                #     output$redirection <- renderUI({
+                                #         fluidRow( class = "flex-container-titles",
+                                #             div(id="redirectLicencias", class = "nav-item payments-page hidden-div", menuItem(i18n$t("Ir a Gestión de Suscripción"), href = route_link("plan"), newTab = FALSE))
+                                #         )
+                                #     })
+                                # }else if (rol == "usuario_ilimitado") {
+                                #    output$redirection <- renderUI({
+                                #         fluidRow( class = "flex-container-titles",
+                                #             div(id="redirectLicencias", class = "nav-item payments-page hidden-div", menuItem(i18n$t("Ir a Panel de Usuario"), href = route_link("user"), newTab = FALSE))
+                                #         )
+                                #     })
+                                # }
+                                
+                                # delay(100, shinyjs::show("redirectLicencias"))
+                                
                             }else{
                                 if(status=="active"){
                                     # cambiamos el campo active a true
@@ -243,7 +262,7 @@ success_payment_server <- function(input, output, session){
                                     output$confirmacionPago <- renderText({
                                         sprintf("Suscripción activa. Pago realizado correctamente con fecha: %s", fecha_pago )
                                     })
-                                    shinyjs::show("redirectLicencias")
+                                    # delay(100, shinyjs::show("redirectLicencias"))
 
                                 }else{
                                     # avisamos al usuario de que el pago se realizó correctamente tal dia y que su licencia ya no está activa
@@ -251,11 +270,28 @@ success_payment_server <- function(input, output, session){
                                     output$confirmacionPago <- renderText({
                                         sprintf("Suscripción no activa. Pago realizado correctamente con fecha: %s", fecha_pago )
                                     })
-                                    shinyjs::show("redirectLicencias")
+                                    # delay(100, shinyjs::show("redirectLicencias"))
 
                                 }
+                                
 
                             }
+                            if(rol == "usuario_coordinador_organizacion" || rol == "usuario_administrador"){
+                                output$redirection <- renderUI({
+                                    fluidRow( class = "flex-container-titles",
+                                        div(id="redirectLicencias", class = "nav-item payments-page hidden-div", menuItem(i18n$t("Ir a Gestión de Suscripción"), href = route_link("plan"), newTab = FALSE))
+                                    )
+                                })
+                            }else if (rol == "usuario_ilimitado") {
+                                output$redirection <- renderUI({
+                                    fluidRow( class = "flex-container-titles",
+                                        div(id="redirectLicencias", class = "nav-item payments-page hidden-div", menuItem(i18n$t("Ir a Panel de Usuario"), href = route_link("user"), newTab = FALSE))
+                                    )
+                                })
+                            }
+                            
+                            delay(100, shinyjs::show("redirectLicencias"))
+
                         }
 
                         
@@ -264,11 +300,11 @@ success_payment_server <- function(input, output, session){
                         DBI::dbDisconnect(con)
                     }
                     
-                    output$confirmacionPago <- renderText({
-                        sprintf("Pago Realizado correctamente con fecha: %s", fecha_pago )
+                    # output$confirmacionPago <- renderText({
+                    #     sprintf("Pago Realizado correctamente con fecha: %s", fecha_pago )
 
-                    })
-                    shinyjs::show("redirectLicencias")
+                    # })
+                    # delay(100, shinyjs::show("redirectLicencias"))
 
                     
                 }else{
@@ -276,7 +312,7 @@ success_payment_server <- function(input, output, session){
                         sprintf("Pago no recibido. Motivo: %s", checkout_session$payment_status)
 
                     })
-                    shinyjs::show("redirectLicencias")
+                    delay(100, shinyjs::show("redirectLicencias"))
 
                 }
 
@@ -284,7 +320,7 @@ success_payment_server <- function(input, output, session){
                 output$confirmacionPago <- renderText({
                     "Pago no Realizado. Redirigir a la pagina de planes"
                 })
-                shinyjs::show("redirectLicencias")
+                delay(100, shinyjs::show("redirectLicencias"))
 
             }
         }else{
@@ -292,7 +328,7 @@ success_payment_server <- function(input, output, session){
             output$confirmacionPago <- renderText({
                 "No deberia estar aqui. Redirigir a la pagina de planes"
             })
-            shinyjs::show("redirectLicencias")
+            delay(100, shinyjs::show("redirectLicencias"))
 
         }
     })

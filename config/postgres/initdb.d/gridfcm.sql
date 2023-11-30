@@ -108,6 +108,7 @@ CREATE TABLE IF NOT EXISTS suscripcion (
     organizacion BOOLEAN,
     activa BOOLEAN,
     id_stripe_suscripcion VARCHAR(50),
+    tipo_suscripcion varchar(10) default 'auto',
     fk_psicologo INT REFERENCES psicologo(id)
 );
 

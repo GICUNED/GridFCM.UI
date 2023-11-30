@@ -62,8 +62,11 @@ function navButtons(){
       $('#incio-page')
         .find('.nav-link')
         .addClass('active');
-  };
 
+      $('.footer-psychlabuned')
+        .addClass('hidden');
+  }
+  
   //botón de User
 
   if (window.location.href.indexOf("/user_home") > -1) {
@@ -75,6 +78,9 @@ function navButtons(){
     $('#profile')
       .find('.nav-link')
       .addClass('active');
+
+      $('.footer-psychlabuned')
+      .removeClass('hidden');
   };
 
   //botón de Patient
@@ -88,6 +94,9 @@ function navButtons(){
       $('#patient-page')
         .find('.nav-link')
         .addClass('active');
+
+        $('.footer-psychlabuned')
+      .removeClass('hidden');
 
      /* $('#import-page, #excel-page, #form-page')
         .removeClass('hidden');
@@ -112,6 +121,9 @@ function navButtons(){
       $('#import-page, #excel-page, #form-page')
         .removeClass('hidden');
 
+        $('.footer-psychlabuned')
+      .removeClass('hidden');
+
   };
 
    //botón de Files
@@ -125,6 +137,9 @@ function navButtons(){
       .find('.nav-link')
       .addClass('active')
       .addClass('sub');
+
+      $('.footer-psychlabuned')
+      .removeClass('hidden');
 
       $('#import-page, #excel-page, #form-page')
         .removeClass('hidden');
@@ -142,6 +157,9 @@ function navButtons(){
       .addClass('active')
       .addClass('sub');
 
+      $('.footer-psychlabuned')
+      .removeClass('hidden');
+
       $('#import-page, #excel-page, #form-page')
         .removeClass('hidden');
   };
@@ -156,6 +174,9 @@ function navButtons(){
     $('#repgrid-page')
       .find('.nav-link')
       .addClass('active');
+
+      $('.footer-psychlabuned')
+      .removeClass('hidden');
   };
 
    //botón de WimpGrid
@@ -168,6 +189,9 @@ function navButtons(){
     $('#wimpgrid-page')
       .find('.nav-link')
       .addClass('active');
+
+      $('.footer-psychlabuned')
+      .removeClass('hidden');
   };
 
   //botón de WimpGrid
@@ -180,6 +204,9 @@ function navButtons(){
    $('#suggestion-page')
      .find('.nav-link')
      .addClass('active');
+
+     $('.footer-psychlabuned')
+      .removeClass('hidden');
  };
 
  if (window.location.href.indexOf("/plan") > -1) {
@@ -191,6 +218,9 @@ function navButtons(){
  $('#plan-page')
    .find('.nav-link')
    .addClass('active');
+
+   $('.footer-psychlabuned')
+      .removeClass('hidden');
 };
 
 if (window.location.href.indexOf("/user") > -1) {
@@ -202,6 +232,9 @@ if (window.location.href.indexOf("/user") > -1) {
  $('#profile')
    .find('.nav-link')
    .addClass('active');
-};
+
+   $('.footer-psychlabuned')
+    .removeClass('hidden');
+}
 
 }
