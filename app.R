@@ -302,13 +302,13 @@ gestionar_rol <- function(roles){
   }
 }
 
-
 crear_usuario <- function(info){
   con <- establishDBConnection()
   info <- (httr::content(info, "text"))
   info <- jsonlite::fromJSON(info)
   name <- info$name
   rol <- gestionar_rol(info$roles)
+  nuevo <- FALSE
   message("rol:", rol)
   if(is.null(name)){
     name <- "default"
@@ -317,6 +317,8 @@ crear_usuario <- function(info){
   user <- info$preferred_username
   id <- as.integer(DBI::dbGetQuery(con, sprintf("SELECT id FROM psicologo WHERE email='%s'", mail)))
   if(is.na(id)){
+    # si entro aquí es la primera vez que inicia sesión y se mete en postgre
+    nuevo <- TRUE
     message("entro en insert ")
     query <- sprintf("INSERT INTO psicologo(nombre, username, email) VALUES ('%s', '%s', '%s')", name, user, mail)
     DBI::dbExecute(con, query)
@@ -324,7 +326,7 @@ crear_usuario <- function(info){
   }
   DBI::dbDisconnect(con)
 
-  return(id)
+  return(list(id=id, nuevo=nuevo))
 }
 
 obtener_token <- function(params){
@@ -357,9 +359,6 @@ obtener_token_refrescado <- function(refresh){
 }
 
 server <- function(input, output, session) {
-
-  
-  
   user_name <- reactiveVal(NULL)
   psicologo <- reactiveVal(NULL)
 
@@ -379,6 +378,55 @@ server <- function(input, output, session) {
     else{
       psicologo(NULL)
     }
+  })
+
+  modal_colectivo <- function(){
+    showModal(modalDialog(
+      box(
+        title = i18n$t("Bienvenido/a a PsychLab, acaba de registrar tu usuario"),
+        radioButtons("col", i18n$t("Seleccione el colectivo al que pertenece:"), 
+                    choices = c("Investigador", "Profesional", "Alumno", "Institución", "Otro")),
+        
+        conditionalPanel(
+          condition = "input.col == 'Investigador'",
+          textInput("especificar_investigador", i18n$t("Especificar Investigador:"))
+        ),
+        conditionalPanel(
+          condition = "input.col == 'Profesional'",
+          textInput("especificar_profesional", i18n$t("Especificar Profesional:"))
+        ),
+        conditionalPanel(
+          condition = "input.col == 'Otro'",
+          textInput("especificar_otro", i18n$t("Especificar Otro:"))
+        )
+      ),
+      footer = tagList(
+        actionButton("confirmar_colectivo", i18n$t("Confirmar"))
+      )
+    ))
+  }
+
+  shinyjs::onclick("confirmar_colectivo", {
+    removeModal()
+    con <- establishDBConnection()
+    user <- psicologo()
+    separador <- ": "
+    if(!is.null(user) && length(user$id) != 0) {
+      colectivo_seleccionado <- input$col
+      especificar_valor <- switch(
+        colectivo_seleccionado,
+        "Investigador" = input$especificar_investigador,
+        "Profesional" =  input$especificar_profesional,
+        "Otro" = input$especificar_otro,
+        ""
+      )
+      if(especificar_valor == ""){
+        separador <- ""
+      }
+      query <- sprintf("UPDATE PSICOLOGO SET colectivo='%s' WHERE id=%d", paste0(colectivo_seleccionado, separador, especificar_valor), user$id)
+      DBI::dbExecute(con, query)
+    }
+    DBI::dbDisconnect(con)
   })
 
 
@@ -403,7 +451,11 @@ server <- function(input, output, session) {
           GLOBAL_REFRESH_TOKEN <- token_data$refresh_token
           # info general del usuario
           resp_info <- httr::GET(url = info_url, add_headers("Authorization" = paste("Bearer", GLOBAL_TOKEN, sep = " ")))
-          id <- crear_usuario(resp_info)
+          creado <- crear_usuario(resp_info)
+          id <- creado$id
+          if(creado$nuevo){
+            modal_colectivo()
+          }
           session$userData$id_psicologo <- id
           patient_server(input, output, session)
           suggestion_server(input, output, session)
