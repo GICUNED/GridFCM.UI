@@ -18,7 +18,7 @@ plan_subscription_ui <- fluidPage(class="custom-margins",
         #     h6(i18n$t("Precio: Desde 40€ (2 licencias)")),
         #     a(i18n$t("Comprar"), href=""),
         # ),
-        column(12, offset = 0, class="mt-2 mb-2", style='padding:0px;',
+        column(12, offset = 0, class="mt-2 mb-2 p-0 box-shadow-1 overflow-hidden",
             uiOutput("pricing_table")
        ),
         

@@ -130,12 +130,16 @@ tabsetPanel(
             box(
                 title = i18n$t("Puntuaciones RepGrid"),
                 icon=icon("star"),
+                column(12, class="d-flex justify-content-center mb-3",
+                    actionButton("atras_puntuaciones", class="mr-2", icon=icon("left-long"), i18n$t("Atrás")),
+                    actionButton("reiniciar_puntuaciones", status="warning", class="mr-auto", icon=icon("arrow-rotate-left"), i18n$t("Reiniciar")),
+                ),
                 h6(strong(textOutput("elemento_puntuable"))),
                 uiOutput("pagina_puntuaciones"),
+                
+                div(id="rg_success", class="icon-success vis-off", icon("circle-check")),
 
                 column(12, class="d-flex justify-content-center mt-3",
-                    actionButton("atras_puntuaciones", class="mr-2", icon=icon("left-long"), i18n$t("Atrás")),
-                    actionButton("reiniciar_puntuaciones", status="warning", class="mr-1", icon=icon("arrow-rotate-left"), i18n$t("Reiniciar")),
                     actionButton("siguiente_puntuacion", status="success", class="ml-auto", i18n$t("Siguiente"), icon = icon("arrow-right"))
                 )
             ),
@@ -190,7 +194,7 @@ tabsetPanel(
                         numericInput("n_aleatorio_w", i18n$t("Número de constructos que desea generar:"), value = 1, step=1),
                     ),
                     
-                    column(12, class="d-flex justify-content-center gap-1 mt-2",
+                    column(12, class="d-flex justify-content-center gap-1 mt-4",
                     actionButton("puntuaciones_w",  i18n$t("Puntuar constructos"), icon= icon("star"), status="info", style = "display: none;"),
                     actionButton("generar_elementos_w", i18n$t("Introducir elementos"),  icon= icon("face-grin"), style = "display: none;"),
                     ),
@@ -323,12 +327,16 @@ tabsetPanel(
                 box(
                     title = i18n$t("Puntuaciones WimpgGrid"),
                     icon=icon("star"),
+                    column(12, class="d-flex justify-content-center mb-3",
+                        actionButton("atras_puntuaciones_w", class="mr-2",icon=icon("left-long"), i18n$t("Atrás")),
+                        actionButton("reiniciar_puntuaciones_w", status="warning", class="mr-auto", icon=icon("arrow-rotate-left"), i18n$t("Reiniciar"))
+                    ),
                     h6(strong(textOutput("elemento_puntuable_w"))),
                     uiOutput("pagina_puntuaciones_w"),
 
+                    div(id="wg_success", class="icon-success vis-off", icon("circle-check")),
+
                     column(12, class="d-flex justify-content-center mt-3",
-                        actionButton("atras_puntuaciones_w", class="mr-2",icon=icon("left-long"), i18n$t("Atrás")),
-                        actionButton("reiniciar_puntuaciones_w", status="warning", class="mr-1", icon=icon("arrow-rotate-left"), i18n$t("Reiniciar")),
                         actionButton("siguiente_puntuacion_w",  status="success", class="ml-auto", i18n$t("Siguiente"), icon = icon("arrow-right"))
                     )
                 ),

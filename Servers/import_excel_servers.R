@@ -15,6 +15,7 @@ import_excel_server <- function(input, output, session) {
     }
     if((num_rep$num + num_wimp$num) >= 2){
       shinyjs::disable("importar_formulario")
+      shinyjs::hide("form-page")
     }
   }
   
