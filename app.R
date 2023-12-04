@@ -31,6 +31,7 @@ knitr::knit_hooks$set(webgl = hook_webgl)
 
 
 
+
 source("global.R")
 # GRID1
 source("R/GraphFunctions.R")
@@ -76,12 +77,10 @@ source("Servers/success_payment_server.R")
 
 
 
-
-
 #DB
 source("DB/establish_con.R")
 source("DB/gestion_excel.R")
-source("DB/sync_stripe_db.R")
+source("DB/sync_stripe_db_process.R")
 
 
 
@@ -134,6 +133,7 @@ theme <- create_theme(
 )
 
 
+
 httr::set_config(config(ssl_verifypeer = 0L, ssl_verifyhost = 0L))
 domain <- Sys.getenv("DOMAIN")
 message("domain")
@@ -141,6 +141,8 @@ message(domain)
 ruta_app <- sprintf("https://%s/", domain)
 keycloak_client_id <- "gridfcm"
 keycloak_client_secret <- Sys.getenv("KEYCLOAK_CLIENT_SECRET")
+message("keycloak client secret")
+message(keycloak_client_secret)
 # Replace "gridfcm.localhost" with "domain" in all URLs
 token_url <- sprintf("https://%s/keycloak/realms/Gridfcm/protocol/openid-connect/token", domain)
 info_url <- sprintf("https://%s/keycloak/realms/Gridfcm/protocol/openid-connect/userinfo", domain)
@@ -336,8 +338,13 @@ crear_usuario <- function(info){
   return(id)
 }
 
+
+
+
 obtener_token <- function(params){
   code <- params$code
+  message("code")
+  message(code)
   params <- list(
     client_id = keycloak_client_id,
     client_secret = keycloak_client_secret,
@@ -345,11 +352,13 @@ obtener_token <- function(params){
     code = code,
     grant_type = "authorization_code"
   )
+  message(add_headers("Content-Type" = "application/x-www-form-urlencoded"))
   resp <- httr::POST(url = token_url, add_headers("Content-Type" = "application/x-www-form-urlencoded"), body = params, encode="form")
   respuesta <- (httr::content(resp, "text"))
   token_data <- jsonlite::fromJSON(respuesta)
   return(token_data)
 }
+
 
 obtener_token_refrescado <- function(refresh){
   params <- list(
@@ -367,8 +376,7 @@ obtener_token_refrescado <- function(refresh){
 
 server <- function(input, output, session) {
 
-  
-  
+
   user_name <- reactiveVal(NULL)
   psicologo <- reactiveVal(NULL)
 
@@ -521,6 +529,7 @@ observeEvent(input$invitado, {
         message("entro en obtener tokens")
         token_data <- obtener_token(params)
         if(is.null(token_data$error)){
+          message("entro sin error token")
           # Acceder al access_token
           GLOBAL_TOKEN <- token_data$access_token
           # session$global_token <- GLOBAL_TOKEN
@@ -554,6 +563,7 @@ observeEvent(input$invitado, {
           user_name(user$nombre)
         }
         else{
+          message("error token")
           message(token_data$error)
           user_name(NULL)
         }
@@ -614,7 +624,7 @@ observeEvent(input$invitado, {
           # llamar a la funcion de refrescar con stripe
           ## asi podemos ver si el rol coincide con la suscripcion que se tenga
           ## y metemos el rol actualizado en la variable session
-          syncStripeDB(info$email, user$id, rol, con)
+          syncStripeDBProcess()
         }
 
         session$userData$rol <- rol
