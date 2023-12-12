@@ -7,13 +7,15 @@ CREATE TABLE IF NOT EXISTS psicologo (
     token TEXT,
     refresh_token TEXT,
     rol VARCHAR,
-    colectivo VARCHAR
+    colectivo VARCHAR,
+    fecha_registro TIMESTAMP DEFAULT (CURRENT_TIMESTAMP AT TIME ZONE 'Europe/Madrid')
 );
 
 -- Tabla para almacenar los usuarios demo para luego enviar publi
 CREATE TABLE IF NOT EXISTS usuario_demo (
   id serial PRIMARY KEY,
-  email varchar(75) NOT NULL
+  email varchar(75) NOT NULL,
+  fecha_registro TIMESTAMP DEFAULT (CURRENT_TIMESTAMP AT TIME ZONE 'Europe/Madrid')
 );
 
 -- Crear tabla paciente si no existe
