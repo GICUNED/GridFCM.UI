@@ -164,13 +164,15 @@ has_auth_code <- function(params) {
 
 # link <- make_authorization_url()
 ui <- add_cookie_handlers(
-
   dashboardPage(
     title = "PsychLab UNED | GridFCM",
     freshTheme = theme,
     dashboardHeader(
       tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "customization.css")),
       tags$head(tags$link(rel = "icon", type = "image/x-icon", href = 'favicon.png')),
+      tags$script(src="https://www.googletagmanager.com/gtag/js?id=G-Y4YW79BBD3"),
+      tags$script(src="gtagconnector.js"),
+  
       title = tags$a(href='https://www.uned.es/', target ="_blank", class = "logocontainer",
       tags$img(height='56.9',width='', class = "logoimg")),
       div( class ="ml-auto nav-functions-container",
@@ -180,6 +182,8 @@ ui <- add_cookie_handlers(
         # div(id="profile", class = "nav-item user-page user-page-btn" , menuItem(textOutput("user_name"), href = route_link("user"), icon = icon("house-user"), newTab = FALSE)),
       )
     ),
+
+
 
     dashboardSidebar(
       sidebarMenu(
@@ -203,7 +207,8 @@ ui <- add_cookie_handlers(
 
     dashboardBody(
       usei18n(translator = i18n),
-      tags$script(src = "activescript.js"),
+      tags$script(async="true", src = "activescript.js"),
+
       useShinyjs(),
 
       router_ui(
@@ -395,26 +400,29 @@ server <- function(input, output, session) {
 
   modal_colectivo <- function(){
     showModal(modalDialog(
-      box(
-        title = i18n$t("Bienvenido/a a PsychLab, acaba de registrar tu usuario"),
-        radioButtons("col", i18n$t("Seleccione el colectivo al que pertenece:"), 
+      box(width = 12,
+        icon=icon("face-smile-wink"),
+        collapsible=FALSE,
+        title = i18n$t("¡Bienvenido/a a PsychLab! Completa tu registro."),
+        p(class="mb-1", i18n$t("Selecciona el colectivo al que pertenece")),
+        radioButtons("col", "",
                     choices = c("Investigador", "Profesional", "Alumno", "Institución", "Otro")),
         
         conditionalPanel(
           condition = "input.col == 'Investigador'",
-          textInput("especificar_investigador", i18n$t("Especificar Investigador:"))
+          textInput("especificar_investigador", i18n$t("Especificar Investigador"))
         ),
         conditionalPanel(
           condition = "input.col == 'Profesional'",
-          textInput("especificar_profesional", i18n$t("Especificar Profesional:"))
+          textInput("especificar_profesional", i18n$t("Especificar Profesional"))
         ),
         conditionalPanel(
           condition = "input.col == 'Otro'",
-          textInput("especificar_otro", i18n$t("Especificar Otro:"))
+          textInput("especificar_otro", i18n$t("Especificar Otro"))
         )
       ),
       footer = tagList(
-        actionButton("confirmar_colectivo", i18n$t("Confirmar"))
+        actionButton("confirmar_colectivo", i18n$t("Confirmar"), status="success")
       )
     ))
   }

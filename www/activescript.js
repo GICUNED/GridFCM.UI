@@ -4,6 +4,13 @@ $('#sidebarId').removeClass('sidebar-dark-primary');
 $('#import-page, #excel-page, #form-page')
     .addClass('hidden');
   
+//Activar tooltips bootstrap-4
+
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+
+
 //funcionalidad de fullscreen
 
 function openFullscreen(elem) {

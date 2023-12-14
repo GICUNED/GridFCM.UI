@@ -76,26 +76,51 @@ form_server <- function(input, output, session){
     })
 
     shinyjs::onclick("continuar_elementos", {
+        runjs("
+        setTimeout(function () {
+                window.scrollTo(0,0);
+            }, 10);
+        ")
         shinyjs::hide("Elementos")
         shinyjs::show("preguntasDiadas")
     })    
 
     # Preguntas sobre los constructos
     shinyjs::onclick("aleatorio", {
+        runjs("
+        setTimeout(function () {
+                window.scrollTo(0,0);
+            }, 10);
+        ")
         shinyjs::show("n_aleatorio")
         shinyjs::show("generar_aleatorio")
     })
 
     shinyjs::onclick("manual", {
+        runjs("
+        setTimeout(function () {
+                window.scrollTo(0,0);
+            }, 10);
+        ")
         shinyjs::show("Constructos")
         shinyjs::hide("preguntasDiadas")
     })
 
     shinyjs::onclick("generar_aleatorio", {
+        runjs("
+        setTimeout(function () {
+                window.scrollTo(0,0);
+            }, 10);
+        ")
         generar_diadas(input$n_aleatorio)
     })
 
     shinyjs::onclick("atras_preguntas_diada", {
+        runjs("
+        setTimeout(function () {
+                window.scrollTo(0,0);
+            }, 10);
+        ")
         shinyjs::hide("preguntasDiadas")
         shinyjs::show("Elementos")
         nombres_w(NULL)
@@ -181,6 +206,11 @@ form_server <- function(input, output, session){
     )
 
     shinyjs::onclick("continuar_constructo", {
+        runjs("
+        setTimeout(function () {
+                window.scrollTo(0,0);
+            }, 10);
+        ")
         shinyjs::hide("Constructos")
         shinyjs::show("PuntuacionesRepgrid")
         constructos_puntuables(constructos())
@@ -189,6 +219,11 @@ form_server <- function(input, output, session){
     })  
 
     shinyjs::onclick("atras_constructos", {
+        runjs("
+        setTimeout(function () {
+                window.scrollTo(0,0);
+            }, 10);
+        ")
         shinyjs::hide("Constructos")
         shinyjs::show("preguntasDiadas")
     })
@@ -284,6 +319,13 @@ form_server <- function(input, output, session){
                     })
                     sidebarMenu(id="menu_constructos", menu_items)
                 })
+
+                runjs("
+                    setTimeout(function () {
+                            window.scrollTo(0,0);
+                        }, 10);
+                ")
+
                 shinyjs::hide("ConstructosAleatorios")
                 shinyjs::show("Constructos")
 
@@ -292,6 +334,11 @@ form_server <- function(input, output, session){
     })
 
     shinyjs::onclick("atras_constructos_aleatorios", {
+        runjs("
+        setTimeout(function () {
+                window.scrollTo(0,0);
+            }, 10);
+        ")
         shinyjs::hide("ConstructosAleatorios")
         shinyjs::show("preguntasDiadas")
     })
@@ -340,6 +387,25 @@ form_server <- function(input, output, session){
     })
                 
     shinyjs::onclick("siguiente_puntuacion", {
+
+        runjs("
+
+        window.scrollTo(0,0);
+        $('#pagina_puntuaciones').addClass('vis-off');
+
+        setTimeout(function () {
+            $('#rg_success').removeClass('vis-off');
+        }, 300);
+
+        setTimeout(function () {
+            $('#rg_success').addClass('vis-off');
+        }, 500);
+
+        setTimeout(function () {
+            $('#pagina_puntuaciones').removeClass('vis-off');
+        }, 1000);
+        ")
+
         slider_names <- list()
         for(i in 1:length(constructos())){
             slider <- paste("slider_", i)
@@ -356,6 +422,11 @@ form_server <- function(input, output, session){
 
 
     shinyjs::onclick("atras_puntuaciones", {
+        runjs("
+        setTimeout(function () {
+                window.scrollTo(0,0);
+            }, 10);
+        ")
         shinyjs::hide("PuntuacionesRepgrid")
         shinyjs::show("Constructos")
     })
@@ -472,6 +543,11 @@ form_server <- function(input, output, session){
     })
 
     shinyjs::onclick("atras_confirmacion_repgrid", {
+        runjs("
+        setTimeout(function () {
+                window.scrollTo(0,0);
+            }, 10);
+        ")
         shinyjs::hide("ConfirmacionRepgrid")
         shinyjs::show("Constructos")
     })
@@ -609,6 +685,11 @@ form_server <- function(input, output, session){
     })
     
     shinyjs::onclick("iniciar_nuevo_w", {
+        runjs("
+        setTimeout(function () {
+                window.scrollTo(0,0);
+            }, 10);
+        ")
         shinyjs::hide("ComprobarDatos_w")
         #shinyjs::hide("iniciar_nuevo_w")
         shinyjs::hide("sim_rep_w")
@@ -626,11 +707,21 @@ form_server <- function(input, output, session){
     # COMO SE GENERAN LOS CONSTRUCTOS -------------------------------------------
 
     shinyjs::onclick("manual_w", {
+        runjs("
+        setTimeout(function () {
+                window.scrollTo(0,0);
+            }, 10);
+        ")
         shinyjs::hide("preguntasDiadas_w")
         shinyjs::show("Constructos_w")
     })
 
     shinyjs::onclick("atras_preguntas_diada_w", {
+        runjs("
+        setTimeout(function () {
+                window.scrollTo(0,0);
+            }, 10);
+        ")
         shinyjs::hide("preguntasDiadas_w")
         shinyjs::show("ComprobarDatos_w")
         shinyjs::show("iniciar_nuevo_w")
@@ -700,6 +791,11 @@ form_server <- function(input, output, session){
     )
 
     shinyjs::onclick("continuar_constructo_w", {
+        runjs("
+        setTimeout(function () {
+                window.scrollTo(0,0);
+            }, 10);
+        ")
         shinyjs::hide("Constructos_w")
         # si viene de comprobar datos previos repgrid ya tengo los "YO's"
         if(is.null(actual_repgrid()) && is.null(ideal_repgrid())){
@@ -724,6 +820,11 @@ form_server <- function(input, output, session){
     })  
 
     shinyjs::onclick("atras_constructos_w", {
+        runjs("
+        setTimeout(function () {
+                window.scrollTo(0,0);
+            }, 10);
+        ")
         shinyjs::hide("Constructos_w")
         shinyjs::show("preguntasDiadas_w")
     })
@@ -798,11 +899,21 @@ form_server <- function(input, output, session){
     })
 
     shinyjs::onclick("atras_elementos_w", {
+        runjs("
+        setTimeout(function () {
+                window.scrollTo(0,0);
+            }, 10);
+        ")
         shinyjs::hide("Elementos_w")
         shinyjs::show("preguntasDiadas_w")
     })
 
     shinyjs::onclick("continuar_elementos_w", {
+        runjs("
+        setTimeout(function () {
+                window.scrollTo(0,0);
+            }, 10);
+        ")
         shinyjs::hide("Elementos_w")
         shinyjs::show("preguntasDiadas_w")
         shinyjs::show("generar_elementos_w")
@@ -811,6 +922,11 @@ form_server <- function(input, output, session){
     }) 
 
     shinyjs::onclick("generar_elementos_w", {
+        runjs("
+        setTimeout(function () {
+                window.scrollTo(0,0);
+            }, 10);
+        ")
         shinyjs::hide("preguntasDiadas_w")
         shinyjs::show("Elementos_w")
     })
@@ -904,6 +1020,12 @@ form_server <- function(input, output, session){
             }
             # espero que se acutalicen las preguntas?
             if(is.null(aleatorios_w())){
+
+                runjs("
+                setTimeout(function () {
+                        window.scrollTo(0,0);
+                    }, 10);
+                ")
                 
                 shinyjs::hide("ConstructosAleatorios_w")
                 shinyjs::show("Constructos_w")
@@ -913,6 +1035,13 @@ form_server <- function(input, output, session){
     })
 
     shinyjs::onclick("atras_constructos_aleatorios_w", {
+
+        runjs("
+        setTimeout(function () {
+                window.scrollTo(0,0);
+            }, 10);
+        ")
+
         shinyjs::hide("ConstructosAleatorios_w")
         shinyjs::show("preguntasDiadas_w")
     })
@@ -1092,6 +1221,26 @@ form_server <- function(input, output, session){
     })
 
     shinyjs::onclick("siguiente_puntuacion_w", {
+
+        runjs("
+
+        window.scrollTo(0,0);
+        $('#pagina_puntuaciones_w').addClass('vis-off');
+
+        setTimeout(function () {
+            $('#wg_success').removeClass('vis-off');
+        }, 300);
+
+        setTimeout(function () {
+            $('#wg_success').addClass('vis-off');
+        }, 500);
+
+        setTimeout(function () {
+            $('#pagina_puntuaciones_w').removeClass('vis-off');
+        }, 1000);
+        ")
+        
+
         slider_names <- list()
         # iterador para poner el yo actual en la diagonal de la wimpgrid
         iterador <- iterador_constructos()
@@ -1115,11 +1264,21 @@ form_server <- function(input, output, session){
     })
 
     shinyjs::onclick("atras_puntuaciones_w", {
+        runjs("
+        setTimeout(function () {
+                window.scrollTo(0,0);
+            }, 10);
+        ")
         shinyjs::hide("PuntuacionesWimpgrid")
         shinyjs::show("preguntasDiadas_w")
     })
 
     shinyjs::onclick("atras_confirmacion_wimpgrid", {
+        runjs("
+        setTimeout(function () {
+                window.scrollTo(0,0);
+            }, 10);
+        ")
         shinyjs::hide("ConfirmacionWimpgrid")
         shinyjs::show("preguntasDiadas_w")
     })
