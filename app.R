@@ -139,7 +139,7 @@ httr::set_config(config(ssl_verifypeer = 0L, ssl_verifyhost = 0L))
 domain <- Sys.getenv("DOMAIN")
 message("domain")
 message(domain)
-ruta_app <- sprintf("https://%s", domain)
+ruta_app <- sprintf("https://%s/", domain)
 keycloak_client_id <- "gridfcm"
 keycloak_client_secret <- Sys.getenv("KEYCLOAK_CLIENT_SECRET")
 # Replace "gridfcm.localhost" with "domain" in all URLs
