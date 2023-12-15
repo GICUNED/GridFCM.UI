@@ -31,7 +31,6 @@ knitr::knit_hooks$set(webgl = hook_webgl)
 
 
 
-
 source("global.R")
 # GRID1
 source("R/GraphFunctions.R")
@@ -76,11 +75,11 @@ source("Servers/success_payment_server.R")
 
 
 
-
 #DB
 source("DB/establish_con.R")
 source("DB/gestion_excel.R")
-source("DB/sync_stripe_db_process.R")
+# source("DB/sync_stripe_db_process_light.R")
+
 
 
 
@@ -134,15 +133,17 @@ theme <- create_theme(
 
 
 
+
+
 httr::set_config(config(ssl_verifypeer = 0L, ssl_verifyhost = 0L))
 domain <- Sys.getenv("DOMAIN")
-message("domain")
-message(domain)
+# message("domain")
+# message(domain)
 ruta_app <- sprintf("https://%s/", domain)
 keycloak_client_id <- "gridfcm"
 keycloak_client_secret <- Sys.getenv("KEYCLOAK_CLIENT_SECRET")
-message("keycloak client secret")
-message(keycloak_client_secret)
+# message("keycloak client secret")
+# message(keycloak_client_secret)
 # Replace "gridfcm.localhost" with "domain" in all URLs
 token_url <- sprintf("https://%s/keycloak/realms/Gridfcm/protocol/openid-connect/token", domain)
 info_url <- sprintf("https://%s/keycloak/realms/Gridfcm/protocol/openid-connect/userinfo", domain)
@@ -278,6 +279,7 @@ ui <- add_cookie_handlers(
   )
 )
 
+
 gestionar_rol <- function(roles){
   # obtengo el maximo rol posible a nivel de funcionalidades
   usuario_ilimitado <- FALSE
@@ -295,8 +297,14 @@ gestionar_rol <- function(roles){
     shinyjs::show("patient-page")
     shinyjs::show("repgrid-page")
     shinyjs::show("wimpgrid-page")
-    shinyjs::show("plan-page")
     
+    # si el usuario es ilimitado se la ocultamos
+    if(usuario_ilimitado){
+      shinyjs::hide("plan-page")
+    }else{
+      shinyjs::show("plan-page")
+    }
+
     shinyjs::hide("welcome_box")
     if (usuario_admin) {
       return("usuario_administrador")
@@ -609,6 +617,7 @@ observeEvent(input$invitado, {
 
         }
         
+
       }
       if(ultima_palabra == "OK"){
         message("token válido....")
@@ -624,8 +633,13 @@ observeEvent(input$invitado, {
           # llamar a la funcion de refrescar con stripe
           ## asi podemos ver si el rol coincide con la suscripcion que se tenga
           ## y metemos el rol actualizado en la variable session
-          syncStripeDBProcess()
+          # syncStripeDBProcessLight()
+          # syncStripeDBProcess()
         }
+
+
+
+
 
         session$userData$rol <- rol
         session$userData$id_psicologo <- user$id
@@ -683,6 +697,9 @@ observeEvent(input$invitado, {
     )
   }
   
+
+
+
 
   link <- make_authorization_url()
   

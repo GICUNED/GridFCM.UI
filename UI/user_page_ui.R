@@ -21,7 +21,7 @@ user_page_ui <- fluidPage(class="custom-margins",
         ),
 
         column(6, class="d-flex justify-content-start gap-1 align-items-center flex-column",
-            actionButton("redirect_licencias", class="ml-auto", i18n$t("Gestionar Suscripción"), status = 'success', icon = icon("address-card")),
+            shinyjs::hidden(actionButton("redirect_licencias", class="ml-auto", i18n$t("Gestionar Suscripción"), status = 'success', icon = icon("address-card"))),
             shinyjs::hidden(actionButton("admin_btn", class="ml-auto", i18n$t("Admin Panel"), status = 'secondary', icon = icon("gear"), newTab = TRUE))
         )
     ),

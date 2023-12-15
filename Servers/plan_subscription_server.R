@@ -6,6 +6,22 @@ plan_subscription_server <- function(input, output, session){
     success_payment_server(input, output, session, new_rol_from_payments)
 
     rol <- session$userData$rol
+    message(sprintf('
+            rol desde suscripciones %s
+    ', rol))
+    if(!is.null(rol) && rol == "usuario_ilimitado"){
+        shinyjs::hide("panel-compra")
+    }else{
+        shinyjs::show("panel-compra")
+    }
+
+    if(!is.null(rol) && (rol == "usuario_coordinador_organizacion" || rol == "usuario_administrador")){
+        shinyjs::show("advertencia-planes")
+    }else{
+        shinyjs::hide("advertencia-planes")
+    }
+
+
     id_psicologo <- session$userData$id_psicologo
     email_user <- session$userData$email_user
     
@@ -276,9 +292,9 @@ plan_subscription_server <- function(input, output, session){
             if(!is.null(licenciasDB)){
                 licencias_data$psicologos <- licenciasDB$id
                 df <- data.frame(Nombre = licenciasDB$nombre, Email = licenciasDB$email, Usuario=licenciasDB$username)
-                message("entro licencias")
-                message(df)
-                message(nrow(df))
+                # message("entro licencias")
+                # message(df)
+                # message(nrow(df))
                 custom_button_revocar_accesso <- function(tbl){
                     function(i){
                         if(i==0){
