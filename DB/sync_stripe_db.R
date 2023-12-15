@@ -115,6 +115,7 @@ syncStripeDB <- function(email, id_psicologo, rol, con) {
       }else{
         en_licencia_ya = FALSE
       }
+      # message("paso1")
       # recorremos todas las suscripciones a añadir
       for(id_susc_a_añadir in suscripciones_a_añadir){
         # message(id_susc_a_añadir)
@@ -126,14 +127,16 @@ syncStripeDB <- function(email, id_psicologo, rol, con) {
           en_licencia_ya = TRUE # no hay que meter en licencia al usuario con suscripcion individual
         }
 
-        if(en_licencia_ya && organizacion){
+        if(en_licencia_ya && organizacion=="true"){
           sus_licencias_disponibles = cantidad_susc_a_añadir
-        }else if (en_licencia_ya && !organizacion) {
+        }else if (en_licencia_ya && !(organizacion=="true")) {
           sus_licencias_disponibles = cantidad_susc_a_añadir - 1
         }
         else{
           sus_licencias_disponibles = cantidad_susc_a_añadir - 1
         }
+        # message("paso2")
+
         sus_fecha_inicio = as.POSIXct(stripe_data[stripe_data$id_suscripcion==id_susc_a_añadir, "fecha_inicio"], format="%H:%M:%S")
         sus_fecha_fin = as.POSIXct(stripe_data[stripe_data$id_suscripcion==id_susc_a_añadir, "fecha_fin"], format="%H:%M:%S")
         # message(sus_fecha_inicio)
@@ -194,6 +197,8 @@ syncStripeDB <- function(email, id_psicologo, rol, con) {
         }
       }
     }
+    # message("paso3")
+
     if(values_text!=""){
       # message(values_text)
       query <- sprintf("update SUSCRIPCION as s set
@@ -210,7 +215,7 @@ syncStripeDB <- function(email, id_psicologo, rol, con) {
       ids_actualizar_no_activas_text = paste("'",suscripciones_a_actualizar_no_activas,"'", sep="", collapse = ", ")
 
       query <- sprintf("SELECT id from SUSCRIPCION WHERE id_stripe_suscripcion in (%s)", ids_actualizar_no_activas_text)
-      message(query)
+      # message(query)
       # message(query)
       datos <- DBI::dbGetQuery(con, query)
 
@@ -220,10 +225,11 @@ syncStripeDB <- function(email, id_psicologo, rol, con) {
       # borramos de licencias todo lo que tenga que ver con estas ids
       ids_text = paste(ids_actualizar_no_activas_serial, collapse = ", ")
       query <- sprintf("delete from licencia where fk_suscripcion in (%s);", ids_text)
-      message(query)
+      # message(query)
       DBI::dbExecute(con, query)
     }
     
+    # message("paso4")
 
     # revisar las manuales
     if(!is.null(suscripciones_manuales) && length(suscripciones_manuales)>0){
@@ -247,7 +253,7 @@ syncStripeDB <- function(email, id_psicologo, rol, con) {
         # message(fecha_fin_susc_manual)
 
         if(current_date < fecha_inicio_susc_manual || current_date > fecha_fin_susc_manual){
-          message("cambio a inactiva")
+          # message("cambio a inactiva")
           ids_manuales_a_cambiar_a_no_activo = append(ids_manuales_a_cambiar_a_no_activo, id_susc_manual)
         }else{
           message("se queda activa")
@@ -262,7 +268,7 @@ syncStripeDB <- function(email, id_psicologo, rol, con) {
         query <- sprintf("update SUSCRIPCION as s set
           activa = false 
           where s.id in (%s);", ids_text)
-        message(query)
+        # message(query)
         DBI::dbExecute(con, query)
 
         # ahora si hay algun registro con estas suscripciones en licencia los quitamos
@@ -276,8 +282,8 @@ syncStripeDB <- function(email, id_psicologo, rol, con) {
     # revisar los permisos, se tendrá que ver el rol que tiene el usuario ahora mismo y ver si es consistente con el que debería tener
     ## hay que jugar con suscripciones añadidad, suscripciones actualizadas a activas y no activas y las manuales.
     ## lo mas facil quizá sea comprobar en la bd si se tiene alguna licencia/suscripcion donde este el usuario dado de alta, y comprobar si el rol que tiene concuerda.
-    message("stripe")
-    message(rol)
+    # message("stripe")
+    # message(rol)
     if(rol != "usuario_administrador"){
       # si no es administrador, tenemos que hacer el checkeo para darle los posibles permisos que le falten, o quitarle los que no deba tener.
       ## miramos si tiene alguna suscripcion activa
@@ -293,9 +299,9 @@ syncStripeDB <- function(email, id_psicologo, rol, con) {
       datos <- DBI::dbGetQuery(con, query)
       licencias_activas = datos$id
 
-      message(suscripciones_activas_organizacion)
-      message(suscripciones_activas_individual)
-      message(licencias_activas)
+      # message(suscripciones_activas_organizacion)
+      # message(suscripciones_activas_individual)
+      # message(licencias_activas)
 
       # calculamos el rol que debe tener
       rol_debe_tener = "usuario_gratis"
@@ -306,6 +312,7 @@ syncStripeDB <- function(email, id_psicologo, rol, con) {
       }else if (!is.null(licencias_activas) && length(licencias_activas)>0) {
         rol_debe_tener = "usuario_ilimitado"
       }
+
 
       if(rol != rol_debe_tener){
         # definimos todas la variables necesarias para atacar a keycloak
@@ -358,15 +365,18 @@ syncStripeDB <- function(email, id_psicologo, rol, con) {
         ## primero, sacamos el token para acceder a la api de admin
         admin_token <- obtener_token_admin_api()
         ## ahora necesitamos el user id del usuario al que quitar el rol ilimitado
+        # message(email)
+        # message("llego")
         user_id <- obtener_user_id(email, admin_token)
 
-        message(user_id)
+        # message(user_id)
 
         rol_url <- sprintf("https://%s/keycloak/admin/realms/Gridfcm/users/%s/role-mappings/realm", domain, user_id)
 
         # hacemos el cambio de rol en keycloak, partimos de que el usuario no puede tener el administrador llegados este punto
         if(rol_debe_tener == "usuario_coordinador_organizacion"){
           ## meter usuario_coordinador_organizacion a keycloak y quitar usuario_ilimitado si existiera
+          message("haria el cambio en keycloak")
           request_body <- data.frame(
               id = c(rol_coordinador$id),name = c(rol_coordinador$name)
           )
@@ -381,16 +391,77 @@ syncStripeDB <- function(email, id_psicologo, rol, con) {
                   message("error")
               }
           }
-          ## quitamos usuario_ilimitado si existiera
-          
+          ## quitamos usuario_ilimitado por si existiera (aqui se podria ver si el rol actual es ilimitado, y si no es no hace falta hacer la llamada)
+          request_body <- data.frame(
+              id = c(rol_ilimitado$id),name = c(rol_ilimitado$name)
+          )
+          request_body_json <- toJSON(request_body, auto_unbox = TRUE)
+          resp <- httr::DELETE (url = rol_url, add_headers("Content-Type" = "application/json","Authorization" = paste("Bearer", admin_token, sep = " ")), body = request_body_json, encode="json")
+          roles <- (httr::content(resp, "text"))
+          if(!is.null(roles) && roles != ""){
+              roles <- jsonlite::fromJSON(roles)
+              if(is.null(roles$error)){
+                  message("no error")
+              }else{
+                  message("error")
+              }
+          }
 
         }else if (rol_debe_tener == "usuario_ilimitado") {
-          ## meter usuario ilimitado y quitar usuario_coordinador_organizacion si existiera
+          ## meter usuario ilimitado 
+          request_body <- data.frame(
+              id = c(rol_ilimitado$id),name = c(rol_ilimitado$name)
+          )
+          request_body_json <- toJSON(request_body, auto_unbox = TRUE)
+          resp <- httr::POST(url = rol_url, add_headers("Content-Type" = "application/json","Authorization" = paste("Bearer", admin_token, sep = " ")), body = request_body_json, encode="json")
+          roles <- (httr::content(resp, "text"))
+          if(!is.null(roles) && roles != ""){
+              roles <- jsonlite::fromJSON(roles)
+              if(is.null(roles$error)){
+                  message("no error")
+              }else{
+                  message("error")
+              }
+          }
+          
+          ## quitar usuario_coordinador_organizacion si existiera
+          request_body <- data.frame(
+              id = c(rol_coordinador$id),name = c(rol_coordinador$name)
+          )
+          request_body_json <- toJSON(request_body, auto_unbox = TRUE)
+          resp <- httr::DELETE (url = rol_url, add_headers("Content-Type" = "application/json","Authorization" = paste("Bearer", admin_token, sep = " ")), body = request_body_json, encode="json")
+          roles <- (httr::content(resp, "text"))
+          if(!is.null(roles) && roles != ""){
+              roles <- jsonlite::fromJSON(roles)
+              if(is.null(roles$error)){
+                  message("no error")
+              }else{
+                  message("error")
+              }
+          }
+
         }else if (rol_debe_tener == "usuario_gratis") {
-          ## meter usuario gratis y quitar usuario_coordinador_organizacion y usuario_ilimitado si existieran
+          ## meter usuario gratis (no hace falta ya que todos los usuarios lo tienen por defecto)
+          message("entro usuario gratis")
+          ## quitar usuario_coordinador_organizacion y usuario_ilimitado si existieran
+          request_body <- data.frame(
+              id = c(rol_coordinador$id, rol_ilimitado$id),name = c(rol_coordinador$name, rol_ilimitado$name)
+          )
+          request_body_json <- toJSON(request_body, auto_unbox = TRUE)
+          resp <- httr::DELETE (url = rol_url, add_headers("Content-Type" = "application/json","Authorization" = paste("Bearer", admin_token, sep = " ")), body = request_body_json, encode="json")
+          roles <- (httr::content(resp, "text"))
+          if(!is.null(roles) && roles != ""){
+              roles <- jsonlite::fromJSON(roles)
+              if(is.null(roles$error)){
+                  message("no error")
+              }else{
+                  message("error")
+              }
+          }
+
 
         }
-        message(rol_debe_tener)
+        # message(rol_debe_tener)
 
 
 

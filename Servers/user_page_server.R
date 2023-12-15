@@ -1,6 +1,7 @@
 user_page_server <- function(input, output, session){
 
     rol <- session$userData$rol
+    
     id_psicologo <- session$userData$id_psicologo
 
     con <- establishDBConnection()
@@ -35,9 +36,14 @@ user_page_server <- function(input, output, session){
         if(rol == "usuario_administrador"){
             shinyjs::show("admin_btn")
         }
-
         else{
             shinyjs::hide("admin_btn")
+        }
+
+        if(rol == "usuario_ilimitado"){
+            shinyjs::hide("redirect_licencias")
+        }else{
+            shinyjs::show("redirect_licencias")
         }
     }
 

@@ -6,6 +6,22 @@ plan_subscription_server <- function(input, output, session){
     success_payment_server(input, output, session, new_rol_from_payments)
 
     rol <- session$userData$rol
+    message(sprintf('
+            rol desde suscripciones %s
+    ', rol))
+    if(!is.null(rol) && rol == "usuario_ilimitado"){
+        shinyjs::hide("panel-compra")
+    }else{
+        shinyjs::show("panel-compra")
+    }
+
+    if(!is.null(rol) && (rol == "usuario_coordinador_organizacion" || rol == "usuario_administrador")){
+        shinyjs::show("advertencia-planes")
+    }else{
+        shinyjs::hide("advertencia-planes")
+    }
+
+
     id_psicologo <- session$userData$id_psicologo
     email_user <- session$userData$email_user
     
@@ -276,20 +292,32 @@ plan_subscription_server <- function(input, output, session){
             if(!is.null(licenciasDB)){
                 licencias_data$psicologos <- licenciasDB$id
                 df <- data.frame(Nombre = licenciasDB$nombre, Email = licenciasDB$email, Usuario=licenciasDB$username)
-
+                # message("entro licencias")
+                # message(df)
+                # message(nrow(df))
                 custom_button_revocar_accesso <- function(tbl){
                     function(i){
-                        sprintf(
-                        '<button id="revocar_acceso_modal_%s_%d" type="button" onclick="%s">Revocar Accesso</button>', 
-                        tbl, i, "Shiny.setInputValue('button_id_revocar_acceso', this.id, {priority: 'event'});")
+                        if(i==0){
+                            NULL
+                        }else {
+                           sprintf(
+                            '<button id="revocar_acceso_modal_%s_%d" type="button" onclick="%s">Revocar Accesso</button>', 
+                            tbl, i, "Shiny.setInputValue('button_id_revocar_acceso', this.id, {priority: 'event'});")
+                        }
+                        
                     }
                 }
-
+                
+                if(nrow(df)==0){
+                    button_rows = 0
+                }else{
+                    button_rows = 1:nrow(df)
+                }
                 data_df <- cbind(df, 
-                            button = sapply(1:nrow(df), custom_button_revocar_accesso("tbl1")), 
+                            button = sapply(button_rows, custom_button_revocar_accesso("tbl1")), 
                             stringsAsFactors = FALSE)
 
-
+                message(data_df)
                 # data_rep <- df %>%
                 #     mutate(
                 #         actionable = glue(
