@@ -1,8 +1,8 @@
 plan_subscription_ui <- fluidPage(class="custom-margins",
     useShinyjs(),
 
-    fluidRow(id="advertencia-planes",
-        span("Atención: Se si vuelve a comprar otra suscripción cuando sigue activa la actual, no se añade más tiempo a la suscripción. Por ello, es mejor configurar una renovación automática o esperar a que se termine la fecha de suscripción, para ampliar la actual.")
+    fluidRow(class="advert-help w-100 mb-4", id="advertencia-planes",
+        p( strong("Atención"), "Se si vuelve a comprar otra suscripción cuando sigue activa la actual, no se añade más tiempo a la suscripción. Por ello, es mejor configurar una renovación automática o esperar a que se termine la fecha de suscripción, para ampliar la actual.")
     ),
     fluidRow(id="panel-compra",
         fluidRow(class = "flex-container-titles",

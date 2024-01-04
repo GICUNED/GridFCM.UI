@@ -82,7 +82,6 @@ source("DB/gestion_excel.R")
 
 
 
-
 menu <- tags$ul(tags$li(a(
   class = "item", href = route_link(""), "Inicio"
 )),
@@ -204,7 +203,6 @@ ui <- add_cookie_handlers(
           actionButton('logout_btn',i18n$t("Cerrar sesión"), icon = icon("right-from-bracket"), status="danger", class="logout-btn", style="display: none;")
         )
       ),
-
 
     dashboardBody(
       usei18n(translator = i18n),

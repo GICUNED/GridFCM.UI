@@ -1895,6 +1895,28 @@ color: #8b0000;
   color: #d87272;
 }
 
+/*Mensajes de advertencia ---------------------------------------------------------------*/
+
+
+.advert-help {
+  background-color: #eeecbf;
+  padding: 1rem;
+  border-radius: 1rem;
+}
+
+.dark-mode .advert-help {
+  background-color: #3a3b1a;
+}
+
+.advert-help p {
+  font-size: 1rem;
+  color: #676208;
+  margin: 0;
+}
+
+.dark-mode .advert-help p {
+  color: #ffffff;
+}
 
 /*Tablas, graphs, etc.----------------------------------------------------------------------------*/
 
