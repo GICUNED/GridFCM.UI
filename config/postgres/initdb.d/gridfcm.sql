@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS psicologo (
     token TEXT,
     refresh_token TEXT,
     rol VARCHAR,
-    colectivo VARCHAR,
+    colectivo VARCHAR DEFAULT 'Otro',
     fecha_registro TIMESTAMP DEFAULT (CURRENT_TIMESTAMP AT TIME ZONE 'Europe/Madrid')
 );
 
