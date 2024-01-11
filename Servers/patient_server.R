@@ -332,7 +332,7 @@ patient_server <- function(input, output, session){
             # runjs("window.location.href = '/#!/repgrid';")
             message(paste("error: ", e))
             showModal(modalDialog(
-                title = i18n$t("Esta simulación se guardó con errores. Bórrela y vuélvela a crear."),
+                title = i18n$t("Esta simulación se guardó con errores. Bórrela y vuelva a crearla."),
                 footer = tagList(
                     modalButton("OK"),
                 )
