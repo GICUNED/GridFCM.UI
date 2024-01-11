@@ -325,7 +325,7 @@ tabsetPanel(
 
             fluidRow(id="PuntuacionesWimpgrid", class = "mt-2 custom-margins justify-content-center align-items-start",  
                 box(
-                    title = i18n$t("Puntuaciones WimpgGrid"),
+                    title = i18n$t("Puntuaciones WimpGrid"),
                     icon=icon("star"),
                     column(12, class="d-flex justify-content-center mb-3",
                         actionButton("atras_puntuaciones_w", class="mr-2",icon=icon("left-long"), i18n$t("Atrás")),

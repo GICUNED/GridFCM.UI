@@ -532,7 +532,7 @@ form_server <- function(input, output, session){
             # runjs("window.location.href = '/#!/repgrid';")
             message(paste("error: ", e))
             showModal(modalDialog(
-                title = i18n$t("Ha habido un problema al procesar los elementos introducidos. Revise los valores introducidos moviéndote atrás."),
+                title = i18n$t("Ha habido un problema al procesar los elementos introducidos. Revise los valores."),
                 footer = tagList(
                     modalButton("OK"),
                 )
@@ -643,46 +643,51 @@ form_server <- function(input, output, session){
     }
 
     observeEvent(input$sim_rep_w_rows_selected, {
-        selected_row <- input$sim_rep_w_rows_selected
-        fechas <- fechas_repgrid()
-        fecha <- fechas[selected_row]
-        message(fecha)
-        ruta_destino <- tempfile(fileext = ".xlsx")
-        id <- decodificar_BD_excel('repgrid_xlsx', ruta_destino, session$userData$id_paciente, fecha)
-        excel_repgrid <- read.xlsx(ruta_destino)
-        file.remove(ruta_destino)
-        # convierto a numero las puntuaciones
-        columnas_a_convertir <- 2:(ncol(excel_repgrid) - 1)
-        # Utiliza lapply para aplicar la conversión a las columnas seleccionadas
-        excel_repgrid[, columnas_a_convertir] <- lapply(excel_repgrid[, columnas_a_convertir], as.numeric)
+        tryCatch({
+            selected_row <- input$sim_rep_w_rows_selected
+            fechas <- fechas_repgrid()
+            fecha <- fechas[selected_row]
+            message(fecha)
+            ruta_destino <- tempfile(fileext = ".xlsx")
+            id <- decodificar_BD_excel('repgrid_xlsx', ruta_destino, session$userData$id_paciente, fecha)
+            excel_repgrid <- read.xlsx(ruta_destino)
+            file.remove(ruta_destino)
+            # convierto a numero las puntuaciones
+            columnas_a_convertir <- 2:(ncol(excel_repgrid) - 1)
+            # Utiliza lapply para aplicar la conversión a las columnas seleccionadas
+            excel_repgrid[, columnas_a_convertir] <- lapply(excel_repgrid[, columnas_a_convertir], as.numeric)
 
-        nombres_columnas <- colnames(excel_repgrid)
-        min <- as.numeric(nombres_columnas[1])
-        max <- as.numeric(nombres_columnas[length(nombres_columnas)])
-        message("min, max: ", min, " ", max)
-        # Utiliza lapply para aplicar la conversión a las columnas seleccionadas
-        
-        excel_repgrid[, columnas_a_convertir] <- unlist(lapply(excel_repgrid[, columnas_a_convertir], function(x) reescalar(x, min=min, max=max)))
-        message(excel_repgrid)
-        # saco los constructos
-        constructos_izq <- excel_repgrid[1:nrow(excel_repgrid), 1]
-        constructos_der <- excel_repgrid[1:nrow(excel_repgrid), ncol(excel_repgrid)]
-        res <- paste(constructos_izq, constructos_der, sep=" - ")
-        constructos_w(res)
-        # saco el yo-ideal y yo-actual
-        actual <- excel_repgrid[1:nrow(excel_repgrid), 2]
-        ideal <- excel_repgrid[1:nrow(excel_repgrid), ncol(excel_repgrid)-1]
-        actual_repgrid(actual)
-        ideal_repgrid(ideal)
-        # oculto cosas
-        shinyjs::hide("ComprobarDatos_w")
-        #shinyjs::hide("iniciar_nuevo_w")
-        shinyjs::hide("sim_rep_w")
-        shinyjs::show("Constructos_w")
-        proxy <- dataTableProxy("sim_rep_w")
-        proxy %>% selectRows(NULL)
+            nombres_columnas <- colnames(excel_repgrid)
+            min <- as.numeric(nombres_columnas[1])
+            max <- as.numeric(nombres_columnas[length(nombres_columnas)])
+            message("min, max: ", min, " ", max)
+            # Utiliza lapply para aplicar la conversión a las columnas seleccionadas
+            
+            excel_repgrid[, columnas_a_convertir] <- unlist(lapply(excel_repgrid[, columnas_a_convertir], function(x) reescalar(x, min=min, max=max)))
+            message(excel_repgrid)
+            # saco los constructos
+            constructos_izq <- excel_repgrid[1:nrow(excel_repgrid), 1]
+            constructos_der <- excel_repgrid[1:nrow(excel_repgrid), ncol(excel_repgrid)]
+            res <- paste(constructos_izq, constructos_der, sep=" - ")
+            constructos_w(res)
+            # saco el yo-ideal y yo-actual
+            actual <- excel_repgrid[1:nrow(excel_repgrid), 2]
+            ideal <- excel_repgrid[1:nrow(excel_repgrid), ncol(excel_repgrid)-1]
+            actual_repgrid(actual)
+            ideal_repgrid(ideal)
+            # oculto cosas
+            shinyjs::hide("ComprobarDatos_w")
+            #shinyjs::hide("iniciar_nuevo_w")
+            shinyjs::hide("sim_rep_w")
+            shinyjs::show("Constructos_w")
+            proxy <- dataTableProxy("sim_rep_w")
+            proxy %>% selectRows(NULL)
+        },error = function(e) {
+            message(NULL)
+        })
         
     })
+
     
     shinyjs::onclick("iniciar_nuevo_w", {
         runjs("
@@ -1270,6 +1275,7 @@ form_server <- function(input, output, session){
             }, 10);
         ")
         shinyjs::hide("PuntuacionesWimpgrid")
+        iterador_constructos(1)
         shinyjs::show("preguntasDiadas_w")
     })
 
@@ -1280,6 +1286,7 @@ form_server <- function(input, output, session){
             }, 10);
         ")
         shinyjs::hide("ConfirmacionWimpgrid")
+        iterador_constructos(1)
         shinyjs::show("preguntasDiadas_w")
     })
     # FIN PUNTUACIONES WIMPGRID ---------------------------------------------------------
@@ -1378,7 +1385,6 @@ form_server <- function(input, output, session){
                     shinyjs::hide("form-page")
                     shinyjs::hide("excel-page")
                     shinyjs::hide("Constructos_w")
-                    shinyjs::show("ComprobarDatos_w")
                     nombres_w(NULL)
                     nombres_valoraciones_w(NULL)
                     nombre_seleccionado_w(NULL)
@@ -1392,6 +1398,7 @@ form_server <- function(input, output, session){
                     valoracion_actual(NULL)
                     valoracion_hipotetico(NULL)
                     fechas_repgrid(NULL)
+                    iterador_constructos(1)
                 }  
             }
         },
@@ -1399,7 +1406,7 @@ form_server <- function(input, output, session){
             # runjs("window.location.href = '/#!/repgrid';")
             message(paste("error: ", e))
             showModal(modalDialog(
-                title = i18n$t("Ha habido un problema al procesar los elementos introducidos. Revise los valores introducidos moviéndote atrás."),
+                title = i18n$t("Ha habido un problema al procesar los elementos introducidos. Revise los valores."),
                 footer = tagList(
                     modalButton("OK"),
                 )

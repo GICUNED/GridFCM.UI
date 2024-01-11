@@ -908,6 +908,10 @@
     {
       "es": "Gestión de Suscripción",
       "en": "Manage Subscription"
+    },
+    {
+      "es": "Ha habido un problema al procesar los elementos introducidos. Revise los valores.",
+      "en": "There has been an issue processing the entered elements. Please review the values."
     }
     
     

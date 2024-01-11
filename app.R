@@ -30,7 +30,6 @@ knitr::knit_hooks$set(webgl = hook_webgl)
 
 
 
-
 source("global.R")
 # GRID1
 source("R/GraphFunctions.R")
@@ -79,7 +78,6 @@ source("Servers/success_payment_server.R")
 source("DB/establish_con.R")
 source("DB/gestion_excel.R")
 # source("DB/sync_stripe_db_process_light.R")
-
 
 
 

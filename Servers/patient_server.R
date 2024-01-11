@@ -499,24 +499,29 @@ patient_server <- function(input, output, session){
     })
 
     observeEvent(input$importarGridPaciente, {
-        shinyjs::hide("patientSimulations")
-        shinyjs::show("import-page")
-        shinyjs::show("form-page")
-        shinyjs::show("excel-page")
-        session$userData$id_paciente <- user_data$selected_user_id
-        proxy <- dataTableProxy("user_table")
-        proxy %>% selectRows(NULL)
-        session$userData$rol <- rol
-        import_excel_server(input, output, session)
-        form_server(input, output, session)
-        
-         runjs("
-            setTimeout(function () {
-                window.location.href = '/#!/import';
-                window.scrollTo(0,0);
-            }, 10);
-        ")
-        # es una opcion esto session$reload()
+        tryCatch({
+            shinyjs::hide("patientSimulations")
+            shinyjs::show("import-page")
+            shinyjs::show("form-page")
+            shinyjs::show("excel-page")
+            session$userData$id_paciente <- user_data$selected_user_id
+            proxy <- dataTableProxy("user_table")
+            proxy %>% selectRows(NULL)
+            session$userData$rol <- rol
+            import_excel_server(input, output, session)
+            form_server(input, output, session)
+            
+            runjs("
+                setTimeout(function () {
+                    window.location.href = '/#!/import';
+                    window.scrollTo(0,0);
+                }, 10);
+            ")
+        },
+        error = function(e) {
+            message("error ", e)
+            session$reload()
+        })
     })
 
     shinyjs::onevent("click", "patientIndicator", {
