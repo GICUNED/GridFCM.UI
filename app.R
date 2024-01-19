@@ -131,7 +131,6 @@ theme <- create_theme(
 
 
 
-
 httr::set_config(config(ssl_verifypeer = 0L, ssl_verifyhost = 0L))
 domain <- Sys.getenv("DOMAIN")
 # message("domain")
