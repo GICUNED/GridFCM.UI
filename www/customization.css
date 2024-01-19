@@ -3077,29 +3077,26 @@ table.dataTable{
 
 #sugerencias_admin .odd td:nth-child(2),
 #sugerencias_admin .even td:nth-child(2),
-
+#sugerencias_admin .odd td:nth-child(3),
+#sugerencias_admin .even td:nth-child(3),
 
 #usuarios_demo .odd td:nth-child(1),
 #usuarios_demo .even td:nth-child(1),
 
 .gestion-licencias .odd td:nth-child(1),
 .gestion-licencias .even td:nth-child(1),
-
 .gestion-licencias .odd td:nth-child(3)::before,
 .gestion-licencias .even td:nth-child(3)::before,
-
 .gestion-licencias .odd td:nth-child(2)::before,
 .gestion-licencias .even td:nth-child(2)::before,
 
 .licencias-table .odd td:nth-child(2),
 .licencias-table .even td:nth-child(2),
-
 .licencias-table .odd td:nth-child(3),
 .licencias-table .even td:nth-child(3),
 
 .patient-diff .odd td:nth-child(1),
 .patient-diff .even td:nth-child(1), 
-
 .patient-diff .odd td:nth-child(4),
 .patient-diff .even td:nth-child(4),
 
@@ -3233,7 +3230,10 @@ text-align: right;
 .gestion-licencias .even td:nth-child(1)::before,
 
 .patient-diff .odd td:nth-child(1)::before,
-.patient-diff .even td:nth-child(1)::before
+.patient-diff .even td:nth-child(1)::before,
+
+#sugerencias_admin .odd td:nth-child(3)::before,
+#sugerencias_admin .even td:nth-child(3)::before
 {
   display: inline-block;
   visibility: visible !important;
@@ -3265,7 +3265,10 @@ text-align: right;
 .gestion-licencias .even td:nth-child(2)::before,
 
 #usuarios_demo .odd td:nth-child(2)::before,
-#usuarios_demo .even td:nth-child(2)::before
+#usuarios_demo .even td:nth-child(2)::before,
+
+#sugerencias_admin .odd td:nth-child(5)::before,
+#sugerencias_admin .even td:nth-child(5)::before
 {
   display: inline-block;
   visibility: visible !important;

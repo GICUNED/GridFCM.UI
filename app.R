@@ -274,7 +274,6 @@ ui <- add_cookie_handlers(
   )
 )
 
-
 gestionar_rol <- function(roles){
   # obtengo el maximo rol posible a nivel de funcionalidades
   usuario_ilimitado <- FALSE
@@ -294,13 +293,12 @@ gestionar_rol <- function(roles){
     shinyjs::show("wimpgrid-page")
     shinyjs::show("plan-page")
     
-    
     # si el usuario es ilimitado se la ocultamos
-    # if(usuario_ilimitado){
-    #   shinyjs::hide("plan-page")
-    # }else{
-    #   shinyjs::show("plan-page")
-    # }
+    if(usuario_ilimitado){
+     shinyjs::hide("plan-page")
+    }else{
+     shinyjs::show("plan-page")
+    }
 
      #shinyjs::hide("welcome_box")
 
