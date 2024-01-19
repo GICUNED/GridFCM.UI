@@ -445,7 +445,7 @@ patient_server <- function(input, output, session){
             sprintf(i18n$t("¿Está seguro de que quiere eliminar esta simulación de %s? Esto no se puede deshacer."), nombrepaciente),
             footer = tagList(
             modalButton(i18n$t("Cancelar")),
-            actionButton("confirmarBorradoSimulacion", i18n$t("Confirmar"), class = "btn-danger")
+            actionButton("confirmarBorradoSimulacion", i18n$t("Confirmar"), status ="danger", icon = icon("trash-can"))
             )
         ))
     }
@@ -585,7 +585,7 @@ patient_server <- function(input, output, session){
                 i18n$t("¿Está seguro de que quiere eliminar al paciente? Se borrarán todas sus simulaciones"),
                 footer = tagList(
                     modalButton(i18n$t("Cancelar")),
-                    actionButton("confirmarBorrado", i18n$t("Confirmar"), class = "btn-danger")
+                    actionButton("confirmarBorrado", i18n$t("Confirmar"), status ="danger", icon = icon("trash-can"))
                 )
             ))
         }

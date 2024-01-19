@@ -182,8 +182,6 @@ ui <- add_cookie_handlers(
       )
     ),
 
-
-
     dashboardSidebar(
       sidebarMenu(
           id = "sidebar_principal",
@@ -196,13 +194,11 @@ ui <- add_cookie_handlers(
           div(id = "wimpgrid-page", class = "nav-item wimpg-page hidden-div", menuItem("WimpGrid", href = route_link("wimpgrid"), icon = icon("border-none"), newTab = FALSE)),
           div(id="suggestion-page", class = "nav-item suggestion-page hidden-div", menuItem(i18n$t("Sugerencias"), href = route_link("suggestion"), icon = icon("comments"), newTab = FALSE)),
           div(id="plan-page", class = "nav-item plan-page hidden-div", menuItem(i18n$t("Gestión de Suscripción"), href = route_link("plan"), icon = icon("address-card"), newTab = FALSE)),
-          #div(class = 'language-selector',selectInput('selected_language',i18n$t("Idioma"), choices = i18n$get_languages(),selected = i18n$get_translation_language())),
           div(class = 'language-selector',radioGroupButtons('selected_language',i18n$t("Idioma"), choices = i18n$get_languages(), selected = i18n$get_translation_language(), width='100%', checkIcon = list())),
           
           actionButton('logout_btn',i18n$t("Cerrar sesión"), icon = icon("right-from-bracket"), status="danger", class="logout-btn", style="display: none;")
         )
       ),
-
 
     dashboardBody(
       usei18n(translator = i18n),
@@ -299,15 +295,18 @@ gestionar_rol <- function(roles){
     shinyjs::show("patient-page")
     shinyjs::show("repgrid-page")
     shinyjs::show("wimpgrid-page")
+    shinyjs::show("plan-page")
+    
     
     # si el usuario es ilimitado se la ocultamos
-    if(usuario_ilimitado){
-      shinyjs::hide("plan-page")
-    }else{
-      shinyjs::show("plan-page")
-    }
+    # if(usuario_ilimitado){
+    #   shinyjs::hide("plan-page")
+    # }else{
+    #   shinyjs::show("plan-page")
+    # }
 
-    shinyjs::hide("welcome_box")
+     #shinyjs::hide("welcome_box")
+
     if (usuario_admin) {
       return("usuario_administrador")
     } else if (usuario_gratis && !usuario_ilimitado && !usuario_coordinador_organizacion) {
@@ -775,7 +774,6 @@ observeEvent(input$invitado, {
       })
     }
   )
-
 
 
   i18n_r <- reactive({

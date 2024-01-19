@@ -5,8 +5,8 @@ success_payment_ui <- fluidPage(class="custom-margins",
         h2(i18n$t("Confirmación de pago"), class = "rg pagetitlecustom mt-2"),
     ),
     br(),
-    fluidRow(
-        textOutput("confirmacionPago")
+    fluidRow(class="success-help mb-2",
+        uiOutput("confirmacionPago")
     ),
 
     br(),

@@ -244,6 +244,23 @@ li.nav-item::marker{
   border: none !important;
 }
 
+#redirectLicencias{
+  background-color: #d8e6e2 !important;
+  border: 1px solid #003d333d;
+  border-radius: 0.5rem;
+}
+
+.dark-mode #redirectLicencias{
+  background-color: #00271f !important;
+  border: 1px solid #bddcd25c;
+  border-radius: 0.5rem;
+}
+
+#redirectLicencias p{
+ margin: 0;
+}
+
+
 .btn-herramienta{
 
   display: flex !important;
@@ -471,11 +488,11 @@ li.nav-item::marker{
 
 }
 
-#custom_btn_borrar:hover, #custom_btn_abrir:hover{
+#custom_btn_borrar:hover, #custom_btn_abrir:hover, [id^=revocar_acceso_modal_]:hover{
   opacity: 0.8;
 }
 
-#custom_btn_borrar, #custom_btn_abrir{
+#custom_btn_borrar, #custom_btn_abrir, [id^=revocar_acceso_modal_]{
   padding: 0 .8rem;
   border-radius: .25rem;
   font-weight: bold;
@@ -498,8 +515,13 @@ li.nav-item::marker{
 
 }
 
-#custom_btn_borrar{
+#custom_btn_borrar, [id^=revocar_acceso_modal_]{
+
+  display: inline-flex;
+  align-items: center;
+
   margin-left: .5rem;
+  gap: .5rem;
 
   color: #fff;
   background-color: #BF616A;
@@ -507,11 +529,22 @@ li.nav-item::marker{
   cursor: pointer;
 }
 
+
+
 #custom_btn_borrar::before{
   display: block;
   font-family: "Font Awesome 6 Free";
   content: "\f2ed";
   font-weight: 900;
+  width: fit-content;
+}
+
+[id^=revocar_acceso_modal_]::before{
+  display: block;
+  font-family: "Font Awesome 6 Free";
+  content: "\f05e";
+  font-weight: 900;
+  width: fit-content;
 }
 
 #custom_btn_abrir::before{
@@ -519,6 +552,7 @@ li.nav-item::marker{
   font-family: "Font Awesome 6 Free";
   content: "\f360";
   font-weight: 900;
+  width: fit-content;
 }
 
 
@@ -618,7 +652,7 @@ li.nav-item::marker{
 /*Indicadores de pacientes*/
 
 
-.patients-table{
+.patients-table, .licencias-table{
   box-shadow: 0 0 1px #11111135;
   overflow: hidden;
 }
@@ -810,6 +844,8 @@ background-color: #454D55;
 .dark-mode .pagetitlecustom::after {
   background-color: #C6F1E0;
 }
+
+
 
 
 .pagetitle2custom{
@@ -1009,7 +1045,7 @@ background-color: #454D55;
   width: 100% !important;
 }
 
-.language-selector .form-group div .selectize-control .selectize-input{
+.language-selector .form-group div .selectize-control .shiny-input-select{
   height: 34px;
   margin: 0 0 0 .2rem;
   padding: 6px;
@@ -1553,7 +1589,7 @@ box-shadow: none !important;
   width: 100% !important;
   }
 
-.patient-form-container{
+.patient-form-container, .participant-form-container{
   background-color: #fff;
   border-radius: .6rem;
 
@@ -1570,11 +1606,21 @@ box-shadow: none !important;
   left: calc(50% - 12.5rem);
 }
 
-.patient-form-container .shiny-input-container:not(.shiny-input-container-inline) {
+.participant-form-container{
+
+  bottom: 15%;
+  top: unset !important;
+
+}
+
+.patient-form-container .shiny-input-container:not(.shiny-input-container-inline),
+.participant-form-container .shiny-input-container:not(.shiny-input-container-inline){
   width: 100% !important;
 }
 
-.dark-mode .patient-form-container{
+.dark-mode .patient-form-container,
+.dark-mode .participant-form-container {
+  
   background-color: #343a40;
 }
 
@@ -1730,14 +1776,17 @@ box-shadow: none !important;
   background-color: #2b3034;
 }
 
+
 .user-details{
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   gap: .4rem;
   align-items: center;
-  margin: .5rem 0;
+  margin: 0 0 .5rem 0;
   justify-content: left;
+
+  width: 100%;
 }
 
 .user-details h3{
@@ -1745,7 +1794,7 @@ box-shadow: none !important;
   font-weight: bold;
 }
 
-.user-details i{
+.user-details > i:nth-child(1){
   font-size: 2rem;
   color: #637367;
 }
@@ -1765,15 +1814,39 @@ box-shadow: none !important;
 }
 
 #suscripcion_activa{
-  color: #454D55;
+  color: #2f353b;
 }
 
 .dark-mode #suscripcion_activa{
-  color: #a7adb4;
+  color: #e0e5eb;
 }
 
 #redirect_licencias{
   height: 40px;
+}
+
+
+#fechas_suscripcion{
+  color: #454D55;
+
+  background-color: #fff;
+  border-radius: 0.5rem;
+
+  padding: 0.5rem;
+}
+
+
+#fechas_suscripcion i{
+  color: #0f6e53;
+}
+
+.dark-mode #fechas_suscripcion{
+  color: #a7adb4;
+  background-color: #192120;
+}
+
+.dark-mode #fechas_suscripcion i{
+  color: #99efd7;
 }
 
 /*carousel-------------------------------------------------*/
@@ -1895,6 +1968,57 @@ color: #8b0000;
   color: #d87272;
 }
 
+/*Mensajes de advertencia ---------------------------------------------------------------*/
+.advert-help{
+  justify-content: center;
+}
+
+.advert-help p{
+  background-color: #eeecbf;
+  padding: 1rem;
+  border-radius: 1rem;
+  margin-inline: auto;
+
+  text-align: center;
+  max-width: 500px;
+}
+
+.dark-mode .advert-help p{
+  background-color: #3a3b1a;
+}
+
+.advert-help p {
+  font-size: 1rem;
+  color: #676208;
+  margin: 0;
+}
+
+.dark-mode .advert-help p {
+  color: #ffffff;
+}
+
+
+.success-help {
+  background-color: #bfeeda;
+  padding: 1rem;
+  border-radius: 1rem;
+
+  width: fit-content;
+}
+
+.dark-mode .success-help {
+  background-color: #1a3b2c;
+}
+
+.success-help p {
+  font-size: 1rem;
+  color: #086739;
+  margin: 0;
+}
+
+.dark-mode .success-help p {
+  color: #ffffff;
+}
 
 /*Tablas, graphs, etc.----------------------------------------------------------------------------*/
 
@@ -2046,18 +2170,20 @@ color: #8b0000;
   border: 2px solid #dfb639 !important
 }
 
-.selectize-input{
+.shiny-input-select{
   display: flex;
   align-items: center;
   height: calc(2.25rem + 2px);
   margin-bottom: 0;
+
+  cursor: pointer;
 }
 
-.selectize-input:hover{
+.shiny-input-select:hover{
   background-color: #f5fdfa;
 }
 
-.dark-mode .selectize-input:hover{
+.dark-mode .shiny-input-select:hover{
   background-color: #1e2322;
 } 
 
@@ -2066,14 +2192,25 @@ color: #8b0000;
   height: 40px;
   }
 
-.selectize-input .item{
+.wg-diff #graph_selector_visualizacion,
+.wg-diff #graph_selector_laboratorio-selectized{
+  font-weight: bolder;
+  color: #545000;
+  }
+
+.dark-mode .wg-diff  #graph_selector_visualizacion,
+.dark-mode .wg-diff  #graph_selector_laboratorio-selectized{
+    color: #f1efc6;
+  }
+
+.rg-diff #graph_selector{
   font-weight: bolder;
   color: #005440;
   }
 
-.dark-mode .selectize-input .item{
+  .dark-mode .rg-diff #graph_selector{
     color: #C6F1E0;
-    }
+  }
 
 .form-control{
     height: 40px;
@@ -2919,7 +3056,10 @@ table.dataTable{
 }
 
 .patients-table table.dataTable.display > tbody > tr.selected:hover > *,
-.patients-table table.dataTable.display > tbody > tr.selected > * {
+.patients-table table.dataTable.display > tbody > tr.selected > *,
+.licencias-table table.dataTable.display > tbody > tr.selected:hover > *,
+.licencias-table table.dataTable.display > tbody > tr.selected > * {
+ 
   box-shadow: inset 0 0 0 9999px #711a3a !important;
   font-weight: bold;
 }
@@ -2938,11 +3078,24 @@ table.dataTable{
 #sugerencias_admin .odd td:nth-child(2),
 #sugerencias_admin .even td:nth-child(2),
 
-#panel-gestion-licencias .odd td:nth-child(2),
-#panel-gestion-licencias .even td:nth-child(2),
 
-#panel-gestion-licencias .odd td:nth-child(3),
-#panel-gestion-licencias .even td:nth-child(3),
+#usuarios_demo .odd td:nth-child(1),
+#usuarios_demo .even td:nth-child(1),
+
+.gestion-licencias .odd td:nth-child(1),
+.gestion-licencias .even td:nth-child(1),
+
+.gestion-licencias .odd td:nth-child(3)::before,
+.gestion-licencias .even td:nth-child(3)::before,
+
+.gestion-licencias .odd td:nth-child(2)::before,
+.gestion-licencias .even td:nth-child(2)::before,
+
+.licencias-table .odd td:nth-child(2),
+.licencias-table .even td:nth-child(2),
+
+.licencias-table .odd td:nth-child(3),
+.licencias-table .even td:nth-child(3),
 
 .patient-diff .odd td:nth-child(1),
 .patient-diff .even td:nth-child(1), 
@@ -3031,6 +3184,7 @@ text-align: right;
 #patientSimulations .odd td:nth-child(1)::before,
 #patientSimulations .even td:nth-child(1)::before,
 
+
 #ComprobarDatos_w .odd td:nth-child(1)::before,
 #ComprobarDatos_w .even td:nth-child(1)::before{
   display: inline-block;
@@ -3045,8 +3199,8 @@ text-align: right;
 }
 
 
-#panel-gestion-licencias .odd td:nth-child(2)::before,
-#panel-gestion-licencias .even td:nth-child(2)::before
+.licencias-table .odd td:nth-child(2)::before,
+.licencias-table .even td:nth-child(2)::before
 {
   display: inline-block;
   visibility: visible !important;
@@ -3060,8 +3214,8 @@ text-align: right;
 }
 
 
-#panel-gestion-licencias .odd td:nth-child(3)::before,
-#panel-gestion-licencias .even td:nth-child(3)::before
+.licencias-table .odd td:nth-child(3)::before,
+.licencias-table .even td:nth-child(3)::before
 {
   display: inline-block;
   visibility: visible !important;
@@ -3074,6 +3228,55 @@ text-align: right;
   margin-right: .2rem;
 }
 
+
+.gestion-licencias .odd td:nth-child(1)::before,
+.gestion-licencias .even td:nth-child(1)::before,
+
+.patient-diff .odd td:nth-child(1)::before,
+.patient-diff .even td:nth-child(1)::before
+{
+  display: inline-block;
+  visibility: visible !important;
+  width: 1rem;
+  opacity: 100 !important;
+  text-align: center;
+  font-family: "Font Awesome 6 Free";
+  content: "\f007";
+  font-weight: 900;
+  margin-right: .2rem;
+}
+
+
+.gestion-licencias .odd td:nth-child(3)::before,
+.gestion-licencias .even td:nth-child(3)::before
+{
+  display: inline-block;
+  visibility: visible !important;
+  width: 1rem;
+  opacity: 100 !important;
+  text-align: center;
+  font-family: "Font Awesome 6 Free";
+  content: "\40";
+  font-weight: 900;
+  margin-right: .2rem;
+}
+
+.gestion-licencias .odd td:nth-child(2)::before,
+.gestion-licencias .even td:nth-child(2)::before,
+
+#usuarios_demo .odd td:nth-child(2)::before,
+#usuarios_demo .even td:nth-child(2)::before
+{
+  display: inline-block;
+  visibility: visible !important;
+  width: 1rem;
+  opacity: 100 !important;
+  text-align: center;
+  font-family: "Font Awesome 6 Free";
+  content: "\f0e0";
+  font-weight: 900;
+  margin-right: .2rem;
+}
 
 
 .patient-diff .odd td:nth-child(5), 
@@ -3093,7 +3296,9 @@ text-align: right;
   display: none !important; 
 }
 
-.patients-table tr, 
+.patients-table tr,
+.licencias-table tr,
+.gestion-licencias tr,
 #simulaciones_wimp tr, 
 #simulaciones_rep tr, 
 #ComprobarDatos_w tr{

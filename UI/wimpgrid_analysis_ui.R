@@ -130,7 +130,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                 # Agregar un selectInput para elegir el gráfico a mostrar
                 selectInput("graph_selector_visualizacion",
                             i18n$t("Seleccione un análisis:"),
-                            choices = c("autodigrafo","digrafo del ideal","índices de Wimp")),
+                            choices = c("autodigrafo","digrafo del ideal","índices de Wimp"), selectize = FALSE),
             ),  
 
             conditionalPanel(class = ("flex-container-resp"),   condition = "input.graph_selector_visualizacion == 'selfdigraph' || input.graph_selector_visualizacion == 'autodigrafo'",
@@ -138,11 +138,11 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
 
                               selectInput("selfdigraph_layout", i18n$t("Diseño:"),
                                           choices = c("circulo", "rtcirculo","arbol", "graphopt", "mds", "cuadricula"),
-                                          selected = i18n$t("circulo")),
+                                          selected = i18n$t("circulo"), selectize = FALSE),
 
                                 selectInput("selfdigraph_color", i18n$t("Paleta de colores:"),
                                           choices = c("rojo/verde", "escala de grises"),
-                                          selected = i18n$t("rojo/verde")),
+                                          selected = i18n$t("rojo/verde"), selectize = FALSE),
             ),
 
             conditionalPanel(class = ("flex-container-resp detail"), condition = "input.graph_selector_visualizacion == 'idealdigraph' || input.graph_selector_visualizacion == 'digrafo del ideal'",
@@ -151,11 +151,11 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
 
                               selectInput("idealdigraph_layout", i18n$t("Diseño:"),
                                           choices = c("circulo", "rtcirculo","arbol", "graphopt", "mds", "cuadricula"),
-                                          selected = i18n$t("circulo")),
+                                          selected = i18n$t("circulo"), selectize = FALSE),
 
                                 selectInput("idealdigraph_color", i18n$t("Paleta de colores:"),
                                           choices = c("rojo/verde", "escala de grises"),
-                                          selected = i18n$t("rojo/verde"))
+                                          selected = i18n$t("rojo/verde"), selectize = FALSE)
 
 
             ),
@@ -305,7 +305,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                   # Agregar un selectInput para elegir el gráfico a mostrar
                   selectInput("graph_selector_laboratorio",
                             i18n$t("Seleccione un gráfico:"),
-                            choices = c("simdigrafo","pcsd", "pcsdindices")),
+                            choices = c("simdigrafo","pcsd", "pcsdindices"), selectize = FALSE),
               ),
               
         
@@ -316,19 +316,19 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
 
                     selectInput("simdigraph_infer", i18n$t("Función de propagación:"),
                                   choices = c("transformacion lineal", "otra opción"),
-                                  selected = i18n$t("transformacion lineal")),
+                                  selected = i18n$t("transformacion lineal"), selectize = FALSE),
 
                     selectInput("simdigraph_thr", i18n$t("Función umbral:"),
                                   choices = c("lineal","otra opción"),
-                                  selected = i18n$t("lineal")),
+                                  selected = i18n$t("lineal"), selectize = FALSE),
 
                     selectInput("simdigraph_layout", i18n$t("Diseño:"),
                                   choices = c("circulo", "rtcirculo","arbol", "graphopt", "mds", "cuadricula"),
-                                  selected = i18n$t("circulo")),
+                                  selected = i18n$t("circulo"), selectize = FALSE),
 
                     selectInput("simdigraph_color", i18n$t("Paleta de colores:"),
                                   choices = c("rojo/verde", "escala de grises"),
-                                  selected = i18n$t("rojo/verde")),
+                                  selected = i18n$t("rojo/verde"), selectize = FALSE),
 
                     sliderInput("simdigraph_niter", "Nº de la iteración:", 0, 3, 0, 
                           animate = animationOptions(interval = 2000, loop = FALSE)),
@@ -357,11 +357,11 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
 
                       selectInput("pcsd_infer", i18n$t("Función de propagación:"),
                                   choices = c("transformacion lineal", "otra opción"),
-                                  selected = i18n$t("transformacion lineal")),
+                                  selected = i18n$t("transformacion lineal"), selectize = FALSE),
 
                       selectInput("pcsd_thr", i18n$t("Función umbral:"),
                                   choices = c("lineal", "otra opción"),
-                                  selected = i18n$t("lineal")),
+                                  selected = i18n$t("lineal"), selectize = FALSE), 
 
 
                       numericInput("pcsd_e", i18n$t("Valor diferencial:"), value = 0.0001, step=0.000025),
@@ -376,11 +376,11 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                       shinycssloaders::withSpinner(htmlOutput("convergence"), type = 4, color = "#022a0c", size = 0.6)),
                       selectInput("pcsdindices_infer", i18n$t("Función de propagación:"),
                                   choices = c("transformacion lineal", "transformación sigmoidea", "transformación binaria"),
-                                  selected = i18n$t("transformacion lineal")),
+                                  selected = i18n$t("transformacion lineal"), selectize = FALSE),
 
                       selectInput("pcsdindices_thr", i18n$t("Función umbral:"),
                                   choices = c("lineal", "sigmoide", "binario"),
-                                  selected = i18n$t("lineal")),
+                                  selected = i18n$t("lineal"), selectize = FALSE),
 
                       #numericInput("pcsdindices_act_vector", i18n$t("Changes to simulate:"),
                       #            value = 0, step = 0.01),
