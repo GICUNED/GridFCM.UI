@@ -323,8 +323,6 @@ patient_server <- function(input, output, session){
                     ")
 
                     shinyjs::show("controls-panel-rg")
-        
-
                 } 
             }
         },
@@ -438,6 +436,35 @@ patient_server <- function(input, output, session){
         
     }
 
+    cerrar_rejilla <- function(id_paciente, fecha_repgrid, fecha_wimpgrid){
+        con <- establishDBConnection()
+        if(!is.null(fecha_repgrid) && !is.null(session$userData$id_repgrid)){
+            query <- sprintf("SELECT distinct(id) from repgrid_xlsx where fecha_registro='%s' and fk_paciente=%d", fecha_repgrid, id_paciente) 
+            id <- DBI::dbGetQuery(con, query)
+            if(session$userData$id_repgrid == id){
+                show("repgrid_home_warn")
+                show("repgrid_warning")
+                hide("rg-data-content")
+                hide("rg-analysis-content")
+            }  
+        }
+
+        if(!is.null(fecha_wimpgrid) && !is.null(session$userData$id_wimpgrid)){
+            query <- sprintf("SELECT distinct(id) from wimpgrid_xlsx where fecha_registro='%s' and fk_paciente=%d", fecha_wimpgrid, id_paciente) 
+            id <- DBI::dbGetQuery(con, query)$id
+            if(session$userData$id_wimpgrid == id){
+                show("id_warn")
+                show("vis_warn")
+                show("lab_warn")
+                hide("wg-data-content")
+                hide("wg-vis-content")
+                hide("wg-lab-content")
+            }
+        }
+
+        DBI::dbDisconnect(con)
+    }
+
     borrarSimulacion <- function(){
         nombrepaciente <- nombrePaciente()
         showModal(modalDialog(
@@ -461,11 +488,13 @@ patient_server <- function(input, output, session){
         if (!is.null(fecha_rep) || !is.null(fecha_wimp)) {
             con <- establishDBConnection()
             if (!is.null(fecha_rep)) {
+                cerrar_rejilla(id_paciente, fecha_rep, NULL)
                 query <- sprintf("DELETE FROM repgrid_xlsx where fecha_registro = '%s' and fk_paciente = %d", fecha_rep, id_paciente)
                 DBI::dbExecute(con, query)
                 cargar_fechas()
             }
             if (!is.null(fecha_wimp)) {
+                cerrar_rejilla(id_paciente, NULL, fecha_wimp)
                 id_wx <- as.integer(DBI::dbGetQuery(con, sprintf("SELECT distinct(wp.fk_wimpgrid) from wimpgrid_params as wp, wimpgrid_xlsx as wx where wp.fk_wimpgrid = wx.id and wx.fk_paciente = %d and wx.fecha_registro = '%s'", 
                                                     user_data$selected_user_id, fecha_wimp)))
                 if (!is.na(id_wx)) {
@@ -597,12 +626,24 @@ patient_server <- function(input, output, session){
             )
         }
     })
+
     observeEvent(input$confirmarBorrado, {
         removeModal()  # Cierra la ventana modal de confirmación
-        # habría que sacar un mensajito diciendo seguro que quiere eliminar...
         con <- establishDBConnection()
-        #borrar simulaciones asociadas
-
+        if(!is.null(session$userData$id_wimpgrid)){
+            show("id_warn")
+            show("vis_warn")
+            show("lab_warn")
+            hide("wg-data-content")
+            hide("wg-vis-content")
+            hide("wg-lab-content")
+        }
+        if(!is.null(session$userData$id_repgrid)){
+            show("repgrid_home_warn")
+            show("repgrid_warning")
+            hide("rg-data-content")
+            hide("rg-analysis-content")
+        }
         queryRep <- sprintf("DELETE FROM repgrid_xlsx where fk_paciente = %d", user_data$selected_user_id)
         DBI::dbExecute(con, queryRep)
         id_wx <- DBI::dbGetQuery(con, sprintf("SELECT distinct(wp.fk_wimpgrid) from wimpgrid_params as wp, wimpgrid_xlsx as wx where wp.fk_wimpgrid = wx.id and wx.fk_paciente = %d", user_data$selected_user_id))

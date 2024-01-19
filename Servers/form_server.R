@@ -531,6 +531,9 @@ form_server <- function(input, output, session){
         error = function(e) {
             # runjs("window.location.href = '/#!/repgrid';")
             message(paste("error: ", e))
+            con <- establishDBConnection()
+            DBI::dbExecute(con, sprintf("DELETE FROM repgrid_xlsx where fk_paciente = %d and id = (SELECT MAX(id) from repgrid_xlsx)", id_paciente))
+            DBI::dbDisconnect(con)
             showModal(modalDialog(
                 title = i18n$t("Ha habido un problema al procesar los elementos introducidos. Revise los valores."),
                 footer = tagList(
@@ -1405,6 +1408,9 @@ form_server <- function(input, output, session){
         error = function(e) {
             # runjs("window.location.href = '/#!/repgrid';")
             message(paste("error: ", e))
+            con <- establishDBConnection()
+            DBI::dbExecute(con, sprintf("DELETE FROM wimpgrid_xlsx where fk_paciente = %d and id = (SELECT MAX(id) from wimpgrid_xlsx)", id_paciente))
+            DBI::dbDisconnect(con)
             showModal(modalDialog(
                 title = i18n$t("Ha habido un problema al procesar los elementos introducidos. Revise los valores."),
                 footer = tagList(
