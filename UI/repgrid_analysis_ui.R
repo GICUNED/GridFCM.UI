@@ -81,7 +81,8 @@ shinyjs::hidden(div(id = "rg-analysis-content",
                               "Índices Cognitivos",
                               "Dilemas"
                   ),
-        ) ,
+                  selectize = FALSE
+        ),
     ),
     ),
  

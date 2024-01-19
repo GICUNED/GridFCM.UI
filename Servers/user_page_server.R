@@ -53,13 +53,13 @@ user_page_server <- function(input, output, session){
         if(TRUE %in% datos$activa){
             if(!is.null(rol)){
                 if(rol != "usuario_coordinador_organizacion" && rol != "usuario_administrador"){
-                    output$suscripcion_activa <- renderText({
-                        paste("Suscripciones Activadas: ", length(datos[datos$activa,c("activa")]))
+                    output$suscripcion_activa <- renderUI({
+                        HTML(paste("<strong>", i18n$t("Suscripciones Activadas"), ":</strong>", length(datos[datos$activa,c("activa")])))
                     })
                     # shinyjs::show("admin_btn")
                 }else{
-                    output$suscripcion_activa <- renderText({
-                        paste("Suscripciones de Organización Activadas: ", length(datos[datos$activa,c("activa")]))
+                    output$suscripcion_activa <- renderUI({
+                        HTML(paste("<strong>", i18n$t("Suscripciones de Organización Activadas"), ":</strong>", length(datos[datos$activa,c("activa")])))
                     })
                 }
             }
@@ -69,22 +69,22 @@ user_page_server <- function(input, output, session){
             datos_activos = datos[datos$activa,]
             fechas_text <- ""
             for(i in 1:nrow(datos_activos)) {       # for-loop over rows
-                fechas_text <- paste(fechas_text, "\n", paste("Periodo Suscripcion ", i, ": ", datos_activos[i,c("fecha_inicio")], " hasta ", datos_activos[i,c("fecha_fin")]))
+                fechas_text <- HTML(paste(fechas_text, "\n", paste("<strong>", i18n$t("Periodo Suscripción "), i, "</strong>", ": ", datos_activos[i,c("fecha_inicio")], "<i class='fa-solid fa-right-long'></i>", datos_activos[i,c("fecha_fin")], "<br>")))
             } 
 
-            output$fechas_suscripcion <- renderText({
+            output$fechas_suscripcion <- renderUI({
                 fechas_text
             })
             
         }else{
-            output$suscripcion_activa <- renderText({
-                paste("Suscripción de Organización: Desactivada")
+            output$suscripcion_activa <- renderUI({
+                HTML(paste("<strong>", i18n$t("Periodo Suscripción: "), "</strong>", i18n$t("Desactivadsa")))
             })
 
             datos_no_activos <- datos[!datos$activa,]
             datos_no_activos <- tail(datos_no_activos, n=1)
-            output$fechas_suscripcion <- renderText({
-                paste("Periodo Suscripcion: ", datos_no_activos$fecha_inicio, " hasta ", datos_no_activos$fecha_fin)
+            output$fechas_suscripcion <- renderUI({
+                HTML(paste("<strong>", i18n$t("Periodo Suscripción: "), "</strong>", datos_no_activos$fecha_inicio, "<strong>", " -> ", "</strong>", datos_no_activos$fecha_fin))
             })
         }
     }else{
@@ -96,13 +96,14 @@ user_page_server <- function(input, output, session){
         
         if(length(datos$fk_psicologo) > 0){
             # hay licencia asignada al usuario
-            output$suscripcion_activa <- renderText({
-                paste("Licencia Activada")
+            output$suscripcion_activa <- renderUI({
+                HTML(paste("<strong>", i18n$t("Licencia Activada"), "</strong>"))
             })
         }else{
-            output$suscripcion_activa <- renderText({
-                paste("Sin Licencia")
+            output$suscripcion_activa <- renderUI({
+                HTML(paste("<strong>", i18n$t("Sin Licencia"), "</strong>"))
             })
+            shinyjs::hide("fechas_suscripcion")
         }
     }
 

@@ -649,7 +649,7 @@ output$exportar_w <- downloadHandler(
           textAreaInput("anotacionesGuardarComoSimulacion", i18n$t("Anotaciones:"), value=as.character(comentarios$comentarios)),
           footer = tagList(
             modalButton("Cancelar"),
-            actionButton("confirmarGuardadoComoSimulacion", i18n$t("Guardar simulación"), class = "btn-success")
+            actionButton("confirmarGuardadoComoSimulacion", i18n$t("Guardar simulación"), status ="success", icon = icon("check"))
           )
       ))
     }
@@ -1634,7 +1634,7 @@ observeEvent(input$graph_selector_laboratorio, {
           textAreaInput("anotacionesSimulacion", i18n$t("Anotaciones:"), value=as.character(comentarios$comentarios)),
           footer = tagList(
             modalButton("Cancelar"),
-            actionButton("confirmarGuardadoSimulacion", "Guardar simulación", class = "btn-success")
+            actionButton("confirmarGuardadoSimulacion", "Guardar simulación", status ="success", icon = icon("check"))
           )
       ))
     }

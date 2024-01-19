@@ -7,23 +7,18 @@ user_page_ui <- fluidPage(class="custom-margins",
 
     fluidRow(class="user-container mt-4",
 
-        column(6, 
-
-            div(class="user-details",
-                icon("circle-user"),
-                h3(textOutput("nombre")),
-            ),
-
-            div(class="user-license",
-                textOutput("suscripcion_activa"),
-                textOutput("fechas_suscripcion")
-            ),
+        div(class="user-details w-100",
+            icon("circle-user"),
+            h3(textOutput("nombre")),
+            shinyjs::hidden(actionButton("admin_btn", class="ml-auto", i18n$t("Admin Panel"), status = 'secondary', icon = icon("gear"), newTab = TRUE))
         ),
 
-        column(6, class="d-flex justify-content-start gap-1 align-items-center flex-column",
-            shinyjs::hidden(actionButton("redirect_licencias", class="ml-auto", i18n$t("Gestionar Suscripción"), status = 'success', icon = icon("address-card"))),
-            shinyjs::hidden(actionButton("admin_btn", class="ml-auto", i18n$t("Admin Panel"), status = 'secondary', icon = icon("gear"), newTab = TRUE))
-        )
+        div(class="user-license w-100",
+            uiOutput("suscripcion_activa"),
+            uiOutput("fechas_suscripcion"),
+            shinyjs::hidden(actionButton("redirect_licencias", class="ml-auto mr-auto mt-2", i18n$t("Gestionar Suscripción"), status = 'success', icon = icon("address-card")))
+        ),
+        
     ),
 
      column(12,

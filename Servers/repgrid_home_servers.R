@@ -379,7 +379,7 @@ output$bert <- renderPlot({
           textAreaInput("anotacionesSimulacion_rep", i18n$t("Anotaciones:"), coment),
           footer = tagList(
             modalButton("Cancelar"),
-            actionButton("confirmarGuardadoSimulacion_rep", i18n$t("Guardar simulación"), class = "btn-success")
+            actionButton("confirmarGuardadoSimulacion_rep", i18n$t("Guardar simulación"), status ="success", icon = icon("check"))
           )
       ))
     }
@@ -556,7 +556,7 @@ output$bert <- renderPlot({
           textAreaInput("anotacionesGuardarComoSimulacion_rep", i18n$t("Anotaciones:"), coment),
           footer = tagList(
             modalButton("Cancelar"),
-            actionButton("confirmarGuardadoComoSimulacion_rep", i18n$t("Guardar simulación"), class = "btn-success")
+            actionButton("confirmarGuardadoComoSimulacion_rep", i18n$t("Guardar simulación"), status ="success", icon = icon("check"))
           )
       ))
     }

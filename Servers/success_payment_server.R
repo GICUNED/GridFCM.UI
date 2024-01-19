@@ -233,8 +233,8 @@ success_payment_server <- function(input, output, session, new_rol_from_payments
                             message("ya metida")
                             if(datos$activa){
                                 # avisamos al usuario de que el pago se realizó correctamente tal dia y que su licencia ya está activa
-                                output$confirmacionPago <- renderText({
-                                    sprintf("Suscripción activa. Pago realizado correctamente con fecha: %s", fecha_pago )
+                                output$confirmacionPago <- renderUI({
+                                     HTML(sprintf("<strong>Suscripción activa.</strong> Pago realizado correctamente con fecha: %s", fecha_pago ))
                                 })
                                 # if(rol == "usuario_coordinador_organizacion"){
                                 #     output$redirection <- renderUI({
@@ -259,16 +259,16 @@ success_payment_server <- function(input, output, session, new_rol_from_payments
                                     query <- sprintf("UPDATE SUSCRIPCION set activa=%s WHERE id_stripe_suscripcion = '%s'", "true", subscription_id)
                                     DBI::dbExecute(con, query)
 
-                                    output$confirmacionPago <- renderText({
-                                        sprintf("Suscripción activa. Pago realizado correctamente con fecha: %s", fecha_pago )
+                                    output$confirmacionPago <- renderUI({
+                                        HTML(sprintf("<strong>Suscripción activa.</strong> Pago realizado correctamente con fecha: %s", fecha_pago ))
                                     })
                                     # delay(100, shinyjs::show("redirectLicencias"))
 
                                 }else{
                                     # avisamos al usuario de que el pago se realizó correctamente tal dia y que su licencia ya no está activa
                                     message("not active")
-                                    output$confirmacionPago <- renderText({
-                                        sprintf("Suscripción no activa. Pago realizado correctamente con fecha: %s", fecha_pago )
+                                    output$confirmacionPago <- renderUI({
+                                        HTML(sprintf("<strong>Suscripción no activa.</strong> Pago realizado correctamente con fecha: %s", fecha_pago ))
                                     })
                                     # delay(100, shinyjs::show("redirectLicencias"))
 
@@ -308,8 +308,8 @@ success_payment_server <- function(input, output, session, new_rol_from_payments
 
                     
                 }else{
-                    output$confirmacionPago <- renderText({
-                        sprintf("Pago no recibido. Motivo: %s", checkout_session$payment_status)
+                    output$confirmacionPago <- renderUI({
+                        HTML(sprintf("<strong>Pago no recibido.</strong>  Motivo: %s", checkout_session$payment_status))
 
                     })
                     delay(100, shinyjs::show("redirectLicencias"))
@@ -326,7 +326,7 @@ success_payment_server <- function(input, output, session, new_rol_from_payments
         }else{
             message("estoy en payments else")
             output$confirmacionPago <- renderText({
-                "No deberia estar aqui. Redirigir a la pagina de planes"
+                "No deberia estar aquí. Redirigir a la pagina de planes"
             })
             delay(100, shinyjs::show("redirectLicencias"))
 
