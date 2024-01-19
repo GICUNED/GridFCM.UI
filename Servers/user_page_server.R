@@ -15,8 +15,12 @@ user_page_server <- function(input, output, session){
     })
 
     observeEvent(input$admin_btn,
-    runjs("window.open('/keycloak/admin/Gridfcm/console/', '_blank' );")
+        runjs("window.open('/keycloak/admin/Gridfcm/console/', '_blank' );")
     )
+
+    shinyjs::onclick("metricas", {
+        shinyjs::toggle("iframeContainer")
+    })
 
     con <- establishDBConnection()
     query <- sprintf("SELECT fecha_inicio, fecha_fin, activa from SUSCRIPCION WHERE fk_psicologo=%d", id_psicologo)
@@ -36,9 +40,11 @@ user_page_server <- function(input, output, session){
     if(!is.null(rol)){
         if(rol == "usuario_administrador"){
             shinyjs::show("admin_btn")
+            shinyjs::show("metricas")
         }
         else{
             shinyjs::hide("admin_btn")
+            shinyjs::hide("metricas")
         }
 
         if(rol == "usuario_ilimitado"){

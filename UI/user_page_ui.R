@@ -16,9 +16,25 @@ user_page_ui <- fluidPage(class="custom-margins",
         div(class="user-license w-100",
             uiOutput("suscripcion_activa"),
             uiOutput("fechas_suscripcion"),
-            shinyjs::hidden(actionButton("redirect_licencias", class="ml-auto mr-auto mt-2", i18n$t("Gestionar Suscripción"), status = 'success', icon = icon("address-card")))
+            div(class = "mx-auto text-center",
+                shinyjs::hidden(actionButton("redirect_licencias", class="ml-auto mr-auto mt-2", i18n$t("Gestionar Suscripción"), status = 'success', icon = icon("address-card"))),
+                shinyjs::hidden(actionButton("metricas", class="ml-auto mr-auto mt-2", i18n$t("Métricas"), status = 'warning', icon = icon("bar-chart")))
+            )
         ),
         
+    ),
+
+    div(class = "mx-auto text-center",
+        id = "iframeContainer",
+        style = "display: none;",  # Oculta el div inicialmente
+        tags$iframe(
+            title = "Report Section",
+            width = "100%",
+            height = "600",
+            src = "https://app.powerbi.com/view?r=eyJrIjoiYzY1MjE2ZDktMGU3Mi00Y2ZiLWEyNjQtOWFjNmQxYzYxMjUxIiwidCI6ImFhODJlNjc3LWVkZTQtNGY1Mi04NjA5LTI1Yjk5N2Y1ODM2OCIsImMiOjh9",
+            frameborder = "0",
+            allowfullscreen = TRUE
+        ),
     ),
 
      column(12,
