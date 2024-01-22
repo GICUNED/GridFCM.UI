@@ -92,8 +92,8 @@ form_server <- function(input, output, session){
                 window.scrollTo(0,0);
             }, 10);
         ")
-        shinyjs::show("n_aleatorio")
-        shinyjs::show("generar_aleatorio")
+        shinyjs::toggle("n_aleatorio")
+        shinyjs::toggle("generar_aleatorio")
     })
 
     shinyjs::onclick("manual", {
@@ -103,6 +103,7 @@ form_server <- function(input, output, session){
             }, 10);
         ")
         shinyjs::show("Constructos")
+        constructos(NULL)
         shinyjs::hide("preguntasDiadas")
     })
 
@@ -112,6 +113,7 @@ form_server <- function(input, output, session){
                 window.scrollTo(0,0);
             }, 10);
         ")
+        constructos(NULL)
         generar_diadas(input$n_aleatorio)
     })
 
@@ -150,7 +152,7 @@ form_server <- function(input, output, session){
         }
     )
 
-    observeEvent(input$guardarConstructo, {
+    shinyjs::onclick("guardarConstructo", {
         if((nchar(input$constructo_izq) > 0) && (nchar(input$constructo_der) > 0)){
             constructo <- paste(input$constructo_izq, " - ", input$constructo_der)
             if (!(constructo %in% constructos())) {
@@ -169,6 +171,7 @@ form_server <- function(input, output, session){
                 sidebarMenu(id="menu_constructos", menu_items)
             })
         }
+        message("constructos: ", constructos())
     })
 
     observe(
@@ -534,6 +537,10 @@ form_server <- function(input, output, session){
             con <- establishDBConnection()
             DBI::dbExecute(con, sprintf("DELETE FROM repgrid_xlsx where fk_paciente = %d and id = (SELECT MAX(id) from repgrid_xlsx)", id_paciente))
             DBI::dbDisconnect(con)
+            show("repgrid_home_warn")
+            show("repgrid_warning")
+            hide("rg-data-content")
+            hide("rg-analysis-content")
             showModal(modalDialog(
                 title = i18n$t("Ha habido un problema al procesar los elementos introducidos. Revise los valores."),
                 footer = tagList(
@@ -720,6 +727,7 @@ form_server <- function(input, output, session){
                 window.scrollTo(0,0);
             }, 10);
         ")
+        constructos_w(NULL)
         shinyjs::hide("preguntasDiadas_w")
         shinyjs::show("Constructos_w")
     })
@@ -749,7 +757,7 @@ form_server <- function(input, output, session){
         }
     )
 
-    observeEvent(input$guardarConstructo_w, {
+    shinyjs::onclick("guardarConstructo_w", {
         if((nchar(input$constructo_izq_w) > 0) && (nchar(input$constructo_der_w) > 0)){
             constructo <- paste(input$constructo_izq_w, " - ", input$constructo_der_w)
             if (!(constructo %in% constructos_w())) {
@@ -850,6 +858,7 @@ form_server <- function(input, output, session){
     })
 
     shinyjs::onclick("aleatorio_w", {
+        constructos_w(NULL)
         shinyjs::hide("preguntasDiadas_w")
         shinyjs::show("Elementos_w")
     })
@@ -1411,6 +1420,12 @@ form_server <- function(input, output, session){
             con <- establishDBConnection()
             DBI::dbExecute(con, sprintf("DELETE FROM wimpgrid_xlsx where fk_paciente = %d and id = (SELECT MAX(id) from wimpgrid_xlsx)", id_paciente))
             DBI::dbDisconnect(con)
+            show("id_warn")
+            show("vis_warn")
+            show("lab_warn")
+            hide("wg-data-content")
+            hide("wg-vis-content")
+            hide("wg-lab-content")
             showModal(modalDialog(
                 title = i18n$t("Ha habido un problema al procesar los elementos introducidos. Revise los valores."),
                 footer = tagList(
