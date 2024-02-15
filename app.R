@@ -70,13 +70,10 @@ source("Servers/plan_subscription_server.R")
 source("Servers/success_payment_server.R")
 
 
-
-
 #DB
 source("DB/establish_con.R")
 source("DB/gestion_excel.R")
 # source("DB/sync_stripe_db_process_light.R")
-
 
 
 menu <- tags$ul(tags$li(a(
@@ -114,7 +111,6 @@ tags$li(a(
 )),
 
 )
-
 
 theme <- create_theme(
   bs4dash_status(
@@ -169,7 +165,7 @@ ui <- add_cookie_handlers(
       tags$script(src="https://www.googletagmanager.com/gtag/js?id=G-Y4YW79BBD3"),
       tags$script(src="gtagconnector.js"),
   
-      title = tags$a(href='https://www.uned.es/', target ="_blank", class = "logocontainer",
+      title = tags$a(target ="_blank", class = "logocontainer",
       tags$img(height='56.9',width='', class = "logoimg")),
       div( class ="ml-auto nav-functions-container",
         div(id="patientIndicator", class = "patient-active-label", span(class = "icon-paciente"), htmlOutput("paciente_activo")),

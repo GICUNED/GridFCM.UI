@@ -283,14 +283,17 @@ patient_server <- function(input, output, session){
                 ruta_destino <- tempfile(fileext = ".xlsx")
                 id <- decodificar_BD_excel('repgrid_xlsx', ruta_destino, id_paciente, session$userData$fecha_repgrid)
                 session$userData$id_repgrid <- id
+                
                 datos_repgrid <- OpenRepGrid::importExcel(ruta_destino)
+                
                 excel_repgrid <- read.xlsx(ruta_destino)
                 file.remove(ruta_destino)
-                #convertir nums a formato numerico y no texto como estaba importado
+                # convertir nums a formato numerico y no texto como estaba importado
                 columnas_a_convertir <- 2:(ncol(excel_repgrid) - 1)
                 # Utiliza lapply para aplicar la conversión a las columnas seleccionadas
                 excel_repgrid[, columnas_a_convertir] <- lapply(excel_repgrid[, columnas_a_convertir], as.numeric)
-                #constructos
+                
+                # constructos
                 constructos_izq <- excel_repgrid[1:nrow(excel_repgrid), 1]
                 constructos_der <- excel_repgrid[1:nrow(excel_repgrid), ncol(excel_repgrid)]
                 session$userData$constructos_izq_rep <- constructos_izq
@@ -300,7 +303,8 @@ patient_server <- function(input, output, session){
                 session$userData$num_col_repgrid <- num_columnas
                 num_rows <- nrow(session$userData$datos_to_table)
                 session$userData$num_row_repgrid <- num_rows
-                session$userData$datos_repgrid <- datos_repgrid
+
+                session$userData$datos_repgrid <- alignByIdeal(datos_repgrid, ncol(datos_repgrid))
                 #repgrid_fecha_seleccionada(NULL)
                 if (!is.null(datos_repgrid)) {
                     # Solo archivo RepGrid cargado, navegar a RepGrid Home

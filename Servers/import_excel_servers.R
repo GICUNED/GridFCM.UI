@@ -96,7 +96,7 @@ import_excel_server <- function(input, output, session) {
         }
         #message(paste("num row", num_rows))
         session$userData$num_row_repgrid <- num_rows
-        session$userData$datos_repgrid <- datos_repgrid
+        session$userData$datos_repgrid <- alignByIdeal(datos_repgrid, ncol(datos_repgrid))
         system(paste0("rm ",input$archivo_repgrid$datapath))
         file.remove(ruta_destino_rep)
         if (!is.null(datos_repgrid)) {

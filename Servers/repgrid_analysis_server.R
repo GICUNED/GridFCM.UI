@@ -156,9 +156,14 @@ repgrid_analisis_server <- function(input, output, session) {
 
   # Generar tabla de índices y valores matemáticos
   output$gridindices_table <- renderText({
+    col <- ncol(session$userData$datos_repgrid)
+    message(col)
+    listado <- OpenRepGrid::indexSelfConstruction(session$userData$datos_repgrid, 1, col, method="pearson")
 
     INTe <- indices_list[["intensity"]][["Elements"]]
-    YOIDEAL <- INTe[length(INTe)]
+    YOIDEAL <- listado[[9]]  # antes estab asi> INTe[length(INTe)]
+    YOOTROS <- listado[[10]]
+    OTROSIDEAL <- listado[[11]]
     
     PVEFF <- indices_list[["pvaff"]] 
     INT <- indices_list[["intensity"]][["Total"]] 
@@ -167,20 +172,21 @@ repgrid_analisis_server <- function(input, output, session) {
     GCONS <- indices_list[["intensity"]][["Global Constructs"]]
     GELEM <- indices_list[["intensity"]][["Global Elements"]]
 
-    tabla_indices <- data.frame(YOIDEAL,PVEFF,INT,CON,BIA,GCONS,GELEM)
+    tabla_indices <- data.frame(YOIDEAL,YOOTROS,OTROSIDEAL,PVEFF,INT,CON,BIA,GCONS,GELEM)
     tabla_indices_round <- round(tabla_indices, 3)
-    print(tabla_indices)
 
-    knitr::kable(tabla_indices_round,col.names = c("Yo - Ideal", "PVAFF","Intensity","Conflicts","BIAS","Intensidad Global de Constructos","Intensidad Global de Elementos"),format = "html") %>%
+    
+    knitr::kable(tabla_indices_round,col.names = c("Yo/Ideal", "Yo/Otros", "Otros/Ideal", "PVAFF","Intensity","Conflicts","BIAS","Intensidad Global de Constructos","Intensidad Global de Elementos"),
+    row.names = FALSE, format = "html") %>%
     kable_styling("striped", full_width = T) %>%
-    row_spec(0, bold = T, color = "white", background = "#005440") %>%
-    column_spec(1, bold = T, width = "10%") %>%
-    column_spec(2, width = "10%") %>%
-    column_spec(3, width = "10%") %>%
-    column_spec(4, width = "10%") %>%
-    column_spec(5, width = "10%") %>%
-    column_spec(6, width = "20%") %>%
-    column_spec(7, width = "20%")
+    row_spec(0, bold = T, color = "white", background = "#005440") #%>%
+    # column_spec(1, bold = T, width = "10%") %>%
+    # column_spec(2, width = "10%") %>%
+    # column_spec(3, width = "10%") %>%
+    # column_spec(4, width = "10%") %>%
+    # column_spec(5, width = "10%") %>%
+    # column_spec(6, width = "10%") %>%
+    # column_spec(7, width = "10%")
   })
   
   output$construct <- renderDT({

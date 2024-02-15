@@ -502,7 +502,7 @@ form_server <- function(input, output, session){
                 session$userData$num_col_repgrid <- num_columnas
                 num_rows <- nrow(session$userData$datos_to_table)
                 session$userData$num_row_repgrid <- num_rows
-                session$userData$datos_repgrid <- datos_repgrid
+                session$userData$datos_repgrid <- alignByIdeal(datos_repgrid, ncol(datos_repgrid))
                 file.remove(ruta_destino_rep)
                 if (!is.null(datos_repgrid)) {
                     if(rol == "usuario_demo"){

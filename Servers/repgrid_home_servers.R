@@ -512,7 +512,7 @@ output$bert <- renderPlot({
           # Check if df_read is not NULL or empty
           if (!is.null(df_read) && nrow(df_read) > 0) {
             # Create a repgrid object
-            my_repgrid <- df_read
+            my_repgrid <- alignByIdeal(df_read, ncol(df_read))
             print(my_repgrid)
 
             repgrid_a_mostrar(my_repgrid)
