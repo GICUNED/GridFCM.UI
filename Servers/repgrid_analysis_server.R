@@ -159,12 +159,11 @@ repgrid_analisis_server <- function(input, output, session) {
     INTe <- indices_list[["intensity"]][["Elements"]]
 
     col <- ncol(session$userData$datos_repgrid)
-    listado <- OpenRepGrid::indexSelfConstruction(session$userData$datos_repgrid, 1, col, others=(2:col-1), method="pearson")
+    listado <- OpenRepGrid::indexSelfConstruction(session$userData$datos_repgrid, 1, col, method="pearson")
     YOIDEAL <- listado$self_ideal  # antes estab asi: INTe[length(INTe)]
     YOOTROS <- listado$self_others
     OTROSIDEAL <- listado$ideal_others
-    message(listado$self_element, listado$ideal_element) # si que está pillando bien las columnas
-    
+
     PVEFF <- indices_list[["pvaff"]] 
     INT <- indices_list[["intensity"]][["Total"]] 
     CON <- indices_list[["conflict"]]
