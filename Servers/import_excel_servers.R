@@ -73,7 +73,12 @@ import_excel_server <- function(input, output, session) {
         excel_repgrid <- if (!is.null(input$archivo_repgrid)) {
           read.xlsx(ruta_destino_rep)
         }
-
+        # escala
+        nombres_columnas <- colnames(excel_repgrid)
+        min <- as.numeric(nombres_columnas[1])
+        max <- as.numeric(nombres_columnas[length(nombres_columnas)])
+        session$userData$repgrid_min <- min
+        session$userData$repgrid_max <- max
 
         # aqui voy a comprobar si estoy importando el excel exportado con los numeros como strings
         columnas_a_convertir <- 2:(ncol(excel_repgrid) - 1)

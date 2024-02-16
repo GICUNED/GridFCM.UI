@@ -76,6 +76,7 @@ source("DB/gestion_excel.R")
 # source("DB/sync_stripe_db_process_light.R")
 
 
+
 menu <- tags$ul(tags$li(a(
   class = "item", href = route_link(""), "Inicio"
 )),
@@ -387,12 +388,12 @@ server <- function(input, output, session) {
   params <- parseQueryString(isolate(session$clientData$url_search))
 
   observeEvent(get_cookie("token_cookie"), {
-    message("obtengo la cookie:")
+    #message("obtengo la cookie:")
     token <- get_cookie("token_cookie")
     if(token != "null"){
       con <- establishDBConnection()
       usuario <- DBI::dbGetQuery(con, sprintf("SELECT nombre, id, token, refresh_token FROM psicologo WHERE token='%s'", token)) # de momento
-      message(usuario$nombre, ", id: ", usuario$id)
+      #message(usuario$nombre, ", id: ", usuario$id)
       psicologo(usuario)
       DBI::dbDisconnect(con)
     }
@@ -578,10 +579,10 @@ observeEvent(input$invitado, {
       }
       else{
         # token y refresh token del usuario
-        message("entro en obtener tokens")
+        #message("entro en obtener tokens")
         token_data <- obtener_token(params)
         if(is.null(token_data$error)){
-          message("entro sin error token")
+          #message("entro sin error token")
           # Acceder al access_token
           GLOBAL_TOKEN <- token_data$access_token
           # session$global_token <- GLOBAL_TOKEN
@@ -614,13 +615,13 @@ observeEvent(input$invitado, {
           DBI::dbExecute(con, query)
           query2 <- sprintf("UPDATE PSICOLOGO SET refresh_token = '%s' WHERE id=%d", GLOBAL_REFRESH_TOKEN, id) # de momento 1
           DBI::dbExecute(con, query2)
-          message("Token obtenido e insertado en la bd")
+          #message("Token obtenido e insertado en la bd")
           shinyjs::show("logout_btn")
           user_name(user$nombre)
         }
         else{
-          message("error token")
-          message(token_data$error)
+          #message("error token")
+          #message(token_data$error)
           user_name(NULL)
         }
       }
@@ -628,23 +629,23 @@ observeEvent(input$invitado, {
     else{
       user_name(user$nombre)
       resp_info <- httr::GET(url = info_url, add_headers("Authorization" = paste("Bearer", user$token, sep = " ")))
-      message("respuesta del get info user")
-      message(resp_info)
+      #message("respuesta del get info user")
+      #message(resp_info)
       error <- httr::http_status(resp_info)
-      message("status ", error)
+      #message("status ", error)
       texto <- paste(error, collapse = " ")
       palabras <- strsplit(texto, " ")[[1]]
       # Seleccionar la última palabra
       ultima_palabra <- palabras[length(palabras)]
       if(ultima_palabra != "OK"){
-        message("caducado, intentando refrescar token")
+        #message("caducado, intentando refrescar token")
         refresh_respuesta <- obtener_token_refrescado(user$refresh_token)
-        message("mensaje refresh token")
-        message(refresh_respuesta)
+        #message("mensaje refresh token")
+        #message(refresh_respuesta)
         refresh_token_data <- jsonlite::fromJSON(refresh_respuesta, simplifyVector = FALSE)
         # Acceder al access_token
         if(!is.null(refresh_token_data$error)){
-          message("Imposible refrescar el token")
+          #message("Imposible refrescar el token")
           DBI::dbExecute(con, sprintf("update psicologo set token=NULL, refresh_token=NULL where id=%d", user$id))
           set_cookie(cookie_name = "token_cookie", cookie_value = "null")
           shinyjs::hide("logout_btn")
@@ -655,11 +656,11 @@ observeEvent(input$invitado, {
         }
         else{
           r <- refresh_token_data$access_token
-          message(paste("añado ", user$token))
+          #message(paste("añado ", user$token))
           session$userData$user_token <- r
           set_cookie(cookie_name = "token_cookie", cookie_value = GLOBAL_TOKEN)
           DBI::dbExecute(con, sprintf("update psicologo set token='%s' where id=%d", r, user$id))
-          message("token actualizado")
+          #message("token actualizado")
           shinyjs::show("logout_btn")
           shinyjs::hide("invitado")
 
@@ -668,7 +669,7 @@ observeEvent(input$invitado, {
 
       }
       if(ultima_palabra == "OK"){
-        message("token válido....")
+        #message("token válido....")
         shinyjs::show("logout_btn")
         shinyjs::hide("invitado")
         # token válido, gestionar permisos?
@@ -697,7 +698,7 @@ observeEvent(input$invitado, {
         plan_subscription_server(input, output, session)
         # success_payment_server(input, output, session)
         
-        message("rol> ", rol)
+        #message("rol> ", rol)
         DBI::dbExecute(con, sprintf("update psicologo set rol='%s' where id=%d", rol, user$id)) # de momento 1
       }
     }
@@ -722,7 +723,7 @@ observeEvent(input$invitado, {
     )
     resp <- httr::POST(url = logout_url, add_headers("Content-Type" = "application/x-www-form-urlencoded", "Authorization" = paste("Bearer", token, sep = " ")), 
                       body = params, encode="form")
-    message(resp)
+    #message(resp)
     DBI::dbExecute(con, sprintf("update psicologo set token=NULL, refresh_token=NULL where id=%d", user$id)) # de momento 1
     user_name(NULL)
     set_cookie(cookie_name = "token_cookie", cookie_value = "null")
@@ -746,7 +747,6 @@ observeEvent(input$invitado, {
 
 
 
-
   link <- make_authorization_url()
   
   
@@ -758,7 +758,7 @@ observeEvent(input$invitado, {
       })
     }
     else{
-      message(user_name())
+      #message(user_name())
       output$user_name <- renderText(user_name())
       output$user_div <- renderUI({
         div(id="profile", class = "nav-item user-page user-page-btn" , menuItem(textOutput("user_name"), href = route_link("user"), icon = icon("house-user"), newTab = FALSE))

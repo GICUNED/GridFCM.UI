@@ -503,6 +503,12 @@ form_server <- function(input, output, session){
                 num_rows <- nrow(session$userData$datos_to_table)
                 session$userData$num_row_repgrid <- num_rows
                 session$userData$datos_repgrid <- alignByIdeal(datos_repgrid, ncol(datos_repgrid))
+                #escala
+                nombres_columnas <- colnames(excel_repgrid)
+                min <- as.numeric(nombres_columnas[1])
+                max <- as.numeric(nombres_columnas[length(nombres_columnas)])
+                session$userData$repgrid_min <- min
+                session$userData$repgrid_max <- max
                 file.remove(ruta_destino_rep)
                 if (!is.null(datos_repgrid)) {
                     if(rol == "usuario_demo"){

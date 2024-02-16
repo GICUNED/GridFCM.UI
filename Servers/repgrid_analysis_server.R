@@ -156,14 +156,14 @@ repgrid_analisis_server <- function(input, output, session) {
 
   # Generar tabla de índices y valores matemáticos
   output$gridindices_table <- renderText({
-    col <- ncol(session$userData$datos_repgrid)
-    message(col)
-    listado <- OpenRepGrid::indexSelfConstruction(session$userData$datos_repgrid, 1, col, method="pearson")
-
     INTe <- indices_list[["intensity"]][["Elements"]]
-    YOIDEAL <- listado[[9]]  # antes estab asi> INTe[length(INTe)]
-    YOOTROS <- listado[[10]]
-    OTROSIDEAL <- listado[[11]]
+
+    col <- ncol(session$userData$datos_repgrid)
+    listado <- OpenRepGrid::indexSelfConstruction(session$userData$datos_repgrid, 1, col, others=(2:col-1), method="pearson")
+    YOIDEAL <- listado$self_ideal  # antes estab asi: INTe[length(INTe)]
+    YOOTROS <- listado$self_others
+    OTROSIDEAL <- listado$ideal_others
+    message(listado$self_element, listado$ideal_element) # si que está pillando bien las columnas
     
     PVEFF <- indices_list[["pvaff"]] 
     INT <- indices_list[["intensity"]][["Total"]] 
@@ -193,9 +193,6 @@ repgrid_analisis_server <- function(input, output, session) {
     
     INTc <- indices_list[["intensity"]][["Constructs"]]
 
-    # Ordenar los datos en orden descendente
-    #INTc_ordenado <- sort(INTc, decreasing = TRUE)
-
     # Crear un data frame con los datos ordenados
     INTc_df <- data.frame(Intensity = round(INTc, 3))
 
@@ -207,7 +204,8 @@ repgrid_analisis_server <- function(input, output, session) {
         "function(settings, json) {",
         "$(this.api().table().header()).css({'background-color': '#005440', 'color': 'white'});",
         "}"
-      )
+      ),
+      paging = FALSE
     ))
 
     #knitr::kable(INTc_df, col.names = "Intensity",format = "html") %>%
@@ -232,7 +230,8 @@ repgrid_analisis_server <- function(input, output, session) {
       initComplete = JS(
         "function(settings, json) {",
         "$(this.api().table().header()).css({'background-color': '#005440', 'color': 'white'});",
-        "}")
+        "}"),
+      paging = FALSE
     ))
 
     #knitr::kable(INTe_df, col.names = "Intensity",format = "html") %>%
@@ -244,9 +243,11 @@ repgrid_analisis_server <- function(input, output, session) {
 
 
   output$constructs <- renderText({
-    
+    min <- session$userData$repgrid_min
+    max <- session$userData$repgrid_max
+    message("minimos y maximos de la rejilla> ", min, "  ", max)
     INTc <- indices_list[["dilemmas"]][["Congruency"]] #Constructs congruency
-    INTc <- indexDilemma(repgrid_data,self=1,ideal=session$userData$num_col_repgrid-2, diff.congruent = 1, diff.discrepant = 4)
+    INTc <- indexDilemma(repgrid_data,self=1,ideal=session$userData$num_col_repgrid-2, diff.congruent = ((max-min)/6), diff.discrepant = ((max-min)/2))
     print("dilemmmmmmmm")
     print(INTc$construct_classification)
     #print(indexDilemma(repgrid_data)[[1]])
@@ -258,10 +259,12 @@ repgrid_analisis_server <- function(input, output, session) {
   })
 
   output$dilemmasss <- renderText({
+    min <- session$userData$repgrid_min
+    max <- session$userData$repgrid_max
     message(indices_list[["dilemmas"]][["Dilemmas"]])
     INTc <- indices_list[["dilemmas"]][["Dilemmas"]] #dilemmas
     
-    INTc <- indexDilemma(repgrid_data,self=1,ideal=session$userData$num_col_repgrid-2, diff.congruent = 1, diff.discrepant = 4)
+    INTc <- indexDilemma(repgrid_data,self=1,ideal=session$userData$num_col_repgrid-2, diff.congruent = ((max-min)/6), diff.discrepant = ((max-min)/2))
     
     print(INTc$dilemmas_df)
     dilemmas_df <- INTc$dilemmas_df
@@ -272,9 +275,9 @@ repgrid_analisis_server <- function(input, output, session) {
       
       dilemmas_df$R <- round(dilemmas_df$R, 2) # digits
       
-      ii <- str_detect(dilemmas_df$RexSI, "\\.")
+      ii <- stringr::str_detect(dilemmas_df$RexSI, "\\.")
       
-      dilemmas_df$RexSI[ii] <- as.character(round(as.numeric(dilemmas_df$RexSI[ii]), digits))
+      dilemmas_df$RexSI[ii] <- as.character(round(as.numeric(dilemmas_df$RexSI[ii]), 3))
       
       
       

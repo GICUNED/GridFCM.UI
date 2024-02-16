@@ -303,6 +303,12 @@ patient_server <- function(input, output, session){
                 session$userData$num_col_repgrid <- num_columnas
                 num_rows <- nrow(session$userData$datos_to_table)
                 session$userData$num_row_repgrid <- num_rows
+                # escala
+                nombres_columnas <- colnames(excel_repgrid)
+                min <- as.numeric(nombres_columnas[1])
+                max <- as.numeric(nombres_columnas[length(nombres_columnas)])
+                session$userData$repgrid_min <- min
+                session$userData$repgrid_max <- max
 
                 session$userData$datos_repgrid <- alignByIdeal(datos_repgrid, ncol(datos_repgrid))
                 #repgrid_fecha_seleccionada(NULL)
