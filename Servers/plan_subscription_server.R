@@ -24,14 +24,29 @@ plan_subscription_server <- function(input, output, session){
 
     id_psicologo <- session$userData$id_psicologo
     email_user <- session$userData$email_user
+
+    selectedLanguage <- reactiveVal(i18n$get_translation_language())
+    
+    observeEvent(input$selected_language, {
+        selectedLanguage(input$selected_language)
+    })
     
     output$pricing_table <- renderUI({
-        HTML(sprintf('
-            <script async data-parameter_1="%s" src="pricing-table.js"></script>
-            <stripe-pricing-table pricing-table-id="prctbl_1OHnUHD433GyTQY7egh3gUEc"
-            publishable-key="pk_test_51OCzu7D433GyTQY7aUUS8o9ct9NxRovmwwbMaYaoMmPhzMcIiny9TxTEgTilsAN7xPtfmQBcQ6RFYgstJNH1iTTm00LCx4sEUv">
-            </stripe-pricing-table>
-        ', email_user))
+       if(selectedLanguage() == "es") {
+            HTML(sprintf('
+                <script async src="https://js.stripe.com/v3/pricing-table.js"></script>
+                <stripe-pricing-table pricing-table-id="prctbl_1OEsZRD433GyTQY7Qp69CHyo"
+                publishable-key="pk_live_51OCzu7D433GyTQY7esMPH2Tzahll296t1JhY7YIM4j6ey1zJWejY82GKJSOSXmqgY1AtP1xlNHcDOMrntiZ92Auq00aGFUkZdv">
+                </stripe-pricing-table>
+            ', email_user))
+        } else if(selectedLanguage() == "en") {
+            HTML(sprintf('
+                <script async src="https://js.stripe.com/v3/pricing-table.js"></script>
+                <stripe-pricing-table pricing-table-id="prctbl_1Obih7D433GyTQY7hQoD0qmz"
+                publishable-key="pk_live_51OCzu7D433GyTQY7esMPH2Tzahll296t1JhY7YIM4j6ey1zJWejY82GKJSOSXmqgY1AtP1xlNHcDOMrntiZ92Auq00aGFUkZdv">
+                </stripe-pricing-table>
+            ', email_user))
+        }
     })
 
 

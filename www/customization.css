@@ -121,6 +121,16 @@ ul.navbar-nav{
   margin: auto;
 }
 
+.custom-margins-md{
+  max-width: 1200px;
+  margin: auto;
+}
+
+.rounded-custom{
+  border-radius: .5rem !important;
+  overflow: hidden;
+}
+
 .box-shadow-1{
   box-shadow: 0 0 1px #11111135;
   border-radius: 1rem;
@@ -1980,7 +1990,7 @@ color: #8b0000;
   margin-inline: auto;
 
   text-align: center;
-  max-width: 500px;
+  max-width: 750px;
 }
 
 .dark-mode .advert-help p{

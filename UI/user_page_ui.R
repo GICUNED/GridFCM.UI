@@ -1,11 +1,11 @@
-user_page_ui <- fluidPage(class="custom-margins",
+user_page_ui <- fluidPage(class="custom-margins-md",
     useShinyjs(),
 
     fluidRow(class = "flex-container-titles",
                 h2(i18n$t("Panel de Usuario"), class = "rg pagetitlecustom mt-2"),
     ),
 
-    fluidRow(class="user-container mt-4",
+    fluidRow(class="user-container mt-4 mb-4",
 
         div(class="user-details w-100",
             icon("circle-user"),
@@ -24,7 +24,7 @@ user_page_ui <- fluidPage(class="custom-margins",
         
     ),
 
-    div(class = "mx-auto text-center",
+    div(class = "mx-auto text-center rounded-custom",
         id = "iframeContainer",
         style = "display: none;",  # Oculta el div inicialmente
         tags$iframe(
@@ -37,8 +37,7 @@ user_page_ui <- fluidPage(class="custom-margins",
         ),
     ),
 
-     column(12,
-        id="usuarios_demo", class="p-0 mt-4 mb-2",
+     fluidRow(id="usuarios_demo", class="p-0 mt-4 mb-2 custom-margins",
        
         column(12,
             fluidRow(class = "flex-container-titles",

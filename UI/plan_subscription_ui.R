@@ -1,4 +1,4 @@
-plan_subscription_ui <- fluidPage(class="custom-margins",
+plan_subscription_ui <- fluidPage(class="custom-margins-md",
     useShinyjs(),
 
    

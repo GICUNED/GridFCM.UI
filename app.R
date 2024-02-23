@@ -27,7 +27,6 @@ library(httr)
 library(cookies)
 knitr::knit_hooks$set(webgl = hook_webgl)
 
-
 source("global.R")
 # GRID1
 source("R/GraphFunctions.R")
@@ -114,6 +113,7 @@ tags$li(a(
 
 )
 
+
 theme <- create_theme(
   bs4dash_status(
     primary = "#095540",
@@ -124,8 +124,6 @@ theme <- create_theme(
     info = "#90214a"
   )
 )
-
-
 
 httr::set_config(config(ssl_verifypeer = 0L, ssl_verifyhost = 0L))
 domain <- Sys.getenv("DOMAIN")
@@ -176,6 +174,7 @@ ui <- add_cookie_handlers(
         # div(id="profile", class = "nav-item user-page user-page-btn" , menuItem(textOutput("user_name"), href = route_link("user"), icon = icon("house-user"), newTab = FALSE)),
       )
     ),
+
 
     dashboardSidebar(
       sidebarMenu(
