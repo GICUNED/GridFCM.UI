@@ -5,7 +5,7 @@ patient_ui <- fluidPage(class="patient-diff",
 
   fluidRow( class = ("flex-container-xl mt-2"),
     h2(i18n$t("Pacientes"), class = "pt pagetitlecustom"),
-    p(i18n$t("Esta página te permite..."), class = "desccustom"),
+    p(i18n$t("Esta página te permite añadir y gestionar pacientes, y crear simulaciones personalizadas para cada uno de ellos."), class = "desccustom"),
   ),
 
   fluidRow(class="custom-margins mt-2",

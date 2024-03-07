@@ -6,9 +6,9 @@ $('#import-page, #excel-page, #form-page')
   
 //Activar tooltips bootstrap-4
 
-$(function () {
-    $('[data-toggle="tooltip"]').tooltip()
-})
+//$(function () {
+  //  $('[data-toggle="tooltip"]').tooltip()
+//})
 
 
 //funcionalidad de fullscreen
@@ -24,6 +24,29 @@ function openFullscreen(elem) {
     elem.msRequestFullscreen();
   }
 };
+
+  // Función para alternar la simulación de pantalla completa
+  function toggleFullscreenSimulation(elemId) {
+    const elem = $(elemId);
+    
+    elem.toggleClass('fullscreen-style');
+    // Encuentra todos los botones "enter_fs" y "exit_fs"
+    const enterFsButtonsMb = $("button[id^='mb_enter_fs_']");
+    const exitFsButtonsMb = $("button[id^='mb_exit_fs_']");
+    
+    // Verifica si el elemento tiene la clase 'fullscreen-style'
+    if (elem.hasClass('fullscreen-style')) {
+      // Simula entrar en pantalla completa
+      exitFsButtonsMb.removeClass("hidden");
+      enterFsButtonsMb.addClass("hidden");
+    } else {
+      // Simula salir de pantalla completa
+      exitFsButtonsMb.addClass("hidden");
+      enterFsButtonsMb.removeClass("hidden");
+    }
+
+    
+  }
 
 $(document).ready(function() {
   // Encuentra todos los botones "enter_fs" y "exit_fs"

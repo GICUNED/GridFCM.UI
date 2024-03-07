@@ -20,15 +20,59 @@ repgrid_analisis_server <- function(input, output, session) {
   observeEvent(input$graph_selector, {
 
   seleccion <- input$graph_selector
+  
 
   if(seleccion == 'Cluster Analysis' || seleccion == 'Análisis por Conglomerados'){
     runjs("document.exitFullscreen();")
+    runjs("
+     
+    if ($('#rg-analysis-content').hasClass('fullscreen-style')) {
+      $('#rg-analysis-content').removeClass('fullscreen-style');
+
+      $('#mb_exit_fs_5').addClass('hidden');
+      $('#mb_enter_fs_5').removeClass('hidden');
+
+      $('#mb_exit_fs_6').addClass('hidden');
+      $('#mb_enter_fs_6').removeClass('hidden');
+
+      $('#mb_exit_fs_7').addClass('hidden');
+      $('#mb_enter_fs_7').removeClass('hidden');
+    }")
   } else if (seleccion == 'Índices Cognitivos' || seleccion == 'Cognitive Indices'){
     runjs("document.exitFullscreen();")
+    runjs("
+     
+    if ($('#rg-analysis-content').hasClass('fullscreen-style')) {
+      $('#rg-analysis-content').removeClass('fullscreen-style');
+
+      $('#mb_exit_fs_5').addClass('hidden');
+      $('#mb_enter_fs_5').removeClass('hidden');
+
+      $('#mb_exit_fs_6').addClass('hidden');
+      $('#mb_enter_fs_6').removeClass('hidden');
+
+      $('#mb_exit_fs_7').addClass('hidden');
+      $('#mb_enter_fs_7').removeClass('hidden');
+    }")
+
   } else if (seleccion == 'Dilemas' || seleccion == 'Dilemmas'){
     runjs("document.exitFullscreen();")
-  }
-  })
+    runjs("
+     
+    if ($('#rg-analysis-content').hasClass('fullscreen-style')) {
+      $('#rg-analysis-content').removeClass('fullscreen-style');
+
+      $('#mb_exit_fs_5').addClass('hidden');
+      $('#mb_enter_fs_5').removeClass('hidden');
+
+      $('#mb_exit_fs_6').addClass('hidden');
+      $('#mb_enter_fs_6').removeClass('hidden');
+
+      $('#mb_exit_fs_7').addClass('hidden');
+      $('#mb_enter_fs_7').removeClass('hidden');
+    }")
+  }})
+
 
   #if (is.null(session$userData$datos_repgrid)) {
   #  datos_control <- 0

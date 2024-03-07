@@ -1,5 +1,6 @@
   
 inicio_ui <- fluidPage(class="home-margins",
 
-uiOutput("dynamic_iframe_home")
+  useShinyjs(),
+  uiOutput("dynamic_iframe_home")
 )

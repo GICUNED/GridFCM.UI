@@ -17,6 +17,24 @@ observeEvent(input$graph_selector_visualizacion, {
 
   if(seleccion == 'wimpindices' || seleccion == 'índices de Wimp'){
     runjs("document.exitFullscreen();")
+     runjs("
+     
+    if ($('#wg-vis-content').hasClass('fullscreen-style') || $('#wg-lab-content').hasClass('fullscreen-style')) {
+    $('#wg-vis-content').removeClass('fullscreen-style');
+    $('#wg-lab-content').removeClass('fullscreen-style');
+
+    $('#mb_exit_fs_1').addClass('hidden');
+    $('#mb_enter_fs_1').removeClass('hidden');
+
+    $('#mb_exit_fs_3').addClass('hidden');
+    $('#mb_enter_fs_3').removeClass('hidden');
+
+    $('#mb_exit_fs_4').addClass('hidden');
+    $('#mb_enter_fs_4').removeClass('hidden');
+
+    $('#mb_exit_fs_5').addClass('hidden');
+    $('#mb_enter_fs_5').removeClass('hidden');
+    }")
   }
 })
 

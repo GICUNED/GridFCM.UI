@@ -30,10 +30,44 @@ inicio_server <- function(input, output, session) {
         i18n$set_translation_language(input$selected_language)
   })
 
-  output$dynamic_iframe_home <- renderUI({
+  
+
+    # Reactiva al cambio de 'session$userData$rol' y actualiza la UI en consecuencia
+    observeEvent(session$userData$rol, {
+        # Accede al valor actual de 'rol'
+        rol <- session$userData$rol
+        
+        # Determina qué contenido mostrar basado en si 'rol' es NULL
+        if(is.null(rol)) {
+            # Contenido para usuarios no autenticados
+            output$dynamic_iframe_home <- renderUI({
+                uiOutput("iframe_home")
+            })
+        } else {
+            # Contenido para usuarios autenticados
+            output$dynamic_iframe_home <- renderUI({
+                uiOutput("iframe_user")
+            })
+        }
+    }, ignoreNULL = FALSE)  # Configura 'ignoreNULL = FALSE' para reaccionar también cuando 'rol' sea NULL
+    
+    # Define el contenido para usuarios no autenticados
+    output$iframe_home <- renderUI({
         iframe_src <- switch(input$selected_language,
             "es" = "https://blogs.uned.es/gicuned/psychlab-home",
             "en" = "https://blogs.uned.es/gicuned/psychlab-home-en",
+            NULL
+        )
+        if (!is.null(iframe_src)) {
+            tags$iframe(src = iframe_src, class = "home-iframe")
+        }
+    })
+
+    # Define el contenido para usuarios autenticados
+    output$iframe_user <- renderUI({
+        iframe_src <- switch(input$selected_language,
+            "es" = "https://blogs.uned.es/gicuned/psychlab-docs",
+            "en" = "https://blogs.uned.es/gicuned/psychlab-docs-en",
             NULL
         )
         if (!is.null(iframe_src)) {

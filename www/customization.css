@@ -586,13 +586,8 @@ li.nav-item::marker{
   background: #454d55;
 }
 
-:not(:root):fullscreen{
-  padding: 1rem;
-  overflow-y: scroll;
-  max-height: 100vh;
-}
-
-:not(:root):fullscreen{
+:not(:root):fullscreen,
+.fullscreen-style{
   padding: 1rem;
   height: 100%;
   max-height: 100vh;
@@ -601,14 +596,16 @@ li.nav-item::marker{
 
 @media (min-width: 1417px){
   
-    :not(:root):fullscreen .input-graphic-container{
+    :not(:root):fullscreen .input-graphic-container,
+    .fullscreen-style .input-graphic-container {
       height: 100%;
     }
 }
 
 @media (max-width: 1417px){
   
-  :not(:root):fullscreen{
+  :not(:root):fullscreen,
+  .fullscreen-style{
     overflow-y: scroll;
   }
 }
@@ -635,13 +632,30 @@ li.nav-item::marker{
 :not(:root):fullscreen .shiny-plot-output,
 :not(:root):fullscreen #biplot3d_plot,
 :not(:root):fullscreen #biplot2d_plot,
-:not(:root):fullscreen .graphic-container > div:nth-child(2){
+:not(:root):fullscreen .graphic-container > div:nth-child(2)
+
+
+.fullscreen-style .graphic-container,
+.fullscreen-style [id^='htmlwidget-'],
+
+.fullscreen-style #graph_output_visualizacion,
+.fullscreen-style #graph_output_laboratorio,
+.fullscreen-style #laboratory,
+
+.fullscreen-style #pscd_showw,
+
+.fullscreen-style .shiny-plot-output,
+.fullscreen-style #biplot3d_plot,
+.fullscreen-style #biplot2d_plot,
+.fullscreen-style .graphic-container > div:nth-child(2){
   height: 100% !important;
 }
 
+.fullscreen-style  #biplot2d_plot,
 :not(:root):fullscreen #biplot2d_plot{
   width: 65% !important;
 }
+
 
 :not(:fullscreen) #biplot2d_plot,
 :not(:root) #biplot2d_plot {
@@ -649,13 +663,33 @@ li.nav-item::marker{
   height: 800px !important;
 }
 
-:not(:root):fullscreen .input-field-container{
+:not(:root):fullscreen .input-field-container,
+.fullscreen-style .input-field-container{
   height: fit-content !important;
 }
 
 
 .card-body.flex-container-docs::after{
   display: none !important;
+}
+
+.fullscreen-style {
+  position: fixed; /* Posición fija respecto a la ventana del navegador */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999; /* Asegúrate de que este valor sea superior al de otros elementos */
+  background-color: #F4F6F9; /* O cualquier color de fondo deseado */
+  margin: 0 !important;
+}
+
+.fullscreen-style .graphic-container > div:nth-child(2){
+  height: 100% !important;
+}
+
+.dark-mode .fullscreen-style {
+  background-color: #454D55; /* O cualquier color de fondo deseado */
 }
 
 
@@ -2244,7 +2278,8 @@ color: #8b0000;
   margin-right: 4px !important;
 }
 
-.btn[id^='enter_fs_'] i{
+.btn[id^='enter_fs_'] i,
+.btn[id^='mb_enter_fs_'] i{
   margin-right: 0px !important;
 }
 
@@ -3369,4 +3404,6 @@ color: #fff !important;
 .hidden-div {
     display: none;
   }
+
+
   

@@ -78,8 +78,8 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
 
       fluidRow( class = ("flex-container-titles mt-3"),
             h2(i18n$t("Análisis WimpGrid"), class = "wg pagetitlecustom"),
-            icon("circle-question", id = "tooltip-wg-2-home", class="tooltip-icon mb-4 ml-2"),
-            div(id="context-wg-2-home", class="tooltip-container", icon("circle-xmark", id = "exit-wg-2-tooltip", class="fa-solid exit-tooltip"), p(i18n$t("Esta página te permite..."),  class = "desccustom-tooltip")),
+            #icon("circle-question", id = "tooltip-wg-2-home", class="tooltip-icon mb-4 ml-2"),
+            #div(id="context-wg-2-home", class="tooltip-container", icon("circle-xmark", id = "exit-wg-2-tooltip", class="fa-solid exit-tooltip"), p(i18n$t("Esta página te permite..."),  class = "desccustom-tooltip")),
           ),
 
       shinyjs::hidden(fluidRow(id="vis_warn",class="mb-4 mt-4 gap-2 justify-content-center error-help",
@@ -112,8 +112,11 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                 downloadButton(class = "btn-download", "btn_download_visualizacion", i18n$t("Descargar Gráfico")),
 
                 actionButton("enter_fs_1", label=NULL, status="warning", icon = icon("maximize"), onclick = "openFullscreen(document.getElementById('wg-vis-content'));"),
-                actionButton("exit_fs_1", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "exitFullscreen();")
+                actionButton("exit_fs_1", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "exitFullscreen();"),
                         
+                actionButton("mb_enter_fs_1", label=NULL, status="warning", icon = icon("maximize"), onclick = "toggleFullscreenSimulation($('#wg-vis-content'));"),
+                actionButton("mb_exit_fs_1", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "toggleFullscreenSimulation($('#wg-vis-content'));")
+
               ),
               uiOutput("graph_output_visualizacion")
             ),
@@ -207,8 +210,8 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
 
       fluidRow( class = ("flex-container-titles mt-3"),
             h2(i18n$t("Análisis WimpGrid"), class = "wg pagetitlecustom"),
-            icon("circle-question", id = "tooltip-wg-3-home", class="tooltip-icon mb-4 ml-2"),
-            div(id="context-wg-3-home", class="tooltip-container", icon("circle-xmark", id = "exit-wg-3-tooltip", class="fa-solid exit-tooltip"), p(i18n$t("Esta página te permite..."),  class = "desccustom-tooltip")),
+            #icon("circle-question", id = "tooltip-wg-3-home", class="tooltip-icon mb-4 ml-2"),
+            #div(id="context-wg-3-home", class="tooltip-container", icon("circle-xmark", id = "exit-wg-3-tooltip", class="fa-solid exit-tooltip"), p(i18n$t("Esta página te permite..."),  class = "desccustom-tooltip")),
           ),
 
       shinyjs::hidden(fluidRow(id="lab_warn",class="mb-4 mt-4 gap-2 justify-content-center error-help",
@@ -240,7 +243,11 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
 
                           downloadButton(class = "btn-download", "boton_download_laboratory", i18n$t("Descargar Gráfico")),
                           actionButton("enter_fs_3", label=NULL, status="warning", icon = icon("maximize"), onclick = "openFullscreen(document.getElementById('wg-lab-content'));"),
-                          actionButton("exit_fs_3", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "exitFullscreen();")
+                          actionButton("exit_fs_3", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "exitFullscreen();"),
+
+                          actionButton("mb_enter_fs_3", label=NULL, status="warning", icon = icon("maximize"), onclick = "toggleFullscreenSimulation($('#wg-lab-content'));"),
+                          actionButton("mb_exit_fs_3", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "toggleFullscreenSimulation($('#wg-lab-content'));")
+
                           
                         ),
                     shinycssloaders::withSpinner(rHandsontableOutput("simdigraph_act_vector"), type = 4, color = "#022a0c", size = 0.6)
@@ -258,6 +265,10 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                           ),
                           actionButton("enter_fs_4", label=NULL, status="warning", icon = icon("maximize"), onclick = "openFullscreen(document.getElementById('wg-lab-content'));"),
                           actionButton("exit_fs_4", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "exitFullscreen();"),
+                          
+                          actionButton("mb_enter_fs_4", label=NULL, status="warning", icon = icon("maximize"), onclick = "toggleFullscreenSimulation($('#wg-lab-content'));"),
+                          actionButton("mb_exit_fs_4", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "toggleFullscreenSimulation($('#wg-lab-content'));")
+
                         ),
                     shinycssloaders::withSpinner(rHandsontableOutput("pcsd_act_vector"), type = 4, color = "#022a0c", size = 0.6)
                       
@@ -272,9 +283,12 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                         icon("table"),
                         h4(i18n$t("Resultados"), class = "pagetitle2custom"),
                       ),
-                        actionButton("enter_fs_3", label=NULL, status="warning", icon = icon("maximize"), onclick = "openFullscreen(document.getElementById('wg-lab-content'));"),
-                        actionButton("exit_fs_3", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "exitFullscreen();"),
+                        actionButton("enter_fs_5", label=NULL, status="warning", icon = icon("maximize"), onclick = "openFullscreen(document.getElementById('wg-lab-content'));"),
+                        actionButton("exit_fs_5", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "exitFullscreen();"),
                         
+                        actionButton("mb_enter_fs_5", label=NULL, status="warning", icon = icon("maximize"), onclick = "toggleFullscreenSimulation($('#wg-lab-content'));"),
+                        actionButton("mb_exit_fs_5", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "toggleFullscreenSimulation($('#wg-lab-content'));")
+
                     ),
                     shinycssloaders::withSpinner(rHandsontableOutput("pcsdindices_act_vector"), type = 4, color = "#022a0c", size = 0.6),
       

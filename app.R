@@ -175,7 +175,6 @@ ui <- add_cookie_handlers(
       )
     ),
 
-
     dashboardSidebar(
       sidebarMenu(
           id = "sidebar_principal",
@@ -234,6 +233,7 @@ ui <- add_cookie_handlers(
             width = '',
             class = "logoimg404"
           ),
+
 
           column(
             12,
@@ -342,8 +342,6 @@ crear_usuario <- function(info){
 }
 
 
-
-
 obtener_token <- function(params){
   code <- params$code
   message("code")
@@ -361,7 +359,6 @@ obtener_token <- function(params){
   token_data <- jsonlite::fromJSON(respuesta)
   return(token_data)
 }
-
 
 obtener_token_refrescado <- function(refresh){
   params <- list(
@@ -382,6 +379,53 @@ server <- function(input, output, session) {
   psicologo <- reactiveVal(NULL)
 
   shinyjs::hide("patientIndicator")
+
+  runjs("
+      $(document).ready(function() {
+        // Función para detectar dispositivos táctiles
+        var isTouchDevice = 'ontouchstart' in document.documentElement;
+        
+        // Comunicar la detección al servidor de Shiny
+        Shiny.onInputChange('isTouchDevice', isTouchDevice);
+      });
+    ")
+
+    observe({
+     if (!is.null(input$isTouchDevice) && input$isTouchDevice) {
+      shinyjs::hide("enter_fs_1")
+      shinyjs::hide("enter_fs_2")
+      shinyjs::hide("enter_fs_3")
+      shinyjs::hide("enter_fs_4")
+      shinyjs::hide("enter_fs_5")
+      shinyjs::hide("enter_fs_6")
+      shinyjs::hide("enter_fs_7")
+
+      shinyjs::show("mb_enter_fs_1")
+      shinyjs::show("mb_enter_fs_2")
+      shinyjs::show("mb_enter_fs_3")
+      shinyjs::show("mb_enter_fs_4")
+      shinyjs::show("mb_enter_fs_5")
+      shinyjs::show("mb_enter_fs_6")
+      shinyjs::show("mb_enter_fs_7")
+      
+    } else {
+      shinyjs::show("enter_fs_1")
+      shinyjs::show("enter_fs_2")
+      shinyjs::show("enter_fs_3")
+      shinyjs::show("enter_fs_4")
+      shinyjs::show("enter_fs_5")
+      shinyjs::show("enter_fs_6")
+      shinyjs::show("enter_fs_7")
+      
+      shinyjs::hide("mb_enter_fs_1")
+      shinyjs::hide("mb_enter_fs_2")
+      shinyjs::hide("mb_enter_fs_3")
+      shinyjs::hide("mb_enter_fs_4")
+      shinyjs::hide("mb_enter_fs_5")
+      shinyjs::hide("mb_enter_fs_6")
+      shinyjs::hide("mb_enter_fs_7")
+    }
+  })
 
 
   message("entro en server")
@@ -687,9 +731,6 @@ observeEvent(input$invitado, {
         }
 
 
-
-
-
         session$userData$rol <- rol
         session$userData$id_psicologo <- user$id
         patient_server(input, output, session)
@@ -746,7 +787,6 @@ observeEvent(input$invitado, {
   
 
 
-
   link <- make_authorization_url()
   
   
@@ -765,7 +805,6 @@ observeEvent(input$invitado, {
       })
     }
   )
-
 
   i18n_r <- reactive({
     i18n
@@ -805,12 +844,10 @@ observeEvent(input$invitado, {
     updateSelectInput(session, "simdigraph_thr",
                       choices = i18n_r()$t(c("lineal","otra opción")))
 
-
     updateSelectInput(session, "pcsd_infer",
                       choices = i18n_r()$t(c("transformacion lineal", "otra opción")))
     updateSelectInput(session, "pcsd_thr",
                       choices = i18n_r()$t(c("lineal", "otra opción")))
-
 
     updateSelectInput(session, "pcsdindices_infer",
                       choices = i18n_r()$t(c("transformacion lineal", "transformación sigmoidea", "transformación binaria")))
@@ -822,7 +859,6 @@ observeEvent(input$invitado, {
                       choices = i18n_r()$t(c("Análisis Bidimensional",
                               "Análisis Tridimensional","Análisis por Conglomerados","Índices Cognitivos","Dilemas")))
   })
-
 
 
   router_server()
