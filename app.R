@@ -380,6 +380,7 @@ server <- function(input, output, session) {
 
   shinyjs::hide("patientIndicator")
 
+
   runjs("
       $(document).ready(function() {
         // Función para detectar dispositivos táctiles
@@ -608,6 +609,7 @@ observeEvent(input$invitado, {
       session$userData$rol <- id$rol
       session$userData$id_psicologo <- as.integer(id$id)
       patient_server(input, output, session)
+      inicio_server(input, output, session)
       DBI::dbDisconnect(con)
     }
   })
@@ -654,6 +656,8 @@ observeEvent(input$invitado, {
           suggestion_server(input, output, session)
           user_page_server(input, output, session)
           plan_subscription_server(input, output, session)
+          inicio_server(input, output, session)
+
           # success_payment_server(input, output, session)
           query <- sprintf("UPDATE PSICOLOGO SET token = '%s' WHERE id=%d", GLOBAL_TOKEN, id) # de momento 1 
           DBI::dbExecute(con, query)
@@ -734,6 +738,7 @@ observeEvent(input$invitado, {
         session$userData$rol <- rol
         session$userData$id_psicologo <- user$id
         patient_server(input, output, session)
+        inicio_server(input, output, session)
         suggestion_server(input, output, session)
         user_page_server(input, output, session)
         plan_subscription_server(input, output, session)
@@ -869,7 +874,7 @@ observeEvent(input$invitado, {
   #form_server(input, output, session)
   #patient_server(input, output, session)
   repgrid_server(input, output, session)
-  repgrid_home_server(input, output, session)
+ repgrid_home_server(input, output, session)
   repgrid_analisis_server(input, output, session)
   wimpgrid_analysis_server(input, output, session)
   #suggestion_server(input, output, session)

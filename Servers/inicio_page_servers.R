@@ -33,7 +33,7 @@ inicio_server <- function(input, output, session) {
   
 
     # Reactiva al cambio de 'session$userData$rol' y actualiza la UI en consecuencia
-    observeEvent(session$userData$rol, {
+    observe({
         # Accede al valor actual de 'rol'
         rol <- session$userData$rol
         
@@ -41,31 +41,19 @@ inicio_server <- function(input, output, session) {
         if(is.null(rol)) {
             # Contenido para usuarios no autenticados
             output$dynamic_iframe_home <- renderUI({
-                uiOutput("iframe_home")
-            })
-        } else {
-            # Contenido para usuarios autenticados
-            output$dynamic_iframe_home <- renderUI({
-                uiOutput("iframe_user")
-            })
-        }
-    }, ignoreNULL = FALSE)  # Configura 'ignoreNULL = FALSE' para reaccionar también cuando 'rol' sea NULL
-    
-    # Define el contenido para usuarios no autenticados
-    output$iframe_home <- renderUI({
-        iframe_src <- switch(input$selected_language,
-            "es" = "https://blogs.uned.es/gicuned/psychlab-home",
-            "en" = "https://blogs.uned.es/gicuned/psychlab-home-en",
-            NULL
+                 iframe_src <- switch(input$selected_language,
+                  "es" = "https://blogs.uned.es/gicuned/psychlab-home",
+                  "en" = "https://blogs.uned.es/gicuned/psychlab-home-en",
+                  NULL
         )
         if (!is.null(iframe_src)) {
             tags$iframe(src = iframe_src, class = "home-iframe")
         }
-    })
-
-    # Define el contenido para usuarios autenticados
-    output$iframe_user <- renderUI({
-        iframe_src <- switch(input$selected_language,
+            })
+        } else {
+            # Contenido para usuarios autenticados
+            output$dynamic_iframe_home <- renderUI({
+                 iframe_src <- switch(input$selected_language,
             "es" = "https://blogs.uned.es/gicuned/psychlab-docs",
             "en" = "https://blogs.uned.es/gicuned/psychlab-docs-en",
             NULL
@@ -73,5 +61,8 @@ inicio_server <- function(input, output, session) {
         if (!is.null(iframe_src)) {
             tags$iframe(src = iframe_src, class = "home-iframe")
         }
+            })
+        }
     })
+    
 }
