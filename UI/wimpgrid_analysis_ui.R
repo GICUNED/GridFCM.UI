@@ -34,10 +34,11 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
     fluidRow(class="mb-2 button-container",
       #h3(i18n$t("Tabla de Datos"), class = "mr-auto mb-0"),
     
-      div(class = "mr-auto",
+      div(class = "mr-auto", id="botones_izquierda_w",
         h4(class = "mr-4 mb-0", htmlOutput("titulo_wimpgrid")),
         actionButton("volver_inicio_w", class="tab-active", icon=icon("table"), i18n$t("Tabla de Datos")),
         actionButton("matriz_pesos_w", icon=icon("table-cells"), i18n$t("Matriz de Pesos")),
+        actionButton("vector_yo_actual_w", icon=icon("vector-square"), i18n$t("Monitoreo Yo-Actual"))
       ),
 
       div(class = "flex-container-mini",
@@ -65,6 +66,12 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
       div(id = "matriz_pesos",
         # Mostrar los datos de tabla_datos
           plotlyOutput("weight_matrix_graph")
+        )
+      ),
+      shinyjs::hidden(
+      div(id = "vector_yo_actual",
+        # Mostrar los datos de tabla_datos
+          shinycssloaders::withSpinner(rHandsontableOutput("vector_editable_yo_actual"), type = 4, color = "#022a0c", size = 0.6)
         )
       ),
       div(class=("row"), id = "prueba_container_w",

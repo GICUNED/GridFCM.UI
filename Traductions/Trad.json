@@ -923,6 +923,10 @@
     {
       "es": "Esta simulación se guardó con errores. Bórrela y vuelva a crearla.",
       "en": "This simulation was saved with errors. Delete it and recreate it."
+    },
+    {
+      "es": "Monitoreo Yo-Actual",
+      "en": "Monitoring Me-Actual"
     }
     
     

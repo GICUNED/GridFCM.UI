@@ -469,16 +469,18 @@ li.nav-item::marker{
   margin: 0 !important;
 }
 
-#volver_inicio_w, #matriz_pesos_w{
+#volver_inicio_w, #matriz_pesos_w, #vector_yo_actual_w{
     background-color: transparent;}
 
+#vector_yo_actual_w:hover,
 #volver_inicio_w:hover, #matriz_pesos_w:hover{
   opacity: 0.9;
   background-color: #dcdcdc;
 }
 
 .dark-mode #volver_inicio_w:not(.tab-active):hover,
-.dark-mode #matriz_pesos_w:not(.tab-active):hover{
+.dark-mode #matriz_pesos_w:not(.tab-active):hover,
+.dark-mode #vector_yo_actual_w:not(.tab-active):hover{
   background-color: #1d222a;
 }
 
@@ -489,6 +491,14 @@ li.nav-item::marker{
   font-weight: bold;
 
 }
+
+#vector_yo_actual_w.tab-active{
+  background-color: #005440;
+  color: #fff;
+  border: 1px solid #00795d;
+  font-weight: bold;
+}
+
 
 #volver_inicio_w.tab-active{
   background-color: #3e3b32;
