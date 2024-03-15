@@ -8,7 +8,7 @@ plan_subscription_ui <- fluidPage(class="custom-margins-md",
         ),
 
          fluidRow(class="advert-help w-100 mb-2 mt-2", id="advertencia-planes",
-        p( strong("Atención:"), "Se si vuelve a comprar otra suscripción cuando sigue activa la actual, no se añade más tiempo a la suscripción. Por ello, es mejor configurar una renovación automática o esperar a que se termine la fecha de suscripción, para ampliar la actual.")
+        p( strong("Atención:"), i18n$t("Si se vuelve a comprar otra suscripción cuando sigue activa la actual, no se añade más tiempo a la suscripción. Por ello, es mejor configurar una renovación automática o esperar a que se termine la fecha de suscripción, para ampliar la actual."))
     ),
         # column(id="panel-compra-individual", width=4, offset = 0, style='padding:0px;',
         #     h4(i18n$t("Sucripción individual")),

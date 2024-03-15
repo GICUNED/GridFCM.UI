@@ -41,7 +41,7 @@ user_page_ui <- fluidPage(class="custom-margins-md",
        
         column(12,
             fluidRow(class = "flex-container-titles",
-                h2(i18n$t("Usuarios demo"), class = "rg pagetitlecustom mt-2"),
+                h2(i18n$t("Usuarios Demo"), class = "rg pagetitlecustom mt-2"),
             ),
             column(12, class = "patients-table p-3 bg-white rounded-lg  mt-2",
                 DTOutput("tabla_usuario_demo"),

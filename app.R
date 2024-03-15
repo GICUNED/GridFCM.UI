@@ -589,6 +589,7 @@ observeEvent(input$invitado, {
         duration = 5
       ) 
     }
+    
     else{
       removeModal()
       showNotification(

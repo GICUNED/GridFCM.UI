@@ -3,7 +3,7 @@ patient_ui <- fluidPage(class="patient-diff",
   shiny.i18n::usei18n(i18n),
 
 
-  fluidRow( class = ("flex-container-xl mt-2"),
+  fluidRow( class = ("flex-container-xl mt-2 mb-4"),
     h2(i18n$t("Pacientes"), class = "pt pagetitlecustom"),
     p(i18n$t("Esta página te permite añadir y gestionar pacientes, y crear simulaciones personalizadas para cada uno de ellos."), class = "desccustom"),
   ),
