@@ -364,6 +364,13 @@ onevent("click", "exit-controls-lab", {
     show("wg-lab-content")
   }
 
+  # cargo los datos de weight matrix para que no se actualicen al tocar yo-actual
+  if (!is.null(session$userData$datos_wimpgrid)) {
+    message("entro en matrix_data")
+    matrix_data <- session$userData$datos_wimpgrid[["scores"]][["weights"]]
+  }
+
+
   dataaa_w <-  reactiveVal(session$userData$datos_wimpgrid)
 
 
@@ -833,44 +840,22 @@ onevent("click", "exit-controls-lab", {
  
 
   generate_graph <- function(){
-
     # Verificar que input$graph_selector_visualizacion no es NULL
-
     req(input$graph_selector_visualizacion)
-
-  
-
     # Asignar el input a una variable
 
     graph <- input$graph_selector_visualizacion
-
     graph2 <- NULL
-
-    print("grapfh selected in view")
-
-    print(graph)
 
     # Dependiendo de la selección del usuario, dibuja el gráfico correspondiente
 
     if (graph == "autodigrafo" || graph=="selfdigraph") {
-      print(i18n$get_translation_language())
-
-      print("hhhh")
-
-  
-
       if(i18n$get_translation_language()=="es") {
-
-        print("es")
-      
         #graph2 <- selfdigraph(dataaa_w(), layout = translate_word("en",selfdigraph_layout()), vertex.size = selfdigraph_vertex_size(),edge.width = selfdigraph_edge_width(), color = translate_word("en",selfdigraph_color())) 
         graph2 <- digraph(dataaa_w(), layout = translate_word("en",selfdigraph_layout()), color = translate_word("en",selfdigraph_color()))
-        print(graph2)
 
       }
-
       else {
-
         print("en")
         #graph2 <- selfdigraph(dataaa_w(), layout = selfdigraph_layout(), vertex.size = selfdigraph_vertex_size(),edge.width = selfdigraph_edge_width(), color = selfdigraph_color())
         graph2 <- digraph(dataaa_w(), layout = selfdigraph_layout(), color = selfdigraph_color())
@@ -897,9 +882,6 @@ onevent("click", "exit-controls-lab", {
       # Get column names
 
       column_names <- names(wimpindices(dataaa_w()))
-
-  
-
       # Print column names
 
       cat("Columns:", paste(column_names, collapse = ", "))
@@ -1594,11 +1576,17 @@ onevent("click", "exit-controls-lab", {
 
       # vector actual
       df_actual(actualizarVector(controles$vector_actual))
-      message("vector actualizado: ", df_actual())
+      wimp <- dataaa_w()
+      df <- as.data.frame(t(v))
+      lista <- strsplit(controles$vector_actual, ",")[[1]]
+      wimp$self[[2]] <- as.double(unlist(lista))
+      dataaa_w(wimp)
+
     }
   }
 
   if(!is.null(session$userData$id_wimpgrid)){
+    message("actualizo controles locales")
     actualizar_controles_local(session$userData$id_wimpgrid)
   }
 
@@ -2029,8 +2017,7 @@ output$pscd_show <- renderPlotly({
   })
 
   output$weight_matrix_graph <- renderPlotly({
-    matrix_data <- dataaa_w()[["scores"]][["weights"]]
-    
+    # matrix data se asigna justo al cargar los datos de importwimp para que no afecte las actualizaciones según yo-actual.
     # Crear una matriz de etiquetas con los valores de los constructos
     constructos_der <- session$userData$constructos_der
     constructos_izq <- session$userData$constructos_izq
@@ -2117,18 +2104,12 @@ output$pscd_show <- renderPlotly({
         der <- session$userData$constructos_der
         res <- paste(izq, der, sep="/\n")
         colnames(df) <- res
-        message(lista_actual)
         lista_estandarizada <- c()
         if(all(df[1, ] == 0)){
-          message("todo ceros....")
-          message(min_val, max_val)
           for(i in seq_along(lista_actual)){
-            message(lista_actual[i])
-            
             lista_estandarizada <- c(lista_estandarizada, as.numeric(lista_actual[i]))
           }
           lista_estandarizada <- reescalar(lista_estandarizada, min_val, max_val)
-          message(typeof(lista_estandarizada))
           for(i in 1:length(lista_actual)){
             df[1, i] <- lista_estandarizada[i]
           }
@@ -2147,6 +2128,9 @@ output$pscd_show <- renderPlotly({
     vv <- (hot_to_r(input$vector_editable_yo_actual))
     if(ncol(vv) == max_v){
       df_actual(vv)
+      wimp <- dataaa_w()
+      wimp$self[[2]] <- as.double(unlist(vv))
+      dataaa_w(wimp)
     }
   })
 
