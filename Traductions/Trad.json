@@ -959,6 +959,10 @@
     {
       "es": "Si se vuelve a comprar otra suscripción cuando sigue activa la actual, no se añade más tiempo a la suscripción. Por ello, es mejor configurar una renovación automática o esperar a que se termine la fecha de suscripción, para ampliar la actual.",
       "en": "If you purchase another subscription while the current one is still active, no more time is added to the subscription. Therefore, it is better to set up an automatic renewal or wait for the subscription date to end to extend the current one."
+    },
+    {
+      "es": "Monitoreo Yo-Actual",
+      "en": "Monitoring Me-Actual"
     }
     
 

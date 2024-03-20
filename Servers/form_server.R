@@ -1200,7 +1200,7 @@ form_server <- function(input, output, session){
             polo_der <- sapply(constructos_separados, function(x) x[2])
             constructos <- c()
             message(polo_izq, " ", polo_der)
-            # eso es un poco chapuza pero, iterando sobre esto, evito mostrar el constructo ya evaluado (diagonal)
+            # iterando sobre esto, evito mostrar el constructo ya evaluado (diagonal)
             iterador <- as.integer(iterador_constructos())
             for(j in 1:num_constructos){
                 actual <- valoracion_actual()[j]
