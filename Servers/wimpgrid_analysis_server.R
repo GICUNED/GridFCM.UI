@@ -1597,14 +1597,15 @@ onevent("click", "exit-controls-lab", {
       updateNumericInput(session, "pcsdindices_stop_iter", value=controles$pcind_n_stop_iter)
       df_Vind(actualizarVector(controles$pcind_vector))
 
-      # vector actual
-      df_actual(actualizarVector(controles$vector_actual))
-      wimp <- dataaa_w()
-      df <- as.data.frame(t(v))
-      lista <- strsplit(controles$vector_actual, ",")[[1]]
-      wimp$self[[2]] <- as.double(unlist(lista))
-      dataaa_w(wimp)
-
+      # vector 
+      if(!is.na(controles$vector_actual)){
+        df_actual(actualizarVector(controles$vector_actual))
+        wimp <- dataaa_w()
+        df <- as.data.frame(t(v))
+        lista <- strsplit(controles$vector_actual, ",")[[1]]
+        wimp$self[[2]] <- as.double(unlist(lista))
+        dataaa_w(wimp)
+      }
     }
   }
 
