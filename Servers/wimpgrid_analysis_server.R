@@ -1319,10 +1319,18 @@ onevent("click", "exit-controls-lab", {
 
   observeEvent(input$simdigraph_act_vector, {
       vv <- (hot_to_r(input$simdigraph_act_vector))
-      if(ncol(vv) == max_v){
-        df_V(vv)
-        df_Vpcsd(vv)
-        df_Vind(vv)
+      if(!any(is.na(vv))){
+        if(ncol(vv) == max_v){
+          df_V(vv)
+          df_Vpcsd(vv)
+          df_Vind(vv)
+        }
+      }
+      else{
+        showModal(modalDialog(
+          title = "Error",
+          "No se pueden tener campos vacíos en el vector. Vuelva a rellenarlo"
+        ))
       }
   })
 
@@ -1355,10 +1363,18 @@ onevent("click", "exit-controls-lab", {
 
   observeEvent(input$pcsdindices_act_vector, {
       vv <- (hot_to_r(input$pcsdindices_act_vector))
-      if(ncol(vv) == max_v){
-        df_Vind(vv)
-        df_V(vv)
-        df_Vpcsd(vv)
+      if(!any(is.na(vv))){
+        if(ncol(vv) == max_v){
+          df_Vind(vv)
+          df_V(vv)
+          df_Vpcsd(vv)
+        }
+      }
+      else{
+        showModal(modalDialog(
+          title = "Error",
+          "No se pueden tener campos vacíos en el vector. Vuelva a rellenarlo"
+        ))
       }
 
   })
@@ -1461,12 +1477,19 @@ onevent("click", "exit-controls-lab", {
 
   observeEvent(input$pcsd_act_vector, {
       vv <- (hot_to_r(input$pcsd_act_vector))
-      if(ncol(vv) == max_v){
-        df_Vpcsd(vv)
-        df_Vind(vv)
-        df_V(vv)
+      if(!any(is.na(vv))){
+        if(ncol(vv) == max_v){
+          df_Vpcsd(vv)
+          df_Vind(vv)
+          df_V(vv)
+        }
       }
-
+      else{
+        showModal(modalDialog(
+          title = "Error",
+          "No se pueden tener campos vacíos en el vector. Vuelva a rellenarlo"
+        ))
+      }
   })
 
   # Observer event para el input infer de pscd
@@ -1989,7 +2012,7 @@ output$pscd_show <- renderPlotly({
       $('#matriz_pesos_w').removeClass('tab-active');
       $('#volver_inicio_w').removeClass('tab-active');")
       
-      shinyjs::hide("guardarComo_w")
+      shinyjs::show("guardarComo_w")
       shinyjs::hide("exportar_w")
       shinyjs::hide("prueba_container_w")
       shinyjs::hide("matriz_pesos")
@@ -2126,13 +2149,20 @@ output$pscd_show <- renderPlotly({
 
   observeEvent(input$vector_editable_yo_actual, {
     vv <- (hot_to_r(input$vector_editable_yo_actual))
-    if(ncol(vv) == max_v){
-      df_actual(vv)
-      wimp <- dataaa_w()
-      wimp$self[[2]] <- as.double(unlist(vv))
-      dataaa_w(wimp)
+    if(!any(is.na(vv))){
+      if(ncol(vv) == max_v){
+        df_actual(vv)
+        wimp <- dataaa_w()
+        wimp$self[[2]] <- as.double(unlist(vv))
+        dataaa_w(wimp)
+      }
+    }
+    else{
+      showModal(modalDialog(
+        title = "Error",
+        "No se pueden tener campos vacíos en el vector. Vuelva a rellenarlo"
+      ))
     }
   })
-
 
 }

@@ -290,7 +290,7 @@ repgrid_analisis_server <- function(input, output, session) {
     max <- session$userData$repgrid_max
     message("minimos y maximos de la rejilla> ", min, "  ", max)
     INTc <- indices_list[["dilemmas"]][["Congruency"]] #Constructs congruency
-    INTc <- indexDilemma(repgrid_data,self=1,ideal=session$userData$num_col_repgrid-2, diff.congruent = ((max-min)/6), diff.discrepant = ((max-min)/2))
+    INTc <- indexDilemma(repgrid_data,self=1,ideal=session$userData$num_col_repgrid-2, diff.congruent = ((max-min)/6), diff.discrepant = ((max-min)/2)+0.001)
     print("dilemmmmmmmm")
     print(INTc$construct_classification)
     #print(indexDilemma(repgrid_data)[[1]])
@@ -307,7 +307,7 @@ repgrid_analisis_server <- function(input, output, session) {
     message(indices_list[["dilemmas"]][["Dilemmas"]])
     INTc <- indices_list[["dilemmas"]][["Dilemmas"]] #dilemmas
     
-    INTc <- indexDilemma(repgrid_data,self=1,ideal=session$userData$num_col_repgrid-2, diff.congruent = ((max-min)/6), diff.discrepant = ((max-min)/2))
+    INTc <- indexDilemma(repgrid_data,self=1,ideal=session$userData$num_col_repgrid-2, diff.congruent = ((max-min)/6), diff.discrepant = ((max-min)/2) +0.001)
     
     print(INTc$dilemmas_df)
     dilemmas_df <- INTc$dilemmas_df
