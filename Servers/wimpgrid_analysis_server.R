@@ -1600,14 +1600,14 @@ onevent("click", "exit-controls-lab", {
       df_Vind(actualizarVector(controles$pcind_vector))
 
       # vector 
-      if(!is.na(controles$vector_actual)){
+      #if(!is.na(controles$vector_actual)){
         df_actual(actualizarVector(controles$vector_actual))
         wimp <- dataaa_w()
         df <- as.data.frame(t(v))
         lista <- strsplit(controles$vector_actual, ",")[[1]]
         wimp$self[[2]] <- as.double(unlist(lista))
         dataaa_w(wimp)
-      }
+      #}
     }
   }
 
@@ -2022,6 +2022,49 @@ output$pscd_show <- renderPlotly({
       shinyjs::show("vector_yo_actual")
       shinyjs::show("guardarBD_w")
       permitirEjecucionYoActual <<- TRUE
+
+      output$vector_editable_yo_actual <- renderRHandsontable({
+        lista_actual <- list()
+
+        if(!is.null(session$userData$datos_wimpgrid)){
+          tabla <- tabla_manipulable_w()
+          nombres_columnas <- colnames(tabla)
+          min_val <- as.integer(nombres_columnas[1])
+          max_val <- as.integer(nombres_columnas[length(nombres_columnas)])
+          columnas <- length(nombres_columnas) -3
+          nombres_filas <- rownames(tabla)
+          filas <- length(nombres_filas)
+          for(i in 1:filas){
+            for(j in 1:columnas+1){
+              if(i+1 == j){
+                lista_actual[i] <- as.numeric(tabla[i, j])
+              }
+            }
+          }
+          if(!is.null(session$userData$constructos_izq) && !is.null(session$userData$constructos_der)){
+            # primera vez que se carga, hacerlo desde la rejilla
+            df <- df_actual()
+            izq <- session$userData$constructos_izq
+            der <- session$userData$constructos_der
+            res <- paste(izq, der, sep="/\n")
+            colnames(df) <- res
+            lista_estandarizada <- c()
+            message("df en output$vector_editable_yo_actual: ", df)
+            if(all(df[1, ] == 0)){
+              for(i in seq_along(lista_actual)){
+                lista_estandarizada <- c(lista_estandarizada, as.numeric(lista_actual[i]))
+              }
+              lista_estandarizada <- reescalar(lista_estandarizada, min_val, max_val)
+              for(i in 1:length(lista_actual)){
+                df[1, i] <- lista_estandarizada[i]
+              }
+              
+            }
+          }
+        }
+        rhandsontable(df, rowHeaders = NULL) %>% 
+          hot_table(stretchH="all")
+      })
     }
   })
  
