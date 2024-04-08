@@ -525,7 +525,6 @@ patient_server <- function(input, output, session){
     })
 
     observeEvent(input$button_id_abrir_w, {
-        message("entro en abrir wimp")
         abrir_wimpgrid()
     })
 
