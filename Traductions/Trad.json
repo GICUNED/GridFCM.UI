@@ -963,9 +963,10 @@
     {
       "es": "Monitoreo Yo-Actual",
       "en": "Monitoring Me-Actual"
+    },
+    {
+      "es": "No se pueden tener campos vacíos en el vector. Vuelva a rellenarlo",
+      "en": "Empty fields in the vector are not allowed. Please fill it in again."
     }
-    
-
-    
     
 ]}

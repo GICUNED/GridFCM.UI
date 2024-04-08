@@ -368,11 +368,14 @@ onevent("click", "exit-controls-lab", {
   if (!is.null(session$userData$datos_wimpgrid)) {
     message("entro en matrix_data")
     matrix_data <- session$userData$datos_wimpgrid[["scores"]][["weights"]]
+
+
   }
 
 
   dataaa_w <-  reactiveVal(session$userData$datos_wimpgrid)
 
+  permitirEjecucionYoActual <<- FALSE
 
 
   tabla_manipulable_w <- reactiveVal(tabla_aux)
@@ -1265,7 +1268,6 @@ onevent("click", "exit-controls-lab", {
   observeEvent(input$simdigraph_max_iter, {
 
     simdigraph_max_iter(input$simdigraph_max_iter)
-
   })
 
   
@@ -1329,7 +1331,7 @@ onevent("click", "exit-controls-lab", {
       else{
         showModal(modalDialog(
           title = "Error",
-          "No se pueden tener campos vacíos en el vector. Vuelva a rellenarlo"
+          i18n$t("No se pueden tener campos vacíos en el vector. Vuelva a rellenarlo")
         ))
       }
   })
@@ -1373,7 +1375,7 @@ onevent("click", "exit-controls-lab", {
       else{
         showModal(modalDialog(
           title = "Error",
-          "No se pueden tener campos vacíos en el vector. Vuelva a rellenarlo"
+          i18n$t("No se pueden tener campos vacíos en el vector. Vuelva a rellenarlo")
         ))
       }
 
@@ -1487,7 +1489,7 @@ onevent("click", "exit-controls-lab", {
       else{
         showModal(modalDialog(
           title = "Error",
-          "No se pueden tener campos vacíos en el vector. Vuelva a rellenarlo"
+          i18n$t("No se pueden tener campos vacíos en el vector. Vuelva a rellenarlo")
         ))
       }
   })
@@ -1549,7 +1551,7 @@ onevent("click", "exit-controls-lab", {
 
   })
 
-  df_actual <- reactiveVal(as.data.frame(t(v)))
+  #df_actual <- reactiveVal(as.data.frame(t(v)))
 
   actualizarVector <- function(string){
     df <- as.data.frame(t(v))
@@ -1599,12 +1601,12 @@ onevent("click", "exit-controls-lab", {
 
       # vector actual
       df_actual(actualizarVector(controles$vector_actual))
+      message("entro en actualizarrrrr", controles$vector_actual)
       wimp <- dataaa_w()
       df <- as.data.frame(t(v))
       lista <- strsplit(controles$vector_actual, ",")[[1]]
       wimp$self[[2]] <- as.double(unlist(lista))
       dataaa_w(wimp)
-
     }
   }
 
@@ -2004,7 +2006,7 @@ output$pscd_show <- renderPlotly({
     }
   })
 
-  observeEvent(input$vector_yo_actual_w, {
+  onclick("vector_yo_actual_w", {
     if (!is.null(session$userData$datos_wimpgrid)) {
       shinyjs::hide("editar_w")
 
@@ -2018,6 +2020,7 @@ output$pscd_show <- renderPlotly({
       shinyjs::hide("matriz_pesos")
       shinyjs::show("vector_yo_actual")
       shinyjs::show("guardarBD_w")
+      permitirEjecucionYoActual <<- TRUE
     }
   })
  
@@ -2128,6 +2131,7 @@ output$pscd_show <- renderPlotly({
         res <- paste(izq, der, sep="/\n")
         colnames(df) <- res
         lista_estandarizada <- c()
+        message("df en output$vector_editable_yo_actual: ", df)
         if(all(df[1, ] == 0)){
           for(i in seq_along(lista_actual)){
             lista_estandarizada <- c(lista_estandarizada, as.numeric(lista_actual[i]))
@@ -2140,29 +2144,33 @@ output$pscd_show <- renderPlotly({
         }
       }
     }
-
-  
-  rhandsontable(df, rowHeaders = NULL) %>% 
-    hot_table(stretchH="all")
-
+    rhandsontable(df, rowHeaders = NULL) %>% 
+      hot_table(stretchH="all")
   })
 
   observeEvent(input$vector_editable_yo_actual, {
-    vv <- (hot_to_r(input$vector_editable_yo_actual))
-    if(!any(is.na(vv))){
-      if(ncol(vv) == max_v){
-        df_actual(vv)
-        wimp <- dataaa_w()
-        wimp$self[[2]] <- as.double(unlist(vv))
-        dataaa_w(wimp)
+    vv <- isolate(hot_to_r(input$vector_editable_yo_actual))
+      if(permitirEjecucionYoActual){
+        message("entro en observeevent input vector_editable", vv)
+        if(!any(is.na(vv))){
+          if(ncol(vv) == max_v){
+            df_actual(vv)
+            wimp <- dataaa_w()
+            wimp$self[[2]] <- as.double(unlist(vv))
+            dataaa_w(wimp)
+          }
+        }
+        else{
+          showModal(modalDialog(
+            title = "Error",
+            i18n$t("No se pueden tener campos vacíos en el vector. Vuelva a rellenarlo")
+          ))
+        }
       }
-    }
-    else{
-      showModal(modalDialog(
-        title = "Error",
-        "No se pueden tener campos vacíos en el vector. Vuelva a rellenarlo"
-      ))
-    }
-  })
+  }, ignoreInit = TRUE)
+
+
+
+
 
 }
