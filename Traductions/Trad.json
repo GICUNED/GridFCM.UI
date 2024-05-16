@@ -45,7 +45,6 @@
       "es": "Nuevo análisis de rejilla",
       "en": "New grid analysis"
     },
-
     {
       "es": "Nueva rejilla",
       "en": "New grid analysis"
@@ -965,8 +964,24 @@
       "en": "Monitoring Me-Actual"
     },
     {
-      "es": "No se pueden tener campos vacíos en el vector. Vuelva a rellenarlo",
-      "en": "Empty fields in the vector are not allowed. Please fill it in again."
+      "es": "Nombre Usuario",
+      "en": "Username"
+    },
+    {
+      "es": "Colectivo",
+      "en": "Collective"
+    },
+    {
+      "es": "Rol",
+      "en": "Role"
+    },
+    {
+      "es": "Fecha Registro",
+      "en": "Registration Date"
+    },
+    {
+      "es": "Usuarios Registrados",
+      "en": "Registered Users "
     }
     
 ]}

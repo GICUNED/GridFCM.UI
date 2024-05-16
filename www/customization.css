@@ -3415,5 +3415,6 @@ color: #fff !important;
     display: none;
   }
 
-
-  
+#registered_table{
+  background-color: #D55BFF;
+}
