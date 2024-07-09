@@ -713,13 +713,42 @@ patient_server <- function(input, output, session){
         anotaciones <- input$anotaciones
         fecha_registro <- format(Sys.time(), format = "%Y-%m-%d %H:%M:%S", tz = "Europe/Madrid")
         fk_psicologo <- session$userData$id_psicologo # de momento 
+        message("nombre paciente...... ", nombre)
+        message(class(nombre))
+        message(typeof(nombre))
+        # Validaciones
+        if (is.null(nombre) || nombre == "") {
+            message("El nombre del paciente está vacío")
+            showNotification("El nombre del paciente no puede estar vacío", type = "error")
+            return()
+        }
         
-        if (is.numeric(edad) && edad >= 0 && edad <= 120) {
+        if (is.null(edad) || !is.numeric(edad) || edad < 0 || edad > 120) {
+            message("La edad del paciente no es válida")
+            showNotification("La edad del paciente debe ser un número entre 0 y 120", type = "error")
+            return()
+        }
+        
+        if (is.null(genero) || genero == "") {
+            message("El género del paciente está vacío")
+            showNotification("El género del paciente no puede estar vacío", type = "error")
+            return()
+        }
+        
+        if (is.null(diagnostico) || diagnostico == "") {
+            message("El diagnóstico del paciente está vacío")
+        }
+        
+        if (is.null(anotaciones)) {
+            anotaciones <- "" # Si las anotaciones están vacías, asignar una cadena vacía
+        }
+        tryCatch({
             # Insertar los datos en la base de datos
+            message("000")
             query <- sprintf("INSERT INTO paciente (nombre, edad, genero, diagnostico, anotaciones, fecha_registro) VALUES ('%s', %d, '%s', '%s', '%s', '%s')",
                             nombre, edad, genero, diagnostico, anotaciones, fecha_registro)
             DBI::dbExecute(con, query)
-
+            message("111")
             query_id_paciente <- sprintf("SELECT id FROM paciente WHERE nombre = '%s' and anotaciones = '%s' and fecha_registro = '%s'", nombre, anotaciones, fecha_registro)
             id_paciente <- DBI::dbGetQuery(con, query_id_paciente)
             id_paciente <- as.integer(id_paciente)
@@ -728,25 +757,20 @@ patient_server <- function(input, output, session){
             query2 <- sprintf("INSERT INTO psicologo_paciente (fk_psicologo, fk_paciente) VALUES (%d, %d)", id_psicologo, id_paciente)
             DBI::dbExecute(con, query2)
             DBI::dbDisconnect(con)
-
+            message("222")
             # Vaciar los campos del formulario
             updateTextInput(session, "nombre", value = "")
             updateNumericInput(session, "edad", value = 0)
             updateSelectInput(session, "genero", selected = "")
             updateTextInput(session, "diagnostico", value = "")
             updateTextInput(session, "anotaciones", value = "")
-
+            message("333")
             renderizarTabla()
             shinyjs::hide("patientForm")
-        }
-        else{
-            mensaje <- paste("El valor debe estar entre el rango 0 y 120.")
-            showModal(modalDialog(
-                title = "Error",
-                mensaje,
-                easyClose = TRUE
-            ))
-        }
+        }, error = function(e) {
+            message("Error al insertar en la base de datos: ", e$message)
+            showNotification("Error al guardar los datos del paciente", type = "error")
+        })
     })
 
     output$paciente_simulacion_header <- renderText({

@@ -998,18 +998,18 @@ onevent("click", "exit-controls-lab", {
       if(graph == i18n$t("simdigrafo")) {
 
         if(i18n$get_translation_language()=="es") {
-          scn <- scenariomatrix(dataaa_w(),act.vector= df_V(),infer = "linear transform",
+          scn <- scenariomatrix(dataaa_w(),act.vector= df_V(),infer = simdigraph_infer(),
 
-                                thr = "linear", max.iter = simdigraph_max_iter(), e = simdigraph_e(),
+                                thr = simdigraph_thr(), max.iter = simdigraph_max_iter(), e = simdigraph_e(),
 
                                 stop.iter = sim_stop_it)
 
           widget_sim <- simdigraph.vis(scn,niter=simdigraph_niter(), layout = translate_word("en",simdigraph_layout()), color = translate_word("en",simdigraph_color()))
           saveWidget(widget = widget_sim, file = file, selfcontained = TRUE)
         } else {
-          scn <- scenariomatrix(dataaa_w(),act.vector= df_V(),infer = "linear transform",
+          scn <- scenariomatrix(dataaa_w(),act.vector= df_V(),infer = simdigraph_infer(),
 
-                                thr = "linear", max.iter = simdigraph_max_iter(), e = simdigraph_e(),
+                                thr = simdigraph_thr(), max.iter = simdigraph_max_iter(), e = simdigraph_e(),
 
                                 stop.iter = sim_stop_it)
 
@@ -1125,9 +1125,9 @@ onevent("click", "exit-controls-lab", {
   simdigraph_wimp <- reactiveVal()
 
   # Función de propagación
-  simdigraph_infer <- reactiveVal("linear transform")
+  simdigraph_infer <- reactiveVal("self dynamics")
   # Función umbral
-  simdigraph_thr <- reactiveVal("linear")
+  simdigraph_thr <- reactiveVal("saturation")
   # Nº de iteraciones máximas
   simdigraph_max_iter <- reactiveVal(30)
 
@@ -1142,9 +1142,9 @@ onevent("click", "exit-controls-lab", {
 
   act_vector <- reactiveVal()
 
-  infer <- reactiveVal("linear transform")
+  infer <- reactiveVal("self dynamics")
 
-  thr <- reactiveVal("linear")
+  thr <- reactiveVal("saturation")
 
   max_iter <- reactiveVal(30)
 
@@ -1160,9 +1160,9 @@ onevent("click", "exit-controls-lab", {
 
   pscd_act_vector <- reactiveVal(0)
 
-  pscd_infer <- reactiveVal("linear transform")
+  pscd_infer <- reactiveVal("self dynamics")
 
-  pscd_thr <- reactiveVal("linear")
+  pscd_thr <- reactiveVal("saturation")
   # Nº de iteraciones máximas
   pscd_max_iter <- reactiveVal(30)
   # Valor diferencial
@@ -1496,9 +1496,10 @@ onevent("click", "exit-controls-lab", {
 
   # Observer event para el input infer de pscd
 
-  observeEvent(input$pscd_infer, {
+  observeEvent(input$pcsd_infer, {
 
-    pscd_infer(input$pscd_infer)
+    pscd_infer(input$pcsd_infer)
+    message("modifico pscdinferrrr")
 
   })
 
@@ -1506,9 +1507,9 @@ onevent("click", "exit-controls-lab", {
 
   # Observer event para el input thr de pscd
 
-  observeEvent(input$pscd_thr, {
+  observeEvent(input$pcsd_thr, {
 
-    pscd_thr(input$pscd_thr)
+    pscd_thr(input$pcsd_thr)
 
   })
 
@@ -1744,9 +1745,9 @@ output$graph_output_laboratorio <- renderUI({
         print(paste("simdig:",i18n$get_translation_language()))
 
         print(translate_word("en", simdigraph_infer()))
-        scn <- scenariomatrix(dataaa_w(),act.vector= df_V(),infer = "linear transform",
+        scn <- scenariomatrix(dataaa_w(),act.vector= df_V(),infer = simdigraph_infer(),
 
-                              thr = "linear", max.iter = simdigraph_max_iter(), e = simdigraph_e(),
+                              thr = simdigraph_thr(), max.iter = simdigraph_max_iter(), e = simdigraph_e(),
 
                               stop.iter = sim_stop_it)
         
@@ -1758,14 +1759,11 @@ output$graph_output_laboratorio <- renderUI({
         
       }
       else{
+        thr = simdigraph_thr()
 
-        #infer = simdigraph_infer(),
+        scn <- scenariomatrix(dataaa_w(),act.vector= df_V(),infer = simdigraph_infer(),
 
-        #                       thr = simdigraph_thr()
-
-        scn <- scenariomatrix(dataaa_w(),act.vector= df_V(),infer = "linear transform",
-
-                              thr = "linear", max.iter = simdigraph_max_iter(), e = simdigraph_e(),
+                              thr = simdigraph_thr(), max.iter = simdigraph_max_iter(), e = simdigraph_e(),
 
                               stop.iter = sim_stop_it)
 
@@ -1794,12 +1792,13 @@ output$graph_output_laboratorio <- renderUI({
       #pcsd(scn, vline =pscdit)
 
     } else if (graph == "pcsdindices") {
-
+      message("entro en pcsdindices..")
+      message(infer())
       if(i18n$get_translation_language()=="es") {
 
-        scn <- scenariomatrix(dataaa_w(),act.vector= df_Vind(),infer = translate_word("en",infer()),
+        scn <- scenariomatrix(dataaa_w(),act.vector= df_Vind(),infer = infer(),
 
-                              thr = translate_word("en",thr()), max.iter = max_iter(), e = e(),
+                              thr = thr(), max.iter = max_iter(), e = e(),
 
                               stop.iter = stop_iter())
       } else {
@@ -1825,9 +1824,9 @@ output$convergence <- renderText({
 
     if(i18n$get_translation_language()=="es") {
 
-    scn <- scenariomatrix(dataaa_w(),act.vector= df_Vind(),infer = translate_word("en",infer()),
+    scn <- scenariomatrix(dataaa_w(),act.vector= df_Vind(),infer = infer(),
 
-                           thr = translate_word("en",thr()), max.iter = max_iter(), e = e(),
+                           thr = thr(), max.iter = max_iter(), e = e(),
 
                            stop.iter = stop_iter())
 
@@ -1860,9 +1859,9 @@ output$summary <- DT::renderDataTable({
 
   if(i18n$get_translation_language()=="es") {
 
-    scn <- scenariomatrix(dataaa_w(),act.vector= df_Vind(),infer = translate_word("en",infer()),
+    scn <- scenariomatrix(dataaa_w(),act.vector= df_Vind(),infer = infer(),
 
-                           thr = translate_word("en",thr()), max.iter = max_iter(), e = e(),
+                           thr = thr(), max.iter = max_iter(), e = e(),
 
                            stop.iter = stop_iter())
 
@@ -1891,9 +1890,9 @@ output$auc <- DT::renderDataTable({
 
     if(i18n$get_translation_language()=="es") {
 
-    scn <- scenariomatrix(dataaa_w(),act.vector= df_Vind(),infer = translate_word("en",infer()),
+    scn <- scenariomatrix(dataaa_w(),act.vector= df_Vind(),infer = infer(),
 
-                           thr = translate_word("en",thr()), max.iter = max_iter(), e = e(),
+                           thr = thr(), max.iter = max_iter(), e = e(),
 
                            stop.iter = stop_iter())
 
@@ -1919,9 +1918,9 @@ output$stability <- DT::renderDataTable({
 
     if(i18n$get_translation_language()=="es") {
 
-    scn <- scenariomatrix(dataaa_w(),act.vector= df_Vind(),infer = translate_word("en",infer()),
+    scn <- scenariomatrix(dataaa_w(),act.vector= df_Vind(),infer = infer(),
 
-                           thr = translate_word("en",thr()), max.iter = max_iter(), e = e(),
+                           thr = thr(), max.iter = max_iter(), e = e(),
 
                            stop.iter = stop_iter())
 

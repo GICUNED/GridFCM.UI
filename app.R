@@ -35,7 +35,7 @@ source("global.R")
 source("R/GraphFunctions.R")
 source("R/HideFunctions.R")
 source("R/ImportFunctions.R")
-source("R/IndicesSummary.R")
+source("R/IndicesSummary.R")  
 source("R/PCSDindicesFunctions.R")
 source("R/SimulationFunctions.R")
 source("R/WimpIndicesFunctions.R")
@@ -70,7 +70,6 @@ source("Servers/suggestion_server.R")
 source("Servers/user_page_server.R")
 source("Servers/plan_subscription_server.R")
 source("Servers/success_payment_server.R")
-
 
 #DB
 source("DB/establish_con.R")
@@ -848,19 +847,19 @@ observeEvent(input$invitado, {
                       choices = i18n_r()$t(c("rojo/verde", "escala de grises")))
 
     updateSelectInput(session, "simdigraph_infer",
-                      choices = i18n_r()$t(c("transformacion lineal", "otra opción")))
+                      choices = c("self dynamics", "impact dynamics"))
     updateSelectInput(session, "simdigraph_thr",
-                      choices = i18n_r()$t(c("lineal","otra opción")))
+                      choices = c("saturation", "tanh", "none"))
 
     updateSelectInput(session, "pcsd_infer",
-                      choices = i18n_r()$t(c("transformacion lineal", "otra opción")))
+                      choices = c("self dynamics", "impact dynamics"))
     updateSelectInput(session, "pcsd_thr",
-                      choices = i18n_r()$t(c("lineal", "otra opción")))
+                      choices = c("saturation", "tanh", "none"))
 
     updateSelectInput(session, "pcsdindices_infer",
-                      choices = i18n_r()$t(c("transformacion lineal", "transformación sigmoidea", "transformación binaria")))
+                      choices = c("self dynamics", "impact dynamics"))
     updateSelectInput(session, "pcsdindices_thr",
-                      choices = i18n_r()$t(c("lineal", "sigmoide", "binario")))
+                      choices = c("saturation", "tanh", "none"))
 
 
     updateSelectInput(session, "graph_selector",
