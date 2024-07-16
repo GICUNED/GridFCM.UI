@@ -28,6 +28,14 @@ scenariomatrix <- function(wimp, act.vector = NA, infer = "self dynamics",
     stop("The weight matrix and the activation vector must have compatible dimensions.")
   }
 
+  ideal <- wimp$ideal$standarized
+  swap.vector <- ideal/abs(ideal)
+  swap.vector[is.nan(swap.vector)] <- 1
+
+  if(infer == "self dynamics"){
+  act.vector <- act.vector * swap.vector
+  }
+  
   wimp <- .align.wimp(wimp,exclude.dilemmatics = exclude.dilemmatics)
   dim <- length(wimp$constructs$constructs)
   scene.matrix <- t(matrix(wimp[[3]][[2]]))

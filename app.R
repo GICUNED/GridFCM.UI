@@ -77,7 +77,6 @@ source("DB/gestion_excel.R")
 # source("DB/sync_stripe_db_process_light.R")
 
 
-
 menu <- tags$ul(tags$li(a(
   class = "item", href = route_link(""), "Inicio"
 )),
