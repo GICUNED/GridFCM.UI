@@ -4,8 +4,8 @@ repgrid_analysis_ui <- fluidPage( class="header-tab rg-diff",
   fluidRow( class = ("flex-container-titles mt-2"),
 
     h2(i18n$t("Análisis RepGrid"), class = "pagetitlecustom mt-2"),
-    icon("circle-question", id = "tooltip-rg-analysis", class="tooltip-icon mb-4 ml-2"),
-    div(id="context-rg-analysis", class="tooltip-container", icon("circle-xmark", id = "exit-rg-analysis-tooltip", class="exit-tooltip fa-solid"), p(i18n$t("Esta página te permite..."),  class = "desccustom-tooltip")),
+    #icon("circle-question", id = "tooltip-rg-analysis", class="tooltip-icon mb-4 ml-2"),
+    #div(id="context-rg-analysis", class="tooltip-container", icon("circle-xmark", id = "exit-rg-analysis-tooltip", class="exit-tooltip fa-solid"), p(i18n$t("Esta página te permite..."),  class = "desccustom-tooltip")),
   ),
 
   # Mostrar el gráfico seleccionado usando conditionalPanel
@@ -34,9 +34,12 @@ shinyjs::hidden(div(id = "rg-analysis-content",
                 h4(i18n$t("Análisis Bidimensional"), class = "pagetitle2custom")
               ),
               downloadButton("btn_download_2d", i18n$t("Descargar Gráfico")),
-              actionButton("enter_fs_5", label=NULL, status="primary", icon = icon("maximize"), onclick = "openFullscreen(document.getElementById('rg-analysis-content'));"),
-              actionButton("exit_fs_5", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "exitFullscreen();"),
-                
+              actionButton("enter_fs_6", label=NULL, status="primary", icon = icon("maximize"), onclick = "openFullscreen(document.getElementById('rg-analysis-content'));"),
+              actionButton("exit_fs_6", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "exitFullscreen();"),
+              
+              actionButton("mb_enter_fs_6", label=NULL, status="primary", icon = icon("maximize"), onclick = "toggleFullscreenSimulation($('#rg-analysis-content'));"),
+              actionButton("mb_exit_fs_6", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "toggleFullscreenSimulation($('#rg-analysis-content'));")
+
             ),
           plotOutput("biplot2d_plot"),
         ),
@@ -54,9 +57,12 @@ shinyjs::hidden(div(id = "rg-analysis-content",
               icon("circle-info"),
               p(i18n$t("Haz click y arrastra para Interactuar."),  class = "desccustom-hint"),
             ),
-            actionButton("enter_fs_6", label=NULL, status="primary", icon = icon("maximize"), onclick = "openFullscreen(document.getElementById('rg-analysis-content'));"),
-            actionButton("exit_fs_6", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "exitFullscreen();"),
-                
+            actionButton("enter_fs_7", label=NULL, status="primary", icon = icon("maximize"), onclick = "openFullscreen(document.getElementById('rg-analysis-content'));"),
+            actionButton("exit_fs_7", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "exitFullscreen();"),
+            
+            actionButton("mb_enter_fs_7", label=NULL, status="primary", icon = icon("maximize"), onclick = "toggleFullscreenSimulation($('#rg-analysis-content'));"),
+            actionButton("mb_exit_fs_7", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "toggleFullscreenSimulation($('#rg-analysis-content'));")
+
           ),
           rglwidgetOutput("biplot3d_plot"),
           
@@ -81,7 +87,8 @@ shinyjs::hidden(div(id = "rg-analysis-content",
                               "Índices Cognitivos",
                               "Dilemas"
                   ),
-        ) ,
+                  selectize = FALSE
+        ),
     ),
     ),
  
@@ -98,8 +105,8 @@ shinyjs::hidden(div(id = "rg-analysis-content",
           icon("network-wired"),
           h4(i18n$t("Análisis por Conglomerados"), class = "pagetitle2custom")
         ),
-        #actionButton("enter_fs_7", i18n$t("Expandir"), status="primary", icon = icon("maximize"), onclick = "openFullscreen(document.getElementById('rg-analysis-content'));"),
-        #actionButton("exit_fs_7", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "exitFullscreen();"),
+        #actionButton("enter_fs_8", i18n$t("Expandir"), status="primary", icon = icon("maximize"), onclick = "openFullscreen(document.getElementById('rg-analysis-content'));"),
+        #actionButton("exit_fs_8", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "exitFullscreen();"),
              
       ),
 
@@ -135,8 +142,8 @@ shinyjs::hidden(div(id = "rg-analysis-content",
         h4(i18n$t("Índices"), class = "pagetitle2custom mt-2 mb-2"),
       ),
 
-        #actionButton("enter_fs_8", i18n$t("Expandir"), status="primary", icon = icon("maximize"), onclick = "openFullscreen(document.getElementById('rg-analysis-content'));"),
-        #actionButton("exit_fs_8", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "exitFullscreen();"),
+        #actionButton("enter_fs_9", i18n$t("Expandir"), status="primary", icon = icon("maximize"), onclick = "openFullscreen(document.getElementById('rg-analysis-content'));"),
+        #actionButton("exit_fs_9", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "exitFullscreen();"),
             
       ),
       fluidRow(class = "table-container mt-4",
@@ -171,8 +178,8 @@ shinyjs::hidden(div(id = "rg-analysis-content",
       icon("calculator"),
       h4(i18n$t("Índices y Valores Matemáticos"), class = "pagetitle2custom mt-2 mb-2")
     ),
-      #actionButton("enter_fs_9", i18n$t("Expandir"), status="primary", icon = icon("maximize"), onclick = "openFullscreen(document.getElementById('rg-analysis-content'));"),
-      #actionButton("exit_fs_9", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "exitFullscreen();"),
+      #actionButton("enter_fs_10", i18n$t("Expandir"), status="primary", icon = icon("maximize"), onclick = "openFullscreen(document.getElementById('rg-analysis-content'));"),
+      #actionButton("exit_fs_10", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "exitFullscreen();"),
            
     ),
     fluidRow(

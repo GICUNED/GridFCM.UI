@@ -7,13 +7,15 @@ CREATE TABLE IF NOT EXISTS psicologo (
     token TEXT,
     refresh_token TEXT,
     rol VARCHAR,
-    colectivo VARCHAR
+    colectivo VARCHAR DEFAULT 'Otro',
+    fecha_registro TIMESTAMP DEFAULT (CURRENT_TIMESTAMP AT TIME ZONE 'Europe/Madrid')
 );
 
 -- Tabla para almacenar los usuarios demo para luego enviar publi
 CREATE TABLE IF NOT EXISTS usuario_demo (
   id serial PRIMARY KEY,
-  email varchar(75) NOT NULL
+  email varchar(75) NOT NULL,
+  fecha_registro TIMESTAMP DEFAULT (CURRENT_TIMESTAMP AT TIME ZONE 'Europe/Madrid')
 );
 
 -- Crear tabla paciente si no existe
@@ -87,7 +89,8 @@ CREATE TABLE IF NOT EXISTS wimpgrid_params (
     pcind_n_stop_iter INTEGER,
     pcind_valor_diferencial DECIMAL(8, 6),
     pcind_vector varchar(150),
-    -- vector
+    -- vector actual
+    vector_actual varchar(150),
 
     FOREIGN KEY(fk_wimpgrid, fk_fila, fk_columna) REFERENCES wimpgrid_xlsx(id, fila, columna)
 );

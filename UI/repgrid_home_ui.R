@@ -56,7 +56,6 @@ shinyjs::hidden(fluidRow(id="repgrid_home_warn",class="mb-4 mt-4 gap-2 justify-c
     div(class=("row"), id = "prueba_container",
       # Mostrar los datos de prueba
       plotOutput("bert")
-      # plotOutput("bert")
     ),
   ))
 

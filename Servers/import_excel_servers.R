@@ -1,4 +1,7 @@
 import_excel_server <- function(input, output, session) {
+  shinyjs::disable("importar_datos")
+  shinyjs::disable("importar_datos_w")
+  shinyjs::disable("importar_formulario")
   rol <- session$userData$rol
   con <- establishDBConnection()
   query <- sprintf("SELECT COUNT(DISTINCT id) as num FROM wimpgrid_xlsx where fk_paciente = %d", session$userData$id_paciente) # de momento
@@ -7,26 +10,36 @@ import_excel_server <- function(input, output, session) {
   num_rep <- DBI::dbGetQuery(con, query2)
   DBI::dbDisconnect(con)
   if(!is.null(rol) && rol == "usuario_gratis"){
-    if(num_rep$num >= 1){
-      shinyjs::disable("importar_datos")
-    }
-    if(num_wimp$num >= 1){
-      shinyjs::disable("importar_datos_w")
-    }
     if((num_rep$num + num_wimp$num) >= 2){
       shinyjs::disable("importar_formulario")
       shinyjs::hide("form-page")
     }
-  }
-  
-  observe(
-    if(is.null(input$archivo_repgrid$datapath)){
+    else{
+      shinyjs::enable("importar_formulario")
+      shinyjs::show("form-page")
+    }
+    if(!is.null(rol) && rol == "usuario_gratis" && num_rep$num >= 1){
       shinyjs::disable("importar_datos")
+      shinyjs::hide("archivo_repgrid")
     }
     else{
       shinyjs::enable("importar_datos")
+      shinyjs::show("archivo_repgrid")
     }
-  )
+    if(!is.null(rol) && rol == "usuario_gratis" && num_wimp$num >= 1){
+      shinyjs::disable("importar_datos_w")
+      shinyjs::hide("archivo_wimpgrid")
+    }
+    else{
+      shinyjs::enable("importar_datos_w")
+      shinyjs::show("archivo_wimpgrid")
+    }
+  }
+  else{
+    shinyjs::enable("importar_datos")
+    shinyjs::enable("importar_datos_w")
+    shinyjs::enable("importar_formulario")
+  }
 
   observeEvent(input$importar_datos, {
     id_paciente <- session$userData$id_paciente
@@ -60,7 +73,12 @@ import_excel_server <- function(input, output, session) {
         excel_repgrid <- if (!is.null(input$archivo_repgrid)) {
           read.xlsx(ruta_destino_rep)
         }
-
+        # escala
+        nombres_columnas <- colnames(excel_repgrid)
+        min <- as.numeric(nombres_columnas[1])
+        max <- as.numeric(nombres_columnas[length(nombres_columnas)])
+        session$userData$repgrid_min <- min
+        session$userData$repgrid_max <- max
 
         # aqui voy a comprobar si estoy importando el excel exportado con los numeros como strings
         columnas_a_convertir <- 2:(ncol(excel_repgrid) - 1)
@@ -83,7 +101,7 @@ import_excel_server <- function(input, output, session) {
         }
         #message(paste("num row", num_rows))
         session$userData$num_row_repgrid <- num_rows
-        session$userData$datos_repgrid <- datos_repgrid
+        session$userData$datos_repgrid <- alignByIdeal(datos_repgrid, ncol(datos_repgrid))
         system(paste0("rm ",input$archivo_repgrid$datapath))
         file.remove(ruta_destino_rep)
         if (!is.null(datos_repgrid)) {
@@ -126,16 +144,6 @@ import_excel_server <- function(input, output, session) {
     }
 
   })
-
-
-  observe(
-    if(is.null(input$archivo_wimpgrid$datapath)){
-      shinyjs::disable("importar_datos_w")
-    }
-    else{
-      shinyjs::enable("importar_datos_w")
-    }
-  )
 
   observeEvent(input$importar_datos_w, {
     id_paciente <- session$userData$id_paciente

@@ -283,14 +283,17 @@ patient_server <- function(input, output, session){
                 ruta_destino <- tempfile(fileext = ".xlsx")
                 id <- decodificar_BD_excel('repgrid_xlsx', ruta_destino, id_paciente, session$userData$fecha_repgrid)
                 session$userData$id_repgrid <- id
+                
                 datos_repgrid <- OpenRepGrid::importExcel(ruta_destino)
+                
                 excel_repgrid <- read.xlsx(ruta_destino)
                 file.remove(ruta_destino)
-                #convertir nums a formato numerico y no texto como estaba importado
+                # convertir nums a formato numerico y no texto como estaba importado
                 columnas_a_convertir <- 2:(ncol(excel_repgrid) - 1)
                 # Utiliza lapply para aplicar la conversión a las columnas seleccionadas
                 excel_repgrid[, columnas_a_convertir] <- lapply(excel_repgrid[, columnas_a_convertir], as.numeric)
-                #constructos
+                
+                # constructos
                 constructos_izq <- excel_repgrid[1:nrow(excel_repgrid), 1]
                 constructos_der <- excel_repgrid[1:nrow(excel_repgrid), ncol(excel_repgrid)]
                 session$userData$constructos_izq_rep <- constructos_izq
@@ -300,7 +303,14 @@ patient_server <- function(input, output, session){
                 session$userData$num_col_repgrid <- num_columnas
                 num_rows <- nrow(session$userData$datos_to_table)
                 session$userData$num_row_repgrid <- num_rows
-                session$userData$datos_repgrid <- datos_repgrid
+                # escala
+                nombres_columnas <- colnames(excel_repgrid)
+                min <- as.numeric(nombres_columnas[1])
+                max <- as.numeric(nombres_columnas[length(nombres_columnas)])
+                session$userData$repgrid_min <- min
+                session$userData$repgrid_max <- max
+
+                session$userData$datos_repgrid <- alignByIdeal(datos_repgrid, ncol(datos_repgrid))
                 #repgrid_fecha_seleccionada(NULL)
                 if (!is.null(datos_repgrid)) {
                     # Solo archivo RepGrid cargado, navegar a RepGrid Home
@@ -323,8 +333,6 @@ patient_server <- function(input, output, session){
                     ")
 
                     shinyjs::show("controls-panel-rg")
-        
-
                 } 
             }
         },
@@ -332,7 +340,7 @@ patient_server <- function(input, output, session){
             # runjs("window.location.href = '/#!/repgrid';")
             message(paste("error: ", e))
             showModal(modalDialog(
-                title = i18n$t("Esta simulación se guardó con errores. Bórrela y vuélvela a crear."),
+                title = i18n$t("Esta simulación se guardó con errores. Bórrela y vuelva a crearla."),
                 footer = tagList(
                     modalButton("OK"),
                 )
@@ -438,6 +446,35 @@ patient_server <- function(input, output, session){
         
     }
 
+    cerrar_rejilla <- function(id_paciente, fecha_repgrid, fecha_wimpgrid){
+        con <- establishDBConnection()
+        if(!is.null(fecha_repgrid) && !is.null(session$userData$id_repgrid)){
+            query <- sprintf("SELECT distinct(id) from repgrid_xlsx where fecha_registro='%s' and fk_paciente=%d", fecha_repgrid, id_paciente) 
+            id <- DBI::dbGetQuery(con, query)
+            if(session$userData$id_repgrid == id){
+                show("repgrid_home_warn")
+                show("repgrid_warning")
+                hide("rg-data-content")
+                hide("rg-analysis-content")
+            }  
+        }
+
+        if(!is.null(fecha_wimpgrid) && !is.null(session$userData$id_wimpgrid)){
+            query <- sprintf("SELECT distinct(id) from wimpgrid_xlsx where fecha_registro='%s' and fk_paciente=%d", fecha_wimpgrid, id_paciente) 
+            id <- DBI::dbGetQuery(con, query)$id
+            if(session$userData$id_wimpgrid == id){
+                show("id_warn")
+                show("vis_warn")
+                show("lab_warn")
+                hide("wg-data-content")
+                hide("wg-vis-content")
+                hide("wg-lab-content")
+            }
+        }
+
+        DBI::dbDisconnect(con)
+    }
+
     borrarSimulacion <- function(){
         nombrepaciente <- nombrePaciente()
         showModal(modalDialog(
@@ -445,7 +482,7 @@ patient_server <- function(input, output, session){
             sprintf(i18n$t("¿Está seguro de que quiere eliminar esta simulación de %s? Esto no se puede deshacer."), nombrepaciente),
             footer = tagList(
             modalButton(i18n$t("Cancelar")),
-            actionButton("confirmarBorradoSimulacion", i18n$t("Confirmar"), class = "btn-danger")
+            actionButton("confirmarBorradoSimulacion", i18n$t("Confirmar"), status ="danger", icon = icon("trash-can"))
             )
         ))
     }
@@ -461,11 +498,13 @@ patient_server <- function(input, output, session){
         if (!is.null(fecha_rep) || !is.null(fecha_wimp)) {
             con <- establishDBConnection()
             if (!is.null(fecha_rep)) {
+                cerrar_rejilla(id_paciente, fecha_rep, NULL)
                 query <- sprintf("DELETE FROM repgrid_xlsx where fecha_registro = '%s' and fk_paciente = %d", fecha_rep, id_paciente)
                 DBI::dbExecute(con, query)
                 cargar_fechas()
             }
             if (!is.null(fecha_wimp)) {
+                cerrar_rejilla(id_paciente, NULL, fecha_wimp)
                 id_wx <- as.integer(DBI::dbGetQuery(con, sprintf("SELECT distinct(wp.fk_wimpgrid) from wimpgrid_params as wp, wimpgrid_xlsx as wx where wp.fk_wimpgrid = wx.id and wx.fk_paciente = %d and wx.fecha_registro = '%s'", 
                                                     user_data$selected_user_id, fecha_wimp)))
                 if (!is.na(id_wx)) {
@@ -486,7 +525,6 @@ patient_server <- function(input, output, session){
     })
 
     observeEvent(input$button_id_abrir_w, {
-        message("entro en abrir wimp")
         abrir_wimpgrid()
     })
 
@@ -499,24 +537,29 @@ patient_server <- function(input, output, session){
     })
 
     observeEvent(input$importarGridPaciente, {
-        shinyjs::hide("patientSimulations")
-        shinyjs::show("import-page")
-        shinyjs::show("form-page")
-        shinyjs::show("excel-page")
-        session$userData$id_paciente <- user_data$selected_user_id
-        proxy <- dataTableProxy("user_table")
-        proxy %>% selectRows(NULL)
-        session$userData$rol <- rol
-        import_excel_server(input, output, session)
-        form_server(input, output, session)
-        
-         runjs("
-            setTimeout(function () {
-                window.location.href = '/#!/import';
-                window.scrollTo(0,0);
-            }, 10);
-        ")
-        # es una opcion esto session$reload()
+        tryCatch({
+            shinyjs::hide("patientSimulations")
+            shinyjs::show("import-page")
+            shinyjs::show("form-page")
+            shinyjs::show("excel-page")
+            session$userData$id_paciente <- user_data$selected_user_id
+            proxy <- dataTableProxy("user_table")
+            proxy %>% selectRows(NULL)
+            session$userData$rol <- rol
+            import_excel_server(input, output, session)
+            form_server(input, output, session)
+            
+            runjs("
+                setTimeout(function () {
+                    window.location.href = '/#!/import';
+                    window.scrollTo(0,0);
+                }, 10);
+            ")
+        },
+        error = function(e) {
+            message("error ", e)
+            session$reload()
+        })
     })
 
     shinyjs::onevent("click", "patientIndicator", {
@@ -580,7 +623,7 @@ patient_server <- function(input, output, session){
                 i18n$t("¿Está seguro de que quiere eliminar al paciente? Se borrarán todas sus simulaciones"),
                 footer = tagList(
                     modalButton(i18n$t("Cancelar")),
-                    actionButton("confirmarBorrado", i18n$t("Confirmar"), class = "btn-danger")
+                    actionButton("confirmarBorrado", i18n$t("Confirmar"), status ="danger", icon = icon("trash-can"))
                 )
             ))
         }
@@ -592,12 +635,24 @@ patient_server <- function(input, output, session){
             )
         }
     })
+
     observeEvent(input$confirmarBorrado, {
         removeModal()  # Cierra la ventana modal de confirmación
-        # habría que sacar un mensajito diciendo seguro que quiere eliminar...
         con <- establishDBConnection()
-        #borrar simulaciones asociadas
-
+        if(!is.null(session$userData$id_wimpgrid)){
+            show("id_warn")
+            show("vis_warn")
+            show("lab_warn")
+            hide("wg-data-content")
+            hide("wg-vis-content")
+            hide("wg-lab-content")
+        }
+        if(!is.null(session$userData$id_repgrid)){
+            show("repgrid_home_warn")
+            show("repgrid_warning")
+            hide("rg-data-content")
+            hide("rg-analysis-content")
+        }
         queryRep <- sprintf("DELETE FROM repgrid_xlsx where fk_paciente = %d", user_data$selected_user_id)
         DBI::dbExecute(con, queryRep)
         id_wx <- DBI::dbGetQuery(con, sprintf("SELECT distinct(wp.fk_wimpgrid) from wimpgrid_params as wp, wimpgrid_xlsx as wx where wp.fk_wimpgrid = wx.id and wx.fk_paciente = %d", user_data$selected_user_id))
@@ -658,13 +713,42 @@ patient_server <- function(input, output, session){
         anotaciones <- input$anotaciones
         fecha_registro <- format(Sys.time(), format = "%Y-%m-%d %H:%M:%S", tz = "Europe/Madrid")
         fk_psicologo <- session$userData$id_psicologo # de momento 
+        message("nombre paciente...... ", nombre)
+        message(class(nombre))
+        message(typeof(nombre))
+        # Validaciones
+        if (is.null(nombre) || nombre == "") {
+            message("El nombre del paciente está vacío")
+            showNotification("El nombre del paciente no puede estar vacío", type = "error")
+            return()
+        }
         
-        if (is.numeric(edad) && edad >= 0 && edad <= 120) {
+        if (is.null(edad) || !is.numeric(edad) || edad < 0 || edad > 120) {
+            message("La edad del paciente no es válida")
+            showNotification("La edad del paciente debe ser un número entre 0 y 120", type = "error")
+            return()
+        }
+        
+        if (is.null(genero) || genero == "") {
+            message("El género del paciente está vacío")
+            showNotification("El género del paciente no puede estar vacío", type = "error")
+            return()
+        }
+        
+        if (is.null(diagnostico) || diagnostico == "") {
+            message("El diagnóstico del paciente está vacío")
+        }
+        
+        if (is.null(anotaciones)) {
+            anotaciones <- "" # Si las anotaciones están vacías, asignar una cadena vacía
+        }
+        tryCatch({
             # Insertar los datos en la base de datos
+            message("000")
             query <- sprintf("INSERT INTO paciente (nombre, edad, genero, diagnostico, anotaciones, fecha_registro) VALUES ('%s', %d, '%s', '%s', '%s', '%s')",
                             nombre, edad, genero, diagnostico, anotaciones, fecha_registro)
             DBI::dbExecute(con, query)
-
+            message("111")
             query_id_paciente <- sprintf("SELECT id FROM paciente WHERE nombre = '%s' and anotaciones = '%s' and fecha_registro = '%s'", nombre, anotaciones, fecha_registro)
             id_paciente <- DBI::dbGetQuery(con, query_id_paciente)
             id_paciente <- as.integer(id_paciente)
@@ -673,25 +757,20 @@ patient_server <- function(input, output, session){
             query2 <- sprintf("INSERT INTO psicologo_paciente (fk_psicologo, fk_paciente) VALUES (%d, %d)", id_psicologo, id_paciente)
             DBI::dbExecute(con, query2)
             DBI::dbDisconnect(con)
-
+            message("222")
             # Vaciar los campos del formulario
             updateTextInput(session, "nombre", value = "")
             updateNumericInput(session, "edad", value = 0)
             updateSelectInput(session, "genero", selected = "")
             updateTextInput(session, "diagnostico", value = "")
             updateTextInput(session, "anotaciones", value = "")
-
+            message("333")
             renderizarTabla()
             shinyjs::hide("patientForm")
-        }
-        else{
-            mensaje <- paste("El valor debe estar entre el rango 0 y 120.")
-            showModal(modalDialog(
-                title = "Error",
-                mensaje,
-                easyClose = TRUE
-            ))
-        }
+        }, error = function(e) {
+            message("Error al insertar en la base de datos: ", e$message)
+            showNotification("Error al guardar los datos del paciente", type = "error")
+        })
     })
 
     output$paciente_simulacion_header <- renderText({

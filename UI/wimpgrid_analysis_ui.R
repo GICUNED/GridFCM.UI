@@ -34,10 +34,11 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
     fluidRow(class="mb-2 button-container",
       #h3(i18n$t("Tabla de Datos"), class = "mr-auto mb-0"),
     
-      div(class = "mr-auto",
+      div(class = "mr-auto", id="botones_izquierda_w",
         h4(class = "mr-4 mb-0", htmlOutput("titulo_wimpgrid")),
         actionButton("volver_inicio_w", class="tab-active", icon=icon("table"), i18n$t("Tabla de Datos")),
         actionButton("matriz_pesos_w", icon=icon("table-cells"), i18n$t("Matriz de Pesos")),
+        actionButton("vector_yo_actual_w", icon=icon("vector-square"), i18n$t("Monitoreo Yo-Actual"))
       ),
 
       div(class = "flex-container-mini",
@@ -67,6 +68,12 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
           plotlyOutput("weight_matrix_graph")
         )
       ),
+      shinyjs::hidden(
+      div(id = "vector_yo_actual",
+        # Mostrar los datos de tabla_datos
+          shinycssloaders::withSpinner(rHandsontableOutput("vector_editable_yo_actual"), type = 4, color = "#022a0c", size = 0.6)
+        )
+      ),
       div(class=("row"), id = "prueba_container_w",
       # Mostrar los datos de prueba
       plotOutput("bert_w")
@@ -78,8 +85,8 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
 
       fluidRow( class = ("flex-container-titles mt-3"),
             h2(i18n$t("Análisis WimpGrid"), class = "wg pagetitlecustom"),
-            icon("circle-question", id = "tooltip-wg-2-home", class="tooltip-icon mb-4 ml-2"),
-            div(id="context-wg-2-home", class="tooltip-container", icon("circle-xmark", id = "exit-wg-2-tooltip", class="fa-solid exit-tooltip"), p(i18n$t("Esta página te permite..."),  class = "desccustom-tooltip")),
+            #icon("circle-question", id = "tooltip-wg-2-home", class="tooltip-icon mb-4 ml-2"),
+            #div(id="context-wg-2-home", class="tooltip-container", icon("circle-xmark", id = "exit-wg-2-tooltip", class="fa-solid exit-tooltip"), p(i18n$t("Esta página te permite..."),  class = "desccustom-tooltip")),
           ),
 
       shinyjs::hidden(fluidRow(id="vis_warn",class="mb-4 mt-4 gap-2 justify-content-center error-help",
@@ -112,8 +119,11 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                 downloadButton(class = "btn-download", "btn_download_visualizacion", i18n$t("Descargar Gráfico")),
 
                 actionButton("enter_fs_1", label=NULL, status="warning", icon = icon("maximize"), onclick = "openFullscreen(document.getElementById('wg-vis-content'));"),
-                actionButton("exit_fs_1", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "exitFullscreen();")
+                actionButton("exit_fs_1", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "exitFullscreen();"),
                         
+                actionButton("mb_enter_fs_1", label=NULL, status="warning", icon = icon("maximize"), onclick = "toggleFullscreenSimulation($('#wg-vis-content'));"),
+                actionButton("mb_exit_fs_1", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "toggleFullscreenSimulation($('#wg-vis-content'));")
+
               ),
               uiOutput("graph_output_visualizacion")
             ),
@@ -130,7 +140,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                 # Agregar un selectInput para elegir el gráfico a mostrar
                 selectInput("graph_selector_visualizacion",
                             i18n$t("Seleccione un análisis:"),
-                            choices = c("autodigrafo","digrafo del ideal","índices de Wimp")),
+                            choices = c("autodigrafo","digrafo del ideal","índices de Wimp"), selectize = FALSE),
             ),  
 
             conditionalPanel(class = ("flex-container-resp"),   condition = "input.graph_selector_visualizacion == 'selfdigraph' || input.graph_selector_visualizacion == 'autodigrafo'",
@@ -138,11 +148,11 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
 
                               selectInput("selfdigraph_layout", i18n$t("Diseño:"),
                                           choices = c("circulo", "rtcirculo","arbol", "graphopt", "mds", "cuadricula"),
-                                          selected = i18n$t("circulo")),
+                                          selected = i18n$t("circulo"), selectize = FALSE),
 
                                 selectInput("selfdigraph_color", i18n$t("Paleta de colores:"),
                                           choices = c("rojo/verde", "escala de grises"),
-                                          selected = i18n$t("rojo/verde")),
+                                          selected = i18n$t("rojo/verde"), selectize = FALSE),
             ),
 
             conditionalPanel(class = ("flex-container-resp detail"), condition = "input.graph_selector_visualizacion == 'idealdigraph' || input.graph_selector_visualizacion == 'digrafo del ideal'",
@@ -151,11 +161,11 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
 
                               selectInput("idealdigraph_layout", i18n$t("Diseño:"),
                                           choices = c("circulo", "rtcirculo","arbol", "graphopt", "mds", "cuadricula"),
-                                          selected = i18n$t("circulo")),
+                                          selected = i18n$t("circulo"), selectize = FALSE),
 
                                 selectInput("idealdigraph_color", i18n$t("Paleta de colores:"),
                                           choices = c("rojo/verde", "escala de grises"),
-                                          selected = i18n$t("rojo/verde"))
+                                          selected = i18n$t("rojo/verde"), selectize = FALSE)
 
 
             ),
@@ -207,8 +217,8 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
 
       fluidRow( class = ("flex-container-titles mt-3"),
             h2(i18n$t("Análisis WimpGrid"), class = "wg pagetitlecustom"),
-            icon("circle-question", id = "tooltip-wg-3-home", class="tooltip-icon mb-4 ml-2"),
-            div(id="context-wg-3-home", class="tooltip-container", icon("circle-xmark", id = "exit-wg-3-tooltip", class="fa-solid exit-tooltip"), p(i18n$t("Esta página te permite..."),  class = "desccustom-tooltip")),
+            #icon("circle-question", id = "tooltip-wg-3-home", class="tooltip-icon mb-4 ml-2"),
+            #div(id="context-wg-3-home", class="tooltip-container", icon("circle-xmark", id = "exit-wg-3-tooltip", class="fa-solid exit-tooltip"), p(i18n$t("Esta página te permite..."),  class = "desccustom-tooltip")),
           ),
 
       shinyjs::hidden(fluidRow(id="lab_warn",class="mb-4 mt-4 gap-2 justify-content-center error-help",
@@ -240,7 +250,11 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
 
                           downloadButton(class = "btn-download", "boton_download_laboratory", i18n$t("Descargar Gráfico")),
                           actionButton("enter_fs_3", label=NULL, status="warning", icon = icon("maximize"), onclick = "openFullscreen(document.getElementById('wg-lab-content'));"),
-                          actionButton("exit_fs_3", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "exitFullscreen();")
+                          actionButton("exit_fs_3", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "exitFullscreen();"),
+
+                          actionButton("mb_enter_fs_3", label=NULL, status="warning", icon = icon("maximize"), onclick = "toggleFullscreenSimulation($('#wg-lab-content'));"),
+                          actionButton("mb_exit_fs_3", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "toggleFullscreenSimulation($('#wg-lab-content'));")
+
                           
                         ),
                     shinycssloaders::withSpinner(rHandsontableOutput("simdigraph_act_vector"), type = 4, color = "#022a0c", size = 0.6)
@@ -258,6 +272,10 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                           ),
                           actionButton("enter_fs_4", label=NULL, status="warning", icon = icon("maximize"), onclick = "openFullscreen(document.getElementById('wg-lab-content'));"),
                           actionButton("exit_fs_4", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "exitFullscreen();"),
+                          
+                          actionButton("mb_enter_fs_4", label=NULL, status="warning", icon = icon("maximize"), onclick = "toggleFullscreenSimulation($('#wg-lab-content'));"),
+                          actionButton("mb_exit_fs_4", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "toggleFullscreenSimulation($('#wg-lab-content'));")
+
                         ),
                     shinycssloaders::withSpinner(rHandsontableOutput("pcsd_act_vector"), type = 4, color = "#022a0c", size = 0.6)
                       
@@ -272,9 +290,12 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                         icon("table"),
                         h4(i18n$t("Resultados"), class = "pagetitle2custom"),
                       ),
-                        actionButton("enter_fs_3", label=NULL, status="warning", icon = icon("maximize"), onclick = "openFullscreen(document.getElementById('wg-lab-content'));"),
-                        actionButton("exit_fs_3", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "exitFullscreen();"),
+                        actionButton("enter_fs_5", label=NULL, status="warning", icon = icon("maximize"), onclick = "openFullscreen(document.getElementById('wg-lab-content'));"),
+                        actionButton("exit_fs_5", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "exitFullscreen();"),
                         
+                        actionButton("mb_enter_fs_5", label=NULL, status="warning", icon = icon("maximize"), onclick = "toggleFullscreenSimulation($('#wg-lab-content'));"),
+                        actionButton("mb_exit_fs_5", i18n$t("Salir"), class="hidden", status="danger", icon = icon("minimize"), onclick = "toggleFullscreenSimulation($('#wg-lab-content'));")
+
                     ),
                     shinycssloaders::withSpinner(rHandsontableOutput("pcsdindices_act_vector"), type = 4, color = "#022a0c", size = 0.6),
       
@@ -305,7 +326,7 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                   # Agregar un selectInput para elegir el gráfico a mostrar
                   selectInput("graph_selector_laboratorio",
                             i18n$t("Seleccione un gráfico:"),
-                            choices = c("simdigrafo","pcsd", "pcsdindices")),
+                            choices = c("simdigrafo","pcsd", "pcsdindices"), selectize = FALSE),
               ),
               
         
@@ -315,20 +336,20 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                     ),
 
                     selectInput("simdigraph_infer", i18n$t("Función de propagación:"),
-                                  choices = c("transformacion lineal", "otra opción"),
-                                  selected = i18n$t("transformacion lineal")),
+                                  choices = c("self dynamics", "impact dynamics"),
+                                  selected = i18n$t("self dynamics"), selectize = FALSE),
 
                     selectInput("simdigraph_thr", i18n$t("Función umbral:"),
-                                  choices = c("lineal","otra opción"),
-                                  selected = i18n$t("lineal")),
+                                  choices = c("saturation", "tanh", "none"),
+                                  selected = i18n$t("saturation"), selectize = FALSE),
 
                     selectInput("simdigraph_layout", i18n$t("Diseño:"),
                                   choices = c("circulo", "rtcirculo","arbol", "graphopt", "mds", "cuadricula"),
-                                  selected = i18n$t("circulo")),
+                                  selected = i18n$t("circulo"), selectize = FALSE),
 
                     selectInput("simdigraph_color", i18n$t("Paleta de colores:"),
                                   choices = c("rojo/verde", "escala de grises"),
-                                  selected = i18n$t("rojo/verde")),
+                                  selected = i18n$t("rojo/verde"), selectize = FALSE),
 
                     sliderInput("simdigraph_niter", "Nº de la iteración:", 0, 3, 0, 
                           animate = animationOptions(interval = 2000, loop = FALSE)),
@@ -356,12 +377,12 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                       #numericInput("pcsd_act_vector", i18n$t("Change vector:"), value = 0, step = 0.01),
 
                       selectInput("pcsd_infer", i18n$t("Función de propagación:"),
-                                  choices = c("transformacion lineal", "otra opción"),
-                                  selected = i18n$t("transformacion lineal")),
+                                  choices = c("self dynamics", "impact dynamics"),
+                                  selected = i18n$t("self dynamics"), selectize = FALSE),
 
                       selectInput("pcsd_thr", i18n$t("Función umbral:"),
-                                  choices = c("lineal", "otra opción"),
-                                  selected = i18n$t("lineal")),
+                                  choices = c("saturation", "tanh", "none"),
+                                  selected = i18n$t("saturation"), selectize = FALSE),
 
 
                       numericInput("pcsd_e", i18n$t("Valor diferencial:"), value = 0.0001, step=0.000025),
@@ -375,12 +396,12 @@ wimpgrid_analysis_ui <- fluidPage( class="header-tab wg-diff",
                       div(class="kpi",
                       shinycssloaders::withSpinner(htmlOutput("convergence"), type = 4, color = "#022a0c", size = 0.6)),
                       selectInput("pcsdindices_infer", i18n$t("Función de propagación:"),
-                                  choices = c("transformacion lineal", "transformación sigmoidea", "transformación binaria"),
-                                  selected = i18n$t("transformacion lineal")),
+                                  choices = c("self dynamics", "impact dynamics"),
+                                  selected = i18n$t("self dynamics"), selectize = FALSE),
 
                       selectInput("pcsdindices_thr", i18n$t("Función umbral:"),
-                                  choices = c("lineal", "sigmoide", "binario"),
-                                  selected = i18n$t("lineal")),
+                                  choices = c("saturation", "tanh", "none"),
+                                  selected = i18n$t("saturation"), selectize = FALSE),
 
                       #numericInput("pcsdindices_act_vector", i18n$t("Changes to simulate:"),
                       #            value = 0, step = 0.01),

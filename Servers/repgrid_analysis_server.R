@@ -20,15 +20,59 @@ repgrid_analisis_server <- function(input, output, session) {
   observeEvent(input$graph_selector, {
 
   seleccion <- input$graph_selector
+  
 
   if(seleccion == 'Cluster Analysis' || seleccion == 'Análisis por Conglomerados'){
     runjs("document.exitFullscreen();")
+    runjs("
+     
+    if ($('#rg-analysis-content').hasClass('fullscreen-style')) {
+      $('#rg-analysis-content').removeClass('fullscreen-style');
+
+      $('#mb_exit_fs_5').addClass('hidden');
+      $('#mb_enter_fs_5').removeClass('hidden');
+
+      $('#mb_exit_fs_6').addClass('hidden');
+      $('#mb_enter_fs_6').removeClass('hidden');
+
+      $('#mb_exit_fs_7').addClass('hidden');
+      $('#mb_enter_fs_7').removeClass('hidden');
+    }")
   } else if (seleccion == 'Índices Cognitivos' || seleccion == 'Cognitive Indices'){
     runjs("document.exitFullscreen();")
+    runjs("
+     
+    if ($('#rg-analysis-content').hasClass('fullscreen-style')) {
+      $('#rg-analysis-content').removeClass('fullscreen-style');
+
+      $('#mb_exit_fs_5').addClass('hidden');
+      $('#mb_enter_fs_5').removeClass('hidden');
+
+      $('#mb_exit_fs_6').addClass('hidden');
+      $('#mb_enter_fs_6').removeClass('hidden');
+
+      $('#mb_exit_fs_7').addClass('hidden');
+      $('#mb_enter_fs_7').removeClass('hidden');
+    }")
+
   } else if (seleccion == 'Dilemas' || seleccion == 'Dilemmas'){
     runjs("document.exitFullscreen();")
-  }
-  })
+    runjs("
+     
+    if ($('#rg-analysis-content').hasClass('fullscreen-style')) {
+      $('#rg-analysis-content').removeClass('fullscreen-style');
+
+      $('#mb_exit_fs_5').addClass('hidden');
+      $('#mb_enter_fs_5').removeClass('hidden');
+
+      $('#mb_exit_fs_6').addClass('hidden');
+      $('#mb_enter_fs_6').removeClass('hidden');
+
+      $('#mb_exit_fs_7').addClass('hidden');
+      $('#mb_enter_fs_7').removeClass('hidden');
+    }")
+  }})
+
 
   #if (is.null(session$userData$datos_repgrid)) {
   #  datos_control <- 0
@@ -156,10 +200,14 @@ repgrid_analisis_server <- function(input, output, session) {
 
   # Generar tabla de índices y valores matemáticos
   output$gridindices_table <- renderText({
-
     INTe <- indices_list[["intensity"]][["Elements"]]
-    YOIDEAL <- INTe[length(INTe)]
-    
+
+    col <- ncol(session$userData$datos_repgrid)
+    listado <- OpenRepGrid::indexSelfConstruction(session$userData$datos_repgrid, 1, col, method="pearson")
+    YOIDEAL <- listado$self_ideal  # antes estab asi: INTe[length(INTe)]
+    YOOTROS <- listado$self_others
+    OTROSIDEAL <- listado$ideal_others
+
     PVEFF <- indices_list[["pvaff"]] 
     INT <- indices_list[["intensity"]][["Total"]] 
     CON <- indices_list[["conflict"]]
@@ -167,28 +215,26 @@ repgrid_analisis_server <- function(input, output, session) {
     GCONS <- indices_list[["intensity"]][["Global Constructs"]]
     GELEM <- indices_list[["intensity"]][["Global Elements"]]
 
-    tabla_indices <- data.frame(YOIDEAL,PVEFF,INT,CON,BIA,GCONS,GELEM)
+    tabla_indices <- data.frame(YOIDEAL,YOOTROS,OTROSIDEAL,PVEFF,INT,CON,BIA,GCONS,GELEM)
     tabla_indices_round <- round(tabla_indices, 3)
-    print(tabla_indices)
 
-    knitr::kable(tabla_indices_round,col.names = c("Yo - Ideal", "PVAFF","Intensity","Conflicts","BIAS","Intensidad Global de Constructos","Intensidad Global de Elementos"),format = "html") %>%
+    
+    knitr::kable(tabla_indices_round,col.names = c("Yo/Ideal", "Yo/Otros", "Otros/Ideal", "PVAFF","Intensity","Conflicts","BIAS","Intensidad Global de Constructos","Intensidad Global de Elementos"),
+    row.names = FALSE, format = "html") %>%
     kable_styling("striped", full_width = T) %>%
-    row_spec(0, bold = T, color = "white", background = "#005440") %>%
-    column_spec(1, bold = T, width = "10%") %>%
-    column_spec(2, width = "10%") %>%
-    column_spec(3, width = "10%") %>%
-    column_spec(4, width = "10%") %>%
-    column_spec(5, width = "10%") %>%
-    column_spec(6, width = "20%") %>%
-    column_spec(7, width = "20%")
+    row_spec(0, bold = T, color = "white", background = "#005440") #%>%
+    # column_spec(1, bold = T, width = "10%") %>%
+    # column_spec(2, width = "10%") %>%
+    # column_spec(3, width = "10%") %>%
+    # column_spec(4, width = "10%") %>%
+    # column_spec(5, width = "10%") %>%
+    # column_spec(6, width = "10%") %>%
+    # column_spec(7, width = "10%")
   })
   
   output$construct <- renderDT({
     
     INTc <- indices_list[["intensity"]][["Constructs"]]
-
-    # Ordenar los datos en orden descendente
-    #INTc_ordenado <- sort(INTc, decreasing = TRUE)
 
     # Crear un data frame con los datos ordenados
     INTc_df <- data.frame(Intensity = round(INTc, 3))
@@ -201,7 +247,8 @@ repgrid_analisis_server <- function(input, output, session) {
         "function(settings, json) {",
         "$(this.api().table().header()).css({'background-color': '#005440', 'color': 'white'});",
         "}"
-      )
+      ),
+      paging = FALSE
     ))
 
     #knitr::kable(INTc_df, col.names = "Intensity",format = "html") %>%
@@ -226,7 +273,8 @@ repgrid_analisis_server <- function(input, output, session) {
       initComplete = JS(
         "function(settings, json) {",
         "$(this.api().table().header()).css({'background-color': '#005440', 'color': 'white'});",
-        "}")
+        "}"),
+      paging = FALSE
     ))
 
     #knitr::kable(INTe_df, col.names = "Intensity",format = "html") %>%
@@ -238,9 +286,11 @@ repgrid_analisis_server <- function(input, output, session) {
 
 
   output$constructs <- renderText({
-    
+    min <- session$userData$repgrid_min
+    max <- session$userData$repgrid_max
+    message("minimos y maximos de la rejilla> ", min, "  ", max)
     INTc <- indices_list[["dilemmas"]][["Congruency"]] #Constructs congruency
-    INTc <- indexDilemma(repgrid_data,self=1,ideal=session$userData$num_col_repgrid-2, diff.congruent = 1, diff.discrepant = 4)
+    INTc <- indexDilemma(repgrid_data,self=1,ideal=session$userData$num_col_repgrid-2, diff.congruent = ((max-min)/6), diff.discrepant = ((max-min)/2)+0.001)
     print("dilemmmmmmmm")
     print(INTc$construct_classification)
     #print(indexDilemma(repgrid_data)[[1]])
@@ -252,10 +302,12 @@ repgrid_analisis_server <- function(input, output, session) {
   })
 
   output$dilemmasss <- renderText({
+    min <- session$userData$repgrid_min
+    max <- session$userData$repgrid_max
     message(indices_list[["dilemmas"]][["Dilemmas"]])
     INTc <- indices_list[["dilemmas"]][["Dilemmas"]] #dilemmas
     
-    INTc <- indexDilemma(repgrid_data,self=1,ideal=session$userData$num_col_repgrid-2, diff.congruent = 1, diff.discrepant = 4)
+    INTc <- indexDilemma(repgrid_data,self=1,ideal=session$userData$num_col_repgrid-2, diff.congruent = ((max-min)/6), diff.discrepant = ((max-min)/2) +0.001)
     
     print(INTc$dilemmas_df)
     dilemmas_df <- INTc$dilemmas_df
@@ -266,9 +318,9 @@ repgrid_analisis_server <- function(input, output, session) {
       
       dilemmas_df$R <- round(dilemmas_df$R, 2) # digits
       
-      ii <- str_detect(dilemmas_df$RexSI, "\\.")
+      ii <- stringr::str_detect(dilemmas_df$RexSI, "\\.")
       
-      dilemmas_df$RexSI[ii] <- as.character(round(as.numeric(dilemmas_df$RexSI[ii]), digits))
+      dilemmas_df$RexSI[ii] <- as.character(round(as.numeric(dilemmas_df$RexSI[ii]), 3))
       
       
       

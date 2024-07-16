@@ -45,7 +45,6 @@
       "es": "Nuevo análisis de rejilla",
       "en": "New grid analysis"
     },
-
     {
       "es": "Nueva rejilla",
       "en": "New grid analysis"
@@ -902,15 +901,87 @@
       "en": "Go to Licenses"
     },
     {
-      "es": "Plan de Suscripción",
+      "es": "Planes de Suscripción",
       "en": "Subscription Plans"
     },
     {
       "es": "Gestión de Suscripción",
+      "en": "Manage Subscriptions"
+    },
+
+    {
+      "es": "Gestionar Suscripción",
       "en": "Manage Subscription"
+    },
+
+    {
+      "es": "Métricas",
+      "en": "Metrics"
+    },
+
+    {
+      "es": "Gestión de Licencias",
+      "en": "Manage Licenses"
+    },
+
+
+    {
+      "es": "Panel de Usuario",
+      "en": "User Panel"
+    },
+
+    {
+      "es": "Usuarios Demo",
+      "en": "Demo Users"
+    },
+
+    
+    {
+      "es": "Salir",
+      "en": "Exit"
+    },
+    
+    {
+      "es": "Ha habido un problema al procesar los elementos introducidos. Revise los valores.",
+      "en": "There has been an issue processing the entered elements. Please review the values."
+    },
+    {
+      "es": "Esta simulación se guardó con errores. Bórrela y vuelva a crearla.",
+      "en": "This simulation was saved with errors. Delete it and recreate it."
+    },
+
+    {
+      "es": "Esta página te permite añadir y gestionar pacientes, y crear simulaciones personalizadas para cada uno de ellos.",
+      "en": "This page allows you to add and manage patients, and create custom simulations for each of them."
+    },
+
+    {
+      "es": "Si se vuelve a comprar otra suscripción cuando sigue activa la actual, no se añade más tiempo a la suscripción. Por ello, es mejor configurar una renovación automática o esperar a que se termine la fecha de suscripción, para ampliar la actual.",
+      "en": "If you purchase another subscription while the current one is still active, no more time is added to the subscription. Therefore, it is better to set up an automatic renewal or wait for the subscription date to end to extend the current one."
+    },
+    {
+      "es": "Monitoreo Yo-Actual",
+      "en": "Monitoring Me-Actual"
+    },
+    {
+      "es": "Nombre Usuario",
+      "en": "Username"
+    },
+    {
+      "es": "Colectivo",
+      "en": "Collective"
+    },
+    {
+      "es": "Rol",
+      "en": "Role"
+    },
+    {
+      "es": "Fecha Registro",
+      "en": "Registration Date"
+    },
+    {
+      "es": "Usuarios Registrados",
+      "en": "Registered Users "
     }
-    
-    
-    
     
 ]}

@@ -379,7 +379,7 @@ output$bert <- renderPlot({
           textAreaInput("anotacionesSimulacion_rep", i18n$t("Anotaciones:"), coment),
           footer = tagList(
             modalButton("Cancelar"),
-            actionButton("confirmarGuardadoSimulacion_rep", i18n$t("Guardar simulación"), class = "btn-success")
+            actionButton("confirmarGuardadoSimulacion_rep", i18n$t("Guardar simulación"), status ="success", icon = icon("check"))
           )
       ))
     }
@@ -512,7 +512,7 @@ output$bert <- renderPlot({
           # Check if df_read is not NULL or empty
           if (!is.null(df_read) && nrow(df_read) > 0) {
             # Create a repgrid object
-            my_repgrid <- df_read
+            my_repgrid <- alignByIdeal(df_read, ncol(df_read))
             print(my_repgrid)
 
             repgrid_a_mostrar(my_repgrid)
@@ -556,7 +556,7 @@ output$bert <- renderPlot({
           textAreaInput("anotacionesGuardarComoSimulacion_rep", i18n$t("Anotaciones:"), coment),
           footer = tagList(
             modalButton("Cancelar"),
-            actionButton("confirmarGuardadoComoSimulacion_rep", i18n$t("Guardar simulación"), class = "btn-success")
+            actionButton("confirmarGuardadoComoSimulacion_rep", i18n$t("Guardar simulación"), status ="success", icon = icon("check"))
           )
       ))
     }

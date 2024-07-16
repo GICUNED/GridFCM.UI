@@ -17,34 +17,58 @@
 #'
 #' @examples
 
-scenariomatrix <- function(wimp, act.vector, infer = "linear transform",
-                           thr = "linear", max.iter = 30, e = 0.0001,
-                           stop.iter = 3){
-
-
+scenariomatrix <- function(wimp, act.vector = NA, infer = "self dynamics",
+                           thr = "saturation", max.iter = 10, e = 0.0001,
+                           stop.iter = 3, exclude.dilemmatics = FALSE){
+  
   if(!inherits(wimp,"wimp")){
     stop("The weighted implication grid must be class wimp.")
   }
-  if( ncol(wimp[[6]][[3]]) != length(act.vector)){
+  if( ncol(wimp[[6]][[3]]) != length(act.vector) && infer != "impact dynamics"){
     stop("The weight matrix and the activation vector must have compatible dimensions.")
   }
 
+  ideal <- wimp$ideal$standarized
+  swap.vector <- ideal/abs(ideal)
+  swap.vector[is.nan(swap.vector)] <- 1
+
+  if(infer == "self dynamics"){
+  act.vector <- act.vector * swap.vector
+  }
+  
+  wimp <- .align.wimp(wimp,exclude.dilemmatics = exclude.dilemmatics)
+  dim <- length(wimp$constructs$constructs)
   scene.matrix <- t(matrix(wimp[[3]][[2]]))
+  trans.matrix <- t(wimp$scores$weights)
+  next.matrix <- trans.matrix
 
   n <- 1
   i <- 0
-
   while(n <= max.iter && i <= stop.iter){
 
-    if(infer == "linear transform"){
+    if(infer == "self dynamics"){
       next.iter <- scene.matrix[n,] + t(act.vector)
 
-      if(thr == "linear"){next.iter <- sapply(next.iter, .lineal.thr)}
+      next.iter <- mapply(.thr, next.iter, thr)
 
       delta.iter <- next.iter - scene.matrix[n,]
       scene.matrix <- rbind(scene.matrix, next.iter)
 
-      act.vector <- t(wimp[[6]][[3]]) %*% delta.iter
+      act.vector <- trans.matrix %*% delta.iter
+    }
+
+    if(infer == "impact dynamics"){
+      if(n == 1){scene.matrix <- t(rep(0,dim))}
+      if(exclude.dilemmatics == FALSE){
+        n.matrix <- next.matrix
+        n.matrix[.which.dilemmatics(wimp),] <- 0
+      }else{
+        n.matrix <- next.matrix
+      }
+      sum.columns <- t(n.matrix) %*% rep(1,nrow(trans.matrix))
+      next.iter <- t(sum.columns)
+      scene.matrix <- rbind(scene.matrix, next.iter)
+      next.matrix <- trans.matrix %*% next.matrix
     }
 
     e.iter <- mean(abs(next.iter - scene.matrix[n,]))
@@ -74,6 +98,8 @@ scenariomatrix <- function(wimp, act.vector, infer = "linear transform",
   scene.list$self[[1]] <- wimp$self[[2]]
   scene.list$self[[2]] <- wimp$ideal[[2]]
   scene.list$weights <- wimp[[6]][[3]]
+  scene.list$method$infer <- infer
+  scene.list$method$threeshold <- thr
 
   names(scene.list$self) <- c("self","ideal")
 

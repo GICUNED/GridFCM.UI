@@ -17,6 +17,24 @@ observeEvent(input$graph_selector_visualizacion, {
 
   if(seleccion == 'wimpindices' || seleccion == 'índices de Wimp'){
     runjs("document.exitFullscreen();")
+     runjs("
+     
+    if ($('#wg-vis-content').hasClass('fullscreen-style') || $('#wg-lab-content').hasClass('fullscreen-style')) {
+    $('#wg-vis-content').removeClass('fullscreen-style');
+    $('#wg-lab-content').removeClass('fullscreen-style');
+
+    $('#mb_exit_fs_1').addClass('hidden');
+    $('#mb_enter_fs_1').removeClass('hidden');
+
+    $('#mb_exit_fs_3').addClass('hidden');
+    $('#mb_enter_fs_3').removeClass('hidden');
+
+    $('#mb_exit_fs_4').addClass('hidden');
+    $('#mb_enter_fs_4').removeClass('hidden');
+
+    $('#mb_exit_fs_5').addClass('hidden');
+    $('#mb_enter_fs_5').removeClass('hidden');
+    }")
   }
 })
 
@@ -346,126 +364,45 @@ onevent("click", "exit-controls-lab", {
     show("wg-lab-content")
   }
 
-dataaa_w <-  reactiveVal(session$userData$datos_wimpgrid)
-
-
-
-tabla_manipulable_w <- reactiveVal(tabla_aux)
-
-#tabla_manipulable_w <- session$userData$datos_to_table
-
-tabla_final <- tabla_aux
-
-repgrid_inicial <- reactiveVal(repgrid_aux)
-
-wimpgrid_a_mostrar <- reactiveVal(repgrid_aux)
-nombrePaciente <- reactiveVal()
-
-output$titulo_wimpgrid <- renderText({
-  con <- establishDBConnection()
-  nombre <- DBI::dbGetQuery(con, sprintf("SELECT nombre from paciente WHERE id = %d", session$userData$id_paciente))
-  nombrePaciente(nombre)
-  DBI::dbDisconnect(con)
-  fecha <- session$userData$fecha_wimpgrid
-  paste("<b>", i18n$t("Simulación de "), nombre, "</b><br><p class='desccustom-date'>📅", fecha, "</p>")
-})
-
-output$tabla_datos_wimpgrid <- renderRHandsontable({
+  # cargo los datos de weight matrix para que no se actualicen al tocar yo-actual
   if (!is.null(session$userData$datos_wimpgrid)) {
-    indicess <- seq(1, session$userData$num_col_wimpgrid - 1)
-    tabla <- tabla_manipulable_w()
-    nombres_columnas <- colnames(tabla)
-    min_val <- nombres_columnas[1]
-    max_val <- nombres_columnas[length(nombres_columnas)]
-    nombres <- nombres_columnas[4:length(nombres_columnas)-2]
-    nombres <- strsplit(nombres, "Yo.-.Totalmente.")
-    segundos_elementos <- sapply(nombres, function(x) x[2])
-    lista_formateada <- lapply(segundos_elementos, function(elemento) {
-      elemento <- gsub("\\.", " ", elemento)
-      paste("Yo totalmente", elemento, sep = "\n ")
-    })
-    res <- c(min_val, lista_formateada, "Yo Ideal", max_val)
+    message("entro en matrix_data")
+    matrix_data <- session$userData$datos_wimpgrid[["scores"]][["weights"]]
 
-    hot_table <- rhandsontable(tabla_manipulable_w(), colHeaders=res, rowHeaders=NULL) %>%
-        hot_table(highlightCol = TRUE, highlightRow = TRUE) %>%
-        hot_col(col = indicess, colWidths=120) %>%
-        hot_context_menu(allowRowEdit=FALSE, allowColEdit=FALSE)
-        
-    hot_table
 
   }
 
-})
 
- 
+  dataaa_w <-  reactiveVal(session$userData$datos_wimpgrid)
 
-## NEW ######################################################
-cambios_reactive <- reactiveVal(numeric(0))
- 
+  permitirEjecucionYoActual <<- FALSE
 
-validateValue <- function(changes, tabla) {
 
- 
+  tabla_manipulable_w <- reactiveVal(tabla_aux)
 
-  new_v = changes[[1]][[4]]
+  #tabla_manipulable_w <- session$userData$datos_to_table
 
-  tabla_r <- hot_to_r(tabla)
+  tabla_final <- tabla_aux
 
-  nombres_columnas <- colnames(tabla_r)
+  repgrid_inicial <- reactiveVal(repgrid_aux)
 
- 
+  wimpgrid_a_mostrar <- reactiveVal(repgrid_aux)
+  nombrePaciente <- reactiveVal()
 
-  min_val <- as.numeric(nombres_columnas[1])
+  output$titulo_wimpgrid <- renderText({
+    con <- establishDBConnection()
+    nombre <- DBI::dbGetQuery(con, sprintf("SELECT nombre from paciente WHERE id = %d", session$userData$id_paciente))
+    nombrePaciente(nombre)
+    DBI::dbDisconnect(con)
+    fecha <- session$userData$fecha_wimpgrid
+    paste("<b>", i18n$t("Simulación de "), nombre, "</b><br><p class='desccustom-date'>📅", fecha, "</p>")
+  })
 
-  max_val <- as.numeric(nombres_columnas[length(nombres_columnas)])
- 
-
-  if(!is.na(new_v) && is.numeric(new_v) && (new_v > max_val || new_v < min_val)) {
-
-    mensaje <- paste("El valor debe estar entre el rango", min_val, "-", max_val, ".")
-
-    showModal(modalDialog(
-
-      title = "Error",
-
-      mensaje,
-
-      easyClose = TRUE
-
-    ))
-
-    return(FALSE)
-
-  }
-
-  return(TRUE)
-
-}
-
- 
-
-observeEvent(input$tabla_datos_wimpgrid, {
-  changes <- input$tabla_datos_wimpgrid$changes$changes
-  cambios <- cambios_reactive()
-  
-  if(!is.null(changes)) {
-    shinyjs::hide("volver_w")
-    shinyjs::show("guardar_w")
-    val <- validateValue(changes, input$tabla_datos_wimpgrid)
-    cambios_actualizados <- c(cambios, changes)
-    cambios_reactive(cambios_actualizados)
-
-    if(!val) {
-      xi <- changes[[1]][[1]]
-      yi <- changes[[1]][[2]]
-      old_v <- changes[[1]][[3]]
-      # vuelvo a poner el ultimo valor y luego elimino su instancia de la variable reactiva
-      cambios_reactive(head(cambios_reactive(), -1))
-      tabla_original <- hot_to_r(input$tabla_datos_wimpgrid)
-      tabla_original[xi+1, yi+1] <- old_v
-      tabla_manipulable_w(tabla_original)
-
-      nombres_columnas <- colnames(tabla_manipulable_w())
+  output$tabla_datos_wimpgrid <- renderRHandsontable({
+    if (!is.null(session$userData$datos_wimpgrid)) {
+      indicess <- seq(1, session$userData$num_col_wimpgrid - 1)
+      tabla <- tabla_manipulable_w()
+      nombres_columnas <- colnames(tabla)
       min_val <- nombres_columnas[1]
       max_val <- nombres_columnas[length(nombres_columnas)]
       nombres <- nombres_columnas[4:length(nombres_columnas)-2]
@@ -476,335 +413,426 @@ observeEvent(input$tabla_datos_wimpgrid, {
         paste("Yo totalmente", elemento, sep = "\n ")
       })
       res <- c(min_val, lista_formateada, "Yo Ideal", max_val)
-      output$tabla_datos_wimpgrid <- renderRHandsontable({
-        rhandsontable(tabla_original, colHeaders=res, rowHeaders=NULL) %>%
+
+      hot_table <- rhandsontable(tabla_manipulable_w(), colHeaders=res, rowHeaders=NULL) %>%
           hot_table(highlightCol = TRUE, highlightRow = TRUE) %>%
-          hot_col(col = seq(1, session$userData$num_col_wimpgrid - 1), colWidths=120) %>%
+          hot_col(col = indicess, colWidths=120) %>%
           hot_context_menu(allowRowEdit=FALSE, allowColEdit=FALSE)
-      })
-    } else if (!is.null(session$userData$datos_wimpgrid)) {
-      tabla_manipulable_w(hot_to_r(input$tabla_datos_wimpgrid))
+          
+      hot_table
+
     }
 
-  }
-
-})
- 
-
-output$bert_w <- renderPlot({
-  if (!is.null(session$userData$datos_wimpgrid)) {
-    bertin(wimpgrid_a_mostrar()$openrepgrid , xlim = c(.2,
-   .8), ylim = c(.03, .6), margins = c(0, 1, 1), color=c("white", "#dfb639"), cex.elements = .9,
-      cex.constructs = 1, cex.text = 1, lheight = .7, cc=session$userData$num_col_wimpgrid-2, col.mark.fill="#DBA901")
-    
-  }
-
-})
-
-
-observeEvent(input$editar_w, {
-    if (!is.null(session$userData$datos_wimpgrid)) {
-    # Ocultar el botón "Editar" y mostrar el botón "Guardar"
-    shinyjs::hide("matriz_pesos_w")
-    shinyjs::hide("editar_w")
-    shinyjs::hide("guardarBD_w")
-    shinyjs::show("volver_w")
-    shinyjs::show("reiniciar_w")
-    shinyjs::hide("guardarComo_w")
-    shinyjs::hide("exportar_w")
-    # Cambiar a modo de edición
-    shinyjs::hide("prueba_container_w")
-    shinyjs::show("tabla_datos_wimpgrid_container")
-    }
   })
 
-  observeEvent(input$volver_w,{
-      shinyjs::hide("volver_w")
-      shinyjs::show("editar_w")
-      shinyjs::hide("guardar_w")
-      shinyjs::show("guardarBD_w")
-      shinyjs::hide("reiniciar_w")
-      shinyjs::show("guardarComo_w")
-      shinyjs::show("exportar_w")
-      shinyjs::show("matriz_pesos_w")
-      # Cambiar a modo de tabla
-      shinyjs::show("prueba_container_w")
-      shinyjs::hide("tabla_datos_wimpgrid_container")
-  })
+  
 
+  ## NEW ######################################################
+  cambios_reactive <- reactiveVal(numeric(0))
+  
 
-observeEvent(input$reiniciar_w, {
+  validateValue <- function(changes, tabla) {
 
-    if (!is.null(session$userData$datos_wimpgrid)) {
+  
 
-      tabla_manipulable_w(tabla_final)
+    new_v = changes[[1]][[4]]
 
-      #session$userData$datos_wimpgrid <- tabla_manipulable()
+    tabla_r <- hot_to_r(tabla)
 
-      #session$userData$datos_to_table<- tabla_final
-      shinyjs::show("volver_w")
-      shinyjs::hide("guardar_w") # para que no explote
-      tabla_final <- tabla_manipulable_w()
-      print("tabla_final: ")
-      my_dataframe <-tabla_final
-      # Create a temporary file
-      temp_file <- tempfile(fileext = ".xlsx")
-      on.exit(unlink(temp_file))
-      # Write the dataframe to the temporary file
-      OpenRepGrid::saveAsExcel(session$userData$datos_wimpgrid$openrepgrid, temp_file)
+    nombres_columnas <- colnames(tabla_r)
 
-      print(paste("Temporary file saved at: ", temp_file))
-      if (file.exists(temp_file) && file.size(temp_file) > 0) {
-        # Read the data from the temporary file
-        df_read <- read.xlsx(temp_file)
-        # Print the data
-        print(df_read)
-        if (!is.null(df_read) && nrow(df_read) > 0) {
-          my_wimpgrid <- df_read
-          wimpgrid_a_mostrar(my_wimpgrid)
-          session$userData$datos_wimpgrid <- wimpgrid_a_mostrar()
-          session$userData$datos_to_table_w<- my_wimpgrid
-        }
-      }
-      file.remove(temp_file)
-}})
+  
 
- 
+    min_val <- as.numeric(nombres_columnas[1])
 
-observeEvent(input$guardar_w, {
-    if (!is.null(session$userData$datos_wimpgrid)) {
+    max_val <- as.numeric(nombres_columnas[length(nombres_columnas)])
+  
 
-      tabla_final <- tabla_manipulable_w()
+    if(!is.na(new_v) && is.numeric(new_v) && (new_v > max_val || new_v < min_val)) {
 
-      print("tabla_final: ")
+      mensaje <- paste("El valor debe estar entre el rango", min_val, "-", max_val, ".")
 
-      my_dataframe <-tabla_final
-      # Create a temporary file
-      temp_file <- tempfile(fileext = ".xlsx")
-      on.exit(unlink(temp_file))
-      # Write the dataframe to the temporary file
-
-      write.xlsx(my_dataframe, temp_file)
-
-      print(paste("Temporary file saved at: ", temp_file))
-
-      df_read <- importwimp(temp_file)
-      my_wimpgrid <- df_read
-      print(my_wimpgrid)
-      wimpgrid_a_mostrar(my_wimpgrid)
-      session$userData$datos_wimpgrid <- wimpgrid_a_mostrar()
-      session$userData$datos_to_table_w<- tabla_final
-
-      # Ocultar el botón "Guardar" y mostrar el botón "Editar"
-      shinyjs::hide("reiniciar_w")
-      shinyjs::show("editar_w")
-      shinyjs::hide("guardar_w")
-      shinyjs::hide("volver_w")
-      shinyjs::show("guardarBD_w")
-      shinyjs::show("guardarComo_w")
-      shinyjs::show("exportar_w")
-      shinyjs::show("matriz_pesos_w")
-      # Cambiar a modo de visualización
-
-      shinyjs::hide("tabla_datos_wimpgrid_container")
-
-      shinyjs::show("prueba_container_w")
-      file.remove(temp_file)
-      dataaa_w(df_read)
-
-    }
-
-})
-
-temporal <- NULL  # Define temporal en un alcance superior
-output$exportar_w <- downloadHandler(
-  filename = function() {
-    fecha <- gsub(" ", "_", session$userData$fecha_wimpgrid)
-    nombre_temporal <- paste("Wimpgrid_", nombrePaciente(), "_", fecha, ".xlsx", sep="", collapse="")
-    temporal <- file.path(tempdir(), nombre_temporal)
-    tabla_final <- tabla_manipulable_w()
-    my_dataframe <- tabla_final
-    # Write the dataframe to the temporary file
-    write.xlsx(my_dataframe, temporal)
-    return(nombre_temporal)
-  },
-  content = function(file) {
-    fecha <- gsub(" ", "_", session$userData$fecha_wimpgrid)
-    nombre_temporal <- paste("Wimpgrid_", nombrePaciente(), "_", fecha, ".xlsx", sep="", collapse="")
-    temporal <- file.path(tempdir(), nombre_temporal)
-    file.copy(temporal, file)
-    file.remove(temporal)  # Elimina el archivo temporal después de descargarlo
-  }
-)
-
-
-  shinyjs::onclick("guardarComo_w", {
-    if (!is.null(session$userData$datos_wimpgrid)) {
-      con <- establishDBConnection()
-      comentarios <- DBI::dbGetQuery(con, sprintf("SELECT comentarios FROM wimpgrid_params where fk_wimpgrid=%d", session$userData$id_wimpgrid))
-      DBI::dbDisconnect(con)
       showModal(modalDialog(
-          title = i18n$t("Anotaciones"),
-          sprintf("¿Desea añadir algún comentario para la simulación de %s antes de guardarla?", nombrePaciente()),
-          textAreaInput("anotacionesGuardarComoSimulacion", i18n$t("Anotaciones:"), value=as.character(comentarios$comentarios)),
-          footer = tagList(
-            modalButton("Cancelar"),
-            actionButton("confirmarGuardadoComoSimulacion", i18n$t("Guardar simulación"), class = "btn-success")
-          )
+
+        title = "Error",
+
+        mensaje,
+
+        easyClose = TRUE
+
       ))
+
+      return(FALSE)
+
     }
+
+    return(TRUE)
+
+  }
+
+  
+
+  observeEvent(input$tabla_datos_wimpgrid, {
+    changes <- input$tabla_datos_wimpgrid$changes$changes
+    cambios <- cambios_reactive()
+    
+    if(!is.null(changes)) {
+      shinyjs::hide("volver_w")
+      shinyjs::show("guardar_w")
+      val <- validateValue(changes, input$tabla_datos_wimpgrid)
+      cambios_actualizados <- c(cambios, changes)
+      cambios_reactive(cambios_actualizados)
+
+      if(!val) {
+        xi <- changes[[1]][[1]]
+        yi <- changes[[1]][[2]]
+        old_v <- changes[[1]][[3]]
+        # vuelvo a poner el ultimo valor y luego elimino su instancia de la variable reactiva
+        cambios_reactive(head(cambios_reactive(), -1))
+        tabla_original <- hot_to_r(input$tabla_datos_wimpgrid)
+        tabla_original[xi+1, yi+1] <- old_v
+        tabla_manipulable_w(tabla_original)
+
+        nombres_columnas <- colnames(tabla_manipulable_w())
+        min_val <- nombres_columnas[1]
+        max_val <- nombres_columnas[length(nombres_columnas)]
+        nombres <- nombres_columnas[4:length(nombres_columnas)-2]
+        nombres <- strsplit(nombres, "Yo.-.Totalmente.")
+        segundos_elementos <- sapply(nombres, function(x) x[2])
+        lista_formateada <- lapply(segundos_elementos, function(elemento) {
+          elemento <- gsub("\\.", " ", elemento)
+          paste("Yo totalmente", elemento, sep = "\n ")
+        })
+        res <- c(min_val, lista_formateada, "Yo Ideal", max_val)
+        output$tabla_datos_wimpgrid <- renderRHandsontable({
+          rhandsontable(tabla_original, colHeaders=res, rowHeaders=NULL) %>%
+            hot_table(highlightCol = TRUE, highlightRow = TRUE) %>%
+            hot_col(col = seq(1, session$userData$num_col_wimpgrid - 1), colWidths=120) %>%
+            hot_context_menu(allowRowEdit=FALSE, allowColEdit=FALSE)
+        })
+      } else if (!is.null(session$userData$datos_wimpgrid)) {
+        tabla_manipulable_w(hot_to_r(input$tabla_datos_wimpgrid))
+      }
+
+    }
+
+  })
+  
+
+  output$bert_w <- renderPlot({
+    if (!is.null(session$userData$datos_wimpgrid)) {
+      bertin(wimpgrid_a_mostrar()$openrepgrid , xlim = c(.2,
+    .8), ylim = c(.03, .6), margins = c(0, 1, 1), color=c("white", "#dfb639"), cex.elements = .9,
+        cex.constructs = 1, cex.text = 1, lheight = .7, cc=session$userData$num_col_wimpgrid-2, col.mark.fill="#DBA901")
+      
+    }
+
   })
 
-  shinyjs::onclick("confirmarGuardadoComoSimulacion", {
-    if (!is.null(session$userData$datos_wimpgrid)) {
-        removeModal()
+
+  observeEvent(input$editar_w, {
+      if (!is.null(session$userData$datos_wimpgrid)) {
+      # Ocultar el botón "Editar" y mostrar el botón "Guardar"
+      shinyjs::hide("botones_izquierda_w")
+      shinyjs::hide("editar_w")
+      shinyjs::hide("guardarBD_w")
+      shinyjs::show("volver_w")
+      shinyjs::show("reiniciar_w")
+      shinyjs::hide("guardarComo_w")
+      shinyjs::hide("exportar_w")
+      # Cambiar a modo de edición
+      shinyjs::hide("prueba_container_w")
+      shinyjs::show("tabla_datos_wimpgrid_container")
+      }
+    })
+
+    observeEvent(input$volver_w,{
+        shinyjs::hide("volver_w")
+        shinyjs::show("editar_w")
+        shinyjs::hide("guardar_w")
+        shinyjs::show("guardarBD_w")
+        shinyjs::hide("reiniciar_w")
+        shinyjs::show("guardarComo_w")
+        shinyjs::show("exportar_w")
+        shinyjs::show("botones_izquierda_w")
+        # Cambiar a modo de tabla
+        shinyjs::show("prueba_container_w")
+        shinyjs::hide("tabla_datos_wimpgrid_container")
+    })
+
+
+  observeEvent(input$reiniciar_w, {
+
+      if (!is.null(session$userData$datos_wimpgrid)) {
+
+        tabla_manipulable_w(tabla_final)
+
+        #session$userData$datos_wimpgrid <- tabla_manipulable()
+
+        #session$userData$datos_to_table<- tabla_final
+        shinyjs::show("volver_w")
+        shinyjs::hide("guardar_w") # para que no explote
         tabla_final <- tabla_manipulable_w()
+        print("tabla_final: ")
         my_dataframe <-tabla_final
-        anotaciones <- input$anotacionesGuardarComoSimulacion
         # Create a temporary file
         temp_file <- tempfile(fileext = ".xlsx")
         on.exit(unlink(temp_file))
         # Write the dataframe to the temporary file
-        write.xlsx(my_dataframe, temp_file)
-        excel <- read.xlsx(temp_file, colNames=FALSE)
-        # Check if the file exists and is not empty
+        OpenRepGrid::saveAsExcel(session$userData$datos_wimpgrid$openrepgrid, temp_file)
+
+        print(paste("Temporary file saved at: ", temp_file))
         if (file.exists(temp_file) && file.size(temp_file) > 0) {
-          file.remove(temp_file)
-          #creo la wimpgrid nueva
-          fecha <- codificar_excel_BD(excel, "wimpgrid_xlsx", session$userData$id_paciente)
-          con <- establishDBConnection()
-          # consigo el id de la nueva wimpgrid
-          id <- DBI::dbGetQuery(con, sprintf("SELECT distinct(id) from wimpgrid_xlsx where fecha_registro='%s' and fk_paciente=%d", fecha, session$userData$id_paciente))
-          id <- as.integer(id)
-          
-          # le actualizo tambien los controles 
-          if(!is.null(id)){
-            actualizar_controles_bd(id)
-            query_wp <- sprintf("UPDATE wimpgrid_params SET comentarios='%s' WHERE fk_wimpgrid=%d", anotaciones, id)
-            DBI::dbExecute(con, query_wp)
-            showNotification(
-                ui = sprintf("Nueva simulación de %s guardada con éxito. Diríjase a la página de pacientes para visualizarla.", nombrePaciente()),
-                type = "message",
-                duration = 8
-            ) 
+          # Read the data from the temporary file
+          df_read <- read.xlsx(temp_file)
+          # Print the data
+          print(df_read)
+          if (!is.null(df_read) && nrow(df_read) > 0) {
+            my_wimpgrid <- df_read
+            wimpgrid_a_mostrar(my_wimpgrid)
+            session$userData$datos_wimpgrid <- wimpgrid_a_mostrar()
+            session$userData$datos_to_table_w<- my_wimpgrid
           }
-          DBI::dbDisconnect(con)
         }
-    }
+        file.remove(temp_file)
+  }})
+
+  
+
+  observeEvent(input$guardar_w, {
+      if (!is.null(session$userData$datos_wimpgrid)) {
+
+        tabla_final <- tabla_manipulable_w()
+
+        print("tabla_final: ")
+
+        my_dataframe <-tabla_final
+        # Create a temporary file
+        temp_file <- tempfile(fileext = ".xlsx")
+        on.exit(unlink(temp_file))
+        # Write the dataframe to the temporary file
+
+        write.xlsx(my_dataframe, temp_file)
+
+        print(paste("Temporary file saved at: ", temp_file))
+
+        df_read <- importwimp(temp_file)
+        my_wimpgrid <- df_read
+        print(my_wimpgrid)
+        wimpgrid_a_mostrar(my_wimpgrid)
+        session$userData$datos_wimpgrid <- wimpgrid_a_mostrar()
+        session$userData$datos_to_table_w<- tabla_final
+
+        # Ocultar el botón "Guardar" y mostrar el botón "Editar"
+        shinyjs::hide("reiniciar_w")
+        shinyjs::show("editar_w")
+        shinyjs::hide("guardar_w")
+        shinyjs::hide("volver_w")
+        shinyjs::show("guardarBD_w")
+        shinyjs::show("guardarComo_w")
+        shinyjs::show("exportar_w")
+        shinyjs::show("botones_izquierda_w")
+        # Cambiar a modo de visualización
+
+        shinyjs::hide("tabla_datos_wimpgrid_container")
+
+        shinyjs::show("prueba_container_w")
+        file.remove(temp_file)
+        dataaa_w(df_read)
+
+      }
+
   })
 
+  temporal <- NULL  # Define temporal en un alcance superior
+  output$exportar_w <- downloadHandler(
+    filename = function() {
+      fecha <- gsub(" ", "_", session$userData$fecha_wimpgrid)
+      nombre_temporal <- paste("Wimpgrid_", nombrePaciente(), "_", fecha, ".xlsx", sep="", collapse="")
+      temporal <- file.path(tempdir(), nombre_temporal)
+      tabla_final <- tabla_manipulable_w()
+      my_dataframe <- tabla_final
+      # Write the dataframe to the temporary file
+      write.xlsx(my_dataframe, temporal)
+      return(nombre_temporal)
+    },
+    content = function(file) {
+      fecha <- gsub(" ", "_", session$userData$fecha_wimpgrid)
+      nombre_temporal <- paste("Wimpgrid_", nombrePaciente(), "_", fecha, ".xlsx", sep="", collapse="")
+      temporal <- file.path(tempdir(), nombre_temporal)
+      file.copy(temporal, file)
+      file.remove(temporal)  # Elimina el archivo temporal después de descargarlo
+    }
+  )
 
 
-#scn <- scenariomatrix(dataaa_w(),c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0))
+    shinyjs::onclick("guardarComo_w", {
+      if (!is.null(session$userData$datos_wimpgrid)) {
+        con <- establishDBConnection()
+        comentarios <- DBI::dbGetQuery(con, sprintf("SELECT comentarios FROM wimpgrid_params where fk_wimpgrid=%d", session$userData$id_wimpgrid))
+        DBI::dbDisconnect(con)
+        showModal(modalDialog(
+            title = i18n$t("Anotaciones"),
+            sprintf("¿Desea añadir algún comentario para la simulación de %s antes de guardarla?", nombrePaciente()),
+            textAreaInput("anotacionesGuardarComoSimulacion", i18n$t("Anotaciones:"), value=as.character(comentarios$comentarios)),
+            footer = tagList(
+              modalButton("Cancelar"),
+              actionButton("confirmarGuardadoComoSimulacion", i18n$t("Guardar simulación"), status ="success", icon = icon("check"))
+            )
+        ))
+      }
+    })
 
-#VARIABLES OF THE FORM
+    shinyjs::onclick("confirmarGuardadoComoSimulacion", {
+      if (!is.null(session$userData$datos_wimpgrid)) {
+          removeModal()
+          tabla_final <- tabla_manipulable_w()
+          my_dataframe <-tabla_final
+          anotaciones <- input$anotacionesGuardarComoSimulacion
+          # Create a temporary file
+          temp_file <- tempfile(fileext = ".xlsx")
+          on.exit(unlink(temp_file))
+          # Write the dataframe to the temporary file
+          write.xlsx(my_dataframe, temp_file)
+          excel <- read.xlsx(temp_file, colNames=FALSE)
+          # Check if the file exists and is not empty
+          if (file.exists(temp_file) && file.size(temp_file) > 0) {
+            file.remove(temp_file)
+            #creo la wimpgrid nueva
+            fecha <- codificar_excel_BD(excel, "wimpgrid_xlsx", session$userData$id_paciente)
+            con <- establishDBConnection()
+            # consigo el id de la nueva wimpgrid
+            id <- DBI::dbGetQuery(con, sprintf("SELECT distinct(id) from wimpgrid_xlsx where fecha_registro='%s' and fk_paciente=%d", fecha, session$userData$id_paciente))
+            id <- as.integer(id)
+            
+            # le actualizo tambien los controles 
+            if(!is.null(id)){
+              actualizar_controles_bd(id)
+              query_wp <- sprintf("UPDATE wimpgrid_params SET comentarios='%s' WHERE fk_wimpgrid=%d", anotaciones, id)
+              DBI::dbExecute(con, query_wp)
+              showNotification(
+                  ui = sprintf("Nueva simulación de %s guardada con éxito. Diríjase a la página de pacientes para visualizarla.", nombrePaciente()),
+                  type = "message",
+                  duration = 8
+              ) 
+            }
+            DBI::dbDisconnect(con)
+          }
+      }
+    })
 
- 
-
-selfdigraph_layout <- reactiveVal("circle")
-
-selfdigraph_vertex_size <- reactiveVal(1)
-
-selfdigraph_edge_width <- reactiveVal(1)
-
-selfdigraph_color <- reactiveVal("red/green")
-
- 
-
-idealdigraph_inc <- reactiveVal(FALSE)
-
-idealdigraph_layout <- reactiveVal("circle")
 
 
+  #scn <- scenariomatrix(dataaa_w(),c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0))
 
-idealdigraph_color <- reactiveVal("red/green")
+  #VARIABLES OF THE FORM
 
- 
+  
 
-observeEvent(input$tab_visualizacion, {
+  selfdigraph_layout <- reactiveVal("circle")
 
- 
+  selfdigraph_vertex_size <- reactiveVal(1)
 
-})
+  selfdigraph_edge_width <- reactiveVal(1)
 
- 
+  selfdigraph_color <- reactiveVal("red/green")
 
-# Observer event para el input layout de selfdigraph
+  
 
-observeEvent(input$selfdigraph_layout, {
+  idealdigraph_inc <- reactiveVal(FALSE)
 
-  selfdigraph_layout(input$selfdigraph_layout)
+  idealdigraph_layout <- reactiveVal("circle")
 
-})
 
- 
 
-# Observer event para el input vertex.size de selfdigraph
+  idealdigraph_color <- reactiveVal("red/green")
 
-observeEvent(input$selfdigraph_vertex_size, {
+  
 
-  selfdigraph_vertex_size(input$selfdigraph_vertex_size)
+  observeEvent(input$tab_visualizacion, {
 
-})
+  
 
- 
+  })
 
-# Observer event para el input edge.width de selfdigraph
+  
 
-observeEvent(input$selfdigraph_edge_width, {
+  # Observer event para el input layout de selfdigraph
 
-  selfdigraph_edge_width(input$selfdigraph_edge_width)
+  observeEvent(input$selfdigraph_layout, {
 
-})
+    selfdigraph_layout(input$selfdigraph_layout)
 
- 
+  })
 
-# Observer event para el input color de selfdigraph
+  
 
-observeEvent(input$selfdigraph_color, {
+  # Observer event para el input vertex.size de selfdigraph
 
-  selfdigraph_color(input$selfdigraph_color)
+  observeEvent(input$selfdigraph_vertex_size, {
 
-})
+    selfdigraph_vertex_size(input$selfdigraph_vertex_size)
 
- 
+  })
 
-# Observer event para el input inc de idealdigraph
+  
 
-observeEvent(input$idealdigraph_inc, {
+  # Observer event para el input edge.width de selfdigraph
 
-  idealdigraph_inc(input$idealdigraph_inc)
+  observeEvent(input$selfdigraph_edge_width, {
 
-})
+    selfdigraph_edge_width(input$selfdigraph_edge_width)
 
- 
+  })
 
-# Observer event para el input layout de idealdigraph
+  
 
-observeEvent(input$idealdigraph_layout, {
+  # Observer event para el input color de selfdigraph
 
-  idealdigraph_layout(input$idealdigraph_layout)
+  observeEvent(input$selfdigraph_color, {
 
-})
- 
+    selfdigraph_color(input$selfdigraph_color)
 
-# Observer event para el input color de idealdigraph
+  })
 
-observeEvent(input$idealdigraph_color, {
+  
 
-  idealdigraph_color(input$idealdigraph_color)
+  # Observer event para el input inc de idealdigraph
 
-})
+  observeEvent(input$idealdigraph_inc, {
 
- 
+    idealdigraph_inc(input$idealdigraph_inc)
 
-# Lógica para mostrar los resultados de selfdigraph()
+  })
 
-observeEvent(input$graph_selector_visualizacion, {
+  
 
-  graph <- input$graph_selector_visualizacion
+  # Observer event para el input layout de idealdigraph
 
-})
+  observeEvent(input$idealdigraph_layout, {
+
+    idealdigraph_layout(input$idealdigraph_layout)
+
+  })
+  
+
+  # Observer event para el input color de idealdigraph
+
+  observeEvent(input$idealdigraph_color, {
+
+    idealdigraph_color(input$idealdigraph_color)
+
+  })
+
+  
+
+  # Lógica para mostrar los resultados de selfdigraph()
+
+  observeEvent(input$graph_selector_visualizacion, {
+
+    graph <- input$graph_selector_visualizacion
+
+  })
 
  
 
@@ -814,720 +842,717 @@ observeEvent(input$graph_selector_visualizacion, {
 
  
 
-generate_graph <- function(){
+  generate_graph <- function(){
+    # Verificar que input$graph_selector_visualizacion no es NULL
+    req(input$graph_selector_visualizacion)
+    # Asignar el input a una variable
 
-  # Verificar que input$graph_selector_visualizacion no es NULL
+    graph <- input$graph_selector_visualizacion
+    graph2 <- NULL
 
-  req(input$graph_selector_visualizacion)
+    # Dependiendo de la selección del usuario, dibuja el gráfico correspondiente
 
- 
-
-  # Asignar el input a una variable
-
-  graph <- input$graph_selector_visualizacion
-
-  graph2 <- NULL
-
-  print("grapfh selected in view")
-
-  print(graph)
-
-  # Dependiendo de la selección del usuario, dibuja el gráfico correspondiente
-
-  if (graph == "autodigrafo" || graph=="selfdigraph") {
-    print(i18n$get_translation_language())
-
-    print("hhhh")
-
- 
-
-    if(i18n$get_translation_language()=="es") {
-
-      print("es")
-     
-      #graph2 <- selfdigraph(dataaa_w(), layout = translate_word("en",selfdigraph_layout()), vertex.size = selfdigraph_vertex_size(),edge.width = selfdigraph_edge_width(), color = translate_word("en",selfdigraph_color())) 
-      graph2 <- digraph(dataaa_w(), layout = translate_word("en",selfdigraph_layout()), color = translate_word("en",selfdigraph_color()))
-      print(graph2)
-
-    }
-
-    else {
-
-      print("en")
-      #graph2 <- selfdigraph(dataaa_w(), layout = selfdigraph_layout(), vertex.size = selfdigraph_vertex_size(),edge.width = selfdigraph_edge_width(), color = selfdigraph_color())
-      graph2 <- digraph(dataaa_w(), layout = selfdigraph_layout(), color = selfdigraph_color())
-    
-    }
-
-  } else if (graph == i18n$t("digrafo del ideal")) {
-
-    if(i18n$get_translation_language()=="es")
-
-    {
-      graph2 <- idealdigraph.vis(wimp = dataaa_w(), inc = idealdigraph_inc(), layout = translate_word("en",idealdigraph_layout()), color = translate_word("en",idealdigraph_color()))
-
-    } else {
-      #graph2 <- idealdigraph(dataaa_w(), inc = idealdigraph_inc(), layout = idealdigraph_layout(), vertex.size = idealdigraph_vertex_size(), edge.width = idealdigraph_edge_width(),color = idealdigraph_color())
-      graph2 <- idealdigraph.vis(wimp = dataaa_w(), inc = idealdigraph_inc(), layout = idealdigraph_layout(), color = idealdigraph_color())
-
-    }
-
-  } else if (graph == i18n$t("índices de Wimp")) {
-
-    print("wimpindices")
-
-    # Get column names
-
-    column_names <- names(wimpindices(dataaa_w()))
-
- 
-
-    # Print column names
-
-    cat("Columns:", paste(column_names, collapse = ", "))
-
-    print(wimpindices(dataaa_w())[["distance"]])
-
-        #wimpindices(dataaa_w())
-
-  }
-
- 
-
-  print(graph2)
-
- 
-
-  return(graph2)
-
-}
-
- 
-
- 
-
-output$graph_output_visualizacion <- renderUI({
-
-  generate_graph()
-
-})
-
- 
-
-output$btn_download_visualizacion <- downloadHandler(
-
-  filename = function() {
-
-    gsub(" ", "", paste("grafico_visualizacion_",input$graph_selector_visualizacion,".html"))
-
-  },
-
-  content = function(file) {
-
- 
-
-    print("Botón de descarga presionado")
-
-    graph <- input$graph_selector_visualizacion 
-
-    if(graph == i18n$t("autodigrafo")) {
-
+    if (graph == "autodigrafo" || graph=="selfdigraph") {
       if(i18n$get_translation_language()=="es") {
-
-        saveWidget(widget = digraph(dataaa_w(), layout = translate_word("en",selfdigraph_layout()), color = translate_word("en",selfdigraph_color())), file = file, selfcontained = TRUE)
-
-      } else {
-
-        saveWidget(widget = digraph(dataaa_w(), layout = selfdigraph_layout(), color = selfdigraph_color()), file = file, selfcontained = TRUE)
+        #graph2 <- selfdigraph(dataaa_w(), layout = translate_word("en",selfdigraph_layout()), vertex.size = selfdigraph_vertex_size(),edge.width = selfdigraph_edge_width(), color = translate_word("en",selfdigraph_color())) 
+        graph2 <- digraph(dataaa_w(), layout = translate_word("en",selfdigraph_layout()), color = translate_word("en",selfdigraph_color()))
 
       }
-
-    } else if(graph == i18n$t("digrafo del ideal")) {
-
-      if(i18n$get_translation_language()=="es") {
-
-        saveWidget(widget = idealdigraph.vis(wimp = dataaa_w(), inc = idealdigraph_inc(), layout = translate_word("en",idealdigraph_layout()), color = translate_word("en",idealdigraph_color())), file = file, selfcontained = TRUE)
-
-      } else {
-
-        saveWidget(widget = idealdigraph.vis(wimp = dataaa_w(), inc = idealdigraph_inc(), layout = idealdigraph_layout(), color = idealdigraph_color()), file = file, selfcontained = TRUE)
-
-      }
-
-    }  
-
-   
-
-    #grDevices::dev.off()
-
-    #file.copy("Rplot001.png", file)  # Copiar el archivo temporal a la ubicación deseada
-
-    #file.remove("Rplot001.png")  # Eliminar el archivo temporal
-
-    #ggsave(file, plot = graph, width = 1200, height = 800, units = "px", dpi = 100)
-
-  }
-
-)
-
-# max_v sera el num filas pq en wimpgrid siempre es ncol - 3 
-max_v <- session$userData$num_col_wimpgrid - 3
-
-max_v <- max(1, max_v)
-
-v <- rep(0, max_v)
-
- 
-df_V <- reactiveVal(as.data.frame(t(v)))
-
-output$boton_download_laboratory <- downloadHandler(
-  filename = function() {
-
-    gsub(" ", "", paste("grafico_laboratorio_", input$graph_selector_visualizacion,".html"))
-
-  },
-
-  content = function(file) {
-
-    graph <- input$graph_selector_laboratorio
-    sim_stop_it <- simdigraph_stop_iter()
-
-    if(graph == i18n$t("simdigrafo")) {
-
-      if(i18n$get_translation_language()=="es") {
-        scn <- scenariomatrix(dataaa_w(),act.vector= df_V(),infer = "linear transform",
-
-                              thr = "linear", max.iter = simdigraph_max_iter(), e = simdigraph_e(),
-
-                              stop.iter = sim_stop_it)
-
-        widget_sim <- simdigraph.vis(scn,niter=simdigraph_niter(), layout = translate_word("en",simdigraph_layout()), color = translate_word("en",simdigraph_color()))
-        saveWidget(widget = widget_sim, file = file, selfcontained = TRUE)
-      } else {
-        scn <- scenariomatrix(dataaa_w(),act.vector= df_V(),infer = "linear transform",
-
-                              thr = "linear", max.iter = simdigraph_max_iter(), e = simdigraph_e(),
-
-                              stop.iter = sim_stop_it)
-
-        widget_sim_en <- simdigraph.vis(scn,niter=simdigraph_niter(), layout = simdigraph_layout(), color = simdigraph_color())
-        saveWidget(widget = widget_sim_en, file = file, selfcontained = TRUE)
-      }
-    }
-  }
-)
-
- 
-
-output$dens <- renderText({
-    INTe <- round(wimpindices(dataaa_w())[["density"]], 3)
-
-    knitr::kable(INTe, col.names = "density",format = "html") %>%
-
-    kable_styling("striped", full_width = F) %>%
-
-    row_spec(0, bold = T) %>%
-
-    column_spec(1, bold = T)
-
-})
-
-output$distance <- renderRHandsontable({
-    # no me deja ponerlo sin decimalesS
-    INTe <- wimpindices(dataaa_w())[["distance"]]
-    INTe <- formatC(round(INTe, 0), format = "d", digits=0)
-
-    #DT::datatable(INTe)
-    izq <- session$userData$constructos_izq
-    der <- session$userData$constructos_der
-    res <- paste(izq, der, sep="/<br>")
-    #colnames(INTe) <- res
-    #rownames(INTe) <- res
-    #data_frame <- data.frame(row_names = res, INTe)
-
-    rhandsontable(INTe, colHeaders=res, rowHeaders=res) %>%
-          hot_table(highlightCol = TRUE, highlightRow = TRUE, readOnly = TRUE) %>%
-          hot_context_menu(allowRowEdit = FALSE, allowColEdit = FALSE) %>%
-          hot_cols(colWidths = 130)
+      else {
+        print("en")
+        #graph2 <- selfdigraph(dataaa_w(), layout = selfdigraph_layout(), vertex.size = selfdigraph_vertex_size(),edge.width = selfdigraph_edge_width(), color = selfdigraph_color())
+        graph2 <- digraph(dataaa_w(), layout = selfdigraph_layout(), color = selfdigraph_color())
       
-})
+      }
 
- 
+    } else if (graph == i18n$t("digrafo del ideal")) {
 
-# Creamos las tablas dinámicas para cada subconjunto
+      if(i18n$get_translation_language()=="es")
 
-output$table_degree <- DT::renderDataTable({
+      {
+        graph2 <- idealdigraph.vis(wimp = dataaa_w(), inc = idealdigraph_inc(), layout = translate_word("en",idealdigraph_layout()), color = translate_word("en",idealdigraph_color()))
 
-    centrality <- wimpindices(dataaa_w())[["centrality"]]
+      } else {
+        #graph2 <- idealdigraph(dataaa_w(), inc = idealdigraph_inc(), layout = idealdigraph_layout(), vertex.size = idealdigraph_vertex_size(), edge.width = idealdigraph_edge_width(),color = idealdigraph_color())
+        graph2 <- idealdigraph.vis(wimp = dataaa_w(), inc = idealdigraph_inc(), layout = idealdigraph_layout(), color = idealdigraph_color())
 
- 
+      }
 
-    DT::datatable(centrality$degree)
+    } else if (graph == i18n$t("índices de Wimp")) {
 
-  })
+      print("wimpindices")
 
- 
+      # Get column names
 
-output$table_closeness <- DT::renderDataTable({
+      column_names <- names(wimpindices(dataaa_w()))
+      # Print column names
 
-    centrality <- wimpindices(dataaa_w())[["centrality"]]
+      cat("Columns:", paste(column_names, collapse = ", "))
 
- 
-    closeness <- data.frame(Closeness = round(centrality$closeness, 3))
+      print(wimpindices(dataaa_w())[["distance"]])
 
-    DT::datatable(closeness)
+          #wimpindices(dataaa_w())
 
-  })
-
- 
-
-output$table_betweenness <- DT::renderDataTable({
-
-    centrality <- wimpindices(dataaa_w())[["centrality"]]
-
-    bt <- data.frame(Betweenness = round(centrality$betweenness, 3))
-
-    DT::datatable(bt)
-
-  })
-
-output$inconsistences <- DT::renderDataTable({
-
- 
-
-    INTe <- wimpindices(dataaa_w())[["inconsistences"]]
-
-    DT::datatable(INTe)
-
-})
-
- 
-
-# Variables reactivas para almacenar los cambios de los inputs de simdigraph
-# meter todos los valores de la simulación desde la bd o no
- 
-# Nº de la iteración
-simdigraph_niter <- reactiveVal(0)
-simdigraph_max_niter <- reactiveVal()
-# Diseño
-simdigraph_layout <- reactiveVal("circle")
-
-#Sobra
-simdigraph_vertex_size <- reactiveVal(1)
-#Sobra
-simdigraph_edge_width <- reactiveVal(1)
-# Paleta de colores
-simdigraph_color <- reactiveVal("red/green")
-
-simdigraph_wimp <- reactiveVal()
-
-# Función de propagación
-simdigraph_infer <- reactiveVal("linear transform")
-# Función umbral
-simdigraph_thr <- reactiveVal("linear")
-# Nº de iteraciones máximas
-simdigraph_max_iter <- reactiveVal(30)
-
-# Valor diferencial
-simdigraph_e <- reactiveVal(0.0001)
-# Nº de la iteración sin cambios
-simdigraph_stop_iter <- reactiveVal(3)
-
- 
-
-# Variables reactivas para almacenar los cambios de los inputs de pcsdindices
-
-act_vector <- reactiveVal()
-
-infer <- reactiveVal("linear transform")
-
-thr <- reactiveVal("linear")
-
-max_iter <- reactiveVal(30)
-
-e <- reactiveVal(0.0001)
-
-stop_iter <- reactiveVal(3)
-
- 
-
-# Variables reactivas para almacenar los cambios de los inputs de pscd
-
-pscd_iter <- reactiveVal(0)
-
-pscd_wimp <- reactiveVal()
-
-pscd_act_vector <- reactiveVal(0)
-
-pscd_infer <- reactiveVal("linear transform")
-
-pscd_thr <- reactiveVal("linear")
-# Nº de iteraciones máximas
-pscd_max_iter <- reactiveVal(30)
-# Valor diferencial
-pscd_e <- reactiveVal(0.0001)
-# Nº de iteraciones sin cambios
-pscd_stop_iter <- reactiveVal(3)
-
-
-observe({
-  max_niter <- simdigraph_max_niter()
-  updateNumericInput(session, "simdigraph_niter", min=0, max=max_niter)
-})
-
-# Lógica para la pestaña "Laboratorio"
-
-observeEvent(input$tab_laboratorio, {
+    }
 
   
 
-})
+    print(graph2)
 
-# Observer event para el input niter de simdigraph
+  
 
-observeEvent(input$simdigraph_niter, {
+    return(graph2)
 
-  simdigraph_niter(input$simdigraph_niter)
-
-})
-
- 
-
-# Observer event para el input layout de simdigraph
-
-observeEvent(input$simdigraph_layout, {
-
-  simdigraph_layout(input$simdigraph_layout)
-
-})
-
- 
-
-# Observer event para el input vertex.size de simdigraph
-
-observeEvent(input$simdigraph_vertex_size, {
-
-  simdigraph_vertex_size(input$simdigraph_vertex_size)
-
-})
-
- 
-
-# Observer event para el input edge.width de simdigraph
-
-observeEvent(input$simdigraph_edge_width, {
-
-  simdigraph_edge_width(input$simdigraph_edge_width)
-
-})
-
- 
-
-# Observer event para el input color de simdigraph
-
-observeEvent(input$simdigraph_color, {
-
-  simdigraph_color(input$simdigraph_color)
-
-})
-
- 
-
-# Observer event para el input wimp de simdigraph
-
-observeEvent(input$simdigraph_wimp, {
-
-  simdigraph_wimp(input$simdigraph_wimp)
-
-})
-
-
-# Observer event para el input infer de simdigraph
-
-observeEvent(input$simdigraph_infer, {
-
-  simdigraph_infer(input$simdigraph_infer)
-
-})
-
- 
-
-# Observer event para el input thr de simdigraph
-
-observeEvent(input$simdigraph_thr, {
-
-  simdigraph_thr(input$simdigraph_thr)
-
-})
-
- 
-
-# Observer event para el input max.iter de simdigraph
-
-observeEvent(input$simdigraph_max_iter, {
-
-  simdigraph_max_iter(input$simdigraph_max_iter)
-
-})
-
- 
-
-# Observer event para el input e de simdigraph
-
-observeEvent(input$simdigraph_e, {
-
-  simdigraph_e(input$simdigraph_e)
-
-})
-
- 
-
-# Observer event para el input stop.iter de simdigraph
-
-observeEvent(input$simdigraph_stop_iter, {
-
-  simdigraph_stop_iter(input$simdigraph_stop_iter)
-
-})
-
-
-
-output$simdigraph_act_vector <- renderRHandsontable({
-  vv <- df_V()
-  if(!is.null(session$userData$constructos_izq) && !is.null(session$userData$constructos_der)){
-    izq <- session$userData$constructos_izq
-    der <- session$userData$constructos_der
-    res <- paste(izq, der, sep="/\n")
-    colnames(vv) <- res
   }
-  rhandsontable(vv, rowHeaders = NULL) %>% 
-          hot_table(stretchH="all")
 
+  
 
-})
+  
 
-list_to_string <- function(lista) {
-  cadena_numeros <- as.character(lista)
-  string <- ""
-  for (i in 1:length(cadena_numeros)) {
-    if (i > 1) {
-      string <- paste(string, ",", sep = "")
-    }
-    string <- paste(string, cadena_numeros[i], sep = "")
-  }
-  return(string)
-}
+  output$graph_output_visualizacion <- renderUI({
 
+    generate_graph()
 
-observeEvent(input$simdigraph_act_vector, {
-    vv <- (hot_to_r(input$simdigraph_act_vector))
-    if(ncol(vv) == max_v){
-      df_V(vv)
-      df_Vpcsd(vv)
-      df_Vind(vv)
-    }
-})
+  })
 
- 
+  
 
-# Observer event para el input act.vector de pcsdindices
+  output$btn_download_visualizacion <- downloadHandler(
 
-#v <- rep(0, 22)
+    filename = function() {
 
-df_Vind <- reactiveVal(as.data.frame(t(v)))
+      gsub(" ", "", paste("grafico_visualizacion_",input$graph_selector_visualizacion,".html"))
 
- 
+    },
 
-output$pcsdindices_act_vector <- renderRHandsontable({
+    content = function(file) {
 
-  vv <- df_Vind()
-  col_highlight = c(0, 1)
-  row_highlight = c(3)
-  if(!is.null(session$userData$constructos_izq) && !is.null(session$userData$constructos_der)){
-    izq <- session$userData$constructos_izq
-    der <- session$userData$constructos_der
-    res <- paste(izq, der, sep="/\n")
-    colnames(vv) <- res
-  }
-  rhandsontable(vv ,rowHeaders = NULL, col_highlight = col_highlight, row_highlight = row_highlight) %>% 
-          hot_table(stretchH="all")
-})
+  
 
- 
+      print("Botón de descarga presionado")
 
-observeEvent(input$pcsdindices_act_vector, {
-    vv <- (hot_to_r(input$pcsdindices_act_vector))
-    if(ncol(vv) == max_v){
-      df_Vind(vv)
-      df_V(vv)
-      df_Vpcsd(vv)
+      graph <- input$graph_selector_visualizacion 
+
+      if(graph == i18n$t("autodigrafo")) {
+
+        if(i18n$get_translation_language()=="es") {
+
+          saveWidget(widget = digraph(dataaa_w(), layout = translate_word("en",selfdigraph_layout()), color = translate_word("en",selfdigraph_color())), file = file, selfcontained = TRUE)
+
+        } else {
+
+          saveWidget(widget = digraph(dataaa_w(), layout = selfdigraph_layout(), color = selfdigraph_color()), file = file, selfcontained = TRUE)
+
+        }
+
+      } else if(graph == i18n$t("digrafo del ideal")) {
+
+        if(i18n$get_translation_language()=="es") {
+
+          saveWidget(widget = idealdigraph.vis(wimp = dataaa_w(), inc = idealdigraph_inc(), layout = translate_word("en",idealdigraph_layout()), color = translate_word("en",idealdigraph_color())), file = file, selfcontained = TRUE)
+
+        } else {
+
+          saveWidget(widget = idealdigraph.vis(wimp = dataaa_w(), inc = idealdigraph_inc(), layout = idealdigraph_layout(), color = idealdigraph_color()), file = file, selfcontained = TRUE)
+
+        }
+
+      }  
+
+    
+
+      #grDevices::dev.off()
+
+      #file.copy("Rplot001.png", file)  # Copiar el archivo temporal a la ubicación deseada
+
+      #file.remove("Rplot001.png")  # Eliminar el archivo temporal
+
+      #ggsave(file, plot = graph, width = 1200, height = 800, units = "px", dpi = 100)
+
     }
 
-})
+  )
 
-# Observer event para el input infer de pcsdindices
+  max_v <- session$userData$num_col_wimpgrid - 3
 
-observeEvent(input$pcsdindices_infer, {
+  max_v <- max(1, max_v)
 
-  infer(input$pcsdindices_infer)
+  v <- rep(0, max_v)
 
-})
+  df_actual <- reactiveVal(as.data.frame(t(v)))
+  
+  df_V <- reactiveVal(as.data.frame(t(v)))
 
- 
+  output$boton_download_laboratory <- downloadHandler(
+    filename = function() {
 
-# Observer event para el input thr de pcsdindices
+      gsub(" ", "", paste("grafico_laboratorio_", input$graph_selector_visualizacion,".html"))
 
-observeEvent(input$pcsdindices_thr, {
+    },
 
-  thr(input$pcsdindices_thr)
+    content = function(file) {
 
-})
+      graph <- input$graph_selector_laboratorio
+      sim_stop_it <- simdigraph_stop_iter()
 
- 
+      if(graph == i18n$t("simdigrafo")) {
 
-# Observer event para el input max.iter de pcsdindices
+        if(i18n$get_translation_language()=="es") {
+          scn <- scenariomatrix(dataaa_w(),act.vector= df_V(),infer = simdigraph_infer(),
 
-observeEvent(input$pcsdindices_max_iter, {
+                                thr = simdigraph_thr(), max.iter = simdigraph_max_iter(), e = simdigraph_e(),
 
-  max_iter(input$pcsdindices_max_iter)
+                                stop.iter = sim_stop_it)
 
-})
+          widget_sim <- simdigraph.vis(scn,niter=simdigraph_niter(), layout = translate_word("en",simdigraph_layout()), color = translate_word("en",simdigraph_color()))
+          saveWidget(widget = widget_sim, file = file, selfcontained = TRUE)
+        } else {
+          scn <- scenariomatrix(dataaa_w(),act.vector= df_V(),infer = simdigraph_infer(),
 
- 
+                                thr = simdigraph_thr(), max.iter = simdigraph_max_iter(), e = simdigraph_e(),
 
-# Observer event para el input e de pcsdindices
+                                stop.iter = sim_stop_it)
 
-observeEvent(input$pcsdindices_e, {
-
-  e(input$pcsdindices_e)
-
-})
-
- 
-
-# Observer event para el input stop.iter de pcsdindices
-
-observeEvent(input$pcsdindices_stop_iter, {
-
-  stop_iter(input$pcsdindices_stop_iter)
-
-})
-
- 
-
- 
-
-# Observer event para el input iter de pscd
-
-observeEvent(input$pcsd_iter, {
-
-  pscd_iter(input$pcsd_iter)
-
-})
-
- 
-
-# Observer event para el input wimp de pscd
-
-observeEvent(input$pscd_wimp, {
-
-  pscd_wimp(input$pscd_wimp)
-
-})
-
- 
-
-# Observer event para el input act.vector de pscd
-
-#v <- rep(0, 22)
-
-df_Vpcsd <- reactiveVal(as.data.frame(t(v)))
-
- 
-
-output$pcsd_act_vector <- renderRHandsontable({
-
-  vv <- df_Vpcsd()
-  if(!is.null(session$userData$constructos_izq) && !is.null(session$userData$constructos_der)){
-    izq <- session$userData$constructos_izq
-    der <- session$userData$constructos_der
-    res <- paste(izq, der, sep="/\n")
-    colnames(vv) <- res
-  }
-  rhandsontable(vv, rowHeaders = NULL) %>% 
-          hot_table(stretchH="all")
-
-})
-
- 
-
-observeEvent(input$pcsd_act_vector, {
-    vv <- (hot_to_r(input$pcsd_act_vector))
-    if(ncol(vv) == max_v){
-      df_Vpcsd(vv)
-      df_Vind(vv)
-      df_V(vv)
+          widget_sim_en <- simdigraph.vis(scn,niter=simdigraph_niter(), layout = simdigraph_layout(), color = simdigraph_color())
+          saveWidget(widget = widget_sim_en, file = file, selfcontained = TRUE)
+        }
+      }
     }
+  )
 
-})
+  
 
-# Observer event para el input infer de pscd
+  output$dens <- renderText({
+      INTe <- round(wimpindices(dataaa_w())[["density"]], 3)
 
-observeEvent(input$pscd_infer, {
+      knitr::kable(INTe, col.names = "density",format = "html") %>%
 
-  pscd_infer(input$pscd_infer)
+      kable_styling("striped", full_width = F) %>%
 
-})
+      row_spec(0, bold = T) %>%
 
- 
+      column_spec(1, bold = T)
 
-# Observer event para el input thr de pscd
+  })
 
-observeEvent(input$pscd_thr, {
+  output$distance <- renderRHandsontable({
+      # no me deja ponerlo sin decimalesS
+      INTe <- wimpindices(dataaa_w())[["distance"]]
+      INTe <- formatC(round(INTe, 0), format = "d", digits=0)
 
-  pscd_thr(input$pscd_thr)
+      #DT::datatable(INTe)
+      izq <- session$userData$constructos_izq
+      der <- session$userData$constructos_der
+      res <- paste(izq, der, sep="/<br>")
+      #colnames(INTe) <- res
+      #rownames(INTe) <- res
+      #data_frame <- data.frame(row_names = res, INTe)
 
-})
+      rhandsontable(INTe, colHeaders=res, rowHeaders=res) %>%
+            hot_table(highlightCol = TRUE, highlightRow = TRUE, readOnly = TRUE) %>%
+            hot_context_menu(allowRowEdit = FALSE, allowColEdit = FALSE) %>%
+            hot_cols(colWidths = 130)
+        
+  })
 
- 
+  
 
-# Observer event para el input max.iter de pscd
+  # Creamos las tablas dinámicas para cada subconjunto
 
-observeEvent(input$pcsd_max_iter, {
+  output$table_degree <- DT::renderDataTable({
 
-  pscd_max_iter(input$pcsd_max_iter)
+      centrality <- wimpindices(dataaa_w())[["centrality"]]
 
-})
+  
 
- 
+      DT::datatable(centrality$degree)
 
-# Observer event para el input e de pscd
+    })
 
-observeEvent(input$pcsd_e, {
+  
 
-  pscd_e(input$pcsd_e)
+  output$table_closeness <- DT::renderDataTable({
 
-})
+      centrality <- wimpindices(dataaa_w())[["centrality"]]
 
- 
+  
+      closeness <- data.frame(Closeness = round(centrality$closeness, 3))
 
-# Observer event para el input stop.iter de pscd
+      DT::datatable(closeness)
 
-observeEvent(input$pcsd_stop_iter, {
+    })
 
-  pscd_stop_iter(input$pcsd_stop_iter)
+  
 
-})
- 
+  output$table_betweenness <- DT::renderDataTable({
 
-# Lógica para mostrar los resultados de simdigraph()
+      centrality <- wimpindices(dataaa_w())[["centrality"]]
 
-observeEvent(input$graph_selector_laboratorio, {
+      bt <- data.frame(Betweenness = round(centrality$betweenness, 3))
 
-  graph <- input$graph_selector_laboratorio
+      DT::datatable(bt)
 
-})
+    })
 
+  output$inconsistences <- DT::renderDataTable({
+
+  
+
+      INTe <- wimpindices(dataaa_w())[["inconsistences"]]
+
+      DT::datatable(INTe)
+
+  })
+
+  
+
+  # Variables reactivas para almacenar los cambios de los inputs de simdigraph
+  # meter todos los valores de la simulación desde la bd o no
+  
+  # Nº de la iteración
+  simdigraph_niter <- reactiveVal(0)
+  simdigraph_max_niter <- reactiveVal()
+  # Diseño
+  simdigraph_layout <- reactiveVal("circle")
+
+  #Sobra
+  simdigraph_vertex_size <- reactiveVal(1)
+  #Sobra
+  simdigraph_edge_width <- reactiveVal(1)
+  # Paleta de colores
+  simdigraph_color <- reactiveVal("red/green")
+
+  simdigraph_wimp <- reactiveVal()
+
+  # Función de propagación
+  simdigraph_infer <- reactiveVal("self dynamics")
+  # Función umbral
+  simdigraph_thr <- reactiveVal("saturation")
+  # Nº de iteraciones máximas
+  simdigraph_max_iter <- reactiveVal(30)
+
+  # Valor diferencial
+  simdigraph_e <- reactiveVal(0.0001)
+  # Nº de la iteración sin cambios
+  simdigraph_stop_iter <- reactiveVal(3)
+
+  
+
+  # Variables reactivas para almacenar los cambios de los inputs de pcsdindices
+
+  act_vector <- reactiveVal()
+
+  infer <- reactiveVal("self dynamics")
+
+  thr <- reactiveVal("saturation")
+
+  max_iter <- reactiveVal(30)
+
+  e <- reactiveVal(0.0001)
+
+  stop_iter <- reactiveVal(3)
+
+  # Variables reactivas para almacenar los cambios de los inputs de pscd
+
+  pscd_iter <- reactiveVal(0)
+
+  pscd_wimp <- reactiveVal()
+
+  pscd_act_vector <- reactiveVal(0)
+
+  pscd_infer <- reactiveVal("self dynamics")
+
+  pscd_thr <- reactiveVal("saturation")
+  # Nº de iteraciones máximas
+  pscd_max_iter <- reactiveVal(30)
+  # Valor diferencial
+  pscd_e <- reactiveVal(0.0001)
+  # Nº de iteraciones sin cambios
+  pscd_stop_iter <- reactiveVal(3)
+
+
+  observe({
+    max_niter <- simdigraph_max_niter()
+    updateNumericInput(session, "simdigraph_niter", min=0, max=max_niter)
+  })
+
+  # Lógica para la pestaña "Laboratorio"
+
+  observeEvent(input$tab_laboratorio, {
+
+    
+
+  })
+
+  # Observer event para el input niter de simdigraph
+
+  observeEvent(input$simdigraph_niter, {
+
+    simdigraph_niter(input$simdigraph_niter)
+
+  })
+
+  
+
+  # Observer event para el input layout de simdigraph
+
+  observeEvent(input$simdigraph_layout, {
+
+    simdigraph_layout(input$simdigraph_layout)
+
+  })
+
+  
+
+  # Observer event para el input vertex.size de simdigraph
+
+  observeEvent(input$simdigraph_vertex_size, {
+
+    simdigraph_vertex_size(input$simdigraph_vertex_size)
+
+  })
+
+  
+
+  # Observer event para el input edge.width de simdigraph
+
+  observeEvent(input$simdigraph_edge_width, {
+
+    simdigraph_edge_width(input$simdigraph_edge_width)
+
+  })
+
+  
+
+  # Observer event para el input color de simdigraph
+
+  observeEvent(input$simdigraph_color, {
+
+    simdigraph_color(input$simdigraph_color)
+
+  })
+
+  
+
+  # Observer event para el input wimp de simdigraph
+
+  observeEvent(input$simdigraph_wimp, {
+
+    simdigraph_wimp(input$simdigraph_wimp)
+
+  })
+
+
+  # Observer event para el input infer de simdigraph
+
+  observeEvent(input$simdigraph_infer, {
+
+    simdigraph_infer(input$simdigraph_infer)
+
+  })
+
+  
+
+  # Observer event para el input thr de simdigraph
+
+  observeEvent(input$simdigraph_thr, {
+
+    simdigraph_thr(input$simdigraph_thr)
+
+  })
+
+  
+
+  # Observer event para el input max.iter de simdigraph
+
+  observeEvent(input$simdigraph_max_iter, {
+
+    simdigraph_max_iter(input$simdigraph_max_iter)
+  })
+
+  
+
+  # Observer event para el input e de simdigraph
+
+  observeEvent(input$simdigraph_e, {
+
+    simdigraph_e(input$simdigraph_e)
+
+  })
+
+  
+
+  # Observer event para el input stop.iter de simdigraph
+
+  observeEvent(input$simdigraph_stop_iter, {
+
+    simdigraph_stop_iter(input$simdigraph_stop_iter)
+
+  })
+
+
+
+  output$simdigraph_act_vector <- renderRHandsontable({
+    vv <- df_V()
+    if(!is.null(session$userData$constructos_izq) && !is.null(session$userData$constructos_der)){
+      izq <- session$userData$constructos_izq
+      der <- session$userData$constructos_der
+      res <- paste(izq, der, sep="/\n")
+      colnames(vv) <- res
+    }
+    rhandsontable(vv, rowHeaders = NULL) %>% 
+            hot_table(stretchH="all")
+
+
+  })
+
+  list_to_string <- function(lista) {
+    cadena_numeros <- as.character(lista)
+    string <- ""
+    for (i in 1:length(cadena_numeros)) {
+      if (i > 1) {
+        string <- paste(string, ",", sep = "")
+      }
+      string <- paste(string, cadena_numeros[i], sep = "")
+    }
+    return(string)
+  }
+
+
+  observeEvent(input$simdigraph_act_vector, {
+      vv <- (hot_to_r(input$simdigraph_act_vector))
+      if(!any(is.na(vv))){
+        if(ncol(vv) == max_v){
+          df_V(vv)
+          df_Vpcsd(vv)
+          df_Vind(vv)
+        }
+      }
+      else{
+        showModal(modalDialog(
+          title = "Error",
+          i18n$t("No se pueden tener campos vacíos en el vector. Vuelva a rellenarlo")
+        ))
+      }
+  })
+
+  
+
+  # Observer event para el input act.vector de pcsdindices
+
+  #v <- rep(0, 22)
+
+  df_Vind <- reactiveVal(as.data.frame(t(v)))
+
+  
+
+  output$pcsdindices_act_vector <- renderRHandsontable({
+
+    vv <- df_Vind()
+    col_highlight = c(0, 1)
+    row_highlight = c(3)
+    if(!is.null(session$userData$constructos_izq) && !is.null(session$userData$constructos_der)){
+      izq <- session$userData$constructos_izq
+      der <- session$userData$constructos_der
+      res <- paste(izq, der, sep="/\n")
+      colnames(vv) <- res
+    }
+    rhandsontable(vv ,rowHeaders = NULL, col_highlight = col_highlight, row_highlight = row_highlight) %>% 
+            hot_table(stretchH="all")
+  })
+
+  
+
+  observeEvent(input$pcsdindices_act_vector, {
+      vv <- (hot_to_r(input$pcsdindices_act_vector))
+      if(!any(is.na(vv))){
+        if(ncol(vv) == max_v){
+          df_Vind(vv)
+          df_V(vv)
+          df_Vpcsd(vv)
+        }
+      }
+      else{
+        showModal(modalDialog(
+          title = "Error",
+          i18n$t("No se pueden tener campos vacíos en el vector. Vuelva a rellenarlo")
+        ))
+      }
+
+  })
+
+  # Observer event para el input infer de pcsdindices
+
+  observeEvent(input$pcsdindices_infer, {
+
+    infer(input$pcsdindices_infer)
+
+  })
+
+  
+
+  # Observer event para el input thr de pcsdindices
+
+  observeEvent(input$pcsdindices_thr, {
+
+    thr(input$pcsdindices_thr)
+
+  })
+
+  
+
+  # Observer event para el input max.iter de pcsdindices
+
+  observeEvent(input$pcsdindices_max_iter, {
+
+    max_iter(input$pcsdindices_max_iter)
+
+  })
+
+  
+
+  # Observer event para el input e de pcsdindices
+
+  observeEvent(input$pcsdindices_e, {
+
+    e(input$pcsdindices_e)
+
+  })
+
+  
+
+  # Observer event para el input stop.iter de pcsdindices
+
+  observeEvent(input$pcsdindices_stop_iter, {
+
+    stop_iter(input$pcsdindices_stop_iter)
+
+  })
+
+  
+
+  
+
+  # Observer event para el input iter de pscd
+
+  observeEvent(input$pcsd_iter, {
+
+    pscd_iter(input$pcsd_iter)
+
+  })
+
+  
+
+  # Observer event para el input wimp de pscd
+
+  observeEvent(input$pscd_wimp, {
+
+    pscd_wimp(input$pscd_wimp)
+
+  })
+
+  
+
+  # Observer event para el input act.vector de pscd
+
+  #v <- rep(0, 22)
+
+  df_Vpcsd <- reactiveVal(as.data.frame(t(v)))
+
+  
+
+  output$pcsd_act_vector <- renderRHandsontable({
+
+    vv <- df_Vpcsd()
+    if(!is.null(session$userData$constructos_izq) && !is.null(session$userData$constructos_der)){
+      izq <- session$userData$constructos_izq
+      der <- session$userData$constructos_der
+      res <- paste(izq, der, sep="/\n")
+      colnames(vv) <- res
+    }
+    rhandsontable(vv, rowHeaders = NULL) %>% 
+            hot_table(stretchH="all")
+
+  })
+
+  
+
+  observeEvent(input$pcsd_act_vector, {
+      vv <- (hot_to_r(input$pcsd_act_vector))
+      if(!any(is.na(vv))){
+        if(ncol(vv) == max_v){
+          df_Vpcsd(vv)
+          df_Vind(vv)
+          df_V(vv)
+        }
+      }
+      else{
+        showModal(modalDialog(
+          title = "Error",
+          i18n$t("No se pueden tener campos vacíos en el vector. Vuelva a rellenarlo")
+        ))
+      }
+  })
+
+  # Observer event para el input infer de pscd
+
+  observeEvent(input$pcsd_infer, {
+
+    pscd_infer(input$pcsd_infer)
+    message("modifico pscdinferrrr")
+
+  })
+
+  
+
+  # Observer event para el input thr de pscd
+
+  observeEvent(input$pcsd_thr, {
+
+    pscd_thr(input$pcsd_thr)
+
+  })
+
+  
+
+  # Observer event para el input max.iter de pscd
+
+  observeEvent(input$pcsd_max_iter, {
+
+    pscd_max_iter(input$pcsd_max_iter)
+
+  })
+
+  
+
+  # Observer event para el input e de pscd
+
+  observeEvent(input$pcsd_e, {
+
+    pscd_e(input$pcsd_e)
+
+  })
+
+  
+
+  # Observer event para el input stop.iter de pscd
+
+  observeEvent(input$pcsd_stop_iter, {
+
+    pscd_stop_iter(input$pcsd_stop_iter)
+
+  })
+  
+
+  # Lógica para mostrar los resultados de simdigraph()
+
+  observeEvent(input$graph_selector_laboratorio, {
+
+    graph <- input$graph_selector_laboratorio
+
+  })
+
+  #df_actual <- reactiveVal(as.data.frame(t(v)))
 
   actualizarVector <- function(string){
     df <- as.data.frame(t(v))
@@ -1574,10 +1599,21 @@ observeEvent(input$graph_selector_laboratorio, {
       updateNumericInput(session, "pcsdindices_e", value=controles$pcind_valor_diferencial)
       updateNumericInput(session, "pcsdindices_stop_iter", value=controles$pcind_n_stop_iter)
       df_Vind(actualizarVector(controles$pcind_vector))
+
+      # vector 
+      #if(!is.na(controles$vector_actual)){
+        df_actual(actualizarVector(controles$vector_actual))
+        wimp <- dataaa_w()
+        df <- as.data.frame(t(v))
+        lista <- strsplit(controles$vector_actual, ",")[[1]]
+        wimp$self[[2]] <- as.double(unlist(lista))
+        dataaa_w(wimp)
+      #}
     }
   }
 
   if(!is.null(session$userData$id_wimpgrid)){
+    message("actualizo controles locales")
     actualizar_controles_local(session$userData$id_wimpgrid)
   }
 
@@ -1594,15 +1630,18 @@ observeEvent(input$graph_selector_laboratorio, {
         "INSERT INTO wimpgrid_params (
             id, fk_wimpgrid, sim_design, sim_umbral, sim_n_iter, sim_n_max_iter, sim_n_stop_iter, sim_color, sim_valor_diferencial, sim_vector,
             pcsd_n_iter, pcsd_n_max_iter, pcsd_n_stop_iter, pcsd_valor_diferencial, pcsd_vector,
-            pcind_propagacion, pcind_umbral, pcind_n_max_iter, pcind_n_stop_iter, pcind_valor_diferencial, pcind_vector
+            pcind_propagacion, pcind_umbral, pcind_n_max_iter, pcind_n_stop_iter, pcind_valor_diferencial, pcind_vector,
+            vector_actual
         ) VALUES (
             %d, %d, '%s', '%s', %d, %d, %d, '%s', %f, '%s',
             %d, %d, %d, %f, '%s',
-            '%s', '%s', %d, %d, %f, '%s'
+            '%s', '%s', %d, %d, %f, '%s',
+            '%s'
         )",  
         id_wx, id_wx, simdigraph_layout(), simdigraph_thr(), simdigraph_niter(), simdigraph_max_iter(), simdigraph_stop_iter(), simdigraph_color(), round(simdigraph_e(), 6), list_to_string(df_V()),
         pscd_iter(), pscd_max_iter(), pscd_stop_iter(), round(pscd_e(), 6), list_to_string(df_Vpcsd()),
-        infer(), thr(), max_iter(), stop_iter(), round(e(), 6), list_to_string(df_Vind())
+        infer(), thr(), max_iter(), stop_iter(), round(e(), 6), list_to_string(df_Vind()),
+        list_to_string(df_actual())
       )
     }
     else{
@@ -1611,11 +1650,13 @@ observeEvent(input$graph_selector_laboratorio, {
       UPDATE wimpgrid_params SET
             sim_design = '%s', sim_umbral = '%s', sim_n_iter = %d, sim_n_max_iter = %d, sim_n_stop_iter = %d, sim_color = '%s', sim_valor_diferencial = %f, sim_vector = '%s',
             pcsd_n_iter = %d, pcsd_n_max_iter = %d, pcsd_n_stop_iter = %d, pcsd_valor_diferencial = %f, pcsd_vector = '%s',
-            pcind_propagacion = '%s', pcind_umbral = '%s', pcind_n_max_iter = %d, pcind_n_stop_iter = %d, pcind_valor_diferencial = %f, pcind_vector = '%s'
+            pcind_propagacion = '%s', pcind_umbral = '%s', pcind_n_max_iter = %d, pcind_n_stop_iter = %d, pcind_valor_diferencial = %f, pcind_vector = '%s',
+            vector_actual= '%s'
         WHERE fk_wimpgrid = %d;",
         simdigraph_layout(), simdigraph_thr(), simdigraph_niter(), simdigraph_max_iter(), simdigraph_stop_iter(), simdigraph_color(), round(simdigraph_e(), 6), list_to_string(df_V()),
         pscd_iter(), pscd_max_iter(), pscd_stop_iter(), round(pscd_e(), 6), list_to_string(df_Vpcsd()),
         infer(), thr(), max_iter(), stop_iter(), round(e(), 6), list_to_string(df_Vind()),
+        list_to_string(df_actual()),
         id_wx)
 
     }
@@ -1634,7 +1675,7 @@ observeEvent(input$graph_selector_laboratorio, {
           textAreaInput("anotacionesSimulacion", i18n$t("Anotaciones:"), value=as.character(comentarios$comentarios)),
           footer = tagList(
             modalButton("Cancelar"),
-            actionButton("confirmarGuardadoSimulacion", "Guardar simulación", class = "btn-success")
+            actionButton("confirmarGuardadoSimulacion", "Guardar simulación", status ="success", icon = icon("check"))
           )
       ))
     }
@@ -1704,9 +1745,9 @@ output$graph_output_laboratorio <- renderUI({
         print(paste("simdig:",i18n$get_translation_language()))
 
         print(translate_word("en", simdigraph_infer()))
-        scn <- scenariomatrix(dataaa_w(),act.vector= df_V(),infer = "linear transform",
+        scn <- scenariomatrix(dataaa_w(),act.vector= df_V(),infer = simdigraph_infer(),
 
-                              thr = "linear", max.iter = simdigraph_max_iter(), e = simdigraph_e(),
+                              thr = simdigraph_thr(), max.iter = simdigraph_max_iter(), e = simdigraph_e(),
 
                               stop.iter = sim_stop_it)
         
@@ -1718,14 +1759,11 @@ output$graph_output_laboratorio <- renderUI({
         
       }
       else{
+        thr = simdigraph_thr()
 
-        #infer = simdigraph_infer(),
+        scn <- scenariomatrix(dataaa_w(),act.vector= df_V(),infer = simdigraph_infer(),
 
-        #                       thr = simdigraph_thr()
-
-        scn <- scenariomatrix(dataaa_w(),act.vector= df_V(),infer = "linear transform",
-
-                              thr = "linear", max.iter = simdigraph_max_iter(), e = simdigraph_e(),
+                              thr = simdigraph_thr(), max.iter = simdigraph_max_iter(), e = simdigraph_e(),
 
                               stop.iter = sim_stop_it)
 
@@ -1754,12 +1792,13 @@ output$graph_output_laboratorio <- renderUI({
       #pcsd(scn, vline =pscdit)
 
     } else if (graph == "pcsdindices") {
-
+      message("entro en pcsdindices..")
+      message(infer())
       if(i18n$get_translation_language()=="es") {
 
-        scn <- scenariomatrix(dataaa_w(),act.vector= df_Vind(),infer = translate_word("en",infer()),
+        scn <- scenariomatrix(dataaa_w(),act.vector= df_Vind(),infer = infer(),
 
-                              thr = translate_word("en",thr()), max.iter = max_iter(), e = e(),
+                              thr = thr(), max.iter = max_iter(), e = e(),
 
                               stop.iter = stop_iter())
       } else {
@@ -1785,9 +1824,9 @@ output$convergence <- renderText({
 
     if(i18n$get_translation_language()=="es") {
 
-    scn <- scenariomatrix(dataaa_w(),act.vector= df_Vind(),infer = translate_word("en",infer()),
+    scn <- scenariomatrix(dataaa_w(),act.vector= df_Vind(),infer = infer(),
 
-                           thr = translate_word("en",thr()), max.iter = max_iter(), e = e(),
+                           thr = thr(), max.iter = max_iter(), e = e(),
 
                            stop.iter = stop_iter())
 
@@ -1820,9 +1859,9 @@ output$summary <- DT::renderDataTable({
 
   if(i18n$get_translation_language()=="es") {
 
-    scn <- scenariomatrix(dataaa_w(),act.vector= df_Vind(),infer = translate_word("en",infer()),
+    scn <- scenariomatrix(dataaa_w(),act.vector= df_Vind(),infer = infer(),
 
-                           thr = translate_word("en",thr()), max.iter = max_iter(), e = e(),
+                           thr = thr(), max.iter = max_iter(), e = e(),
 
                            stop.iter = stop_iter())
 
@@ -1851,9 +1890,9 @@ output$auc <- DT::renderDataTable({
 
     if(i18n$get_translation_language()=="es") {
 
-    scn <- scenariomatrix(dataaa_w(),act.vector= df_Vind(),infer = translate_word("en",infer()),
+    scn <- scenariomatrix(dataaa_w(),act.vector= df_Vind(),infer = infer(),
 
-                           thr = translate_word("en",thr()), max.iter = max_iter(), e = e(),
+                           thr = thr(), max.iter = max_iter(), e = e(),
 
                            stop.iter = stop_iter())
 
@@ -1879,9 +1918,9 @@ output$stability <- DT::renderDataTable({
 
     if(i18n$get_translation_language()=="es") {
 
-    scn <- scenariomatrix(dataaa_w(),act.vector= df_Vind(),infer = translate_word("en",infer()),
+    scn <- scenariomatrix(dataaa_w(),act.vector= df_Vind(),infer = infer(),
 
-                           thr = translate_word("en",thr()), max.iter = max_iter(), e = e(),
+                           thr = thr(), max.iter = max_iter(), e = e(),
 
                            stop.iter = stop_iter())
 
@@ -1955,14 +1994,76 @@ output$pscd_show <- renderPlotly({
       #shinyjs::show("volver_inicio_w")
 
       runjs("$('#matriz_pesos_w').addClass('tab-active');
-      $('#volver_inicio_w').removeClass('tab-active');")
+      $('#volver_inicio_w').removeClass('tab-active');
+      $('#vector_yo_actual_w').removeClass('tab-active');")
       
       shinyjs::hide("guardarComo_w")
       shinyjs::hide("exportar_w")
-      #shinyjs::hide("matriz_pesos_w")
       # Cambiar a modo de edición
       shinyjs::hide("prueba_container_w")
+      shinyjs::hide("vector_yo_actual")
       shinyjs::show("matriz_pesos")
+    }
+  })
+
+  onclick("vector_yo_actual_w", {
+    if (!is.null(session$userData$datos_wimpgrid)) {
+      shinyjs::hide("editar_w")
+
+      runjs("$('#vector_yo_actual_w').addClass('tab-active');
+      $('#matriz_pesos_w').removeClass('tab-active');
+      $('#volver_inicio_w').removeClass('tab-active');")
+      
+      shinyjs::show("guardarComo_w")
+      shinyjs::hide("exportar_w")
+      shinyjs::hide("prueba_container_w")
+      shinyjs::hide("matriz_pesos")
+      shinyjs::show("vector_yo_actual")
+      shinyjs::show("guardarBD_w")
+      permitirEjecucionYoActual <<- TRUE
+
+      output$vector_editable_yo_actual <- renderRHandsontable({
+        lista_actual <- list()
+
+        if(!is.null(session$userData$datos_wimpgrid)){
+          tabla <- tabla_manipulable_w()
+          nombres_columnas <- colnames(tabla)
+          min_val <- as.integer(nombres_columnas[1])
+          max_val <- as.integer(nombres_columnas[length(nombres_columnas)])
+          columnas <- length(nombres_columnas) -3
+          nombres_filas <- rownames(tabla)
+          filas <- length(nombres_filas)
+          for(i in 1:filas){
+            for(j in 1:columnas+1){
+              if(i+1 == j){
+                lista_actual[i] <- as.numeric(tabla[i, j])
+              }
+            }
+          }
+          if(!is.null(session$userData$constructos_izq) && !is.null(session$userData$constructos_der)){
+            # primera vez que se carga, hacerlo desde la rejilla
+            df <- df_actual()
+            izq <- session$userData$constructos_izq
+            der <- session$userData$constructos_der
+            res <- paste(izq, der, sep="/\n")
+            colnames(df) <- res
+            lista_estandarizada <- c()
+            message("df en output$vector_editable_yo_actual: ", df)
+            if(all(df[1, ] == 0)){
+              for(i in seq_along(lista_actual)){
+                lista_estandarizada <- c(lista_estandarizada, as.numeric(lista_actual[i]))
+              }
+              lista_estandarizada <- reescalar(lista_estandarizada, min_val, max_val)
+              for(i in 1:length(lista_actual)){
+                df[1, i] <- lista_estandarizada[i]
+              }
+              
+            }
+          }
+        }
+        rhandsontable(df, rowHeaders = NULL) %>% 
+          hot_table(stretchH="all")
+      })
     }
   })
  
@@ -1970,21 +2071,22 @@ output$pscd_show <- renderPlotly({
     #shinyjs::hide("volver_inicio_w")
 
     runjs("$('#volver_inicio_w').addClass('tab-active');
-      $('#matriz_pesos_w').removeClass('tab-active');")
+      $('#matriz_pesos_w').removeClass('tab-active');
+      $('#vector_yo_actual_w').removeClass('tab-active');")
 
     shinyjs::show("editar_w")
     shinyjs::show("guardarBD_w")
     shinyjs::show("guardarComo_w")
     shinyjs::show("exportar_w")
-    shinyjs::show("matriz_pesos_w")
+    shinyjs::show("botones_izquierda_w")
     # Cambiar a modo de tabla
     shinyjs::show("prueba_container_w")
+    shinyjs::hide("vector_yo_actual")
     shinyjs::hide("matriz_pesos")
   })
 
   output$weight_matrix_graph <- renderPlotly({
-    matrix_data <- dataaa_w()[["scores"]][["weights"]]
-    
+    # matrix data se asigna justo al cargar los datos de importwimp para que no afecte las actualizaciones según yo-actual.
     # Crear una matriz de etiquetas con los valores de los constructos
     constructos_der <- session$userData$constructos_der
     constructos_izq <- session$userData$constructos_izq
@@ -2038,6 +2140,78 @@ output$pscd_show <- renderPlotly({
         titlefont = list(size=20)
       )
   })
+
+  reescalar <- function(vector, min_valor, max_valor) {
+      resultado <- (vector - (max_valor + min_valor) / 2) / ((max_valor - min_valor) / 2)
+      redondeado <- lapply(resultado, function(x) round(x, 2))
+      
+      return(redondeado)
+  }
+
+  output$vector_editable_yo_actual <- renderRHandsontable({
+    lista_actual <- list()
+
+    if(!is.null(session$userData$datos_wimpgrid)){
+      tabla <- tabla_manipulable_w()
+      nombres_columnas <- colnames(tabla)
+      min_val <- as.integer(nombres_columnas[1])
+      max_val <- as.integer(nombres_columnas[length(nombres_columnas)])
+      columnas <- length(nombres_columnas) -3
+      nombres_filas <- rownames(tabla)
+      filas <- length(nombres_filas)
+      for(i in 1:filas){
+        for(j in 1:columnas+1){
+          if(i+1 == j){
+            lista_actual[i] <- as.numeric(tabla[i, j])
+          }
+        }
+      }
+      if(!is.null(session$userData$constructos_izq) && !is.null(session$userData$constructos_der)){
+        # primera vez que se carga, hacerlo desde la rejilla
+        df <- df_actual()
+        izq <- session$userData$constructos_izq
+        der <- session$userData$constructos_der
+        res <- paste(izq, der, sep="/\n")
+        colnames(df) <- res
+        lista_estandarizada <- c()
+        message("df en output$vector_editable_yo_actual: ", df)
+        if(all(df[1, ] == 0)){
+          for(i in seq_along(lista_actual)){
+            lista_estandarizada <- c(lista_estandarizada, as.numeric(lista_actual[i]))
+          }
+          lista_estandarizada <- reescalar(lista_estandarizada, min_val, max_val)
+          for(i in 1:length(lista_actual)){
+            df[1, i] <- lista_estandarizada[i]
+          }
+          
+        }
+      }
+    }
+    rhandsontable(df, rowHeaders = NULL) %>% 
+      hot_table(stretchH="all")
+  })
+
+  observeEvent(input$vector_editable_yo_actual, {
+    vv <- isolate(hot_to_r(input$vector_editable_yo_actual))
+      if(permitirEjecucionYoActual){
+        message("entro en observeevent input vector_editable", vv)
+        if(!any(is.na(vv))){
+          if(ncol(vv) == max_v){
+            df_actual(vv)
+            wimp <- dataaa_w()
+            wimp$self[[2]] <- as.double(unlist(vv))
+            dataaa_w(wimp)
+          }
+        }
+        else{
+          showModal(modalDialog(
+            title = "Error",
+            i18n$t("No se pueden tener campos vacíos en el vector. Vuelva a rellenarlo")
+          ))
+        }
+      }
+  }, ignoreInit = TRUE)
+
 
 
 

@@ -26,29 +26,43 @@ inicio_server <- function(input, output, session) {
     grepl("\\<[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}\\>", as.character(x), ignore.case=TRUE)
   }
 
+  observe({
+        i18n$set_translation_language(input$selected_language)
+  })
+
   
 
-  runjs("
-  $(document).on('mousemove', function(e) {
-    var xPos = e.pageX;
-    var yPos = e.pageY;
-   
-    $('#psychlabmove').css({
-      'top': yPos/-100,
-      'left': xPos/-100
-    });
-  });
-  ")
-
-
-  output$psychlabmove <- renderImage({
+    # Reactiva al cambio de 'session$userData$rol' y actualiza la UI en consecuencia
+    observe({
+        # Accede al valor actual de 'rol'
+        rol <- session$userData$rol
+        
+        # Determina qué contenido mostrar basado en si 'rol' es NULL
+        if(is.null(rol)) {
+            # Contenido para usuarios no autenticados
+            output$dynamic_iframe_home <- renderUI({
+                 iframe_src <- switch(input$selected_language,
+                  "es" = "https://blogs.uned.es/gicuned/psychlab-home",
+                  "en" = "https://blogs.uned.es/gicuned/psychlab-home-en",
+                  NULL
+        )
+        if (!is.null(iframe_src)) {
+            tags$iframe(src = iframe_src, class = "home-iframe")
+        }
+            })
+        } else {
+            # Contenido para usuarios autenticados
+            output$dynamic_iframe_home <- renderUI({
+                 iframe_src <- switch(input$selected_language,
+            "es" = "https://blogs.uned.es/gicuned/psychlab-docs",
+            "en" = "https://blogs.uned.es/gicuned/psychlab-docs-en",
+            NULL
+        )
+        if (!is.null(iframe_src)) {
+            tags$iframe(src = iframe_src, class = "home-iframe")
+        }
+            })
+        }
+    })
     
-      return(list(
-        src = "www/IconUNED_light.svg",
-        contentType = "image/svg+xml",
-        alt = "IconPsychLab"
-      ))
-
-  }, deleteFile = FALSE)
-
 }

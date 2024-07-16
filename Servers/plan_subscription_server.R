@@ -24,14 +24,29 @@ plan_subscription_server <- function(input, output, session){
 
     id_psicologo <- session$userData$id_psicologo
     email_user <- session$userData$email_user
+
+    selectedLanguage <- reactiveVal(i18n$get_translation_language())
+    
+    observeEvent(input$selected_language, {
+        selectedLanguage(input$selected_language)
+    })
     
     output$pricing_table <- renderUI({
-        HTML(sprintf('
-            <script async data-parameter_1="%s" src="pricing-table.js"></script>
-            <stripe-pricing-table pricing-table-id="prctbl_1OHnUHD433GyTQY7egh3gUEc"
-            publishable-key="pk_test_51OCzu7D433GyTQY7aUUS8o9ct9NxRovmwwbMaYaoMmPhzMcIiny9TxTEgTilsAN7xPtfmQBcQ6RFYgstJNH1iTTm00LCx4sEUv">
-            </stripe-pricing-table>
-        ', email_user))
+       if(selectedLanguage() == "es") {
+            HTML(sprintf('
+                <script async src="https://js.stripe.com/v3/pricing-table.js"></script>
+                <stripe-pricing-table pricing-table-id="prctbl_1OEsZRD433GyTQY7Qp69CHyo"
+                publishable-key="pk_live_51OCzu7D433GyTQY7esMPH2Tzahll296t1JhY7YIM4j6ey1zJWejY82GKJSOSXmqgY1AtP1xlNHcDOMrntiZ92Auq00aGFUkZdv">
+                </stripe-pricing-table>
+            ', email_user))
+        } else if(selectedLanguage() == "en") {
+            HTML(sprintf('
+                <script async src="https://js.stripe.com/v3/pricing-table.js"></script>
+                <stripe-pricing-table pricing-table-id="prctbl_1Obih7D433GyTQY7hQoD0qmz"
+                publishable-key="pk_live_51OCzu7D433GyTQY7esMPH2Tzahll296t1JhY7YIM4j6ey1zJWejY82GKJSOSXmqgY1AtP1xlNHcDOMrntiZ92Auq00aGFUkZdv">
+                </stripe-pricing-table>
+            ', email_user))
+        }
     })
 
 
@@ -183,7 +198,20 @@ plan_subscription_server <- function(input, output, session){
     );
     ")
 
+    runjs("
+    $('#cancelAddParticipant').on('click', function (){
+        $('#participantForm').removeClass('anim-fade-in');
+        $('#participantForm').addClass('anim-fade-out'); }
+    );
+    ")
+
     shinyjs::onevent("click", "new-participant-cancel", {
+        
+        delay(100, shinyjs::hide("participantForm"))
+        
+    }, add = TRUE)
+
+    shinyjs::onevent("click", "cancelAddParticipant", {
         
         delay(100, shinyjs::hide("participantForm"))
         
@@ -247,7 +275,7 @@ plan_subscription_server <- function(input, output, session){
     })
 
     output$suscripcion_licencia_header <- renderText({
-        paste(icon = icon("universal-access"), "Sucripción ", subscription_data$selected_subscription_id)
+        paste(icon = icon("id-badge"), "Suscripción ", subscription_data$selected_subscription_id)
     })
 
     # cargar_licencias <- function(){
@@ -301,7 +329,7 @@ plan_subscription_server <- function(input, output, session){
                             NULL
                         }else {
                            sprintf(
-                            '<button id="revocar_acceso_modal_%s_%d" type="button" onclick="%s">Revocar Accesso</button>', 
+                            '<button id="revocar_acceso_modal_%s_%d" type="button" onclick="%s">Revocar</button>', 
                             tbl, i, "Shiny.setInputValue('button_id_revocar_acceso', this.id, {priority: 'event'});")
                         }
                         
@@ -498,7 +526,7 @@ plan_subscription_server <- function(input, output, session){
             sprintf(i18n$t("¿Está seguro de que quiere quitar de la suscripción %d la licencia al usuario %s. La licencia quedará disponible de nuevo y se podrá reasignar a otro usuario."), subscription_data$selected_subscription_id,licencias_data$selected_licencia_psicologo_id),
             footer = tagList(
                 modalButton(i18n$t("Cancelar")),
-                actionButton("confirmarRevocarAcceso", i18n$t("Confirmar"), class = "btn-danger")
+                actionButton("confirmarRevocarAcceso", i18n$t("Confirmar"), status ="danger", icon = icon("ban"))
             )
         ))
     })
@@ -541,6 +569,7 @@ plan_subscription_server <- function(input, output, session){
                         shinyjs::hide("guardarAddParticipant")
                         shinyjs::show("segundo_paso")
                         shinyjs::enable("confirmAddParticipant")
+                        shinyjs::enable("cancelAddParticipant")
                     }else{
                         # tiene suscripcion
                         output$email_text <- renderText({
@@ -550,6 +579,8 @@ plan_subscription_server <- function(input, output, session){
                         shinyjs::show("guardarAddParticipant")
                         shinyjs::hide("segundo_paso")
                         shinyjs::disable("confirmAddParticipant")
+                        shinyjs::disable("cancelAddParticipant")
+
                     }
                 }else{
                     # tiene licencia
@@ -560,6 +591,9 @@ plan_subscription_server <- function(input, output, session){
                     shinyjs::show("guardarAddParticipant")
                     shinyjs::hide("segundo_paso")
                     shinyjs::disable("confirmAddParticipant")
+                    shinyjs::disable("cancelAddParticipant")
+
+                    
                 }
                 
             }else{
@@ -581,6 +615,8 @@ plan_subscription_server <- function(input, output, session){
             shinyjs::show("guardarAddParticipant")
             shinyjs::hide("segundo_paso")
             shinyjs::disable("confirmAddParticipant")
+            shinyjs::disable("cancelAddParticipant")
+
         }
     })
 
@@ -641,6 +677,8 @@ plan_subscription_server <- function(input, output, session){
             shinyjs::show("guardarAddParticipant")
             shinyjs::hide("segundo_paso")
             shinyjs::disable("confirmAddParticipant")
+            shinyjs::disable("cancelAddParticipant")
+
 
             selected_row_add <- input$subscription_table_rows_selected
             renderizarTabla()
@@ -711,6 +749,22 @@ plan_subscription_server <- function(input, output, session){
         shinyjs::show("guardarAddParticipant")
         shinyjs::hide("segundo_paso")
         shinyjs::disable("confirmAddParticipant")
+
+    }, add = TRUE)
+
+    shinyjs::onevent("click", "cancelAddParticipant", {
+        delay(100, shinyjs::hide("participantForm"))
+        # Vaciar los campos del formulario
+        updateTextInput(session, "email_participant", value = "")
+
+        output$email_text <- renderText({
+            ""
+        })
+        shinyjs::enable("email_participant")
+        shinyjs::show("guardarAddParticipant")
+        shinyjs::hide("segundo_paso")
+        shinyjs::disable("confirmAddParticipant")
+        
 
     }, add = TRUE)
 

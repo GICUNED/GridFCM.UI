@@ -30,13 +30,12 @@ knitr::knit_hooks$set(webgl = hook_webgl)
 
 
 
-
 source("global.R")
 # GRID1
 source("R/GraphFunctions.R")
 source("R/HideFunctions.R")
 source("R/ImportFunctions.R")
-source("R/IndicesSummary.R")
+source("R/IndicesSummary.R")  
 source("R/PCSDindicesFunctions.R")
 source("R/SimulationFunctions.R")
 source("R/WimpIndicesFunctions.R")
@@ -72,15 +71,10 @@ source("Servers/user_page_server.R")
 source("Servers/plan_subscription_server.R")
 source("Servers/success_payment_server.R")
 
-
-
-
 #DB
 source("DB/establish_con.R")
 source("DB/gestion_excel.R")
 # source("DB/sync_stripe_db_process_light.R")
-
-
 
 
 menu <- tags$ul(tags$li(a(
@@ -131,9 +125,6 @@ theme <- create_theme(
   )
 )
 
-
-
-
 httr::set_config(config(ssl_verifypeer = 0L, ssl_verifyhost = 0L))
 domain <- Sys.getenv("DOMAIN")
 # message("domain")
@@ -174,7 +165,7 @@ ui <- add_cookie_handlers(
       tags$script(src="https://www.googletagmanager.com/gtag/js?id=G-Y4YW79BBD3"),
       tags$script(src="gtagconnector.js"),
   
-      title = tags$a(href='https://www.uned.es/', target ="_blank", class = "logocontainer",
+      title = tags$a(target ="_blank", class = "logocontainer",
       tags$img(height='56.9',width='', class = "logoimg")),
       div( class ="ml-auto nav-functions-container",
         div(id="patientIndicator", class = "patient-active-label", span(class = "icon-paciente"), htmlOutput("paciente_activo")),
@@ -183,8 +174,6 @@ ui <- add_cookie_handlers(
         # div(id="profile", class = "nav-item user-page user-page-btn" , menuItem(textOutput("user_name"), href = route_link("user"), icon = icon("house-user"), newTab = FALSE)),
       )
     ),
-
-
 
     dashboardSidebar(
       sidebarMenu(
@@ -198,13 +187,11 @@ ui <- add_cookie_handlers(
           div(id = "wimpgrid-page", class = "nav-item wimpg-page hidden-div", menuItem("WimpGrid", href = route_link("wimpgrid"), icon = icon("border-none"), newTab = FALSE)),
           div(id="suggestion-page", class = "nav-item suggestion-page hidden-div", menuItem(i18n$t("Sugerencias"), href = route_link("suggestion"), icon = icon("comments"), newTab = FALSE)),
           div(id="plan-page", class = "nav-item plan-page hidden-div", menuItem(i18n$t("Gestión de Suscripción"), href = route_link("plan"), icon = icon("address-card"), newTab = FALSE)),
-          #div(class = 'language-selector',selectInput('selected_language',i18n$t("Idioma"), choices = i18n$get_languages(),selected = i18n$get_translation_language())),
           div(class = 'language-selector',radioGroupButtons('selected_language',i18n$t("Idioma"), choices = i18n$get_languages(), selected = i18n$get_translation_language(), width='100%', checkIcon = list())),
           
           actionButton('logout_btn',i18n$t("Cerrar sesión"), icon = icon("right-from-bracket"), status="danger", class="logout-btn", style="display: none;")
         )
       ),
-
 
     dashboardBody(
       usei18n(translator = i18n),
@@ -247,6 +234,7 @@ ui <- add_cookie_handlers(
             class = "logoimg404"
           ),
 
+
           column(
             12,
             class = "d-flex mb-4 justify-content-center",
@@ -283,7 +271,6 @@ ui <- add_cookie_handlers(
   )
 )
 
-
 gestionar_rol <- function(roles){
   # obtengo el maximo rol posible a nivel de funcionalidades
   usuario_ilimitado <- FALSE
@@ -301,15 +288,17 @@ gestionar_rol <- function(roles){
     shinyjs::show("patient-page")
     shinyjs::show("repgrid-page")
     shinyjs::show("wimpgrid-page")
+    shinyjs::show("plan-page")
     
     # si el usuario es ilimitado se la ocultamos
     if(usuario_ilimitado){
-      shinyjs::hide("plan-page")
+     shinyjs::hide("plan-page")
     }else{
-      shinyjs::show("plan-page")
+     shinyjs::show("plan-page")
     }
 
-    shinyjs::hide("welcome_box")
+     #shinyjs::hide("welcome_box")
+
     if (usuario_admin) {
       return("usuario_administrador")
     } else if (usuario_gratis && !usuario_ilimitado && !usuario_coordinador_organizacion) {
@@ -353,8 +342,6 @@ crear_usuario <- function(info){
 }
 
 
-
-
 obtener_token <- function(params){
   code <- params$code
   message("code")
@@ -372,7 +359,6 @@ obtener_token <- function(params){
   token_data <- jsonlite::fromJSON(respuesta)
   return(token_data)
 }
-
 
 obtener_token_refrescado <- function(refresh){
   params <- list(
@@ -395,16 +381,64 @@ server <- function(input, output, session) {
   shinyjs::hide("patientIndicator")
 
 
+  runjs("
+      $(document).ready(function() {
+        // Función para detectar dispositivos táctiles
+        var isTouchDevice = 'ontouchstart' in document.documentElement;
+        
+        // Comunicar la detección al servidor de Shiny
+        Shiny.onInputChange('isTouchDevice', isTouchDevice);
+      });
+    ")
+
+    observe({
+     if (!is.null(input$isTouchDevice) && input$isTouchDevice) {
+      shinyjs::hide("enter_fs_1")
+      shinyjs::hide("enter_fs_2")
+      shinyjs::hide("enter_fs_3")
+      shinyjs::hide("enter_fs_4")
+      shinyjs::hide("enter_fs_5")
+      shinyjs::hide("enter_fs_6")
+      shinyjs::hide("enter_fs_7")
+
+      shinyjs::show("mb_enter_fs_1")
+      shinyjs::show("mb_enter_fs_2")
+      shinyjs::show("mb_enter_fs_3")
+      shinyjs::show("mb_enter_fs_4")
+      shinyjs::show("mb_enter_fs_5")
+      shinyjs::show("mb_enter_fs_6")
+      shinyjs::show("mb_enter_fs_7")
+      
+    } else {
+      shinyjs::show("enter_fs_1")
+      shinyjs::show("enter_fs_2")
+      shinyjs::show("enter_fs_3")
+      shinyjs::show("enter_fs_4")
+      shinyjs::show("enter_fs_5")
+      shinyjs::show("enter_fs_6")
+      shinyjs::show("enter_fs_7")
+      
+      shinyjs::hide("mb_enter_fs_1")
+      shinyjs::hide("mb_enter_fs_2")
+      shinyjs::hide("mb_enter_fs_3")
+      shinyjs::hide("mb_enter_fs_4")
+      shinyjs::hide("mb_enter_fs_5")
+      shinyjs::hide("mb_enter_fs_6")
+      shinyjs::hide("mb_enter_fs_7")
+    }
+  })
+
+
   message("entro en server")
   params <- parseQueryString(isolate(session$clientData$url_search))
 
   observeEvent(get_cookie("token_cookie"), {
-    message("obtengo la cookie:")
+    #message("obtengo la cookie:")
     token <- get_cookie("token_cookie")
     if(token != "null"){
       con <- establishDBConnection()
       usuario <- DBI::dbGetQuery(con, sprintf("SELECT nombre, id, token, refresh_token FROM psicologo WHERE token='%s'", token)) # de momento
-      message(usuario$nombre, ", id: ", usuario$id)
+      #message(usuario$nombre, ", id: ", usuario$id)
       psicologo(usuario)
       DBI::dbDisconnect(con)
     }
@@ -555,6 +589,7 @@ observeEvent(input$invitado, {
         duration = 5
       ) 
     }
+    
     else{
       removeModal()
       showNotification(
@@ -575,6 +610,7 @@ observeEvent(input$invitado, {
       session$userData$rol <- id$rol
       session$userData$id_psicologo <- as.integer(id$id)
       patient_server(input, output, session)
+      inicio_server(input, output, session)
       DBI::dbDisconnect(con)
     }
   })
@@ -590,10 +626,10 @@ observeEvent(input$invitado, {
       }
       else{
         # token y refresh token del usuario
-        message("entro en obtener tokens")
+        #message("entro en obtener tokens")
         token_data <- obtener_token(params)
         if(is.null(token_data$error)){
-          message("entro sin error token")
+          #message("entro sin error token")
           # Acceder al access_token
           GLOBAL_TOKEN <- token_data$access_token
           # session$global_token <- GLOBAL_TOKEN
@@ -621,18 +657,20 @@ observeEvent(input$invitado, {
           suggestion_server(input, output, session)
           user_page_server(input, output, session)
           plan_subscription_server(input, output, session)
+          inicio_server(input, output, session)
+
           # success_payment_server(input, output, session)
           query <- sprintf("UPDATE PSICOLOGO SET token = '%s' WHERE id=%d", GLOBAL_TOKEN, id) # de momento 1 
           DBI::dbExecute(con, query)
           query2 <- sprintf("UPDATE PSICOLOGO SET refresh_token = '%s' WHERE id=%d", GLOBAL_REFRESH_TOKEN, id) # de momento 1
           DBI::dbExecute(con, query2)
-          message("Token obtenido e insertado en la bd")
+          #message("Token obtenido e insertado en la bd")
           shinyjs::show("logout_btn")
           user_name(user$nombre)
         }
         else{
-          message("error token")
-          message(token_data$error)
+          #message("error token")
+          #message(token_data$error)
           user_name(NULL)
         }
       }
@@ -640,23 +678,23 @@ observeEvent(input$invitado, {
     else{
       user_name(user$nombre)
       resp_info <- httr::GET(url = info_url, add_headers("Authorization" = paste("Bearer", user$token, sep = " ")))
-      message("respuesta del get info user")
-      message(resp_info)
+      #message("respuesta del get info user")
+      #message(resp_info)
       error <- httr::http_status(resp_info)
-      message("status ", error)
+      #message("status ", error)
       texto <- paste(error, collapse = " ")
       palabras <- strsplit(texto, " ")[[1]]
       # Seleccionar la última palabra
       ultima_palabra <- palabras[length(palabras)]
       if(ultima_palabra != "OK"){
-        message("caducado, intentando refrescar token")
+        #message("caducado, intentando refrescar token")
         refresh_respuesta <- obtener_token_refrescado(user$refresh_token)
-        message("mensaje refresh token")
-        message(refresh_respuesta)
+        #message("mensaje refresh token")
+        #message(refresh_respuesta)
         refresh_token_data <- jsonlite::fromJSON(refresh_respuesta, simplifyVector = FALSE)
         # Acceder al access_token
         if(!is.null(refresh_token_data$error)){
-          message("Imposible refrescar el token")
+          #message("Imposible refrescar el token")
           DBI::dbExecute(con, sprintf("update psicologo set token=NULL, refresh_token=NULL where id=%d", user$id))
           set_cookie(cookie_name = "token_cookie", cookie_value = "null")
           shinyjs::hide("logout_btn")
@@ -667,11 +705,11 @@ observeEvent(input$invitado, {
         }
         else{
           r <- refresh_token_data$access_token
-          message(paste("añado ", user$token))
+          #message(paste("añado ", user$token))
           session$userData$user_token <- r
           set_cookie(cookie_name = "token_cookie", cookie_value = GLOBAL_TOKEN)
           DBI::dbExecute(con, sprintf("update psicologo set token='%s' where id=%d", r, user$id))
-          message("token actualizado")
+          #message("token actualizado")
           shinyjs::show("logout_btn")
           shinyjs::hide("invitado")
 
@@ -680,7 +718,7 @@ observeEvent(input$invitado, {
 
       }
       if(ultima_palabra == "OK"){
-        message("token válido....")
+        #message("token válido....")
         shinyjs::show("logout_btn")
         shinyjs::hide("invitado")
         # token válido, gestionar permisos?
@@ -698,20 +736,16 @@ observeEvent(input$invitado, {
         }
 
 
-
-
-
         session$userData$rol <- rol
         session$userData$id_psicologo <- user$id
-        
-
         patient_server(input, output, session)
+        inicio_server(input, output, session)
         suggestion_server(input, output, session)
         user_page_server(input, output, session)
         plan_subscription_server(input, output, session)
         # success_payment_server(input, output, session)
         
-        message("rol> ", rol)
+        #message("rol> ", rol)
         DBI::dbExecute(con, sprintf("update psicologo set rol='%s' where id=%d", rol, user$id)) # de momento 1
       }
     }
@@ -736,7 +770,7 @@ observeEvent(input$invitado, {
     )
     resp <- httr::POST(url = logout_url, add_headers("Content-Type" = "application/x-www-form-urlencoded", "Authorization" = paste("Bearer", token, sep = " ")), 
                       body = params, encode="form")
-    message(resp)
+    #message(resp)
     DBI::dbExecute(con, sprintf("update psicologo set token=NULL, refresh_token=NULL where id=%d", user$id)) # de momento 1
     user_name(NULL)
     set_cookie(cookie_name = "token_cookie", cookie_value = "null")
@@ -759,8 +793,6 @@ observeEvent(input$invitado, {
   
 
 
-
-
   link <- make_authorization_url()
   
   
@@ -772,15 +804,13 @@ observeEvent(input$invitado, {
       })
     }
     else{
-      message(user_name())
+      #message(user_name())
       output$user_name <- renderText(user_name())
       output$user_div <- renderUI({
         div(id="profile", class = "nav-item user-page user-page-btn" , menuItem(textOutput("user_name"), href = route_link("user"), icon = icon("house-user"), newTab = FALSE))
       })
     }
   )
-
-
 
   i18n_r <- reactive({
     i18n
@@ -816,28 +846,25 @@ observeEvent(input$invitado, {
                       choices = i18n_r()$t(c("rojo/verde", "escala de grises")))
 
     updateSelectInput(session, "simdigraph_infer",
-                      choices = i18n_r()$t(c("transformacion lineal", "otra opción")))
+                      choices = c("self dynamics", "impact dynamics"))
     updateSelectInput(session, "simdigraph_thr",
-                      choices = i18n_r()$t(c("lineal","otra opción")))
-
+                      choices = c("saturation", "tanh", "none"))
 
     updateSelectInput(session, "pcsd_infer",
-                      choices = i18n_r()$t(c("transformacion lineal", "otra opción")))
+                      choices = c("self dynamics", "impact dynamics"))
     updateSelectInput(session, "pcsd_thr",
-                      choices = i18n_r()$t(c("lineal", "otra opción")))
-
+                      choices = c("saturation", "tanh", "none"))
 
     updateSelectInput(session, "pcsdindices_infer",
-                      choices = i18n_r()$t(c("transformacion lineal", "transformación sigmoidea", "transformación binaria")))
+                      choices = c("self dynamics", "impact dynamics"))
     updateSelectInput(session, "pcsdindices_thr",
-                      choices = i18n_r()$t(c("lineal", "sigmoide", "binario")))
+                      choices = c("saturation", "tanh", "none"))
 
 
     updateSelectInput(session, "graph_selector",
                       choices = i18n_r()$t(c("Análisis Bidimensional",
                               "Análisis Tridimensional","Análisis por Conglomerados","Índices Cognitivos","Dilemas")))
   })
-
 
 
   router_server()
@@ -848,7 +875,7 @@ observeEvent(input$invitado, {
   #form_server(input, output, session)
   #patient_server(input, output, session)
   repgrid_server(input, output, session)
-  repgrid_home_server(input, output, session)
+ repgrid_home_server(input, output, session)
   repgrid_analisis_server(input, output, session)
   wimpgrid_analysis_server(input, output, session)
   #suggestion_server(input, output, session)

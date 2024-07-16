@@ -29,38 +29,7 @@ suggestion_server <- function(input, output, session){
     })
 
 
-    temporal <- NULL  # Defino temporal en un alcance superior
-    output$exportar_usuarios <- downloadHandler(
-        filename = function() {
-            fecha <- gsub(" ", "_", Sys.Date())
-            nombre_temporal <- paste("Usuarios_demo", "_", fecha,  ".xlsx", sep="", collapse="")
-            message(nombre_temporal)
-            temporal <- file.path(tempdir(), nombre_temporal)
-            # traemos los emails de la bd
-            con <- establishDBConnection()
-            query <- sprintf("select email from usuario_demo")
-            users <- DBI::dbGetQuery(con, query)
-            DBI::dbDisconnect(con)
-            my_dataframe = data.frame(email = users$email)
-            write.xlsx(my_dataframe, temporal)
-            return(nombre_temporal)
-        },
-        content = function(file) {
-            fecha <- gsub(" ", "_", Sys.Date())
-            nombre_temporal <- paste("Usuarios_demo", "_", fecha,  ".xlsx", sep="", collapse="")
-            temporal <- file.path(tempdir(), nombre_temporal)
-            file.copy(temporal, file)
-            file.remove(temporal)  # Elimina el archivo temporal después de descargarlo
-        }
-    )
-
-    output$tabla_usuario_demo <- renderDT({
-        con <- establishDBConnection()
-        users <- DBI::dbGetQuery(con, "SELECT DISTINCT email FROM usuario_demo")
-        DBI::dbDisconnect(con)
-        DT::datatable(users)
-    })
-
+    
     suggestion_to_db <- function(sugerencia) {
         con <- establishDBConnection()
 
