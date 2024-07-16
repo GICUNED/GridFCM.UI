@@ -98,7 +98,7 @@ success_payment_server <- function(input, output, session, new_rol_from_payments
                         subscription_data <- jsonlite::fromJSON(subscription_data)
 
                         ## ahora obtenemos la cantidad, status, periodo comienzo y finalizacion, producto comprado (individual u organizacional, se puede saber si la qty es >1 o =1)
-                        fecha_inicio <- as.POSIXct(subscription_data$current_period_start, format="%H:%M:%S") 
+                        fecha_inicio <- as.POSIXct(subscription_data$current_period_start, format="%H:%M:%S")
                         fecha_fin <- as.POSIXct(subscription_data$current_period_end, format="%H:%M:%S")
                         cantidad <- subscription_data$quantity
                         status <- subscription_data$status
