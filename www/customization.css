@@ -89,7 +89,8 @@ textarea{
 .sidebar nav,
 .sidebar nav ul{
   overflow: hidden;
-
+  height: 100%;
+  
 }
 
 .nav-functions-container{
@@ -1157,11 +1158,19 @@ background-color: #454D55;
     visibility: hidden;
   }
 
+  .sidebar-mini.sidebar-collapse .iso-logo-bottom{
+    visibility: hidden;
+  }
+
   .sidebar-mini.sidebar-collapse .logout-btn i{
     margin-left: .5rem;
   }
 
   .sidebar-mini.sidebar-collapse .main-sidebar:hover .logout-btn span{
+    visibility:  visible;
+  }
+
+  .sidebar-mini.sidebar-collapse .main-sidebar:hover .iso-logo-bottom{
     visibility:  visible;
   }
 
@@ -1226,6 +1235,15 @@ background-color: #454D55;
 }
 
 /*logos -----------------------------------------------------------------------------------------*/
+
+.iso-logo{
+  background: no-repeat center url('../ISO-27001.svg');
+  background-size: contain;
+  height: 80px;
+  border: none;
+  width: 100%;
+  object-fit: cover;
+}
 
 .logoimg:hover{
   opacity: .9 !important;
@@ -1764,6 +1782,20 @@ box-shadow: none !important;
   gap: .2rem;
   margin-top: auto;
 }
+
+.iso-logo-bottom{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: .2rem;
+  margin-top: auto; 
+}
+
+.iso-logo-bottom p{
+  font-size: 0.75rem;
+}
+
 
 .flex-container-mini button{
   width: 100%;

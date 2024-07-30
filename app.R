@@ -77,6 +77,7 @@ source("DB/gestion_excel.R")
 # source("DB/sync_stripe_db_process_light.R")
 
 
+
 menu <- tags$ul(tags$li(a(
   class = "item", href = route_link(""), "Inicio"
 )),
@@ -189,9 +190,15 @@ ui <- add_cookie_handlers(
           div(id="plan-page", class = "nav-item plan-page hidden-div", menuItem(i18n$t("Gestión de Suscripción"), href = route_link("plan"), icon = icon("address-card"), newTab = FALSE)),
           div(class = 'language-selector',radioGroupButtons('selected_language',i18n$t("Idioma"), choices = i18n$get_languages(), selected = i18n$get_translation_language(), width='100%', checkIcon = list())),
           
-          actionButton('logout_btn',i18n$t("Cerrar sesión"), icon = icon("right-from-bracket"), status="danger", class="logout-btn", style="display: none;")
+          actionButton('logout_btn',i18n$t("Cerrar sesión"), icon = icon("right-from-bracket"), status="danger", class="logout-btn", style="display: none;"),
+
+          div(class= "iso-logo-bottom",
+            div(class="iso-logo"),
+            p(i18n$t("Information Security Certified"))
+          )
         )
       ),
+
 
     dashboardBody(
       usei18n(translator = i18n),
