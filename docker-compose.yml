@@ -140,7 +140,7 @@ volumes:
     name: "gridfcm-traefik-acme"
 
   r-data:
-    name: "gridfcm-r-data"
+    name: "gridfcm-r-data-prueba7"
 
   postgres-data:
     name: "gridfcm-postgres-data"
@@ -151,3 +151,4 @@ networks:
     name: "gridfcm"
     driver: "bridge"
     internal: false
+
