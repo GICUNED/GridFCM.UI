@@ -839,6 +839,7 @@ observeEvent(input$invitado, {
     updateSelectInput(session, "selfdigraph_color",
                       choices = i18n_r()$t(c("rojo/verde", "escala de grises")))
 
+
     updateSelectInput(session, "idealdigraph_layout",
                       choices = i18n_r()$t(c("circulo", "rtcirculo","arbol", "graphopt", "mds", "cuadricula")))
     updateSelectInput(session, "idealdigraph_color",
