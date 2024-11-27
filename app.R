@@ -788,6 +788,7 @@ observeEvent(input$invitado, {
   })
   
 
+
   make_authorization_url <- function() {
     url_template <- "http://%s/keycloak/realms/Gridfcm/protocol/openid-connect/auth?client_id=%s&redirect_uri=%s&response_type=code&scope=%s"
     sprintf(url_template,

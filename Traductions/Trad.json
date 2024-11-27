@@ -3,7 +3,7 @@
   "translation": [
     {
       "es": "Inicia sesion para continuar",
-      "en": "Log in to continue" 
+      "en": "Log in to continue"
     },
     {
       "es": "Iniciar Sesión",
@@ -169,7 +169,7 @@
       "es": "Analisis de RepGrid",
       "en": "RepGrid Analysis"
     },
-    
+
     {
       "es": "Análisis Bidimensional",
       "en": "Two-Dimensional Analysis"
@@ -466,7 +466,7 @@
       "es": "Descripción del análisis Fullgrid.",
       "en": "Description of the FullGrid analysis."
     },
-  
+
     {
       "es": "Importar archivos RepGrid",
       "en": "Import RepGrid files"
@@ -745,11 +745,11 @@
     },
     {
       "es": "¿En qué se parecen tu YO ACTUAL y tu",
-      "en": "What are the similarities between your YO ACTUAL and your"
+      "en": "What are the similarities between your ACTUAL SELF and your"
     },
     {
       "es": "¿En qué se diferencian tu YO ACTUAL y tu",
-      "en": "What are the differences between your YO ACTUAL and your"
+      "en": "What are the differences between your ACTUAL SELF and your"
     },
     {
       "es": "Por el contrario, mi ",
@@ -855,7 +855,7 @@
     {
       "es": "Comprobar datos previos",
       "en": "Check previous data"
-    },    
+    },
     {
       "es": "Iniciar formulario nuevo",
       "en": "Start a new form"
@@ -924,7 +924,6 @@
       "en": "Manage Licenses"
     },
 
-
     {
       "es": "Panel de Usuario",
       "en": "User Panel"
@@ -935,12 +934,11 @@
       "en": "Demo Users"
     },
 
-    
     {
       "es": "Salir",
       "en": "Exit"
     },
-    
+
     {
       "es": "Ha habido un problema al procesar los elementos introducidos. Revise los valores.",
       "en": "There has been an issue processing the entered elements. Please review the values."
@@ -982,6 +980,26 @@
     {
       "es": "Usuarios Registrados",
       "en": "Registered Users "
+    },
+    {
+      "es": "Hombre",
+      "en": "Male"
+    },
+    {
+      "es": "Mujer",
+      "en": "Female"
+    },
+    {
+      "es": "Sin definir",
+      "en": "Undefined"
+    },
+    {
+      "es": "Yo - Actual",
+      "en": "Actual - Self "
+    },
+    {
+      "es": "Yo - Ideal",
+      "en": "Ideal - Self"
     }
-    
-]}
+  ]
+}

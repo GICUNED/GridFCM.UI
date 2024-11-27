@@ -47,11 +47,17 @@ patient_server <- function(input, output, session){
             con <- establishDBConnection()
             query <- sprintf("SELECT p.nombre, p.edad, p.genero, p.fecha_registro, p.diagnostico, p.anotaciones FROM paciente as p, psicologo_paciente as pp 
                                 WHERE pp.fk_paciente = p.id and pp.fk_psicologo = %d", session$userData$id_psicologo) # de momento
+            lang <- i18n$get_translation_language()
             if(limit_output){
                 query = paste(query, " LIMIT 2")
             }
             users <- DBI::dbGetQuery(con, query)
             DBI::dbDisconnect(con)
+
+            if (lang == 'en') {
+                users$genero <- i18n$t(users$genero)
+            } 
+
             # Convertir género en factor
             users$genero <- as.factor(users$genero)
             
@@ -85,6 +91,7 @@ patient_server <- function(input, output, session){
     
     shinyjs::onclick("addPatient",  {
         shinyjs::show("patientForm")
+        updateSelectInput(session, "genero", selected = "", choices = c(i18n$t("Hombre"), i18n$t("Mujer"), i18n$t("Sin definir")))
     })
     # observeEvent(input$addPatient, {
     #     message("presiono boton")
@@ -572,11 +579,24 @@ patient_server <- function(input, output, session){
         # de momento 1, luego deberia coger el paciente de la fila correspondiente
         query <- sprintf("SELECT * FROM paciente where id = %d", user_data$selected_user_id ) 
         users <- DBI::dbGetQuery(con, query)
+        lang <- i18n$get_translation_language()
+
+        if (lang == "en") {
+            if (users$genero == 'Hombre') {
+                gender <- 'Male'
+            } else if(users$genero == 'Mujer') {
+                gender <- 'Female'
+            } else if (users$genero == 'Sin definir') {
+                gender <- 'Undefined'
+            } 
+        } else {
+            gender = users$genero
+        }
 
         shinyjs::show("editForm")
         updateTextInput(session, "nombreEdit", value = users$nombre)
         updateNumericInput(session, "edadEdit", value = users$edad)
-        updateSelectInput(session, "generoEdit", selected = users$genero)
+        updateSelectInput(session, "generoEdit", selected = gender, choices = c(i18n$t("Hombre"), i18n$t("Mujer"), i18n$t("Sin definir")))
         updateTextInput(session, "diagnosticoEdit", value = users$diagnostico)
         updateTextInput(session, "anotacionesEdit", value = users$anotaciones)
 
@@ -592,6 +612,17 @@ patient_server <- function(input, output, session){
         genero <- input$generoEdit
         diagnostico <- input$diagnosticoEdit
         anotaciones <- input$anotacionesEdit
+        lang <- i18n$get_translation_language()
+
+        if (lang == "en") {
+            if (genero == "Male") {
+                genero <- "Hombre"
+            } else if(genero == "Female") {
+                genero <- "Mujer"
+            } else if (genero== "Undefined") {
+                genero <- "Sin definir"
+            } 
+        } 
 
         if (is.numeric(edad) && edad >= 0 && edad <= 120) {
             # Insertar los datos en la base de datos
@@ -733,6 +764,12 @@ patient_server <- function(input, output, session){
             message("El género del paciente está vacío")
             showNotification("El género del paciente no puede estar vacío", type = "error")
             return()
+        } else {
+            if (genero == "Male") genero = "Hombre"
+            if (genero == "Female") genero = "Mujer"
+            if (genero == "Undefined") {
+                genero = "Sin definir"
+            }
         }
         
         if (is.null(diagnostico) || diagnostico == "") {
@@ -761,7 +798,7 @@ patient_server <- function(input, output, session){
             # Vaciar los campos del formulario
             updateTextInput(session, "nombre", value = "")
             updateNumericInput(session, "edad", value = 0)
-            updateSelectInput(session, "genero", selected = "")
+            updateSelectInput(session, "genero", selected = "", choices = c(i18n$t("Hombre"), i18n$t("Mujer"), i18n$t("Sin definir")))
             updateTextInput(session, "diagnostico", value = "")
             updateTextInput(session, "anotaciones", value = "")
             message("333")

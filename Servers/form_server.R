@@ -8,6 +8,7 @@ form_server <- function(input, output, session){
     shinyjs::hide("PuntuacionesRepgrid")
     shinyjs::hide("ConfirmacionRepgrid")
     shinyjs::show("Elementos")
+    lang <- i18n$get_translation_language()
     nombres <- reactiveVal(list("Yo - Actual", "Yo - Ideal"))
     nombre_seleccionado <- reactiveVal(NULL)
     constructos <- reactiveVal(NULL)
@@ -34,19 +35,23 @@ form_server <- function(input, output, session){
             }
             nombres(nombres)
             #reactiveVal entre parentesis sin parametros devuelve el valor del objeto
-            
+
             updateTextInput(session, "nombrePaciente", value = "")
 
             output$lista_nombres <- renderUI({
                 if (length(nombres) > 0) {
                     menu_items <- lapply(nombres, function(nombre) {
-                        menuItem(nombre, icon = icon("user"), tabName=nombre)
+                        if ((nombre == "Yo - Ideal" | nombre == "Yo - Actual") & lang == "en") {
+                            menuItem(i18n$t(nombre), icon = icon("user"), tabName=nombre)
+                        } else {
+                            menuItem(nombre, icon = icon("user"), tabName=nombre)
+                        }
                     })
                     sidebarMenu(id="menu_elementos", menu_items)
-                } 
+                }
             })
         }
-        
+
     })
 
     observe(
@@ -58,7 +63,7 @@ form_server <- function(input, output, session){
             shinyjs::disable("borrarElemento")
         }
     )
-    
+
     observeEvent(input$borrarElemento, {
         nombre <- nombre_seleccionado()
         if(!is.null(nombre)){
@@ -68,7 +73,11 @@ form_server <- function(input, output, session){
             nombres(nombres_lista)
             output$lista_nombres <- renderUI({
                 menu_items <- lapply(nombres(), function(nombre) {
-                    menuItem(nombre, icon = icon("user"), tabName=nombre)
+                    if ((nombre == "Yo - Ideal" | nombre == "Yo - Actual") & lang == "en") {
+                        menuItem(i18n$t(nombre), icon = icon("user"), tabName=nombre)
+                    } else {
+                        menuItem(nombre, icon = icon("user"), tabName=nombre)
+                    }
                 })
                 sidebarMenu(id="menu_elementos", menu_items)
             })
@@ -83,7 +92,7 @@ form_server <- function(input, output, session){
         ")
         shinyjs::hide("Elementos")
         shinyjs::show("preguntasDiadas")
-    })    
+    })
 
     # Preguntas sobre los constructos
     shinyjs::onclick("aleatorio", {
@@ -166,7 +175,11 @@ form_server <- function(input, output, session){
             updateTextInput(session, "constructo_der", value="")
             output$lista_constructos <- renderUI({
                 menu_items <- lapply(constructos(), function(nombre) {
-                    menuItem(nombre, tabName=nombre)
+                    if ((nombre == "Yo - Ideal" | nombre == "Yo - Actual") & lang == "en") {
+                        menuItem(i18n$t(nombre), tabName=nombre)
+                    } else {
+                        menuItem(nombre, tabName=nombre)
+                    }
                 })
                 sidebarMenu(id="menu_constructos", menu_items)
             })
@@ -193,7 +206,11 @@ form_server <- function(input, output, session){
             constructos(lista_constructos)
             output$lista_constructos <- renderUI({
                 menu_items <- lapply(constructos(), function(nombre) {
-                    menuItem(nombre, tabName=nombre)
+                    if ((nombre == "Yo - Ideal" | nombre == "Yo - Actual") & lang == "en") {
+                        menuItem(i18n$t(nombre), tabName=nombre)
+                    } else {
+                        menuItem(nombre, tabName=nombre)
+                    }
                 })
                 sidebarMenu(id="menu_constructos", menu_items)
             })
@@ -219,7 +236,7 @@ form_server <- function(input, output, session){
         constructos_puntuables(constructos())
         elementos_puntuables(nombres())
         puntos_repgrid(NULL)
-    })  
+    })
 
     shinyjs::onclick("atras_constructos", {
         runjs("
@@ -269,19 +286,19 @@ form_server <- function(input, output, session){
             polo_derecho <- aleatorios()[[1]][[2]]
 
             output$pregunta_semejanza <- renderText({
-                paste(i18n$t("¿En qué se parecen tu YO ACTUAL y tu"), polo_derecho, "?")
+                paste(i18n$t("¿En qué se parecen tu YO ACTUAL y tu"), i18n$t(polo_derecho), "?")
             })
             output$pregunta_diferencia <- renderText({
-                paste(i18n$t("¿En qué se diferencian tu YO ACTUAL y tu"), polo_derecho, "?")
+                paste(i18n$t("¿En qué se diferencian tu YO ACTUAL y tu"), i18n$t(polo_derecho), "?")
             })
             output$pregunta_diferencia_2 <- renderText({
-                paste(i18n$t("Por el contrario, mi "), polo_derecho, i18n$t(" es:"))
+                paste(i18n$t("Por el contrario, mi "), i18n$t(polo_derecho), i18n$t(" es:"))
             })
         }
     )
 
     observe(
-        if((input$respuesta_semejanza_1 != "") && (input$respuesta_semejanza_2 != "") && 
+        if((input$respuesta_semejanza_1 != "") && (input$respuesta_semejanza_2 != "") &&
                 (input$respuesta_diferencia_1 != "") && (input$respuesta_diferencia_2 != "")){
             shinyjs::enable("siguiente_constructo")
         }
@@ -318,7 +335,11 @@ form_server <- function(input, output, session){
             if(is.null(aleatorios())){
                 output$lista_constructos <- renderUI({
                     menu_items <- lapply(constructos(), function(nombre) {
-                        menuItem(nombre, tabName=nombre)
+                        if ((nombre == "Yo - Ideal" | nombre == "Yo - Actual") & lang == "en") {
+                            menuItem(i18n$t(nombre), tabName=nombre)
+                        } else {
+                            menuItem(nombre, tabName=nombre)
+                        }
                     })
                     sidebarMenu(id="menu_constructos", menu_items)
                 })
@@ -333,7 +354,7 @@ form_server <- function(input, output, session){
                 shinyjs::show("Constructos")
 
             }
-        }        
+        }
     })
 
     shinyjs::onclick("atras_constructos_aleatorios", {
@@ -363,7 +384,7 @@ form_server <- function(input, output, session){
                         textOutput(""),
                         polo_der[j]
                     ),
-                    column(12, 
+                    column(12,
                         sliderInput(
                             paste("slider_", j),
                             label = " ",
@@ -379,7 +400,11 @@ form_server <- function(input, output, session){
     observe(
         if(length(elementos_puntuables()) > 0){
             output$elemento_puntuable <- renderText({
-                unlist(elementos_puntuables()[1])
+                if (unlist(elementos_puntuables()[1]) == 'Yo - Actual' | unlist(elementos_puntuables()[1]) == 'Yo - Ideal') {
+                    i18n$t(unlist(elementos_puntuables()[1]))
+                } else {
+                    unlist(elementos_puntuables()[1])
+                }
             })
             renderizar_puntos()
         }
@@ -388,7 +413,7 @@ form_server <- function(input, output, session){
     observeEvent(input$reiniciar_puntuaciones, {
         renderizar_puntos()
     })
-                
+
     shinyjs::onclick("siguiente_puntuacion", {
 
         runjs("
@@ -438,11 +463,23 @@ form_server <- function(input, output, session){
     # Página de confirmación puntuaciones. Sacar un resumen?
 
     generar_excel <- function(){
+        lang <- i18n$get_translation_language()
         puntuaciones <- puntos_repgrid()
         elementos <- nombres()
         constructos <- constructos()
         n_constructos <- length(constructos)
         n_elementos <- length(elementos)
+        
+        if (lang == "en") {
+            elementos <- unlist(elementos)
+            for (i in seq_along(elementos)) {
+                if (elementos[i] == "Yo - Actual" | elementos[i] == "Yo - Ideal") {
+                    elementos[i] <- i18n$t(elementos[i])
+                } 
+            }
+            elementos <- as.list(elementos)
+        }
+
         primera_fila <- c("-1", elementos, "1")
         constructos_separados <- strsplit(constructos, " - ")
         polo_izq <- sapply(constructos_separados, function(x) x[1])
@@ -456,7 +493,7 @@ form_server <- function(input, output, session){
         writeData(wb, sheet, primera_fila, startRow=1)
         writeData(wb, sheet, polo_izq, startRow=2, startCol=1)
         writeData(wb, sheet, polo_der, startRow=2, startCol=num_columnas)
-        
+
         i = 1
         for (columna in 3:num_columnas-1) {
             for (fila in 2:num_filas) {
@@ -471,9 +508,9 @@ form_server <- function(input, output, session){
 
         return(nombre)
     }
-    
+
     shinyjs::onclick("crearRepgrid", {
-        
+
         ruta_excel <- generar_excel()
         id_paciente <- session$userData$id_paciente
 
@@ -523,7 +560,7 @@ form_server <- function(input, output, session){
                         window.location.href = '/#!/repgrid';
                     }, 100);
                     ")
-                    
+
                     shinyjs::hide("ConfirmacionRepgrid")
                     shinyjs::hide("import-page")
                     shinyjs::hide("form-page")
@@ -534,7 +571,7 @@ form_server <- function(input, output, session){
                     elementos_puntuables(NULL)
                     constructos_puntuables(NULL)
                     puntos_repgrid(NULL)
-                } 
+                }
             }
         },
         error = function(e) {
@@ -555,7 +592,7 @@ form_server <- function(input, output, session){
             ))
         }
         )
-        
+
     })
 
     shinyjs::onclick("atras_confirmacion_repgrid", {
@@ -601,12 +638,16 @@ form_server <- function(input, output, session){
     ideal_repgrid <- reactiveVal(NULL)
     actual_repgrid <- reactiveVal(NULL)
     iterador_constructos <- reactiveVal(1)
-    
+
 
     observe(
         output$lista_constructos_w <- renderUI({
             menu_items <- lapply(constructos_w(), function(nombre) {
-                menuItem(nombre, tabName=nombre)
+                if ((nombre == "Yo - Ideal" | nombre == "Yo - Actual") & lang == "en") {
+                    menuItem(i18n$t(nombre), tabName=nombre)
+                } else {
+                    menuItem(nombre, tabName=nombre)
+                }
             })
             sidebarMenu(id="menu_constructos_w", menu_items)
         })
@@ -616,7 +657,7 @@ form_server <- function(input, output, session){
 
     observe(
         output$sim_rep_w <- renderDT(
-            datatable(data.frame(Fechas= fechas_repgrid()), 
+            datatable(data.frame(Fechas= fechas_repgrid()),
                 selection = "single",
                 rownames = FALSE,
                 escape = FALSE,
@@ -626,7 +667,7 @@ form_server <- function(input, output, session){
                 ),
                 colnames = i18n$t("Simulaciones Repgrid")
             )
-        ) 
+        )
     )
 
     cargar_fechas <- function(){
@@ -634,11 +675,11 @@ form_server <- function(input, output, session){
         query <- sprintf("SELECT distinct(fecha_registro) FROM repgrid_xlsx WHERE fk_paciente=%d", session$userData$id_paciente)
         repgridDB <- DBI::dbGetQuery(con, query)
         DBI::dbDisconnect(con)
-        
+
         if(!is.null(repgridDB)){
             fecha_hora <- repgridDB$fecha_registro
             fechasRep <- format(fecha_hora, format = "%Y-%m-%d %H:%M:%S")
-            
+
             df <- data.frame(Fechas = fechasRep)
             fechas_repgrid(fechasRep)
         }
@@ -649,12 +690,12 @@ form_server <- function(input, output, session){
             shinyjs::show("sim_rep_w")
             cargar_fechas()
         }
-    })  
+    })
 
     reescalar <- function(vector, min_valor, max_valor) {
         resultado <- (vector - (max_valor + min_valor) / 2) / ((max_valor - min_valor) / 2)
         redondeado <- lapply(resultado, function(x) round(x, 2))
-        
+
         return(redondeado)
     }
 
@@ -678,7 +719,7 @@ form_server <- function(input, output, session){
             max <- as.numeric(nombres_columnas[length(nombres_columnas)])
             message("min, max: ", min, " ", max)
             # Utiliza lapply para aplicar la conversión a las columnas seleccionadas
-            
+
             excel_repgrid[, columnas_a_convertir] <- unlist(lapply(excel_repgrid[, columnas_a_convertir], function(x) reescalar(x, min=min, max=max)))
             message(excel_repgrid)
             # saco los constructos
@@ -701,10 +742,10 @@ form_server <- function(input, output, session){
         },error = function(e) {
             message(NULL)
         })
-        
+
     })
 
-    
+
     shinyjs::onclick("iniciar_nuevo_w", {
         runjs("
         setTimeout(function () {
@@ -719,7 +760,7 @@ form_server <- function(input, output, session){
         shinyjs::hide("generar_elementos_w")
         shinyjs::show("preguntasDiadas_w")
         constructos_w(NULL)
-    })  
+    })
 
     # FIN COMPROBAR DATOS PREVIOS --------------------------------------------------
 
@@ -800,7 +841,7 @@ form_server <- function(input, output, session){
             # Eliminar el nombre seleccionado
             lista_constructos <- constructos[constructos != constructo]
             constructos_w(lista_constructos)
-            
+
         }
     })
 
@@ -839,7 +880,7 @@ form_server <- function(input, output, session){
         elementos_evaluables_w(nombres_valoraciones_w())
         constructos_puntuables_w(constructos_w())
         updateSliderInput(session, "valora", value=0)
-    })  
+    })
 
     shinyjs::onclick("atras_constructos_w", {
         runjs("
@@ -853,7 +894,7 @@ form_server <- function(input, output, session){
 
     # FIN CONSTRUCTOS MANUALES WIMPGRID ---------------------------------
 
-    
+
 
     # CONSTRUCTOS ALEATORIOS WIMPGRID ------------------------------------------------
     # Formulario para constructos aleatorios wimpgrid
@@ -873,10 +914,14 @@ form_server <- function(input, output, session){
         output$lista_nombres_w <- renderUI({
             if (length(nombres_w()) > 2) {
                 menu_items <- lapply(nombres_w(), function(nombre) {
-                    menuItem(nombre, icon = icon("user"), tabName=nombre)
+                    if ((nombre == "Yo - Ideal" | nombre == "Yo - Actual") & lang == "en") {
+                        menuItem(i18n$t(nombre), icon = icon("user"), tabName=nombre)
+                    } else {
+                        menuItem(nombre, icon = icon("user"), tabName=nombre)
+                    }
                 })
                 sidebarMenu(id="menu_elementos_w", menu_items)
-            } 
+            }
         })
     )
 
@@ -895,10 +940,10 @@ form_server <- function(input, output, session){
             }
             nombres_w(nombres)
             #reactiveVal entre parentesis sin parametros devuelve el valor del objeto
-            
+
             updateTextInput(session, "nombrePaciente_w", value = "")
         }
-        
+
     })
 
     observe(
@@ -910,7 +955,7 @@ form_server <- function(input, output, session){
             shinyjs::disable("borrarElemento_w")
         }
     )
-    
+
     observeEvent(input$borrarElemento_w, {
         nombre <- nombre_seleccionado_w()
         if(!is.null(nombre)){
@@ -942,7 +987,7 @@ form_server <- function(input, output, session){
         shinyjs::show("generar_elementos_w")
         shinyjs::show("n_aleatorio_w")
         shinyjs::show("generar_aleatorio_w")
-    }) 
+    })
 
     shinyjs::onclick("generar_elementos_w", {
         runjs("
@@ -953,7 +998,7 @@ form_server <- function(input, output, session){
         shinyjs::hide("preguntasDiadas_w")
         shinyjs::show("Elementos_w")
     })
-     
+
     # Una vez metidos los elementos igual que en repgrid, se meten los constructos aleatoriamente comparando elementos
 
     generar_diadas_w <- function(n_pares){
@@ -992,19 +1037,19 @@ form_server <- function(input, output, session){
             polo_derecho <- aleatorios_w()[[1]][[2]]
 
             output$pregunta_semejanza_w <- renderText({
-                paste(i18n$t("¿En qué se parecen tu YO ACTUAL y tu"), polo_derecho, "?")
+                paste(i18n$t("¿En qué se parecen tu YO ACTUAL y tu"), i18n$t(polo_derecho), "?")
             })
             output$pregunta_diferencia_w <- renderText({
-                paste(i18n$t("¿En qué se diferencian tu YO ACTUAL y tu"), polo_derecho, "?")
+                paste(i18n$t("¿En qué se diferencian tu YO ACTUAL y tu"), i18n$t(polo_derecho), "?")
             })
             output$pregunta_diferencia_2_w <- renderText({
-                paste(i18n$t("Por el contrario, mi "), polo_derecho, i18n$t(" es:"))
+                paste(i18n$t("Por el contrario, mi "), i18n$t(polo_derecho), i18n$t(" es:"))
             })
         }
     )
 
     observe(
-        if((input$respuesta_semejanza_1_w != "") && (input$respuesta_semejanza_2_w != "") && 
+        if((input$respuesta_semejanza_1_w != "") && (input$respuesta_semejanza_2_w != "") &&
                 (input$respuesta_diferencia_1_w != "") && (input$respuesta_diferencia_2_w != "")){
             shinyjs::enable("siguiente_constructo_w")
         }
@@ -1049,12 +1094,12 @@ form_server <- function(input, output, session){
                         window.scrollTo(0,0);
                     }, 10);
                 ")
-                
+
                 shinyjs::hide("ConstructosAleatorios_w")
                 shinyjs::show("Constructos_w")
 
             }
-        }        
+        }
     })
 
     shinyjs::onclick("atras_constructos_aleatorios_w", {
@@ -1072,12 +1117,18 @@ form_server <- function(input, output, session){
     # FIN CONSTRUCTOS ALEATORIOS ---------------------------------------------------
 
     # VALORACIONES WIMPGRID --------------------------------------------------------
-    # Valoraciones 
+    # Valoraciones
 
     observe(
         if(length(elementos_evaluables_w()) > 0){
             output$elemento_evaluable_w <- renderText({
-                unlist(elementos_evaluables_w()[1])
+                if (unlist(elementos_evaluables_w()[1]) == "Yo - Actual") {
+                    i18n$t(unlist(elementos_evaluables_w()[1]))
+                } else if (unlist(elementos_evaluables_w()[1]) == "Yo - Ideal") {
+                    i18n$t(unlist(elementos_evaluables_w()[1]))
+                } else {
+                    unlist(elementos_evaluables_w()[1])
+                }
             })
         }
     )
@@ -1121,7 +1172,7 @@ form_server <- function(input, output, session){
 
         return(h)
     }
-                
+
     shinyjs::onclick("siguiente_evaluacion_w", {
         if(length(elementos_evaluables_w()) > 0){
             if(unlist(elementos_evaluables_w()[1]) == "Yo - Actual"){
@@ -1140,7 +1191,7 @@ form_server <- function(input, output, session){
             constructos_puntuables_w(constructos_puntuables_w()[-1])
         }
         if(length(constructos_puntuables_w()) == 0){
-            
+
             shinyjs::hide("ValoracionesWimpgrid")
             shinyjs::show("preguntasDiadas_w")
             shinyjs::show("puntuaciones_w")
@@ -1159,16 +1210,25 @@ form_server <- function(input, output, session){
 
     # PUNTUACIONES WIMPGRID ---------------------------------------------------------
     generar_elementos_wimpgrid <- function(constructos){
+        lang <- i18n$get_translation_language()
         elementos <- list()
         valores_hipoteticos <- valoracion_hipotetico()
         resultado <- lapply(constructos, function(cadena) unlist(strsplit(cadena, " - ")))
         i <- 1
         for(e in resultado){
             if(valores_hipoteticos[i] == 1){
-                elementos <- c(elementos, sprintf("Yo - Totalmente %s", e[2]))
+                if (lang == 'en') {
+                    elementos <- c(elementos, sprintf("Self - Fully %s", e[2]))
+                } else {
+                    elementos <- c(elementos, sprintf("Yo - Totalmente %s", e[2]))
+                }
             }
             else{
-                elementos <- c(elementos, sprintf("Yo - Totalmente %s", e[1]))
+                if (lang == 'en') {
+                    elementos <- c(elementos, sprintf("Self - Fully %s", e[1]))
+                } else {
+                    elementos <- c(elementos, sprintf("Yo - Totalmente %s", e[1]))
+                }
             }
             i <- i+1
         }
@@ -1191,7 +1251,7 @@ form_server <- function(input, output, session){
             shinyjs::hide("puntuaciones_w")
         }
     )
-    
+
     renderizar_puntos_w <- function(){
         output$pagina_puntuaciones_w <- renderUI({
             num_constructos <- length(constructos_puntuables_w())
@@ -1214,7 +1274,7 @@ form_server <- function(input, output, session){
                             textOutput(""),
                             polo_der[j]
                         ),
-                        column(12, 
+                        column(12,
                             sliderInput(
                                 paste("slider_", j),
                                 label = " ",
@@ -1223,7 +1283,7 @@ form_server <- function(input, output, session){
                         )
                     )
                 }
-                
+
             }
             constructos
         })
@@ -1262,7 +1322,7 @@ form_server <- function(input, output, session){
             $('#pagina_puntuaciones_w').removeClass('vis-off');
         }, 1000);
         ")
-        
+
 
         slider_names <- list()
         # iterador para poner el yo actual en la diagonal de la wimpgrid
@@ -1312,12 +1372,13 @@ form_server <- function(input, output, session){
     # CREAR WIMPGRID XSLX ----------------------------------------------------
 
     generar_excel_w <- function(){
+        lang <- i18n$get_translation_language()
         puntuaciones <- puntos_wimpgrid()
         constructos <- constructos_w()
         elementos <- generar_elementos_wimpgrid(constructos)
         n_constructos <- length(constructos)
         n_elementos <- length(elementos)
-        primera_fila <- c("-1", elementos, "Yo - Ideal", "1")
+        primera_fila <- c("-1", elementos, i18n$t("Yo - Ideal"), "1")
         constructos_separados <- strsplit(constructos, " - ")
         polo_izq <- sapply(constructos_separados, function(x) x[1])
         polo_der <- sapply(constructos_separados, function(x) x[2])
@@ -1331,7 +1392,7 @@ form_server <- function(input, output, session){
         writeData(wb, sheet, polo_izq, startRow=2, startCol=1)
         writeData(wb, sheet, polo_der, startRow=2, startCol=num_columnas)
         writeData(wb, sheet, valoracion_ideal(), startRow=2, startCol=num_columnas-1)
-        
+
         i = 1
         for (columna in 4:num_columnas-2) {
             for (fila in 2:num_filas) {
@@ -1369,7 +1430,7 @@ form_server <- function(input, output, session){
                 session$userData$id_wimpgrid <- id
                 datos_wimpgrid <- importwimp(ruta_destino_wimp)
                 excel_wimp<-read.xlsx(ruta_destino_wimp)
-                
+
                 columnas_a_convertir <- 2:(ncol(excel_wimp) - 1)
                 # Utiliza lapply para aplicar la conversión a las columnas seleccionadas
                 excel_wimp[, columnas_a_convertir] <- lapply(excel_wimp[, columnas_a_convertir], as.numeric)
@@ -1381,7 +1442,7 @@ form_server <- function(input, output, session){
                 num_rows <- nrow(session$userData$datos_to_table_w)
                 session$userData$num_row_wimpgrid <- num_rows
                 session$userData$datos_wimpgrid <- datos_wimpgrid
-                
+
                 file.remove(ruta_destino_wimp)
                 if (!is.null(datos_wimpgrid)) {
                     if(rol == "usuario_demo"){
@@ -1392,7 +1453,7 @@ form_server <- function(input, output, session){
                     }
                     # Solo archivo WimpGrid cargado, navegar a WimpGrid Home
                     wimpgrid_analysis_server(input,output,session)
-                    
+
                     runjs("
                     setTimeout(function () {
                         window.location.href = '/#!/wimpgrid';
@@ -1417,7 +1478,7 @@ form_server <- function(input, output, session){
                     valoracion_hipotetico(NULL)
                     fechas_repgrid(NULL)
                     iterador_constructos(1)
-                }  
+                }
             }
         },
         error = function(e) {
