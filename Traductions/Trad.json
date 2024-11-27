@@ -1000,6 +1000,14 @@
     {
       "es": "Yo - Ideal",
       "en": "Ideal - Self"
+    },
+    {
+      "es": "Enviada por",
+      "en": "Sent by"
+    },
+    {
+      "es": "Correo",
+      "en": "Mail"
     }
   ]
 }
