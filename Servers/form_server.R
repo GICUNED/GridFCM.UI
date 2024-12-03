@@ -1237,27 +1237,10 @@ form_server <- function(input, output, session){
         resultado <- lapply(constructos, function(cadena) unlist(strsplit(cadena, " - ")))
         i <- 1
         for(e in resultado){
-            message('SELF FULLY')
             if(valores_hipoteticos[i] == 1){
-                message('ENTER IF')
-                # if (lang == LANG_EN) {
-                #     elementos <- c(elementos, sprintf("Self - Fully %s", e[2]))
-                # } else if (lang == LANG_ES) {
-                #     elementos <- c(elementos, sprintf("Yo - Totalmente %s", e[2]))
-                # } else {
-                #     elementos <- c(elementos, sprintf("Yo - Totalmente %s", e[2]))
-                # }
                 elementos <- c(elementos, sprintf(i18n$t("Yo - Totalmente %s"), e[2]))
             }
             else{
-                message('ENTER ELSE')
-                # if (lang == LANG_EN) {
-                #     elementos <- c(elementos, sprintf("Self - Fully %s", e[1]))
-                # } else if (lang == LANG_ES) {
-                #     elementos <- c(elementos, sprintf("Yo - Totalmente %s", e[1]))
-                # } else {
-                #     elementos <- c(elementos, sprintf("Yo - Totalmente %s", e[1]))
-                # }
                 elementos <- c(elementos, sprintf(i18n$t("Yo - Totalmente %s"), e[1]))
             }
             i <- i+1
@@ -1322,7 +1305,11 @@ form_server <- function(input, output, session){
     observe(
         if(length(elementos_puntuables_w()) > 0){
             output$elemento_puntuable_w <- renderText({
-                paste(i18n$t("Yo - Totalmente"), strsplit(unlist(elementos_puntuables_w()[1]), "Yo - Totalmente")[[1]][2])
+                if (lang == LANG_EN) {
+                    paste(i18n$t("Yo - Totalmente"), strsplit(unlist(elementos_puntuables_w()[1]), "Self - Fully")[[1]][2])
+                } else {
+                    paste(i18n$t("Yo - Totalmente"), strsplit(unlist(elementos_puntuables_w()[1]), "Yo - Totalmente")[[1]][2])
+                }
             })
             renderizar_puntos_w()
         }

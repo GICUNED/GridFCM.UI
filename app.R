@@ -622,6 +622,8 @@ observeEvent(input$invitado, {
     }
   })
 
+
+
   observe({
     user <- psicologo()
     con <- establishDBConnection()
