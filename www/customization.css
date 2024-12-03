@@ -534,6 +534,7 @@ li.nav-item::marker{
   color: #444;
   cursor: pointer;
 
+  margin-left: 0;
 }
 
 #custom_btn_borrar, [id^=revocar_acceso_modal_]{

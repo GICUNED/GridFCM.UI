@@ -1008,6 +1008,22 @@
     {
       "es": "Correo",
       "en": "Mail"
+    },
+    {
+      "es": "Yo - Totalmente %s",
+      "en": "Self - Fully %s"
+    },
+    {
+      "es": "Yo - Totalmente",
+      "en": "Self - Fully"
+    },
+    {
+      "es": "Puntuaciones WimpGrid",
+      "en": "WimpGrid Scores"
+    },
+    {
+      "es": "Abrir",
+      "en": "Open"
     }
   ]
 }

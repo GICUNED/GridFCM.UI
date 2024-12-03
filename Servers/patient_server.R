@@ -91,6 +91,18 @@ patient_server <- function(input, output, session){
     
     shinyjs::onclick("addPatient",  {
         shinyjs::show("patientForm")
+        observe({
+            # Observa cambios en el idioma
+            idioma_actual <- i18n$get_translation_language()
+            
+            # Actualiza las opciones del selectInput
+            updateSelectInput(
+                session, 
+                "genero", 
+                selected = "", 
+                choices = c(i18n$t("Hombre"), i18n$t("Mujer"), i18n$t("Sin definir"))
+            )
+        })
         updateSelectInput(session, "genero", selected = "", choices = c(i18n$t("Hombre"), i18n$t("Mujer"), i18n$t("Sin definir")))
     })
     # observeEvent(input$addPatient, {
@@ -185,7 +197,7 @@ patient_server <- function(input, output, session){
                 data_rep <- df %>%
                     mutate(
                         actionable = glue(
-                            '<button id="custom_btn_abrir" onclick="Shiny.onInputChange(\'button_id_abrir\', {row_number()+numero_aleatorio})">Abrir</button>',
+                            '<button id="custom_btn_abrir" onclick="Shiny.onInputChange(\'button_id_abrir\', {row_number()+numero_aleatorio})">{i18n$t("Abrir")}</button>',
                             '<button id="custom_btn_borrar" onclick="Shiny.onInputChange(\'button_id_borrar\', {row_number()+numero_aleatorio})"></button>'
                         )
                     )
@@ -590,7 +602,7 @@ patient_server <- function(input, output, session){
                 gender <- 'Undefined'
             } 
         } else {
-            gender = users$genero
+            gender <- users$genero
         }
 
         shinyjs::show("editForm")

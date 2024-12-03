@@ -17,6 +17,10 @@ form_server <- function(input, output, session){
     elementos_puntuables <- reactiveVal(NULL)
     constructos_puntuables <- reactiveVal(NULL)
     puntos_repgrid <- reactiveVal(NULL)
+    YO_IDEAL <- "Yo - Ideal"
+    YO_ACTUAL <- "Yo - Actual"
+    LANG_EN <- "en"
+    LANG_ES <- "es"
 
     # Formulario para elementos repgrid
 
@@ -39,9 +43,12 @@ form_server <- function(input, output, session){
             updateTextInput(session, "nombrePaciente", value = "")
 
             output$lista_nombres <- renderUI({
+
                 if (length(nombres) > 0) {
                     menu_items <- lapply(nombres, function(nombre) {
-                        if ((nombre == "Yo - Ideal" | nombre == "Yo - Actual") & lang == "en") {
+                        if ((nombre == YO_IDEAL | nombre == YO_ACTUAL) & lang == LANG_EN) {
+                            menuItem(i18n$t(nombre), icon = icon("user"), tabName=nombre)
+                        } else if ((nombre == YO_IDEAL | nombre == YO_ACTUAL) & lang == LANG_ES) {
                             menuItem(i18n$t(nombre), icon = icon("user"), tabName=nombre)
                         } else {
                             menuItem(nombre, icon = icon("user"), tabName=nombre)
@@ -73,7 +80,9 @@ form_server <- function(input, output, session){
             nombres(nombres_lista)
             output$lista_nombres <- renderUI({
                 menu_items <- lapply(nombres(), function(nombre) {
-                    if ((nombre == "Yo - Ideal" | nombre == "Yo - Actual") & lang == "en") {
+                    if ((nombre == YO_IDEAL | nombre == YO_ACTUAL) & lang == LANG_EN) {
+                        menuItem(i18n$t(nombre), icon = icon("user"), tabName=nombre)
+                    } else if ((nombre == YO_IDEAL | nombre == YO_ACTUAL) & lang == LANG_ES) {
                         menuItem(i18n$t(nombre), icon = icon("user"), tabName=nombre)
                     } else {
                         menuItem(nombre, icon = icon("user"), tabName=nombre)
@@ -175,7 +184,9 @@ form_server <- function(input, output, session){
             updateTextInput(session, "constructo_der", value="")
             output$lista_constructos <- renderUI({
                 menu_items <- lapply(constructos(), function(nombre) {
-                    if ((nombre == "Yo - Ideal" | nombre == "Yo - Actual") & lang == "en") {
+                    if ((nombre == YO_IDEAL | nombre == YO_ACTUAL) & lang == LANG_EN) {
+                        menuItem(i18n$t(nombre), tabName=nombre)
+                    } else if ((nombre == YO_IDEAL | nombre == YO_ACTUAL) & lang == LANG_ES) {
                         menuItem(i18n$t(nombre), tabName=nombre)
                     } else {
                         menuItem(nombre, tabName=nombre)
@@ -206,7 +217,9 @@ form_server <- function(input, output, session){
             constructos(lista_constructos)
             output$lista_constructos <- renderUI({
                 menu_items <- lapply(constructos(), function(nombre) {
-                    if ((nombre == "Yo - Ideal" | nombre == "Yo - Actual") & lang == "en") {
+                    if ((nombre == YO_IDEAL | nombre == YO_ACTUAL) & lang == LANG_EN) {
+                        menuItem(i18n$t(nombre), tabName=nombre)
+                    } else if ((nombre == YO_IDEAL | nombre == YO_ACTUAL) & lang == LANG_ES) {
                         menuItem(i18n$t(nombre), tabName=nombre)
                     } else {
                         menuItem(nombre, tabName=nombre)
@@ -335,11 +348,14 @@ form_server <- function(input, output, session){
             if(is.null(aleatorios())){
                 output$lista_constructos <- renderUI({
                     menu_items <- lapply(constructos(), function(nombre) {
-                        if ((nombre == "Yo - Ideal" | nombre == "Yo - Actual") & lang == "en") {
+                        if ((nombre == YO_IDEAL | nombre == YO_ACTUAL) & lang == LANG_EN) {
+                            menuItem(i18n$t(nombre), tabName=nombre)
+                        } else if ((nombre == YO_IDEAL | nombre == YO_ACTUAL) & lang == LANG_ES) {
                             menuItem(i18n$t(nombre), tabName=nombre)
                         } else {
                             menuItem(nombre, tabName=nombre)
                         }
+
                     })
                     sidebarMenu(id="menu_constructos", menu_items)
                 })
@@ -400,7 +416,7 @@ form_server <- function(input, output, session){
     observe(
         if(length(elementos_puntuables()) > 0){
             output$elemento_puntuable <- renderText({
-                if (unlist(elementos_puntuables()[1]) == 'Yo - Actual' | unlist(elementos_puntuables()[1]) == 'Yo - Ideal') {
+                if (unlist(elementos_puntuables()[1]) == YO_IDEAL | unlist(elementos_puntuables()[1]) == YO_ACTUAL) {
                     i18n$t(unlist(elementos_puntuables()[1]))
                 } else {
                     unlist(elementos_puntuables()[1])
@@ -469,13 +485,13 @@ form_server <- function(input, output, session){
         constructos <- constructos()
         n_constructos <- length(constructos)
         n_elementos <- length(elementos)
-        
-        if (lang == "en") {
+
+        if (lang == LANG_EN) {
             elementos <- unlist(elementos)
             for (i in seq_along(elementos)) {
                 if (elementos[i] == "Yo - Actual" | elementos[i] == "Yo - Ideal") {
                     elementos[i] <- i18n$t(elementos[i])
-                } 
+                }
             }
             elementos <- as.list(elementos)
         }
@@ -643,11 +659,14 @@ form_server <- function(input, output, session){
     observe(
         output$lista_constructos_w <- renderUI({
             menu_items <- lapply(constructos_w(), function(nombre) {
-                if ((nombre == "Yo - Ideal" | nombre == "Yo - Actual") & lang == "en") {
+                if ((nombre == YO_IDEAL | nombre == YO_ACTUAL) & lang == LANG_EN) {
+                    menuItem(i18n$t(nombre), tabName=nombre)
+                } else if ((nombre == YO_IDEAL | nombre == YO_ACTUAL) & lang == LANG_ES) {
                     menuItem(i18n$t(nombre), tabName=nombre)
                 } else {
                     menuItem(nombre, tabName=nombre)
                 }
+
             })
             sidebarMenu(id="menu_constructos_w", menu_items)
         })
@@ -914,10 +933,12 @@ form_server <- function(input, output, session){
         output$lista_nombres_w <- renderUI({
             if (length(nombres_w()) > 2) {
                 menu_items <- lapply(nombres_w(), function(nombre) {
-                    if ((nombre == "Yo - Ideal" | nombre == "Yo - Actual") & lang == "en") {
-                        menuItem(i18n$t(nombre), icon = icon("user"), tabName=nombre)
+                    if ((nombre == YO_IDEAL | nombre == YO_ACTUAL) & lang == LANG_EN) {
+                        menuItem(i18n$t(nombre),  icon = icon("user"), tabName=nombre)
+                    } else if ((nombre == YO_IDEAL | nombre == YO_ACTUAL) & lang == LANG_ES) {
+                        menuItem(i18n$t(nombre),  icon = icon("user"), tabName=nombre)
                     } else {
-                        menuItem(nombre, icon = icon("user"), tabName=nombre)
+                        menuItem(nombre, tabName=nombre)
                     }
                 })
                 sidebarMenu(id="menu_elementos_w", menu_items)
@@ -1122,9 +1143,9 @@ form_server <- function(input, output, session){
     observe(
         if(length(elementos_evaluables_w()) > 0){
             output$elemento_evaluable_w <- renderText({
-                if (unlist(elementos_evaluables_w()[1]) == "Yo - Actual") {
+                if (unlist(elementos_evaluables_w()[1]) == YO_ACTUAL) {
                     i18n$t(unlist(elementos_evaluables_w()[1]))
-                } else if (unlist(elementos_evaluables_w()[1]) == "Yo - Ideal") {
+                } else if (unlist(elementos_evaluables_w()[1]) == YO_IDEAL) {
                     i18n$t(unlist(elementos_evaluables_w()[1]))
                 } else {
                     unlist(elementos_evaluables_w()[1])
@@ -1216,19 +1237,28 @@ form_server <- function(input, output, session){
         resultado <- lapply(constructos, function(cadena) unlist(strsplit(cadena, " - ")))
         i <- 1
         for(e in resultado){
+            message('SELF FULLY')
             if(valores_hipoteticos[i] == 1){
-                if (lang == 'en') {
-                    elementos <- c(elementos, sprintf("Self - Fully %s", e[2]))
-                } else {
-                    elementos <- c(elementos, sprintf("Yo - Totalmente %s", e[2]))
-                }
+                message('ENTER IF')
+                # if (lang == LANG_EN) {
+                #     elementos <- c(elementos, sprintf("Self - Fully %s", e[2]))
+                # } else if (lang == LANG_ES) {
+                #     elementos <- c(elementos, sprintf("Yo - Totalmente %s", e[2]))
+                # } else {
+                #     elementos <- c(elementos, sprintf("Yo - Totalmente %s", e[2]))
+                # }
+                elementos <- c(elementos, sprintf(i18n$t("Yo - Totalmente %s"), e[2]))
             }
             else{
-                if (lang == 'en') {
-                    elementos <- c(elementos, sprintf("Self - Fully %s", e[1]))
-                } else {
-                    elementos <- c(elementos, sprintf("Yo - Totalmente %s", e[1]))
-                }
+                message('ENTER ELSE')
+                # if (lang == LANG_EN) {
+                #     elementos <- c(elementos, sprintf("Self - Fully %s", e[1]))
+                # } else if (lang == LANG_ES) {
+                #     elementos <- c(elementos, sprintf("Yo - Totalmente %s", e[1]))
+                # } else {
+                #     elementos <- c(elementos, sprintf("Yo - Totalmente %s", e[1]))
+                # }
+                elementos <- c(elementos, sprintf(i18n$t("Yo - Totalmente %s"), e[1]))
             }
             i <- i+1
         }
@@ -1291,9 +1321,8 @@ form_server <- function(input, output, session){
 
     observe(
         if(length(elementos_puntuables_w()) > 0){
-            message(unlist(elementos_puntuables_w()[1]))
             output$elemento_puntuable_w <- renderText({
-                unlist(elementos_puntuables_w()[1])
+                paste(i18n$t("Yo - Totalmente"), strsplit(unlist(elementos_puntuables_w()[1]), "Yo - Totalmente")[[1]][2])
             })
             renderizar_puntos_w()
         }
