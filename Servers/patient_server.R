@@ -250,7 +250,7 @@ patient_server <- function(input, output, session){
                 data_wimp <- df %>%
                     mutate(
                         actionable = glue(
-                            '<button id="custom_btn_abrir" onclick="Shiny.onInputChange(\'button_id_abrir_w\', {row_number()+numero_aleatorio})">Abrir</button>',
+                            '<button id="custom_btn_abrir" onclick="Shiny.onInputChange(\'button_id_abrir_w\', {row_number()+numero_aleatorio})">{i18n$t("Abrir")}</button>',
                             '<button id="custom_btn_borrar" onclick="Shiny.onInputChange(\'button_id_borrar_w\', {row_number()+numero_aleatorio})"></button>'
                         )
                     )
