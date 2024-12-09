@@ -172,6 +172,19 @@ patient_server <- function(input, output, session){
     })
 
     observeEvent(input$tabSimulaciones, {
+        tab_text <- gsub("<[^>]+>", "", input$tabSimulaciones)
+        message('ESTO SON LA TAB SIMULA', tab_text)
+
+        if (tab_text == "WimpGrid") {
+            runjs("
+                document.getElementById('available-sims').style.backgroundColor = '#edd58b';
+            ")
+        } else {
+            runjs("
+                document.getElementById('available-sims').style.backgroundColor = '#b8e9dc';
+            ")
+        }
+
         runjs("
         $('#patientSimulations')[0].scrollIntoView({
             behavior: 'smooth',

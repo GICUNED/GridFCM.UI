@@ -29,6 +29,11 @@ patient_ui <- fluidPage(class="patient-diff",
             #actionButton("cargarSimulacion", i18n$t("Abrir simulación"), disabled=TRUE, icon = icon("download")),
             #actionButton("borrarSimulacion", i18n$t("Borrar simulación"), disabled=TRUE, status ="danger", icon = icon("trash-can"))
           ),
+           div(id = "available-sims", class = "available-simulations-container",
+            h4(i18n$t("Simulaciones disponibles")),
+            #actionButton("cargarSimulacion", i18n$t("Abrir simulación"), disabled=TRUE, icon = icon("download")),
+            #actionButton("borrarSimulacion", i18n$t("Borrar simulación"), disabled=TRUE, status ="danger", icon = icon("trash-can"))
+          ),
             tabsetPanel(id = "tabSimulaciones",
               tabPanel(i18n$t("RepGrid"), id = "patient-rep", icon = icon("magnifying-glass-chart"),
                 # Listado de simulaciones repgrid
