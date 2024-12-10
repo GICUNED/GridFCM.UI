@@ -173,7 +173,6 @@ patient_server <- function(input, output, session){
 
     observeEvent(input$tabSimulaciones, {
         tab_text <- gsub("<[^>]+>", "", input$tabSimulaciones)
-        message('ESTO SON LA TAB SIMULA', tab_text)
 
         if (tab_text == "WimpGrid") {
             runjs("

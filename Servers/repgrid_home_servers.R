@@ -263,7 +263,6 @@ output$titulo_repgrid <- renderText({
   DBI::dbDisconnect(con)
   nombrePaciente(nombre)
   fecha <- session$userData$fecha_repgrid
-  message('NOMBRE: ', nombre)
   if (lang  == "es") {
     paste("<b>", i18n$t("Simulación de"), nombre, "</b><br><p class='desccustom-date'>📅", fecha, "</p>") 
   } else {
