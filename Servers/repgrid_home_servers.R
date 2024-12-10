@@ -258,11 +258,17 @@ $('#open-controls-rg-dil').on('click', function (){
 
 output$titulo_repgrid <- renderText({
   con <- establishDBConnection()
+  lang <- i18n$get_translation_language()
   nombre <- DBI::dbGetQuery(con, sprintf("SELECT nombre from paciente WHERE id = %d", session$userData$id_paciente))
   DBI::dbDisconnect(con)
   nombrePaciente(nombre)
   fecha <- session$userData$fecha_repgrid
-  paste("<b>", i18n$t("Simulación de "), nombre, "</b><br><p class='desccustom-date'>📅", fecha, "</p>")
+  message('NOMBRE: ', nombre)
+  if (lang  == "es") {
+    paste("<b>", i18n$t("Simulación de"), nombre, "</b><br><p class='desccustom-date'>📅", fecha, "</p>") 
+  } else {
+    paste("<b>", sprintf("%s%s", nombre, i18n$t("Simulación de")), "</b><br><p class='desccustom-date'>📅", fecha, "</p>")
+  }
 })
 
 output$tabla_datos_repgrid <- renderRHandsontable({

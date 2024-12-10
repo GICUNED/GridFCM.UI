@@ -392,10 +392,15 @@ onevent("click", "exit-controls-lab", {
   output$titulo_wimpgrid <- renderText({
     con <- establishDBConnection()
     nombre <- DBI::dbGetQuery(con, sprintf("SELECT nombre from paciente WHERE id = %d", session$userData$id_paciente))
+    lang <- i18n$get_translation_language()
     nombrePaciente(nombre)
     DBI::dbDisconnect(con)
     fecha <- session$userData$fecha_wimpgrid
-    paste("<b>", i18n$t("Simulación de "), nombre, "</b><br><p class='desccustom-date'>📅", fecha, "</p>")
+     if (lang  == "es") {
+      paste("<b>", i18n$t("Simulación de"), nombre, "</b><br><p class='desccustom-date'>📅", fecha, "</p>") 
+    } else {
+      paste("<b>", sprintf("%s%s", nombre, i18n$t("Simulación de")), "</b><br><p class='desccustom-date'>📅", fecha, "</p>")
+    }
   })
 
   output$tabla_datos_wimpgrid <- renderRHandsontable({
