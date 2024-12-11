@@ -1305,8 +1305,16 @@ form_server <- function(input, output, session){
     observe(
         if(length(elementos_puntuables_w()) > 0){
             output$elemento_puntuable_w <- renderText({
+                    
+                message('ELEMENT: ', elementos_puntuables_w()[1])
+                    message('LANG: ', lang)
+
                 if (lang == LANG_EN) {
-                    paste(i18n$t("Yo - Totalmente"), strsplit(unlist(elementos_puntuables_w()[1]), "Self - Fully")[[1]][2])
+                    message('EXTRACTING: ', sub("Totally (.*) Me", "\\1", unlist(elementos_puntuables_w()[1])))
+                    # paste(sprintf("Totally %s Me", strsplit(unlist(elementos_puntuables_w()[1]), "Self - Fully")[[1]][2]))
+                    paste(i18n$t("Yo - Totalmente"), sub("Totally (.*) Me", "\\1", unlist(elementos_puntuables_w()[1])))
+                } else if ((grepl("Totally (.*) Me", unlist(elementos_puntuables_w())[1]))) {
+                    paste(i18n$t("Yo - Totalmente"), sub("Totally (.*) Me", "\\1", unlist(elementos_puntuables_w()[1])))
                 } else {
                     paste(i18n$t("Yo - Totalmente"), strsplit(unlist(elementos_puntuables_w()[1]), "Yo - Totalmente")[[1]][2])
                 }
