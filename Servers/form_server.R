@@ -1230,18 +1230,27 @@ form_server <- function(input, output, session){
     # FIN VALORACIONES WIMPGRID -----------------------------------------------------
 
     # PUNTUACIONES WIMPGRID ---------------------------------------------------------
-    generar_elementos_wimpgrid <- function(constructos){
+    generar_elementos_wimpgrid <- function(constructos, show){
         lang <- i18n$get_translation_language()
         elementos <- list()
         valores_hipoteticos <- valoracion_hipotetico()
         resultado <- lapply(constructos, function(cadena) unlist(strsplit(cadena, " - ")))
         i <- 1
         for(e in resultado){
-            if(valores_hipoteticos[i] == 1){
-                elementos <- c(elementos, sprintf(i18n$t("Yo - Totalmente %s"), e[2]))
-            }
-            else{
-                elementos <- c(elementos, sprintf(i18n$t("Yo - Totalmente %s"), e[1]))
+            if (!show) {
+                if(valores_hipoteticos[i] == 1){
+                    elementos <- c(elementos, sprintf(i18n$t("Yo - Totalmente %s"), e[2]))
+                }
+                else{
+                    elementos <- c(elementos, sprintf(i18n$t("Yo - Totalmente %s"), e[1]))
+                }
+            } else {
+                if(valores_hipoteticos[i] == 1){
+                    elementos <- c(elementos, e[2])
+                }
+                else{
+                    elementos <- c(elementos,e[1])
+                }
             }
             i <- i+1
         }
@@ -1252,7 +1261,8 @@ form_server <- function(input, output, session){
         shinyjs::hide("preguntasDiadas_w")
         shinyjs::show("PuntuacionesWimpgrid")
         constructos_puntuables_w(constructos_w())
-        elementos_puntuables_w(generar_elementos_wimpgrid(constructos_w()))
+        show <- TRUE
+        elementos_puntuables_w(generar_elementos_wimpgrid(constructos_w(), show))
         puntos_wimpgrid(NULL)
     })
 
@@ -1305,19 +1315,7 @@ form_server <- function(input, output, session){
     observe(
         if(length(elementos_puntuables_w()) > 0){
             output$elemento_puntuable_w <- renderText({
-                    
-                message('ELEMENT: ', elementos_puntuables_w()[1])
-                    message('LANG: ', lang)
-
-                if (lang == LANG_EN) {
-                    message('EXTRACTING: ', sub("Totally (.*) Me", "\\1", unlist(elementos_puntuables_w()[1])))
-                    # paste(sprintf("Totally %s Me", strsplit(unlist(elementos_puntuables_w()[1]), "Self - Fully")[[1]][2]))
-                    paste(i18n$t("Yo - Totalmente"), sub("Totally (.*) Me", "\\1", unlist(elementos_puntuables_w()[1])))
-                } else if ((grepl("Totally (.*) Me", unlist(elementos_puntuables_w())[1]))) {
-                    paste(i18n$t("Yo - Totalmente"), sub("Totally (.*) Me", "\\1", unlist(elementos_puntuables_w()[1])))
-                } else {
-                    paste(i18n$t("Yo - Totalmente"), strsplit(unlist(elementos_puntuables_w()[1]), "Yo - Totalmente")[[1]][2])
-                }
+                paste(i18n$t("Yo - Totalmente"), elementos_puntuables_w()[1])
             })
             renderizar_puntos_w()
         }
@@ -1399,7 +1397,8 @@ form_server <- function(input, output, session){
         lang <- i18n$get_translation_language()
         puntuaciones <- puntos_wimpgrid()
         constructos <- constructos_w()
-        elementos <- generar_elementos_wimpgrid(constructos)
+        show <- FALSE
+        elementos <- generar_elementos_wimpgrid(constructos, show)
         n_constructos <- length(constructos)
         n_elementos <- length(elementos)
         primera_fila <- c("-1", elementos, i18n$t("Yo - Ideal"), "1")
@@ -1476,6 +1475,9 @@ form_server <- function(input, output, session){
                         DBI::dbDisconnect(con)
                     }
                     # Solo archivo WimpGrid cargado, navegar a WimpGrid Home
+                    show <- TRUE
+                    session$userData$elementos_w_show <- generar_elementos_wimpgrid(constructos_w(), show)
+
                     wimpgrid_analysis_server(input,output,session)
 
                     runjs("

@@ -219,7 +219,7 @@ repgrid_analisis_server <- function(input, output, session) {
     tabla_indices_round <- round(tabla_indices, 3)
 
     
-    knitr::kable(tabla_indices_round,col.names = c("Yo/Ideal", "Yo/Otros", "Otros/Ideal", "PVAFF","Intensity","Conflicts","BIAS","Intensidad Global de Constructos","Intensidad Global de Elementos"),
+    knitr::kable(tabla_indices_round,col.names = c(i18n$t("Yo/Ideal"), i18n$t("Yo/Otros"), i18n$t("Otros/Ideal"), "PVAFF", i18n$t("Intensidad"), i18n$t("Conflicts"),"BIAS", i18n$t("Intensidad Global de Constructos"), i18n$t("Intensidad Global de Elementos")),
     row.names = FALSE, format = "html") %>%
     kable_styling("striped", full_width = T) %>%
     row_spec(0, bold = T, color = "white", background = "#005440") #%>%

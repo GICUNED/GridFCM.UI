@@ -1024,6 +1024,38 @@
     {
       "es": "Abrir",
       "en": "Open"
+    },
+    {
+      "es": "Yo totalmente",
+      "en": "Totally me"
+    },
+    {
+      "es": "Yo/Ideal",
+      "en": "Ideal/Self"
+    },
+    {
+      "es": "Yo/Otros",
+      "en": "Others/Self"
+    },
+    {
+      "es": "Otros/Ideal",
+      "en": "Others/Ideal"
+    },
+    {
+      "es": "Intensidad",
+      "en": "Intensity"
+    },
+    {
+      "es": "Intensidad Global de Constructos",
+      "en": "Global Intensity of Constructs"
+    },
+    {
+      "es": "Intensidad Global de Elementos",
+      "en": "Global Intensity of Elements"
+    },
+    {
+      "es": "Atención:",
+      "en": "Warning:"
     }
   ]
 }
